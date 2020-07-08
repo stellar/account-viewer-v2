@@ -4,7 +4,7 @@ import { combineReducers } from "redux";
 import { Provider } from "react-redux";
 
 import { render } from "@testing-library/react";
-import { Home } from "./Home";
+import { Dashboard } from "./Dashboard";
 
 import { reducer as counter } from "ducks/counter";
 
@@ -17,9 +17,9 @@ const store = configureStore({
 test("renders learn react link", () => {
   const { getByText } = render(
     <Provider store={store}>
-      <Home />
+      <Dashboard />
     </Provider>,
   );
-  const linkElement = getByText(/The counter is now/i);
-  expect(linkElement).toBeInTheDocument();
+  const titleElement = getByText(/Dashboard page/i);
+  expect(titleElement).toBeInTheDocument();
 });

@@ -1,5 +1,6 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
+
 import logo from "assets/logo.svg";
 
 const logoSpin = keyframes`
@@ -36,12 +37,12 @@ const HeaderEl = styled.header`
   color: white;
 `;
 
-export function About() {
+export function Dashboard() {
   return (
     <El>
       <HeaderEl>
         <LogoEl src={logo} className="App-logo" alt="logo" />
-        <p>This is the About page. COOL HUH?!?</p>
+        <p>Dashboard page</p>
       </HeaderEl>
     </El>
   );

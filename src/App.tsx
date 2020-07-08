@@ -5,8 +5,9 @@ import { combineReducers } from "redux";
 import { Provider } from "react-redux";
 import { createGlobalStyle } from "styled-components";
 
-import { About } from "components/About";
-import { Home } from "components/Home";
+import { Auth } from "components/Auth";
+import { Dashboard } from "components/Dashboard";
+import { Send } from "components/Send";
 
 import { reducer as counter } from "ducks/counter";
 
@@ -31,10 +32,13 @@ export function App() {
           <nav>
             <ul>
               <li>
-                <Link to="/">Home</Link>
+                <Link to="/">Auth</Link>
               </li>
               <li>
-                <Link to="/about">About</Link>
+                <Link to="/dashboard">Dashboard</Link>
+              </li>
+              <li>
+                <Link to="/send">Send</Link>
               </li>
             </ul>
           </nav>
@@ -42,11 +46,15 @@ export function App() {
           {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
           <Switch>
-            <Route path="/about">
-              <About />
+            <Route exact path="/">
+              <Auth />
             </Route>
-            <Route path="/">
-              <Home />
+            {/* TODO: Dashboard and Send need to be protected routes */}
+            <Route exact path="/dashboard">
+              <Dashboard />
+            </Route>
+            <Route exact path="/send">
+              <Send />
             </Route>
           </Switch>
         </div>
