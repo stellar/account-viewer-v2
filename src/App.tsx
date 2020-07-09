@@ -5,7 +5,8 @@ import { combineReducers } from "redux";
 import { Provider } from "react-redux";
 import { createGlobalStyle } from "styled-components";
 
-import { Auth } from "components/Auth";
+import { Landing } from "components/Landing";
+import { AuthSecretKey } from "components/AuthSecretKey";
 import { Dashboard } from "components/Dashboard";
 import { Send } from "components/Send";
 
@@ -23,7 +24,7 @@ const store = configureStore({
   }),
 });
 
-export function App() {
+export const App = () => {
   return (
     <Provider store={store}>
       <Router>
@@ -32,7 +33,7 @@ export function App() {
           <nav>
             <ul>
               <li>
-                <Link to="/">Auth</Link>
+                <Link to="/">Landing</Link>
               </li>
               <li>
                 <Link to="/dashboard">Dashboard</Link>
@@ -47,12 +48,18 @@ export function App() {
             renders the first one that matches the current URL. */}
           <Switch>
             <Route exact path="/">
-              <Auth />
+              <Landing />
             </Route>
+
+            <Route exact path="/auth/secretkey">
+              <AuthSecretKey />
+            </Route>
+
             {/* TODO: Dashboard and Send need to be protected routes */}
             <Route exact path="/dashboard">
               <Dashboard />
             </Route>
+
             <Route exact path="/send">
               <Send />
             </Route>
@@ -61,4 +68,4 @@ export function App() {
       </Router>
     </Provider>
   );
-}
+};
