@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
-import { useRedux } from "../hooks/useRedux";
-import { fetchAccountTxHistory } from "../ducks/account";
-import { useDispatch } from "react-redux";
+import { useRedux } from "hooks/useRedux";
+import { TransactionHistory } from "components/TransactionHistory";
 
 const El = styled.div`
   padding-bottom: 10px;
@@ -29,29 +28,7 @@ export const Dashboard = () => {
       <TempButtonEl>Send</TempButtonEl>
       <TempButtonEl>Receive</TempButtonEl>
       <El>
-        <PaymentsHistory />
-      </El>
-    </El>
-  );
-};
-
-const PaymentsHistory = () => {
-  const { account } = useRedux(["account"]);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (account.data) {
-      dispatch(fetchAccountTxHistory(account.data.id));
-    }
-  }, [account.data, dispatch]);
-
-  return (
-    <El>
-      <El>Payments History</El>
-      <El>
-        {account.pastTransactions.map((pt: any) => (
-          <El key={pt.id}>{pt.id}</El>
-        ))}
+        <TransactionHistory />
       </El>
     </El>
   );

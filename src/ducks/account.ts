@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { DataProvider, Types } from "@stellar/wallet-sdk";
 import StellarSdk from "stellar-sdk";
 import pick from "lodash/pick";
-import { AppDispatch } from "../App";
+import { AppDispatch } from "App";
 
 export const fetchAccount = createAsyncThunk<
   // Return type of the payload creator
