@@ -5,10 +5,10 @@ import { combineReducers } from "redux";
 import { Provider } from "react-redux";
 import { createGlobalStyle } from "styled-components";
 
-import { Landing } from "components/Landing";
-import { AuthSecretKey } from "components/AuthSecretKey";
-import { Dashboard } from "components/Dashboard";
-import { Send } from "components/Send";
+import { Landing } from "pages/Landing";
+import { SigninSecretKey } from "pages/SigninSecretKey";
+import { Dashboard } from "pages/Dashboard";
+import { Send } from "pages/Send";
 
 import { reducer as account } from "ducks/account";
 
@@ -58,7 +58,7 @@ export const App = () => {
             </Route>
 
             <Route exact path="/auth/secretkey">
-              <AuthSecretKey />
+              <SigninSecretKey />
             </Route>
 
             {/* TODO: Dashboard and Send need to be protected routes */}

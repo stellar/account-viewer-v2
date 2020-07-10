@@ -6,32 +6,32 @@ import { Keypair } from "stellar-sdk";
 
 import { fetchAccount } from "ducks/account";
 
-const Warning = styled.div`
+const WarningEl = styled.div`
   background-color: #f3e5e5;
   color: #681e1e;
   padding: 20px;
   margin-bottom: 20px;
 `;
 
-const TempLink = styled(Link)`
+const TempLinkEl = styled(Link)`
   display: block;
   margin-bottom: 20px;
 `;
 
-const TempButton = styled.button`
+const TempButtonEl = styled.button`
   margin-bottom: 20px;
 `;
 
-const TempInput = styled.input`
+const TempInputEl = styled.input`
   margin-bottom: 20px;
   min-width: 300px;
 `;
 
-export const AuthSecretKey = () => {
+export const SigninSecretKey = () => {
   const dispatch = useDispatch();
   let history = useHistory();
 
-  const [canContinue, setCanContinue] = useState(false);
+  const [acceptedWarning, setAcceptedWarning] = useState(false);
   const [secretKey, setSecretKey] = useState("");
 
   let failedAttempts = 0;
@@ -70,9 +70,9 @@ export const AuthSecretKey = () => {
       <h1>Sign in with a Secret Key</h1>
 
       {/* Show Warning message */}
-      {!canContinue && (
+      {!acceptedWarning && (
         <div>
-          <Warning>
+          <WarningEl>
             <h3>
               ATTENTION: Copying and pasting your secret key is not recommended
             </h3>
@@ -90,20 +90,20 @@ export const AuthSecretKey = () => {
               </li>
               <li>...</li>
             </ul>
-          </Warning>
+          </WarningEl>
 
-          <TempButton onClick={() => setCanContinue(true)}>
+          <TempButtonEl onClick={() => setAcceptedWarning(true)}>
             I understand the risks of pasting my secret key
-          </TempButton>
+          </TempButtonEl>
 
-          <TempLink to="/">Cancel</TempLink>
+          <TempLinkEl to="/">Cancel</TempLinkEl>
         </div>
       )}
 
       {/* Show Enter Secret Key */}
-      {canContinue && (
+      {acceptedWarning && (
         <div>
-          <Warning>
+          <WarningEl>
             <p>
               <strong>accountviewer.stellar.org</strong>
             </p>
@@ -112,18 +112,18 @@ export const AuthSecretKey = () => {
               pasting your keys. Scammers can replicate this page in a different
               domain in order to steal your keys.
             </p>
-          </Warning>
+          </WarningEl>
 
           <div>
             <h3>Your Secret Key</h3>
-            <TempInput
+            <TempInputEl
               placeholder="Starts with S, example: SCHK...ZLJ&"
               onBlur={(e) => setSecretKey(e.currentTarget.value)}
               type="password"
             />
           </div>
 
-          <TempButton onClick={handleSignIn}>Sign in</TempButton>
+          <TempButtonEl onClick={handleSignIn}>Sign in</TempButtonEl>
         </div>
       )}
     </div>
