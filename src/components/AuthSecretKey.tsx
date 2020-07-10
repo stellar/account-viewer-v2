@@ -1,6 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { Keypair } from "stellar-sdk";
+
+import { fetchAccount } from "ducks/account";
 
 const Warning = styled.div`
   background-color: #f3e5e5;
@@ -24,11 +28,41 @@ const TempInput = styled.input`
 `;
 
 export const AuthSecretKey = () => {
-  // TODO: put back to false
-  const [canContinue, setCanContinue] = useState(true);
+  const dispatch = useDispatch();
+  let history = useHistory();
+
+  const [canContinue, setCanContinue] = useState(false);
+  const [secretKey, setSecretKey] = useState("");
+
+  let failedAttempts = 0;
 
   const handleSignIn = () => {
-    console.log("SIGN IN");
+    if (!secretKey) {
+      alert("Please enter your Secret Key");
+      return;
+    }
+
+    if (failedAttempts > 8) {
+      alert("Please wait a few seconds before attempting to log in again.");
+    }
+
+    try {
+      let keypair = Keypair.fromSecret(secretKey);
+      let publicKey = keypair.publicKey();
+
+      dispatch(fetchAccount(publicKey));
+      history.push("/dashboard");
+    } catch (e) {
+      console.error("SECRET KEY :: error :: ", e);
+
+      // Rate limit with exponential backoff.
+      failedAttempts++;
+      setTimeout(() => {
+        failedAttempts--;
+      }, 2 ** failedAttempts * 1000);
+
+      alert("Something went wrong, please try again.");
+    }
   };
 
   return (
@@ -69,10 +103,6 @@ export const AuthSecretKey = () => {
       {/* Show Enter Secret Key */}
       {canContinue && (
         <div>
-          {/* TODO: Check if domain matches accountviewer.stellar.org, show
-          warning if it doesn't */}
-          {/* TODO: ??? this could be easily changed in copied repo, should we
-          add something on the backend? */}
           <Warning>
             <p>
               <strong>accountviewer.stellar.org</strong>
@@ -86,10 +116,13 @@ export const AuthSecretKey = () => {
 
           <div>
             <h3>Your Secret Key</h3>
-            <TempInput placeholder="Starts with S, example: SCHK...ZLJ&" />
+            <TempInput
+              placeholder="Starts with S, example: SCHK...ZLJ&"
+              onBlur={(e) => setSecretKey(e.currentTarget.value)}
+              type="password"
+            />
           </div>
 
-          {/* TODO: ??? disable button if domain doesn't match? */}
           <TempButton onClick={handleSignIn}>Sign in</TempButton>
         </div>
       )}

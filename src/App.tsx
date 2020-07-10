@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import { Provider } from "react-redux";
 import { createGlobalStyle } from "styled-components";
@@ -10,7 +10,7 @@ import { AuthSecretKey } from "components/AuthSecretKey";
 import { Dashboard } from "components/Dashboard";
 import { Send } from "components/Send";
 
-import { reducer as counter } from "ducks/counter";
+import { reducer as account } from "ducks/account";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -20,7 +20,13 @@ const GlobalStyle = createGlobalStyle`
 
 const store = configureStore({
   reducer: combineReducers({
-    counter,
+    account,
+  }),
+  middleware: getDefaultMiddleware({
+    serializableCheck: {
+      // Account balances in response are Non-Serializable
+      ignoredActions: ["account/fetchAccount/fulfilled"],
+    },
   }),
 });
 
