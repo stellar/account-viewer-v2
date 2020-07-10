@@ -1,49 +1,58 @@
-import React from "react";
-import styled, { keyframes } from "styled-components";
-
-import logo from "assets/logo.svg";
-
-const logoSpin = keyframes`
-from {
-  transform: rotate(0deg);
-}
-to {
-  transform: rotate(360deg);
-}
-
-`;
+import React, { useEffect } from "react";
+import styled from "styled-components";
+import { useRedux } from "../hooks/useRedux";
+import { fetchAccountTxHistory } from "../ducks/account";
+import { useDispatch } from "react-redux";
 
 const El = styled.div`
-  text-align: center;
+  padding-bottom: 10px;
 `;
 
-const LogoEl = styled.img`
-  height: 40vmin;
-  pointer-events: none;
+const TempButtonEl = styled.button`
+  margin-bottom: 20px;
+`;
 
-  @media (prefers-reduced-motion: no-preference) {
-    animation: ${logoSpin} infinite 20s linear;
+export const Dashboard = () => {
+  const { account } = useRedux(["account"]);
+
+  let nativeBalance = 0;
+  if (account.data) {
+    nativeBalance = account.data.balances.native.total.toFixed();
   }
-`;
 
-const HeaderEl = styled.header`
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-`;
-
-export function Dashboard() {
   return (
     <El>
-      <HeaderEl>
-        <LogoEl src={logo} className="App-logo" alt="logo" />
-        <p>Dashboard page</p>
-      </HeaderEl>
+      <El>Dashboard</El>
+      <El>{account.publicKey}</El>
+      <El>Your Balance</El>
+      <El>{nativeBalance} lumens</El>
+      <TempButtonEl>Send</TempButtonEl>
+      <TempButtonEl>Receive</TempButtonEl>
+      <El>
+        <PaymentsHistory />
+      </El>
     </El>
   );
-}
+};
+
+const PaymentsHistory = () => {
+  const { account } = useRedux(["account"]);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (account.data) {
+      dispatch(fetchAccountTxHistory(account.data.id));
+    }
+  }, [account.data, dispatch]);
+
+  return (
+    <El>
+      <El>Payments History</El>
+      <El>
+        {account.pastTransactions.map((pt: any) => (
+          <El key={pt.id}>{pt.id}</El>
+        ))}
+      </El>
+    </El>
+  );
+};

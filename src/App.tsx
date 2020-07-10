@@ -30,6 +30,8 @@ const store = configureStore({
   }),
 });
 
+export type AppDispatch = typeof store.dispatch;
+
 export const App = () => {
   return (
     <Provider store={store}>

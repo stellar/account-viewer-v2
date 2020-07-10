@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { DataProvider, Types } from "@stellar/wallet-sdk";
 import StellarSdk from "stellar-sdk";
+import pick from "lodash/pick";
+import { AppDispatch } from "../App";
 
 export const fetchAccount = createAsyncThunk<
   // Return type of the payload creator
@@ -11,7 +13,7 @@ export const fetchAccount = createAsyncThunk<
   { rejectValue: RejectMessage }
 >("account/fetchAccount", async (publicKey, { rejectWithValue }) => {
   const dataProvider = new DataProvider({
-    // TODO: move to config (support mainnet and testnet)
+    // TODO: move to config (support mainnet and testnet) (check everywhere)
     serverUrl: "https://horizon-testnet.stellar.org",
     accountOrKey: publicKey,
     networkPassphrase: StellarSdk.Networks.TESTNET,
@@ -38,18 +40,26 @@ interface InitialState {
   data: Types.AccountDetails | null;
   error?: string;
   loading: boolean;
+  // TODO - "any" ?
+  pastTransactions: Array<any>;
 }
 
 const initialState: InitialState = {
   data: null,
   error: undefined,
   loading: false,
+  pastTransactions: [],
 };
 
 const accountSlice = createSlice({
   name: "account",
   initialState,
-  reducers: {},
+  reducers: {
+    pastTransactions: (state, action) => ({
+      ...state,
+      pastTransactions: action.payload,
+    }),
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchAccount.fulfilled, (state, action) => {
       return {
@@ -66,5 +76,29 @@ const accountSlice = createSlice({
     });
   },
 });
+
+// TODO - make thunk methods consistent (eg. use createAsyncChunk or not)
+// leaving like this to compare
+export const fetchAccountTxHistory = (accountId: string) => {
+  return async (dispatch: AppDispatch) => {
+    const server = new StellarSdk.Server("https://horizon-testnet.stellar.org");
+    return (
+      server
+        .transactions()
+        .forAccount(accountId)
+        .call()
+        // Todo - handle paging
+        .then((page: any) => {
+          dispatch(
+            accountSlice.actions.pastTransactions(
+              page.records.map((record: any) =>
+                pick(record, ["created_at", "id"]),
+              ),
+            ),
+          );
+        })
+    );
+  };
+};
 
 export const { reducer } = accountSlice;
