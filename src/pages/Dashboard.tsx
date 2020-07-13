@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import { useRedux } from "hooks/useRedux";
 import { TransactionHistory } from "components/TransactionHistory";
-// import BigNumber from "bignumber.js";
 
 const El = styled.div`
   padding-bottom: 10px;
