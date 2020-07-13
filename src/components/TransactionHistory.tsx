@@ -10,13 +10,14 @@ const El = styled.div`
 
 export const TransactionHistory = () => {
   const { account, txHistory } = useRedux(["account", "txHistory"]);
+  const accountId = account.data?.id;
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (account.data) {
       dispatch(fetchAccountTxHistory(account.data.id));
     }
-  }, [account.data?.id]);
+  }, [accountId]);
 
   return (
     <El>

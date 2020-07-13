@@ -35,20 +35,22 @@ export const txHistorySlice = createSlice({
 
 // TODO - make thunk methods consistent (eg. use createAsyncChunk or not)
 // leaving like this to compare
-export const fetchAccountTxHistory = (accountId: string) => async (dispatch: AppDispatch) => {
-    dispatch(txHistorySlice.actions.txHistoryPending());
-    const dataProvider = new DataProvider({
-      serverUrl: "https://horizon-testnet.stellar.org",
-      accountOrKey: accountId,
-      networkPassphrase: StellarSdk.Networks.TESTNET,
-    });
-    let payments: Array<Types.Payment> | null = null;
-    try {
-      payments = (await dataProvider.fetchPayments())?.records;
-    } catch (err) {
-      dispatch(txHistorySlice.actions.txHistoryFail(payments));
-    }
-    dispatch(txHistorySlice.actions.txHistorySuccess(payments));
-  };
+export const fetchAccountTxHistory = (accountId: string) => async (
+  dispatch: AppDispatch,
+) => {
+  dispatch(txHistorySlice.actions.txHistoryPending());
+  const dataProvider = new DataProvider({
+    serverUrl: "https://horizon-testnet.stellar.org",
+    accountOrKey: accountId,
+    networkPassphrase: StellarSdk.Networks.TESTNET,
+  });
+  let payments: Array<Types.Payment> | null = null;
+  try {
+    payments = (await dataProvider.fetchPayments())?.records;
+  } catch (err) {
+    return dispatch(txHistorySlice.actions.txHistoryFail(payments));
+  }
+  return dispatch(txHistorySlice.actions.txHistorySuccess(payments));
+};
 
 export const { reducer } = txHistorySlice;
