@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
-import { combineReducers } from "redux";
+import { combineReducers, Action } from "redux";
 import { Provider } from "react-redux";
 import { createGlobalStyle } from "styled-components";
 
@@ -18,16 +18,28 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
+const loggerMiddleware = (store: any) => (next: any) => (
+  action: Action<any>,
+) => {
+  console.log("Dispatching: ", action.type);
+  const dispatchedAction = next(action);
+  console.log("NEW STATE: ", store.getState());
+  return dispatchedAction;
+};
+
 const store = configureStore({
   reducer: combineReducers({
     account,
   }),
-  middleware: getDefaultMiddleware({
-    serializableCheck: {
-      // Account balances in response are Non-Serializable
-      ignoredActions: ["account/fetchAccount/fulfilled"],
-    },
-  }),
+  middleware: [
+    ...getDefaultMiddleware({
+      serializableCheck: {
+        // Account balances in response are Non-Serializable
+        ignoredActions: ["account/fetchAccount/fulfilled"],
+      },
+    }),
+    loggerMiddleware,
+  ],
 });
 
 export const App = () => {
