@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { Keypair } from "stellar-sdk";
 
-import { fetchAccount } from "ducks/account";
+import { fetchAccount, ActionStatus } from "ducks/account";
+import { useRedux } from "hooks/useRedux";
 
 const WarningEl = styled.div`
   background-color: #f3e5e5;
@@ -27,41 +28,65 @@ const TempInputEl = styled.input`
   min-width: 300px;
 `;
 
+const TempErrorEl = styled.div`
+  color: #c00;
+  margin-bottom: 20px;
+`;
+
 export const SigninSecretKey = () => {
   const dispatch = useDispatch();
-  let history = useHistory();
+  const history = useHistory();
 
+  const { account } = useRedux(["account"]);
+  const { status, isAuthenticated, errorMessage } = account;
   const [acceptedWarning, setAcceptedWarning] = useState(false);
   const [secretKey, setSecretKey] = useState("");
+  const [pageError, setPageError] = useState("");
+
+  useEffect(() => {
+    if (errorMessage) {
+      setPageError(errorMessage);
+      return;
+    }
+
+    if (status === ActionStatus.SUCCESS) {
+      if (isAuthenticated) {
+        history.push("/dashboard");
+      } else {
+        setPageError("Something went wrong, please try again.");
+      }
+    }
+  }, [status, errorMessage]);
 
   let failedAttempts = 0;
 
   const handleSignIn = () => {
     if (!secretKey) {
+      // TODO:
+      // eslint-disable-next-line
       alert("Please enter your Secret Key");
       return;
     }
 
     if (failedAttempts > 8) {
+      // TODO:
+      // eslint-disable-next-line
       alert("Please wait a few seconds before attempting to log in again.");
     }
 
     try {
-      let keypair = Keypair.fromSecret(secretKey);
-      let publicKey = keypair.publicKey();
+      const keypair = Keypair.fromSecret(secretKey);
+      const publicKey = keypair.publicKey();
 
       dispatch(fetchAccount(publicKey));
-      history.push("/dashboard");
     } catch (e) {
-      console.error("SECRET KEY :: error :: ", e);
-
       // Rate limit with exponential backoff.
-      failedAttempts++;
+      failedAttempts += 1;
       setTimeout(() => {
-        failedAttempts--;
+        failedAttempts -= 1;
       }, 2 ** failedAttempts * 1000);
 
-      alert("Something went wrong, please try again.");
+      setPageError(`Something went wrong. ${e.toString()}`);
     }
   };
 
@@ -123,7 +148,14 @@ export const SigninSecretKey = () => {
             />
           </div>
 
-          <TempButtonEl onClick={handleSignIn}>Sign in</TempButtonEl>
+          {pageError && <TempErrorEl>{pageError}</TempErrorEl>}
+
+          <TempButtonEl
+            onClick={handleSignIn}
+            disabled={status === ActionStatus.PENDING}
+          >
+            Sign in
+          </TempButtonEl>
         </div>
       )}
     </div>
