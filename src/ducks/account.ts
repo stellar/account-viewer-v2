@@ -34,16 +34,24 @@ interface RejectMessage {
   errorMessage: string;
 }
 
+export enum ActionStatus {
+  PENDING = "PENDING",
+  SUCCESS = "SUCCESS",
+  ERROR = "ERROR",
+}
+
 interface InitialState {
   data: Types.AccountDetails | null;
-  error?: string;
-  loading: boolean;
+  isAuthenticated: boolean;
+  status: ActionStatus | undefined;
+  errorMessage?: string;
 }
 
 const initialState: InitialState = {
   data: null,
-  error: undefined,
-  loading: false,
+  isAuthenticated: false,
+  status: undefined,
+  errorMessage: undefined,
 };
 
 const accountSlice = createSlice({
@@ -51,19 +59,26 @@ const accountSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchAccount.fulfilled, (state, action) => {
-      return {
-        ...state,
-        data: { ...action.payload },
-      };
-    });
+    builder.addCase(fetchAccount.pending, (state) => ({
+      ...state,
+      status: ActionStatus.PENDING,
+    }));
 
-    builder.addCase(fetchAccount.rejected, (state, action) => {
-      return {
-        ...state,
-        error: action.payload?.errorMessage,
-      };
-    });
+    builder.addCase(fetchAccount.fulfilled, (state, action) => ({
+      ...state,
+      data: { ...action.payload },
+      status: ActionStatus.SUCCESS,
+      // If something went wrong, action.payload could be null. Just making
+      // sure we have the response data to set isAuthenticated correctly.
+      isAuthenticated: !!action.payload,
+    }));
+
+    builder.addCase(fetchAccount.rejected, (state, action) => ({
+      ...state,
+      data: null,
+      status: ActionStatus.ERROR,
+      errorMessage: action.payload?.errorMessage,
+    }));
   },
 });
 
