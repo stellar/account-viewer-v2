@@ -11,7 +11,7 @@ export const fetchAccount = createAsyncThunk<
   { rejectValue: RejectMessage }
 >("account/fetchAccount", async (publicKey, { rejectWithValue }) => {
   const dataProvider = new DataProvider({
-    // TODO: move to config (support mainnet and testnet) (check everywhere)
+    // TODO: move to config (support mainnet and testnet)
     serverUrl: "https://horizon-testnet.stellar.org",
     accountOrKey: publicKey,
     networkPassphrase: StellarSdk.Networks.TESTNET,
@@ -42,30 +42,43 @@ export enum ActionStatus {
 
 interface InitialState {
   data: Types.AccountDetails | null;
-  error?: string;
-  loading: boolean;
+  isAuthenticated: boolean;
+  status: ActionStatus | undefined;
+  errorMessage?: string;
 }
 
 const initialState: InitialState = {
   data: null,
-  error: undefined,
-  loading: false,
+  isAuthenticated: false,
+  status: undefined,
+  errorMessage: undefined,
 };
 
-export const accountSlice = createSlice({
+const accountSlice = createSlice({
   name: "account",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    builder.addCase(fetchAccount.pending, (state) => ({
+      ...state,
+      status: ActionStatus.PENDING,
+    }));
+
     builder.addCase(fetchAccount.fulfilled, (state, action) => ({
-        ...state,
-        data: { ...action.payload },
-      }));
+      ...state,
+      data: { ...action.payload },
+      status: ActionStatus.SUCCESS,
+      // If something went wrong, action.payload could be null. Just making
+      // sure we have the response data to set isAuthenticated correctly.
+      isAuthenticated: !!action.payload,
+    }));
 
     builder.addCase(fetchAccount.rejected, (state, action) => ({
-        ...state,
-        error: action.payload?.errorMessage,
-      }));
+      ...state,
+      data: null,
+      status: ActionStatus.ERROR,
+      errorMessage: action.payload?.errorMessage,
+    }));
   },
 });
 
