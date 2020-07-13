@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { fetchAccountTxHistory } from "ducks/account";
+import { fetchAccountTxHistory } from "ducks/txHistory";
 import { useDispatch } from "react-redux";
 import { useRedux } from "hooks/useRedux";
 import styled from "styled-components";
@@ -9,7 +9,7 @@ const El = styled.div`
 `;
 
 export const TransactionHistory = () => {
-  const { account } = useRedux(["account"]);
+  const { account, txHistory } = useRedux(["account", "txHistory"]);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export const TransactionHistory = () => {
     <El>
       <El>Payments History</El>
       <El>
-        {account.pastTransactions.map((pt: any) => (
+        {txHistory.records?.map((pt: any) => (
           <El key={pt.id}>{pt.id}</El>
         ))}
       </El>

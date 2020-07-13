@@ -34,6 +34,12 @@ interface RejectMessage {
   errorMessage: string;
 }
 
+export enum ActionStatus {
+  PENDING = "PENDING",
+  SUCCESS = "SUCCESS",
+  ERROR = "ERROR",
+}
+
 interface InitialState {
   data: Types.AccountDetails | null;
   error?: string;
