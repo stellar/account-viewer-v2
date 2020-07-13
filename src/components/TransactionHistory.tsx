@@ -16,7 +16,7 @@ export const TransactionHistory = () => {
     if (account.data) {
       dispatch(fetchAccountTxHistory(account.data.id));
     }
-  }, [account.data, dispatch]);
+  }, [account.data?.id]);
 
   return (
     <El>
