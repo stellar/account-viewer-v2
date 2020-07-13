@@ -9,6 +9,7 @@ import { Landing } from "pages/Landing";
 import { SigninSecretKey } from "pages/SigninSecretKey";
 import { Dashboard } from "pages/Dashboard";
 import { Send } from "pages/Send";
+import { PrivateRoute } from "components/PrivateRoute";
 
 import { reducer as account } from "ducks/account";
 
@@ -42,8 +43,7 @@ const store = configureStore({
   ],
 });
 
-export const App = () => {
-  return (
+export const App = () => (
     <Provider store={store}>
       <Router>
         <div>
@@ -62,8 +62,6 @@ export const App = () => {
             </ul>
           </nav>
 
-          {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
           <Switch>
             <Route exact path="/">
               <Landing />
@@ -73,17 +71,17 @@ export const App = () => {
               <SigninSecretKey />
             </Route>
 
-            {/* TODO: Dashboard and Send need to be protected routes */}
-            <Route exact path="/dashboard">
+            <PrivateRoute exact path="/dashboard">
               <Dashboard />
-            </Route>
+            </PrivateRoute>
 
-            <Route exact path="/send">
+            <PrivateRoute exact path="/send">
               <Send />
-            </Route>
+            </PrivateRoute>
+
+            {/* TODO: add 404 page */}
           </Switch>
         </div>
       </Router>
     </Provider>
   );
-};
