@@ -12,6 +12,7 @@ import { Send } from "pages/Send";
 import { PrivateRoute } from "components/PrivateRoute";
 
 import { reducer as account } from "ducks/account";
+import { reducer as txHistory } from "ducks/txHistory";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -31,6 +32,7 @@ const loggerMiddleware = (store: any) => (next: any) => (
 const store = configureStore({
   reducer: combineReducers({
     account,
+    txHistory,
   }),
   middleware: [
     ...getDefaultMiddleware({
@@ -43,45 +45,47 @@ const store = configureStore({
   ],
 });
 
+export type AppDispatch = typeof store.dispatch;
+
 export const App = () => (
-    <Provider store={store}>
-      <Router>
-        <div>
-          <GlobalStyle />
-          <nav>
-            <ul>
-              <li>
-                <Link to="/">Landing</Link>
-              </li>
-              <li>
-                <Link to="/dashboard">Dashboard</Link>
-              </li>
-              <li>
-                <Link to="/send">Send</Link>
-              </li>
-            </ul>
-          </nav>
+  <Provider store={store}>
+    <Router>
+      <div>
+        <GlobalStyle />
+        <nav>
+          <ul>
+            <li>
+              <Link to="/">Landing</Link>
+            </li>
+            <li>
+              <Link to="/dashboard">Dashboard</Link>
+            </li>
+            <li>
+              <Link to="/send">Send</Link>
+            </li>
+          </ul>
+        </nav>
 
-          <Switch>
-            <Route exact path="/">
-              <Landing />
-            </Route>
+        <Switch>
+          <Route exact path="/">
+            <Landing />
+          </Route>
 
-            <Route exact path="/auth/secretkey">
-              <SigninSecretKey />
-            </Route>
+          <Route exact path="/auth/secretkey">
+            <SigninSecretKey />
+          </Route>
 
-            <PrivateRoute exact path="/dashboard">
-              <Dashboard />
-            </PrivateRoute>
+          <PrivateRoute exact path="/dashboard">
+            <Dashboard />
+          </PrivateRoute>
 
-            <PrivateRoute exact path="/send">
-              <Send />
-            </PrivateRoute>
+          <PrivateRoute exact path="/send">
+            <Send />
+          </PrivateRoute>
 
-            {/* TODO: add 404 page */}
-          </Switch>
-        </div>
-      </Router>
-    </Provider>
-  );
+          {/* TODO: add 404 page */}
+        </Switch>
+      </div>
+    </Router>
+  </Provider>
+);
