@@ -13,6 +13,7 @@ import { PrivateRoute } from "components/PrivateRoute";
 
 import { reducer as account } from "ducks/account";
 import { reducer as sendTx } from "ducks/send";
+import { reducer as txHistory } from "ducks/txHistory";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -33,6 +34,7 @@ const store = configureStore({
   reducer: combineReducers({
     account,
     sendTx,
+    txHistory,
   }),
   middleware: [
     ...getDefaultMiddleware({
@@ -44,6 +46,8 @@ const store = configureStore({
     loggerMiddleware,
   ],
 });
+
+export type AppDispatch = typeof store.dispatch;
 
 export const App = () => (
   <Provider store={store}>
