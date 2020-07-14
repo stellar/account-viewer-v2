@@ -1,27 +1,22 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import StellarSdk from "stellar-sdk";
 import BigNumber from "bignumber.js";
 import { ActionStatus } from "./account";
-// TODO - adding to package.json gives weird error
 
 // TODO - network constant config
 const server = new StellarSdk.Server("https://horizon-testnet.stellar.org");
 
-export const sendTransaction = (
-  secret: string,
-  toAccountId: string,
-  amount: BigNumber,
-  fee: number,
-) => 
-  // TODO - make type AppDispatch when added
-   async (dispatch: any) => {
-    dispatch(sendTxSlice.actions.sendTxPending());
-
+export const sendTransaction = createAsyncThunk<
+  any,
+  { secret: string; toAccountId: string; amount: BigNumber; fee: number },
+  { rejectValue: RejectMessage }
+>(
+  "sendTransaction",
+  async ({ secret, toAccountId, amount, fee }, { rejectWithValue }) => {
     let result;
-    // ALEC TODO - test edge cases of inputs. Does SDK give user-friendly UI responses?
+
     try {
       const keypair = StellarSdk.Keypair.fromSecret(secret);
-
       const sequence = (await server.loadAccount(keypair.publicKey())).sequence;
       const source = await new StellarSdk.Account(
         keypair.publicKey(),
@@ -44,14 +39,19 @@ export const sendTransaction = (
 
       transaction.sign(StellarSdk.Keypair.fromSecret(secret));
       result = await server.submitTransaction(transaction);
-    } catch (err) {
-      dispatch(sendTxSlice.actions.sendTxFail(err));
+    } catch (error) {
+      return rejectWithValue({
+        errorMessage: error.response?.detail || error.toString(),
+      });
     }
 
-    // ALEC TODO - remove "return"?
-    return dispatch(sendTxSlice.actions.sendTxSuccess(result));
-  }
-;
+    return result;
+  },
+);
+
+interface RejectMessage {
+  errorMessage: string;
+}
 
 interface InitialState {
   data: any;
@@ -68,18 +68,23 @@ const initialState: InitialState = {
 const sendTxSlice = createSlice({
   name: "sendTx",
   initialState,
-  reducers: {
-    sendTxPending: (state: any) => ({ ...state, status: ActionStatus.PENDING }),
-    sendTxSuccess: (state: any, action) => ({
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(sendTransaction.pending, (state) => ({
       ...state,
-      status: ActionStatus.SUCCESS,
+      status: ActionStatus.PENDING,
+    }));
+    builder.addCase(sendTransaction.fulfilled, (state, action) => ({
+      ...state,
       data: action.payload,
-    }),
-    sendTxFail: (state: any, action) => ({
+      status: ActionStatus.SUCCESS,
+    }));
+    builder.addCase(sendTransaction.rejected, (state, action) => ({
       ...state,
+      data: null,
       status: ActionStatus.ERROR,
-      errorMessage: action.payload,
-    }),
+      errorMessage: action.payload?.errorMessage,
+    }));
   },
 });
 

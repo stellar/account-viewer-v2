@@ -31,7 +31,7 @@ export function Send() {
   });
 
   // ALEC TODO - remove hard coding
-  const secret = "SA6ST6NM5MMSPIT4LPI72VDWG5VN3OVMH4SCMUCTBV3OLJIUSFELSN7I";
+  const secret = "SAOMIQJ6XOKB7JQTPUGOLEICC2FEJBWLFNJV3DCDPDUL74MFVJWLJNH5";
 
   return (
     <El>
@@ -67,21 +67,21 @@ export function Send() {
       <TempButtonEl
         onClick={() =>
           dispatch(
-            sendTransaction(
+            sendTransaction({
               // ALEC TODO - remove hardcoding
               // account.data?.secret,
               secret,
-              formData.toAccountId,
-              formData.amount,
-              Math.round(formData.fee * 1e7),
-            ),
+              toAccountId: formData.toAccountId,
+              amount: formData.amount,
+              fee: Math.round(formData.fee * 1e7),
+            }),
           )
         }
       >
         Send
       </TempButtonEl>
       {sendTx.status === ActionStatus.PENDING && <El>Loading ...</El>}
-      {sendTx.errorMessage && <El>sendTx.errorMessage</El>}
+      {sendTx.errorMessage && <El>{sendTx.errorMessage}</El>}
       {sendTx.data?.successful && <El>Success!</El>}
     </El>
   );
