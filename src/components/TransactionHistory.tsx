@@ -14,8 +14,8 @@ export const TransactionHistory = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (account.data) {
-      dispatch(fetchAccountTxHistory(account.data.id));
+    if (accountId) {
+      dispatch(fetchAccountTxHistory(accountId));
     }
   }, [accountId]);
 
