@@ -1,62 +1,86 @@
-import { createReducer, createAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import StellarSdk from "stellar-sdk";
+import BigNumber from "bignumber.js";
+import { ActionStatus } from "./account";
+// TODO - adding to package.json gives weird error
 
-// ALEC TODO - Move this elsewhere probably
-const account = "";
-const secret = "";
-
+// TODO - network constant config
 const server = new StellarSdk.Server("https://horizon-testnet.stellar.org");
 
-const keypair = StellarSdk.Keypair.fromSecret(secret);
+export const sendTransaction = (
+  secret: string,
+  toAccountId: string,
+  amount: BigNumber,
+  fee: number,
+) => 
+  // TODO - make type AppDispatch when added
+   async (dispatch: any) => {
+    dispatch(sendTxSlice.actions.sendTxPending());
 
-const getAccountSequence = async (accPubKey: string) => {
-  const account = await server.loadAccount(accPubKey);
-  return account.sequence;
+    let result;
+    // ALEC TODO - test edge cases of inputs. Does SDK give user-friendly UI responses?
+    try {
+      const keypair = StellarSdk.Keypair.fromSecret(secret);
+
+      const sequence = (await server.loadAccount(keypair.publicKey())).sequence;
+      const source = await new StellarSdk.Account(
+        keypair.publicKey(),
+        sequence,
+      );
+
+      const transaction = new StellarSdk.TransactionBuilder(source, {
+        fee,
+        networkPassphrase: StellarSdk.Networks.TESTNET,
+      })
+        .addOperation(
+          StellarSdk.Operation.payment({
+            destination: toAccountId,
+            asset: StellarSdk.Asset.native(),
+            amount: amount.toString(),
+          }),
+        )
+        .setTimeout(StellarSdk.TimeoutInfinite)
+        .build();
+
+      transaction.sign(StellarSdk.Keypair.fromSecret(secret));
+      result = await server.submitTransaction(transaction);
+    } catch (err) {
+      dispatch(sendTxSlice.actions.sendTxFail(err));
+    }
+
+    // ALEC TODO - remove "return"?
+    return dispatch(sendTxSlice.actions.sendTxSuccess(result));
+  }
+;
+
+interface InitialState {
+  data: any;
+  status: ActionStatus | undefined;
+  errorMessage?: string;
+}
+
+const initialState: InitialState = {
+  data: null,
+  status: undefined,
+  errorMessage: undefined,
 };
 
-export const transactionSend = (formData: any) => {
-  return async (dispatch: any) => {
-    dispatch(sendStart());
-
-    const source = await new StellarSdk.Account(
-      keypair.publicKey(),
-      await getAccountSequence(account),
-    );
-
-    const transaction = new StellarSdk.TransactionBuilder(source, {
-      fee: StellarSdk.BASE_FEE,
-      networkPassphrase: StellarSdk.Networks.TESTNET,
-    })
-      .addOperation(
-        StellarSdk.Operation.payment({
-          destination: formData.account,
-          amount: formData.amount.toString(),
-          asset: StellarSdk.Asset.native(),
-        }),
-      )
-      .setTimeout(30)
-      .build();
-
-    transaction.sign(StellarSdk.Keypair.fromSecret(secret));
-    return server.submitTransaction(transaction);
-  };
-};
-
-const sendStart = createAction("SEND_START");
-const sendEnd = createAction("SEND_END");
-
-const initData = {
-  sending: false,
-};
-
-export const sendReducer = createReducer(initData, {
-  // ALEC TODO - give correct types
-  [sendStart.type]: (state: any) => ({
-    ...state,
-    sending: true,
-  }),
-  [sendEnd.type]: (state) => ({
-    ...state,
-    sending: false,
-  }),
+const sendTxSlice = createSlice({
+  name: "sendTx",
+  initialState,
+  reducers: {
+    sendTxPending: (state: any) => ({ ...state, status: ActionStatus.PENDING }),
+    sendTxSuccess: (state: any, action) => ({
+      ...state,
+      status: ActionStatus.SUCCESS,
+      data: action.payload,
+    }),
+    sendTxFail: (state: any, action) => ({
+      ...state,
+      status: ActionStatus.ERROR,
+      errorMessage: action.payload,
+    }),
+  },
 });
+
+export const { reducer } = sendTxSlice;
