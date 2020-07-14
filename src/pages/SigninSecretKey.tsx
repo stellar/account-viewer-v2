@@ -43,7 +43,7 @@ export const SigninSecretKey = () => {
   const [secretKey, setSecretKey] = useState("");
   const [pageError, setPageError] = useState("");
 
-  useEffect(() => {
+  const handleStatusChange = () => {
     if (errorMessage) {
       setPageError(errorMessage);
       return;
@@ -56,7 +56,9 @@ export const SigninSecretKey = () => {
         setPageError("Something went wrong, please try again.");
       }
     }
-  }, [status, errorMessage]);
+  };
+
+  useEffect(handleStatusChange, [status, errorMessage]);
 
   let failedAttempts = 0;
 
