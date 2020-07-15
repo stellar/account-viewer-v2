@@ -17,14 +17,14 @@ const TempLinkButtonEl = styled.div`
 `;
 
 export const Landing = () => {
-  const [newKeypaidModalVisible, setNewKeypaidModalVisible] = useState(false);
+  const [newKeyPairModalVisible, setNewKeyPairModalVisible] = useState(false);
 
   const openGenerateNewKeyPairModal = () => {
-    setNewKeypaidModalVisible(true);
+    setNewKeyPairModalVisible(true);
   };
 
   const closeGenerateNewKeyPairModal = () => {
-    setNewKeypaidModalVisible(false);
+    setNewKeyPairModalVisible(false);
   };
 
   return (
@@ -45,7 +45,7 @@ export const Landing = () => {
       </TempLinkButtonEl>
 
       <Modal
-        visible={newKeypaidModalVisible}
+        visible={newKeyPairModalVisible}
         onClose={closeGenerateNewKeyPairModal}
       >
         <NewKeyPairForm onClose={closeGenerateNewKeyPairModal} />
