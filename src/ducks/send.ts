@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import StellarSdk from "stellar-sdk";
+import StellarSdk, { Memo } from "stellar-sdk";
 import BigNumber from "bignumber.js";
 import { ActionStatus } from "./account";
 
@@ -8,11 +8,17 @@ const server = new StellarSdk.Server("https://horizon-testnet.stellar.org");
 
 export const sendTransaction = createAsyncThunk<
   any,
-  { secret: string; toAccountId: string; amount: BigNumber; fee: number },
+  {
+    secret: string;
+    toAccountId: string;
+    amount: BigNumber;
+    fee: number;
+    memo: Memo;
+  },
   { rejectValue: RejectMessage }
 >(
   "sendTransaction",
-  async ({ secret, toAccountId, amount, fee }, { rejectWithValue }) => {
+  async ({ secret, toAccountId, amount, fee, memo }, { rejectWithValue }) => {
     let result;
 
     try {
@@ -23,19 +29,22 @@ export const sendTransaction = createAsyncThunk<
         sequence,
       );
 
-      const transaction = new StellarSdk.TransactionBuilder(source, {
+      let transaction = new StellarSdk.TransactionBuilder(source, {
         fee,
         networkPassphrase: StellarSdk.Networks.TESTNET,
-      })
-        .addOperation(
-          StellarSdk.Operation.payment({
-            destination: toAccountId,
-            asset: StellarSdk.Asset.native(),
-            amount: amount.toString(),
-          }),
-        )
-        .setTimeout(StellarSdk.TimeoutInfinite)
-        .build();
+      }).addOperation(
+        StellarSdk.Operation.payment({
+          destination: toAccountId,
+          asset: StellarSdk.Asset.native(),
+          amount: amount.toString(),
+        }),
+      );
+
+      if (memo.type !== StellarSdk.MemoNone) {
+        transaction = transaction.addMemo(memo);
+      }
+
+      transaction = transaction.setTimeout(StellarSdk.TimeoutInfinite).build();
 
       transaction.sign(StellarSdk.Keypair.fromSecret(secret));
       result = await server.submitTransaction(transaction);
