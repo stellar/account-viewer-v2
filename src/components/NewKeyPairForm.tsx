@@ -108,7 +108,7 @@ ${keypair.secret()}`);
                 different attacks and scams that can result in your secret key
                 being stolen.
               </li>
-              <li>Only use this option if you're aware of the risks...</li>
+              <li>Only use this option if you’re aware of the risks...</li>
               <li>
                 Ideally use other authentication methods like a hardware wallet
                 or a browser
@@ -132,20 +132,20 @@ ${keypair.secret()}`);
 
             <ul>
               <li>
-                It's really important to keep track of your secret key, and to
+                It’s really important to keep track of your secret key, and to
                 keep it safe.
               </li>
               <li>
                 Anyone who knows your secret key has access to your account.
               </li>
               <li>
-                If you lose it, you'll lose access to your account, and no one
+                If you lose it, you’ll lose access to your account, and no one
                 in the known universe will be able to help you get back in.
               </li>
               <li>
                 <strong>
                   So keep it in a safe. Write them down on a piece of paper.
-                  Don't ever keep it unencrypted on your computer or in your
+                  Don’t ever keep it unencrypted on your computer or in your
                   email.
                 </strong>
               </li>
@@ -181,7 +181,7 @@ ${keypair.secret()}`);
               onChange={toggleConfirmSavedSecretKey}
             />
             <label htmlFor="confirmSavedSecretKey">
-              I've copied my secret key to a safe place
+              I’ve copied my secret key to a safe place
             </label>
           </ConfirmWrapperEl>
 
