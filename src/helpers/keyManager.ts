@@ -11,22 +11,24 @@ export interface CreateKeyManagerResponse {
   errorMessage?: string;
 }
 
-export const createKeyManager = async (secret: string) => {
-  const keyPair = Keypair.fromSecret(secret);
-
+const createKeyManager = () => {
   const keyManager = new KeyManager({
     keyStore: new KeyManagerPlugins.MemoryKeyStore(),
     // TODO - network config
     defaultNetworkPassphrase: Networks.TESTNET,
   });
 
-  // TODO - create custom encrypter and keystore?
   keyManager.registerEncrypter(KeyManagerPlugins.ScryptEncrypter);
+  return keyManager;
+};
+
+export const storePrivateKey = async (secret: string) => {
+  const keyPair = Keypair.fromSecret(secret);
+  const keyManager = createKeyManager();
 
   const result: CreateKeyManagerResponse = {
     keyManager: undefined,
     id: "",
-    // TODO - make random?
     password: "Stellar Development Foundation",
     errorMessage: undefined,
   };

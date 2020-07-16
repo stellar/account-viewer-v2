@@ -1,15 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { KeyManager } from "@stellar/wallet-sdk";
-import { createKeyManager, CreateKeyManagerResponse } from "helpers/keyManager";
+import { storePrivateKey, CreateKeyManagerResponse } from "helpers/keyManager";
 
-export const storePrivateKey = createAsyncThunk<
+export const storePrivateKeyThunk = createAsyncThunk<
   CreateKeyManagerResponse,
   string,
   { rejectValue: RejectMessage }
 >("keyManagerThunk", async (secret: string, { rejectWithValue }) => {
   let result;
   try {
-    result = await createKeyManager(secret);
+    result = await storePrivateKey(secret);
   } catch (error) {
     return rejectWithValue({
       errorMessage: error.response?.detail || error.toString(),
@@ -41,13 +41,13 @@ const keyStoreSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(storePrivateKey.fulfilled, (state, action) => ({
+    builder.addCase(storePrivateKeyThunk.fulfilled, (state, action) => ({
       ...state,
       keyManager: action.payload.keyManager,
       id: action.payload.id,
       password: action.payload.password,
     }));
-    builder.addCase(storePrivateKey.rejected, (state, action) => ({
+    builder.addCase(storePrivateKeyThunk.rejected, (state, action) => ({
       ...state,
       errorMessage: action?.payload?.errorMessage,
     }));
