@@ -110,7 +110,7 @@ export const SigninSecretKey = () => {
                 different attacks and scams that can result in your secret key
                 being stolen.
               </li>
-              <li>Only use this option if you're aware of the risks...</li>
+              <li>Only use this option if you’re aware of the risks...</li>
               <li>
                 Ideally use other authentication methods like a hardware wallet
                 or a browser
@@ -135,7 +135,7 @@ export const SigninSecretKey = () => {
               <strong>accountviewer.stellar.org</strong>
             </p>
             <p>
-              Always check the domain you're accessing Account Viewer before
+              Always check the domain you’re accessing Account Viewer before
               pasting your keys. Scammers can replicate this page in a different
               domain in order to steal your keys.
             </p>

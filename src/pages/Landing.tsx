@@ -3,15 +3,29 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import { Modal } from "components/Modal";
+import { NewKeyPairForm } from "components/NewKeyPairForm";
 
 const TempLinkEl = styled(Link)`
   display: block;
   margin-bottom: 20px;
 `;
 
+const TempLinkButtonEl = styled.div`
+  margin-bottom: 20px;
+  text-decoration: underline;
+  cursor: pointer;
+`;
+
 export const Landing = () => {
-  const [modalVisible1, setModalVisible1] = useState(false);
-  const [modalVisible2, setModalVisible2] = useState(false);
+  const [newKeyPairModalVisible, setNewKeyPairModalVisible] = useState(false);
+
+  const openGenerateNewKeyPairModal = () => {
+    setNewKeyPairModalVisible(true);
+  };
+
+  const closeGenerateNewKeyPairModal = () => {
+    setNewKeyPairModalVisible(false);
+  };
 
   return (
     <div>
@@ -26,19 +40,15 @@ export const Landing = () => {
       <h2>Other authentication methods</h2>
       <TempLinkEl to="/auth/secretkey">Sign in using a Secret Key</TempLinkEl>
 
-      <button onClick={() => setModalVisible1(true)}>Show modal 1</button>
-      <button onClick={() => setModalVisible2(true)}>Show modal 2</button>
+      <TempLinkButtonEl onClick={openGenerateNewKeyPairModal}>
+        Generate key pair for a new account
+      </TempLinkButtonEl>
 
-      <Modal visible={modalVisible1} onClose={() => setModalVisible1(false)}>
-        <div>
-          <h2>Modal 1</h2>
-        </div>
-      </Modal>
-
-      <Modal visible={modalVisible2} onClose={() => setModalVisible2(false)}>
-        <div>
-          <h2>Modal 2</h2>
-        </div>
+      <Modal
+        visible={newKeyPairModalVisible}
+        onClose={closeGenerateNewKeyPairModal}
+      >
+        <NewKeyPairForm onClose={closeGenerateNewKeyPairModal} />
       </Modal>
     </div>
   );
