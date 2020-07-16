@@ -82,7 +82,6 @@ export const SigninSecretKey = () => {
       const publicKey = keypair.publicKey();
 
       const result = await dispatch(fetchAccount(publicKey));
-      console.log(result);
       if (fetchAccount.fulfilled.match(result as any)) {
         dispatch(storePrivateKey(secretKey));
       }
