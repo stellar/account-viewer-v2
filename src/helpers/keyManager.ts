@@ -4,6 +4,13 @@ import { Keypair, Networks } from "stellar-sdk";
 // To load privateKey: (keyStore from Redux)
 // await keyStore.keyManager.loadKey( keyStore.id, keyStore.password );
 
+export interface CreateKeyManagerResponse {
+  keyManager?: any;
+  id: string;
+  password: string;
+  errorMessage?: string;
+}
+
 export const createKeyManager = async (secret: string) => {
   const keyPair = Keypair.fromSecret(secret);
 
@@ -16,12 +23,7 @@ export const createKeyManager = async (secret: string) => {
   // TODO - create custom encrypter and keystore?
   keyManager.registerEncrypter(KeyManagerPlugins.ScryptEncrypter);
 
-  const result: {
-    keyManager?: any;
-    id: string;
-    password: string;
-    errorMessage?: string;
-  } = {
+  const result: CreateKeyManagerResponse = {
     keyManager: undefined,
     id: "",
     // TODO - make random?
