@@ -1,19 +1,18 @@
 import { KeyManager, KeyManagerPlugins, KeyType } from "@stellar/wallet-sdk";
 import { Keypair, Networks } from "stellar-sdk";
 
-// To load privateKey: (keyStore from Redux)
-// await keyStore.keyManager.loadKey( keyStore.id, keyStore.password );
-
 export interface CreateKeyManagerResponse {
-  keyManager?: KeyManager;
   id: string;
   password: string;
   errorMessage?: string;
 }
 
 const createKeyManager = () => {
+  const localKeyStore = new KeyManagerPlugins.LocalStorageKeyStore();
+  localKeyStore.configure({ storage: localStorage });
+
   const keyManager = new KeyManager({
-    keyStore: new KeyManagerPlugins.MemoryKeyStore(),
+    keyStore: localKeyStore,
     // TODO - network config
     defaultNetworkPassphrase: Networks.TESTNET,
   });
@@ -27,7 +26,6 @@ export const storePrivateKey = async (secret: string) => {
   const keyManager = createKeyManager();
 
   const result: CreateKeyManagerResponse = {
-    keyManager: undefined,
     id: "",
     password: "Stellar Development Foundation",
     errorMessage: undefined,
@@ -47,11 +45,21 @@ export const storePrivateKey = async (secret: string) => {
     });
 
     result.id = metaData.id;
-    result.keyManager = keyManager;
   } catch (err) {
     result.errorMessage = err;
     return result;
   }
 
+  return result;
+};
+
+export const loadPrivateKey = async (id: string, password: string) => {
+  const keyManager = createKeyManager();
+  let result;
+  try {
+    result = await keyManager.loadKey(id, password);
+  } catch (err) {
+    return err;
+  }
   return result;
 };
