@@ -46,7 +46,7 @@ export const sendTransaction = createAsyncThunk<
 
       transaction = transaction.setTimeout(StellarSdk.TimeoutInfinite).build();
 
-      transaction.sign(StellarSdk.Keypair.fromSecret(secret));
+      transaction.sign(keypair);
       result = await server.submitTransaction(transaction);
     } catch (error) {
       return rejectWithValue({
