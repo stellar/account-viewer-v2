@@ -5,7 +5,7 @@ import { Keypair, Networks } from "stellar-sdk";
 // await keyStore.keyManager.loadKey( keyStore.id, keyStore.password );
 
 export interface CreateKeyManagerResponse {
-  keyManager?: any;
+  keyManager?: KeyManager;
   id: string;
   password: string;
   errorMessage?: string;

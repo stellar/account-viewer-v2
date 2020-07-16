@@ -23,7 +23,7 @@ interface RejectMessage {
 }
 
 interface InitialState {
-  keyManager?: typeof KeyManager;
+  keyManager?: KeyManager;
   id: string;
   password: string;
   errorMessage?: string;
@@ -41,6 +41,9 @@ const keyStoreSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    builder.addCase(storePrivateKeyThunk.pending, () => ({
+      ...initialState,
+    }));
     builder.addCase(storePrivateKeyThunk.fulfilled, (state, action) => ({
       ...state,
       keyManager: action.payload.keyManager,
@@ -49,6 +52,7 @@ const keyStoreSlice = createSlice({
     }));
     builder.addCase(storePrivateKeyThunk.rejected, (state, action) => ({
       ...state,
+      keyManager: undefined,
       errorMessage: action?.payload?.errorMessage,
     }));
   },
