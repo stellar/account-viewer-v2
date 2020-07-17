@@ -50,7 +50,7 @@ export const sendTransaction = createAsyncThunk<
       result = await server.submitTransaction(transaction);
     } catch (error) {
       return rejectWithValue({
-        errorMessage: error.response?.detail || error.toString(),
+        errorData: error,
       });
     }
 
@@ -59,7 +59,8 @@ export const sendTransaction = createAsyncThunk<
 );
 
 interface RejectMessage {
-  errorMessage: string;
+  // TODO - any
+  errorData: any;
 }
 
 interface InitialState {
@@ -92,7 +93,7 @@ const sendTxSlice = createSlice({
       ...state,
       data: null,
       status: ActionStatus.ERROR,
-      errorMessage: action.payload?.errorMessage,
+      errorData: action.payload?.errorData,
     }));
   },
 });

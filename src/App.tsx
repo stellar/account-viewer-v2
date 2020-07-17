@@ -8,7 +8,6 @@ import { createGlobalStyle } from "styled-components";
 import { Landing } from "pages/Landing";
 import { SigninSecretKey } from "pages/SigninSecretKey";
 import { Dashboard } from "pages/Dashboard";
-import { Send } from "pages/Send";
 import { PrivateRoute } from "components/PrivateRoute";
 
 import { reducer as account } from "ducks/account";
@@ -86,10 +85,6 @@ export const App = () => (
 
           <PrivateRoute exact path="/dashboard">
             <Dashboard />
-          </PrivateRoute>
-
-          <PrivateRoute exact path="/send">
-            <Send />
           </PrivateRoute>
 
           {/* TODO: add 404 page */}

@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-// import { FulfilledAction, RejectedAction } from "@reduxjs/toolkit";
-import StellarSdk from "stellar-sdk";
+import StellarSdk, { Horizon } from "stellar-sdk";
 import styled from "styled-components";
 import BigNumber from "bignumber.js";
 import { sendTransaction } from "ducks/send";
 import { useDispatch } from "react-redux";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus } from "ducks/account";
+import { loadPrivateKey } from "helpers/keyManager";
+
+// ALEC - TODO - why doesn't all of Horizon import? Ie the TransactionResponse stuff
+console.log(Horizon);
 
 const El = styled.div``;
 
@@ -47,27 +50,38 @@ interface FormData {
   memoContent: string;
 }
 
+const initialFormData: FormData = {
+  toAccountId: "",
+  amount: new BigNumber(0),
+  fee: String(StellarSdk.BASE_FEE / 1e7),
+  memoType: StellarSdk.MemoNone,
+  memoContent: "",
+};
+
 export const SendTransactionFlow = () => {
   const [currentStage, setCurrentStage] = useState(sendTxFlowEnum.CREATE);
-  const [formData, setFormData] = useState({
-    toAccountId: "",
-    amount: new BigNumber(0),
-    fee: String(StellarSdk.BASE_FEE / 1e7),
-    memoType: StellarSdk.MemoNone,
-    memoContent: "",
-  });
+  const [formData, setFormData] = useState(initialFormData);
+
+  // TODO: specific state
+  const [txResponse, settxResponse] = useState(null);
 
   const handleNextStage = () => {
     setCurrentStage(currentStage + 1);
   };
 
-  // const handleSuccessfulTx = (result: any) => {
-  //   setCurrentStage(sendTxFlowEnum.SUCCESS);
-  // };
+  const onSuccessfulTx = (result: any) => {
+    settxResponse(result);
+    setCurrentStage(sendTxFlowEnum.SUCCESS);
+  };
 
-  const handleFailedTx = (result: any) => {
-    console.log(result);
+  const onFailedTx = (result: any) => {
+    settxResponse(result);
     setCurrentStage(sendTxFlowEnum.ERROR);
+  };
+
+  const onRestartFlow = () => {
+    setFormData(initialFormData);
+    setCurrentStage(sendTxFlowEnum.CREATE);
   };
 
   return (
@@ -87,32 +101,99 @@ export const SendTransactionFlow = () => {
         {currentStage === sendTxFlowEnum.CONFIRM && (
           <El>
             <ConfirmTransaction
-              onContinue={handleNextStage}
-              onFailedTx={handleFailedTx}
+              onSuccessfulTx={onSuccessfulTx}
+              onFailedTx={onFailedTx}
               formData={formData}
             />
           </El>
         )}
       </div>
-      <div>{currentStage === sendTxFlowEnum.SUCCESS && <El>Success</El>}</div>
-      <div>{currentStage === sendTxFlowEnum.ERROR && <El>Error</El>}</div>
+      <div>
+        {currentStage === sendTxFlowEnum.SUCCESS && (
+          <El>
+            <SuccessfulTransaction
+              txResponse={txResponse}
+              onRestartFlow={onRestartFlow}
+            />
+          </El>
+        )}
+      </div>
+      <div>
+        {currentStage === sendTxFlowEnum.ERROR && (
+          <El>
+            <FailedTransaction
+              txResponse={txResponse}
+              onEditTransaction={() => setCurrentStage(sendTxFlowEnum.CREATE)}
+            />
+          </El>
+        )}
+      </div>
     </>
   );
 };
 
+// TODO - any
+const SuccessfulTransaction = (props: {
+  onRestartFlow: () => void;
+  txResponse: any;
+}) => {
+  const { txResponse, onRestartFlow } = props;
+  return (
+    <El>
+      <h1>Success</h1>
+      <El>{txResponse.payload.result_xdr}</El>
+      <El>
+        {/* } TODO - network config */}
+        <TempAnchorEl
+          href={`https://stellar.expert/explorer/testnet/tx/${txResponse.payload.id}`}
+          target="_blank"
+        >
+          See details on StellarExpert
+        </TempAnchorEl>
+      </El>
+      <El>
+        <TempButtonEl onClick={onRestartFlow}>
+          Send another payment
+        </TempButtonEl>
+      </El>
+    </El>
+  );
+};
+
+// TODO - any
+const FailedTransaction = (props: {
+  onEditTransaction: () => void;
+  txResponse: any;
+}) => {
+  const { txResponse, onEditTransaction } = props;
+  const errorCode = txResponse.payload.errorData?.response?.status || 400;
+  return (
+    <El>
+      <h1>Transaction Failed with Status Code {errorCode}</h1>
+      <El>See details below for more information.</El>
+      {/* eslint-disable camelcase */}
+      <El>{txResponse.payload.errorData?.response?.data.extras.result_xdr}</El>
+      <El>{txResponse.payload.errorData?.message}</El>
+      <El>
+        <TempButtonEl onClick={onEditTransaction}>
+          Edit Transaction
+        </TempButtonEl>
+      </El>
+    </El>
+  );
+};
+
 interface ConfirmProps {
-  onContinue: () => void;
+  // TODO - get specific type
+  onSuccessfulTx: (result: any) => void;
   onFailedTx: (result: any) => void;
   formData: FormData;
 }
 
 const ConfirmTransaction = (props: ConfirmProps) => {
-  const { sendTx } = useRedux(["sendTx"]);
-  const { formData, onContinue, onFailedTx } = props;
+  const { sendTx, keyStore } = useRedux(["sendTx", "keyStore"]);
+  const { formData, onSuccessfulTx, onFailedTx } = props;
   const dispatch = useDispatch();
-
-  // ALEC TODO - remove hard coding
-  const secret = "SAOMIQJ6XOKB7JQTPUGOLEICC2FEJBWLFNJV3DCDPDUL74MFVJWLJNH5";
 
   const createMemo = (memoType: any, memoContent: any) => {
     switch (memoType) {
@@ -131,20 +212,18 @@ const ConfirmTransaction = (props: ConfirmProps) => {
   };
 
   const handleSend = async () => {
+    const { privateKey } = await loadPrivateKey(keyStore.id, keyStore.password);
     const result = await dispatch(
       sendTransaction({
-        // ALEC TODO - remove hardcoding
-        // account.data?.secret,
-        secret,
+        secret: privateKey,
         toAccountId: formData.toAccountId,
         amount: formData.amount,
         fee: Math.round(Number(formData.fee) * 1e7),
         memo: createMemo(formData.memoType, formData.memoContent),
       }),
     );
-    console.log(result);
     if (sendTransaction.fulfilled.match(result as any)) {
-      onContinue();
+      onSuccessfulTx(result);
     } else {
       onFailedTx(result);
     }
@@ -174,7 +253,7 @@ interface CreateProps {
 const CreateTransaction = (props: CreateProps) => {
   const { formData, onInput } = props;
 
-  const [addMemo, setAddMemo] = useState(false);
+  const [isMemoVisible, setIsMemoVisible] = useState(!!formData.memoContent);
 
   const memoPlaceholderMap: { [index: string]: string } = {
     [StellarSdk.MemoText]: "Up to 28 characters",
@@ -196,6 +275,7 @@ const CreateTransaction = (props: CreateProps) => {
           onChange={(e) =>
             onInput({ ...formData, toAccountId: e.target.value })
           }
+          value={formData.toAccountId}
           placeholder="Recipient's public key or federation address"
         ></TempInputEl>
       </El>
@@ -209,22 +289,23 @@ const CreateTransaction = (props: CreateProps) => {
               amount: new BigNumber(e.target.value || 0),
             });
           }}
+          value={formData.amount.toString()}
           placeholder="0"
         ></TempInputEl>
       </El>
       <El>
-        {!addMemo && (
+        {!isMemoVisible && (
           <TempAnchorEl
             onClick={() => {
               onInput({ ...formData, memoType: StellarSdk.MemoText });
-              setAddMemo(true);
+              setIsMemoVisible(true);
             }}
           >
             Add memo
           </TempAnchorEl>
         )}
       </El>
-      {addMemo && (
+      {isMemoVisible && (
         <>
           <El>
             Memo Type:{" "}
@@ -235,6 +316,7 @@ const CreateTransaction = (props: CreateProps) => {
                   memoType: e.target.value,
                 });
               }}
+              value={formData.memoType}
             >
               <option value={StellarSdk.MemoText}>MEMO_TEXT</option>
               <option value={StellarSdk.MemoID}>MEMO_ID</option>
@@ -253,6 +335,7 @@ const CreateTransaction = (props: CreateProps) => {
                   memoContent: e.target.value,
                 });
               }}
+              value={formData.memoContent}
             ></TempInputEl>
           </El>
           <El>
@@ -263,7 +346,7 @@ const CreateTransaction = (props: CreateProps) => {
                   memoType: StellarSdk.MemoNone,
                   memoContent: "",
                 });
-                setAddMemo(false);
+                setIsMemoVisible(false);
               }}
             >
               Remove memo:
