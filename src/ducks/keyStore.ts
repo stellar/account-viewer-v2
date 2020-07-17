@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { storePrivateKey, CreateKeyManagerResponse } from "helpers/keyManager";
 
-export const storePrivateKeyThunk = createAsyncThunk<
+export const storePrivateKeyAction = createAsyncThunk<
   CreateKeyManagerResponse,
   string,
   { rejectValue: RejectMessage }
->("keyManagerThunk", async (secret: string, { rejectWithValue }) => {
+>("keyManagerAction", async (secret: string, { rejectWithValue }) => {
   let result;
   try {
     result = await storePrivateKey(secret);
@@ -38,15 +38,15 @@ const keyStoreSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(storePrivateKeyThunk.pending, () => ({
+    builder.addCase(storePrivateKeyAction.pending, () => ({
       ...initialState,
     }));
-    builder.addCase(storePrivateKeyThunk.fulfilled, (state, action) => ({
+    builder.addCase(storePrivateKeyAction.fulfilled, (state, action) => ({
       ...state,
       id: action.payload.id,
       password: action.payload.password,
     }));
-    builder.addCase(storePrivateKeyThunk.rejected, (state, action) => ({
+    builder.addCase(storePrivateKeyAction.rejected, (state, action) => ({
       ...state,
       errorMessage: action?.payload?.errorMessage,
     }));

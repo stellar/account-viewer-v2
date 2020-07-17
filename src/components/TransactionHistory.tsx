@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { fetchTxHistoryThunk } from "ducks/txHistory";
+import { fetchTxHistoryAction } from "ducks/txHistory";
 import { useDispatch } from "react-redux";
 import { useRedux } from "hooks/useRedux";
 import styled from "styled-components";
@@ -15,7 +15,7 @@ export const TransactionHistory = () => {
 
   const handleAccountIdChange = () => {
     if (accountId) {
-      dispatch(fetchTxHistoryThunk(accountId));
+      dispatch(fetchTxHistoryAction(accountId));
     }
   };
 

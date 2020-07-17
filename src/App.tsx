@@ -40,9 +40,10 @@ const store = configureStore({
     ...getDefaultMiddleware({
       serializableCheck: {
         // Account balances in response are Non-Serializable
+
         ignoredActions: [
-          "account/fetchAccount/fulfilled",
-          "txHistory/fulfilled",
+          "account/fetchAccountAction/fulfilled",
+          "txHistoryAction/fulfilled",
         ],
         ignoredPaths: ["account.data.balances.native", "txHistory.data"],
       },

@@ -4,8 +4,8 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { Keypair } from "stellar-sdk";
 
-import { fetchAccount, ActionStatus } from "ducks/account";
-import { storePrivateKeyThunk } from "ducks/keyStore";
+import { fetchAccountAction, ActionStatus } from "ducks/account";
+import { storePrivateKeyAction } from "ducks/keyStore";
 import { useRedux } from "hooks/useRedux";
 
 const WarningEl = styled.div`
@@ -81,9 +81,9 @@ export const SigninSecretKey = () => {
       const keypair = Keypair.fromSecret(secretKey);
       const publicKey = keypair.publicKey();
 
-      const result = await dispatch(fetchAccount(publicKey));
-      if (fetchAccount.fulfilled.match(result as any)) {
-        dispatch(storePrivateKeyThunk(secretKey));
+      const result = await dispatch(fetchAccountAction(publicKey));
+      if (fetchAccountAction.fulfilled.match(result as any)) {
+        dispatch(storePrivateKeyAction(secretKey));
       }
     } catch (e) {
       // Rate limit with exponential backoff.
