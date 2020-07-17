@@ -3,11 +3,11 @@ import { DataProvider, Types } from "@stellar/wallet-sdk";
 import StellarSdk from "stellar-sdk";
 import { ActionStatus } from "./account";
 
-export const fetchTxHistoryThunk = createAsyncThunk<
+export const fetchTxHistoryAction = createAsyncThunk<
   Array<Types.Payment>,
   string,
   { rejectValue: RejectMessage }
->("txHistory", async (publicKey, { rejectWithValue }) => {
+>("txHistoryAction", async (publicKey, { rejectWithValue }) => {
   const dataProvider = new DataProvider({
     serverUrl: "https://horizon-testnet.stellar.org",
     accountOrKey: publicKey,
@@ -45,17 +45,17 @@ export const txHistorySlice = createSlice({
   initialState: initialTxHistoryState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchTxHistoryThunk.pending, (state) => ({
+    builder.addCase(fetchTxHistoryAction.pending, (state) => ({
       ...state,
       data: [],
       status: ActionStatus.PENDING,
     }));
-    builder.addCase(fetchTxHistoryThunk.fulfilled, (state, action) => ({
+    builder.addCase(fetchTxHistoryAction.fulfilled, (state, action) => ({
       ...state,
       data: action.payload,
       status: ActionStatus.SUCCESS,
     }));
-    builder.addCase(fetchTxHistoryThunk.rejected, (state, action) => ({
+    builder.addCase(fetchTxHistoryAction.rejected, (state, action) => ({
       ...state,
       data: [],
       status: ActionStatus.ERROR,

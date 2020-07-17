@@ -14,6 +14,7 @@ import { PrivateRoute } from "components/PrivateRoute";
 import { reducer as account } from "ducks/account";
 import { reducer as sendTx } from "ducks/send";
 import { reducer as txHistory } from "ducks/txHistory";
+import { reducer as keyStore } from "ducks/keyStore";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -35,14 +36,16 @@ const store = configureStore({
     account,
     sendTx,
     txHistory,
+    keyStore,
   }),
   middleware: [
     ...getDefaultMiddleware({
       serializableCheck: {
         // Account balances in response are Non-Serializable
+
         ignoredActions: [
-          "account/fetchAccount/fulfilled",
-          "txHistory/fulfilled",
+          "account/fetchAccountAction/fulfilled",
+          "txHistoryAction/fulfilled",
         ],
         ignoredPaths: ["account.data.balances.native", "txHistory.data"],
       },
