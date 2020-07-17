@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import StellarSdk, { Horizon } from "stellar-sdk";
 import styled from "styled-components";
 import BigNumber from "bignumber.js";
-import { sendTransaction } from "ducks/send";
+import { sendTxAction } from "ducks/sendTransaction";
 import { useDispatch } from "react-redux";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus } from "ducks/account";
@@ -214,7 +214,7 @@ const ConfirmTransaction = (props: ConfirmProps) => {
   const handleSend = async () => {
     const { privateKey } = await loadPrivateKey(keyStore.id, keyStore.password);
     const result = await dispatch(
-      sendTransaction({
+      sendTxAction({
         secret: privateKey,
         toAccountId: formData.toAccountId,
         amount: formData.amount,
@@ -222,7 +222,7 @@ const ConfirmTransaction = (props: ConfirmProps) => {
         memo: createMemo(formData.memoType, formData.memoContent),
       }),
     );
-    if (sendTransaction.fulfilled.match(result as any)) {
+    if (sendTxAction.fulfilled.match(result as any)) {
       onSuccessfulTx(result);
     } else {
       onFailedTx(result);

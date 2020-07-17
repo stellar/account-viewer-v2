@@ -11,7 +11,7 @@ import { Dashboard } from "pages/Dashboard";
 import { PrivateRoute } from "components/PrivateRoute";
 
 import { reducer as account } from "ducks/account";
-import { reducer as sendTx } from "ducks/send";
+import { reducer as sendTx } from "ducks/sendTransaction";
 import { reducer as txHistory } from "ducks/txHistory";
 import { reducer as keyStore } from "ducks/keyStore";
 

@@ -6,7 +6,7 @@ import { ActionStatus } from "./account";
 // TODO - network constant config
 const server = new StellarSdk.Server("https://horizon-testnet.stellar.org");
 
-export const sendTransaction = createAsyncThunk<
+export const sendTxAction = createAsyncThunk<
   any,
   {
     secret: string;
@@ -17,7 +17,7 @@ export const sendTransaction = createAsyncThunk<
   },
   { rejectValue: RejectMessage }
 >(
-  "sendTransaction",
+  "sendTxAction",
   async ({ secret, toAccountId, amount, fee, memo }, { rejectWithValue }) => {
     let result;
 
@@ -80,16 +80,16 @@ const sendTxSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(sendTransaction.pending, (state) => ({
+    builder.addCase(sendTxAction.pending, (state) => ({
       ...state,
       status: ActionStatus.PENDING,
     }));
-    builder.addCase(sendTransaction.fulfilled, (state, action) => ({
+    builder.addCase(sendTxAction.fulfilled, (state, action) => ({
       ...state,
       data: action.payload,
       status: ActionStatus.SUCCESS,
     }));
-    builder.addCase(sendTransaction.rejected, (state, action) => ({
+    builder.addCase(sendTxAction.rejected, (state, action) => ({
       ...state,
       data: null,
       status: ActionStatus.ERROR,
