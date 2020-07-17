@@ -4,7 +4,8 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { Keypair } from "stellar-sdk";
 
-import { fetchAccount, ActionStatus } from "ducks/account";
+import { fetchAccountAction, ActionStatus } from "ducks/account";
+import { storePrivateKeyAction } from "ducks/keyStore";
 import { useRedux } from "hooks/useRedux";
 
 const WarningEl = styled.div`
@@ -62,7 +63,7 @@ export const SigninSecretKey = () => {
 
   let failedAttempts = 0;
 
-  const handleSignIn = () => {
+  const handleSignIn = async () => {
     if (!secretKey) {
       // TODO:
       // eslint-disable-next-line
@@ -80,7 +81,10 @@ export const SigninSecretKey = () => {
       const keypair = Keypair.fromSecret(secretKey);
       const publicKey = keypair.publicKey();
 
-      dispatch(fetchAccount(publicKey));
+      const result = await dispatch(fetchAccountAction(publicKey));
+      if (fetchAccountAction.fulfilled.match(result as any)) {
+        dispatch(storePrivateKeyAction(secretKey));
+      }
     } catch (e) {
       // Rate limit with exponential backoff.
       failedAttempts += 1;

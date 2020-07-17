@@ -2,14 +2,14 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { DataProvider, Types } from "@stellar/wallet-sdk";
 import StellarSdk from "stellar-sdk";
 
-export const fetchAccount = createAsyncThunk<
+export const fetchAccountAction = createAsyncThunk<
   // Return type of the payload creator
   Types.AccountDetails,
   // First argument to the payload creator
   string,
   // Types for ThunkAPI
   { rejectValue: RejectMessage }
->("account/fetchAccount", async (publicKey, { rejectWithValue }) => {
+>("account/fetchAccountAction", async (publicKey, { rejectWithValue }) => {
   const dataProvider = new DataProvider({
     // TODO: move to config (support mainnet and testnet)
     serverUrl: "https://horizon-testnet.stellar.org",
@@ -59,12 +59,12 @@ const accountSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchAccount.pending, (state) => ({
+    builder.addCase(fetchAccountAction.pending, (state) => ({
       ...state,
       status: ActionStatus.PENDING,
     }));
 
-    builder.addCase(fetchAccount.fulfilled, (state, action) => ({
+    builder.addCase(fetchAccountAction.fulfilled, (state, action) => ({
       ...state,
       data: { ...action.payload },
       status: ActionStatus.SUCCESS,
@@ -73,7 +73,7 @@ const accountSlice = createSlice({
       isAuthenticated: !!action.payload,
     }));
 
-    builder.addCase(fetchAccount.rejected, (state, action) => ({
+    builder.addCase(fetchAccountAction.rejected, (state, action) => ({
       ...state,
       data: null,
       status: ActionStatus.ERROR,
