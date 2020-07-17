@@ -3,9 +3,6 @@ import StellarSdk, { Memo } from "stellar-sdk";
 import BigNumber from "bignumber.js";
 import { ActionStatus } from "./account";
 
-// TODO - network constant config
-const server = new StellarSdk.Server("https://horizon-testnet.stellar.org");
-
 export const sendTxAction = createAsyncThunk<
   any,
   {
@@ -21,6 +18,9 @@ export const sendTxAction = createAsyncThunk<
   async ({ secret, toAccountId, amount, fee, memo }, { rejectWithValue }) => {
     let result;
 
+    // TODO - network constant config
+    const server = new StellarSdk.Server("https://horizon-testnet.stellar.org");
+
     try {
       const keypair = StellarSdk.Keypair.fromSecret(secret);
       const sequence = (await server.loadAccount(keypair.publicKey())).sequence;
@@ -32,6 +32,7 @@ export const sendTxAction = createAsyncThunk<
       let transaction = new StellarSdk.TransactionBuilder(source, {
         fee,
         networkPassphrase: StellarSdk.Networks.TESTNET,
+        timebounds: await server.fetchTimebounds(100),
       }).addOperation(
         StellarSdk.Operation.payment({
           destination: toAccountId,
@@ -44,7 +45,7 @@ export const sendTxAction = createAsyncThunk<
         transaction = transaction.addMemo(memo);
       }
 
-      transaction = transaction.setTimeout(StellarSdk.TimeoutInfinite).build();
+      transaction = transaction.build();
 
       transaction.sign(keypair);
       result = await server.submitTransaction(transaction);
