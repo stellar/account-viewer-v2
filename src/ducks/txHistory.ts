@@ -1,56 +1,67 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { DataProvider, Types } from "@stellar/wallet-sdk";
 import StellarSdk from "stellar-sdk";
-import { AppDispatch } from "App";
+import { ActionStatus } from "./account";
 
-interface InitialTxHistoryState {
-  data: Array<Types.Payment>;
-  error?: string;
-  loading: boolean;
-}
-
-const initialTxHistoryState: InitialTxHistoryState = {
-  data: [],
-  error: undefined,
-  loading: false,
-};
-
-export const txHistorySlice = createSlice({
-  name: "txHistory",
-  initialState: initialTxHistoryState,
-  reducers: {
-    txHistoryPending: (state: any) => ({ ...state, loading: true }),
-    txHistorySuccess: (state: any, action) => ({
-      ...state,
-      loading: false,
-      records: action.payload,
-    }),
-    txHistoryFail: (state: any, action) => ({
-      ...state,
-      loading: false,
-      error: action.payload,
-    }),
-  },
-});
-
-// TODO - make thunk methods consistent (eg. use createAsyncChunk or not)
-// leaving like this to compare
-export const fetchAccountTxHistory = (accountId: string) => async (
-  dispatch: AppDispatch,
-) => {
-  dispatch(txHistorySlice.actions.txHistoryPending());
+export const fetchTxHistoryThunk = createAsyncThunk<
+  Array<Types.Payment>,
+  string,
+  { rejectValue: RejectMessage }
+>("txHistory", async (publicKey, { rejectWithValue }) => {
   const dataProvider = new DataProvider({
     serverUrl: "https://horizon-testnet.stellar.org",
-    accountOrKey: accountId,
+    accountOrKey: publicKey,
     networkPassphrase: StellarSdk.Networks.TESTNET,
   });
   let payments: Array<Types.Payment> | null = null;
   try {
     payments = (await dataProvider.fetchPayments())?.records;
-  } catch (err) {
-    return dispatch(txHistorySlice.actions.txHistoryFail(payments));
+  } catch (error) {
+    return rejectWithValue({
+      errorMessage: error.response?.detail || error.toString(),
+    });
   }
-  return dispatch(txHistorySlice.actions.txHistorySuccess(payments));
+  return payments;
+});
+
+interface RejectMessage {
+  errorMessage: string;
+}
+
+interface InitialTxHistoryState {
+  data: Array<Types.Payment>;
+  errorMessage?: string;
+  status: ActionStatus | undefined;
+}
+
+const initialTxHistoryState: InitialTxHistoryState = {
+  data: [],
+  errorMessage: undefined,
+  status: undefined,
 };
+
+export const txHistorySlice = createSlice({
+  name: "txHistory",
+  initialState: initialTxHistoryState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(fetchTxHistoryThunk.pending, (state) => ({
+      ...state,
+      data: [],
+      status: ActionStatus.PENDING,
+    }));
+    builder.addCase(fetchTxHistoryThunk.fulfilled, (state, action) => ({
+      ...state,
+      data: action.payload,
+      status: ActionStatus.SUCCESS,
+    }));
+    builder.addCase(fetchTxHistoryThunk.rejected, (state, action) => ({
+      ...state,
+      data: [],
+      status: ActionStatus.ERROR,
+      errorMessage: action.payload?.errorMessage,
+    }));
+  },
+});
 
 export const { reducer } = txHistorySlice;
