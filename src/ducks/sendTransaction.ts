@@ -51,7 +51,7 @@ export const sendTxAction = createAsyncThunk<
       result = await server.submitTransaction(transaction);
     } catch (error) {
       return rejectWithValue({
-        errorData: error,
+        errorData: error.response?.data || { message: error.message },
       });
     }
 
@@ -59,20 +59,22 @@ export const sendTxAction = createAsyncThunk<
   },
 );
 
+type TxErrorResponse = any;
+
 interface RejectMessage {
-  errorData: Horizon.TransactionResponse | undefined;
+  errorData: TxErrorResponse;
 }
 
 interface InitialState {
   data: Horizon.TransactionResponse | null;
   status: ActionStatus | undefined;
-  errorMessage?: string;
+  errorData?: TxErrorResponse;
 }
 
 const initialState: InitialState = {
   data: null,
   status: undefined,
-  errorMessage: undefined,
+  errorData: undefined,
 };
 
 const sendTxSlice = createSlice({
