@@ -69,7 +69,7 @@ export const SendTransactionFlow = () => {
               onContinue={() => {
                 setCurrentStage(currentStage + 1);
               }}
-              onInput={setFormData as () => void}
+              onInput={setFormData}
               formData={formData}
             />
           </div>
