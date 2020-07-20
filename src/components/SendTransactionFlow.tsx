@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+// import { Action } from "@reduxjs/toolkit";
 import StellarSdk, { Horizon } from "stellar-sdk";
 import styled from "styled-components";
 import BigNumber from "bignumber.js";
@@ -7,9 +8,7 @@ import { useDispatch } from "react-redux";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus } from "ducks/account";
 import { loadPrivateKey } from "helpers/keyManager";
-
-// ALEC - TODO - why doesn't all of Horizon import?
-console.log(Horizon);
+// import { AppDispatch } from "App";
 
 const El = styled.div``;
 
@@ -62,27 +61,12 @@ export const SendTransactionFlow = () => {
   const [currentStage, setCurrentStage] = useState(sendTxFlowEnum.CREATE);
   const [formData, setFormData] = useState(initialFormData);
 
-  // TODO: specific state
-  const [txResponse, settxResponse] = useState(null);
+  const [
+    successTxResponse,
+    setSuccessTxResponse,
+  ] = useState<Horizon.TransactionResponse | null>(null);
 
-  const handleNextStage = () => {
-    setCurrentStage(currentStage + 1);
-  };
-
-  const onSuccessfulTx = (result: any) => {
-    settxResponse(result);
-    setCurrentStage(sendTxFlowEnum.SUCCESS);
-  };
-
-  const onFailedTx = (result: any) => {
-    settxResponse(result);
-    setCurrentStage(sendTxFlowEnum.ERROR);
-  };
-
-  const onRestartFlow = () => {
-    setFormData(initialFormData);
-    setCurrentStage(sendTxFlowEnum.CREATE);
-  };
+  const [failedTxResponse, setFailedTxResponse] = useState(null);
 
   return (
     <>
@@ -90,7 +74,9 @@ export const SendTransactionFlow = () => {
         {currentStage === sendTxFlowEnum.CREATE && (
           <div>
             <CreateTransaction
-              onContinue={handleNextStage}
+              onContinue={() => {
+                setCurrentStage(currentStage + 1);
+              }}
               onInput={setFormData as () => void}
               formData={formData}
             />
@@ -101,145 +87,42 @@ export const SendTransactionFlow = () => {
         {currentStage === sendTxFlowEnum.CONFIRM && (
           <El>
             <ConfirmTransaction
-              onSuccessfulTx={onSuccessfulTx}
-              onFailedTx={onFailedTx}
+              onSuccessfulTx={(result) => {
+                setSuccessTxResponse(result);
+                setCurrentStage(sendTxFlowEnum.SUCCESS);
+              }}
+              onFailedTx={(result) => {
+                setFailedTxResponse(result);
+                setCurrentStage(sendTxFlowEnum.ERROR);
+              }}
               formData={formData}
             />
           </El>
         )}
       </div>
       <div>
-        {currentStage === sendTxFlowEnum.SUCCESS && (
+        {currentStage === sendTxFlowEnum.SUCCESS && successTxResponse && (
           <El>
             <SuccessfulTransaction
-              txResponse={txResponse}
-              onRestartFlow={onRestartFlow}
+              txResponse={successTxResponse}
+              onRestartFlow={() => {
+                setFormData(initialFormData);
+                setCurrentStage(sendTxFlowEnum.CREATE);
+              }}
             />
           </El>
         )}
       </div>
       <div>
-        {currentStage === sendTxFlowEnum.ERROR && (
+        {currentStage === sendTxFlowEnum.ERROR && failedTxResponse && (
           <El>
             <FailedTransaction
-              txResponse={txResponse}
+              txResponse={failedTxResponse}
               onEditTransaction={() => setCurrentStage(sendTxFlowEnum.CREATE)}
             />
           </El>
         )}
       </div>
-    </>
-  );
-};
-
-// TODO - any
-const SuccessfulTransaction = (props: {
-  onRestartFlow: () => void;
-  txResponse: any;
-}) => {
-  const { txResponse, onRestartFlow } = props;
-  return (
-    <El>
-      <h1>Success</h1>
-      <El>{txResponse.payload.result_xdr}</El>
-      <El>
-        {/* } TODO - network config */}
-        <TempAnchorEl
-          href={`https://stellar.expert/explorer/testnet/tx/${txResponse.payload.id}`}
-          target="_blank"
-        >
-          See details on StellarExpert
-        </TempAnchorEl>
-      </El>
-      <El>
-        <TempButtonEl onClick={onRestartFlow}>
-          Send another payment
-        </TempButtonEl>
-      </El>
-    </El>
-  );
-};
-
-// TODO - any
-const FailedTransaction = (props: {
-  onEditTransaction: () => void;
-  txResponse: any;
-}) => {
-  const { txResponse, onEditTransaction } = props;
-  const errorCode = txResponse.payload.errorData?.response?.status || 400;
-  return (
-    <El>
-      <h1>Transaction Failed with Status Code {errorCode}</h1>
-      <El>See details below for more information.</El>
-      {/* eslint-disable camelcase */}
-      <El>{txResponse.payload.errorData?.response?.data.extras.result_xdr}</El>
-      <El>{txResponse.payload.errorData?.message}</El>
-      <El>
-        <TempButtonEl onClick={onEditTransaction}>
-          Edit Transaction
-        </TempButtonEl>
-      </El>
-    </El>
-  );
-};
-
-interface ConfirmProps {
-  // TODO - get specific type
-  onSuccessfulTx: (result: any) => void;
-  onFailedTx: (result: any) => void;
-  formData: FormData;
-}
-
-const ConfirmTransaction = (props: ConfirmProps) => {
-  const { sendTx, keyStore } = useRedux(["sendTx", "keyStore"]);
-  const { formData, onSuccessfulTx, onFailedTx } = props;
-  const dispatch = useDispatch();
-
-  const createMemo = (memoType: any, memoContent: any) => {
-    switch (memoType) {
-      case StellarSdk.MemoText:
-        return StellarSdk.Memo.text(memoContent);
-      case StellarSdk.MemoID:
-        return StellarSdk.Memo.id(memoContent);
-      case StellarSdk.MemoHash:
-        return StellarSdk.Memo.hash(memoContent);
-      case StellarSdk.MemoReturn:
-        return StellarSdk.Memo.return(memoContent);
-      case StellarSdk.MemoNone:
-      default:
-        return StellarSdk.Memo.none();
-    }
-  };
-
-  const handleSend = async () => {
-    const { privateKey } = await loadPrivateKey(keyStore.id, keyStore.password);
-    const result = await dispatch(
-      sendTxAction({
-        secret: privateKey,
-        toAccountId: formData.toAccountId,
-        amount: formData.amount,
-        fee: Math.round(Number(formData.fee) * 1e7),
-        memo: createMemo(formData.memoType, formData.memoContent),
-      }),
-    );
-    if (sendTxAction.fulfilled.match(result as any)) {
-      onSuccessfulTx(result);
-    } else {
-      onFailedTx(result);
-    }
-  };
-
-  return (
-    <>
-      <h1>Confirm Transaction</h1>
-      <El>Sending to address: {formData.toAccountId}</El>
-      <El>Amount: {formData.amount.toString()}</El>
-      <El>Memo: {formData.memoContent}</El>
-      <El>Fee: {formData.fee}</El>
-      <TempButtonEl onClick={handleSend}>Send</TempButtonEl>
-      {sendTx.status === ActionStatus.PENDING && (
-        <El>Submitting Transaction</El>
-      )}
     </>
   );
 };
@@ -365,6 +248,117 @@ const CreateTransaction = (props: CreateProps) => {
         ></TempInputEl>
       </El>
       <button onClick={props.onContinue}>Continue</button>
+    </El>
+  );
+};
+
+interface ConfirmProps {
+  onSuccessfulTx: (result: Horizon.TransactionResponse) => void;
+  onFailedTx: (result: any) => void;
+  formData: FormData;
+}
+
+const ConfirmTransaction = (props: ConfirmProps) => {
+  const { sendTx, keyStore } = useRedux(["sendTx", "keyStore"]);
+  const { formData, onSuccessfulTx, onFailedTx } = props;
+  const dispatch = useDispatch();
+
+  const createMemo = (memoType: any, memoContent: any) => {
+    switch (memoType) {
+      case StellarSdk.MemoText:
+        return StellarSdk.Memo.text(memoContent);
+      case StellarSdk.MemoID:
+        return StellarSdk.Memo.id(memoContent);
+      case StellarSdk.MemoHash:
+        return StellarSdk.Memo.hash(memoContent);
+      case StellarSdk.MemoReturn:
+        return StellarSdk.Memo.return(memoContent);
+      case StellarSdk.MemoNone:
+      default:
+        return StellarSdk.Memo.none();
+    }
+  };
+
+  const handleSend = async () => {
+    const { privateKey } = await loadPrivateKey(keyStore.id, keyStore.password);
+    const result = await dispatch(
+      sendTxAction({
+        secret: privateKey,
+        toAccountId: formData.toAccountId,
+        amount: formData.amount,
+        fee: Math.round(Number(formData.fee) * 1e7),
+        memo: createMemo(formData.memoType, formData.memoContent),
+      }),
+    );
+
+    if (sendTxAction.fulfilled.match(result as any)) {
+      onSuccessfulTx((result as any).payload);
+    } else {
+      onFailedTx((result as any).payload);
+    }
+  };
+
+  return (
+    <>
+      <h1>Confirm Transaction</h1>
+      <El>Sending to address: {formData.toAccountId}</El>
+      <El>Amount: {formData.amount.toString()}</El>
+      <El>Memo: {formData.memoContent}</El>
+      <El>Fee: {formData.fee}</El>
+      <TempButtonEl onClick={handleSend}>Send</TempButtonEl>
+      {sendTx.status === ActionStatus.PENDING && (
+        <El>Submitting Transaction</El>
+      )}
+    </>
+  );
+};
+
+const SuccessfulTransaction = (props: {
+  onRestartFlow: () => void;
+  txResponse: Horizon.TransactionResponse;
+}) => {
+  const { txResponse, onRestartFlow } = props;
+  return (
+    <El>
+      <h1>Success</h1>
+      <El>{txResponse && txResponse.result_xdr}</El>
+      <El>
+        {/* } TODO - network config */}
+        <TempAnchorEl
+          href={`https://stellar.expert/explorer/testnet/tx/${txResponse.id}`}
+          target="_blank"
+        >
+          See details on StellarExpert
+        </TempAnchorEl>
+      </El>
+      <El>
+        <TempButtonEl onClick={onRestartFlow}>
+          Send another payment
+        </TempButtonEl>
+      </El>
+    </El>
+  );
+};
+
+const FailedTransaction = (props: {
+  onEditTransaction: () => void;
+  txResponse: any;
+}) => {
+  const { txResponse, onEditTransaction } = props;
+  const errorCode = txResponse.errorData.response?.status || 400;
+
+  return (
+    <El>
+      <h1>Transaction Failed with Status Code {errorCode}</h1>
+      <El>See details below for more information.</El>
+      {/* eslint-disable camelcase */}
+      <El>{txResponse.errorData.response?.data.extras.result_xdr}</El>
+      <El>{txResponse.errorData.message}</El>
+      <El>
+        <TempButtonEl onClick={onEditTransaction}>
+          Edit Transaction
+        </TempButtonEl>
+      </El>
     </El>
   );
 };

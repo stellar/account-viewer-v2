@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import StellarSdk, { Memo } from "stellar-sdk";
+import StellarSdk, { Memo, Horizon } from "stellar-sdk";
 import BigNumber from "bignumber.js";
 import { ActionStatus } from "./account";
 
 export const sendTxAction = createAsyncThunk<
-  any,
+  Horizon.TransactionResponse,
   {
     secret: string;
     toAccountId: string;
@@ -60,12 +60,11 @@ export const sendTxAction = createAsyncThunk<
 );
 
 interface RejectMessage {
-  // TODO - any
-  errorData: any;
+  errorData: Horizon.TransactionResponse | undefined;
 }
 
 interface InitialState {
-  data: any;
+  data: Horizon.TransactionResponse | null;
   status: ActionStatus | undefined;
   errorMessage?: string;
 }
