@@ -8,7 +8,7 @@ import { useRedux } from "hooks/useRedux";
 import { ActionStatus } from "ducks/account";
 import { loadPrivateKey } from "helpers/keyManager";
 
-// ALEC - TODO - why doesn't all of Horizon import? Ie the TransactionResponse stuff
+// ALEC - TODO - why doesn't all of Horizon import?
 console.log(Horizon);
 
 const El = styled.div``;
@@ -34,7 +34,7 @@ const TempAnchorEl = styled.a`
   text-decoration: underline;
 `;
 
-// CREATE -> CONFIRM -> SUBMIT -> SUCCESS -> ERROR
+// CREATE -> CONFIRM -> SUCCESS || ERROR
 const sendTxFlowEnum = {
   CREATE: 0,
   CONFIRM: 1,

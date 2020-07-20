@@ -68,9 +68,6 @@ export const App = () => (
             <li>
               <Link to="/dashboard">Dashboard</Link>
             </li>
-            <li>
-              <Link to="/send">Send</Link>
-            </li>
           </ul>
         </nav>
 
