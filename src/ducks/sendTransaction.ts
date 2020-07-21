@@ -1,63 +1,34 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import StellarSdk, { Memo, Horizon } from "stellar-sdk";
+import { MemoType, MemoValue, Horizon } from "stellar-sdk";
 import BigNumber from "bignumber.js";
+import { submitPaymentTransaction } from "helpers/submitPaymentTransaction";
 import { ActionStatus } from "./account";
+
+export interface PaymentTransactionParams {
+  secret: string;
+  toAccountId: string;
+  amount: BigNumber;
+  fee: number;
+  memoType: MemoType;
+  memoContent: MemoValue;
+}
 
 export const sendTxAction = createAsyncThunk<
   Horizon.TransactionResponse,
-  {
-    secret: string;
-    toAccountId: string;
-    amount: BigNumber;
-    fee: number;
-    memo: Memo;
-  },
+  PaymentTransactionParams,
   { rejectValue: RejectMessage }
->(
-  "sendTxAction",
-  async ({ secret, toAccountId, amount, fee, memo }, { rejectWithValue }) => {
-    let result;
+>("sendTxAction", async (params, { rejectWithValue }) => {
+  let result;
+  try {
+    result = await submitPaymentTransaction(params);
+  } catch (error) {
+    return rejectWithValue({
+      errorData: error.response?.data || { message: error.message },
+    });
+  }
 
-    // TODO - network constant config
-    const server = new StellarSdk.Server("https://horizon-testnet.stellar.org");
-
-    try {
-      const keypair = StellarSdk.Keypair.fromSecret(secret);
-      const sequence = (await server.loadAccount(keypair.publicKey())).sequence;
-      const source = await new StellarSdk.Account(
-        keypair.publicKey(),
-        sequence,
-      );
-
-      let transaction = new StellarSdk.TransactionBuilder(source, {
-        fee,
-        networkPassphrase: StellarSdk.Networks.TESTNET,
-        timebounds: await server.fetchTimebounds(100),
-      }).addOperation(
-        StellarSdk.Operation.payment({
-          destination: toAccountId,
-          asset: StellarSdk.Asset.native(),
-          amount: amount.toString(),
-        }),
-      );
-
-      if (memo.type !== StellarSdk.MemoNone) {
-        transaction = transaction.addMemo(memo);
-      }
-
-      transaction = transaction.build();
-
-      transaction.sign(keypair);
-      result = await server.submitTransaction(transaction);
-    } catch (error) {
-      return rejectWithValue({
-        errorData: error.response?.data || { message: error.message },
-      });
-    }
-
-    return result;
-  },
-);
+  return result;
+});
 
 type TxErrorResponse = any;
 

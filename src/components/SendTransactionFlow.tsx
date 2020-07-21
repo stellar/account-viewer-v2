@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 // import { Action } from "@reduxjs/toolkit";
-import StellarSdk from "stellar-sdk";
+import StellarSdk, { MemoType, MemoValue } from "stellar-sdk";
 import styled from "styled-components";
 import BigNumber from "bignumber.js";
 import { sendTxAction } from "ducks/sendTransaction";
@@ -33,19 +33,19 @@ const TempAnchorEl = styled.a`
 `;
 
 // CREATE -> CONFIRM -> SUCCESS || ERROR
-const sendTxFlowEnum = {
-  CREATE: 0,
-  CONFIRM: 1,
-  SUCCESS: 2,
-  ERROR: 3,
-};
+enum sendState {
+  CREATE,
+  CONFIRM,
+  SUCCESS,
+  ERROR,
+}
 
 interface FormData {
   toAccountId: string;
   amount: BigNumber;
   fee: string;
-  memoType: string;
-  memoContent: string;
+  memoType: MemoType;
+  memoContent: MemoValue;
 }
 
 const initialFormData: FormData = {
@@ -57,13 +57,13 @@ const initialFormData: FormData = {
 };
 
 export const SendTransactionFlow = () => {
-  const [currentStage, setCurrentStage] = useState(sendTxFlowEnum.CREATE);
+  const [currentStage, setCurrentStage] = useState(sendState.CREATE);
   const [formData, setFormData] = useState(initialFormData);
 
   return (
     <>
       <div>
-        {currentStage === sendTxFlowEnum.CREATE && (
+        {currentStage === sendState.CREATE && (
           <div>
             <CreateTransaction
               onContinue={() => {
@@ -76,14 +76,14 @@ export const SendTransactionFlow = () => {
         )}
       </div>
       <div>
-        {currentStage === sendTxFlowEnum.CONFIRM && (
+        {currentStage === sendState.CONFIRM && (
           <El>
             <ConfirmTransaction
               onSuccessfulTx={() => {
-                setCurrentStage(sendTxFlowEnum.SUCCESS);
+                setCurrentStage(sendState.SUCCESS);
               }}
               onFailedTx={() => {
-                setCurrentStage(sendTxFlowEnum.ERROR);
+                setCurrentStage(sendState.ERROR);
               }}
               formData={formData}
             />
@@ -91,22 +91,22 @@ export const SendTransactionFlow = () => {
         )}
       </div>
       <div>
-        {currentStage === sendTxFlowEnum.SUCCESS && (
+        {currentStage === sendState.SUCCESS && (
           <El>
             <SuccessfulTransaction
               onRestartFlow={() => {
                 setFormData(initialFormData);
-                setCurrentStage(sendTxFlowEnum.CREATE);
+                setCurrentStage(sendState.CREATE);
               }}
             />
           </El>
         )}
       </div>
       <div>
-        {currentStage === sendTxFlowEnum.ERROR && (
+        {currentStage === sendState.ERROR && (
           <El>
             <FailedTransaction
-              onEditTransaction={() => setCurrentStage(sendTxFlowEnum.CREATE)}
+              onEditTransaction={() => setCurrentStage(sendState.CREATE)}
             />
           </El>
         )}
@@ -184,7 +184,7 @@ const CreateTransaction = (props: CreateProps) => {
               onChange={(e) => {
                 onInput({
                   ...formData,
-                  memoType: e.target.value,
+                  memoType: e.target.value as MemoType,
                 });
               }}
               value={formData.memoType}
@@ -199,14 +199,16 @@ const CreateTransaction = (props: CreateProps) => {
             Memo Content:{" "}
             <TempInputEl
               type="text"
-              placeholder={memoPlaceholderMap[formData.memoType]}
+              placeholder={
+                memoPlaceholderMap[formData.memoType || StellarSdk.MemoNone]
+              }
               onChange={(e) => {
                 onInput({
                   ...formData,
                   memoContent: e.target.value,
                 });
               }}
-              value={formData.memoContent}
+              value={formData.memoContent as string}
             ></TempInputEl>
           </El>
           <El>
@@ -251,22 +253,6 @@ const ConfirmTransaction = (props: ConfirmProps) => {
   const { formData, onSuccessfulTx, onFailedTx } = props;
   const dispatch = useDispatch();
 
-  const createMemo = (memoType: string, memoContent: string) => {
-    switch (memoType) {
-      case StellarSdk.MemoText:
-        return StellarSdk.Memo.text(memoContent);
-      case StellarSdk.MemoID:
-        return StellarSdk.Memo.id(memoContent);
-      case StellarSdk.MemoHash:
-        return StellarSdk.Memo.hash(memoContent);
-      case StellarSdk.MemoReturn:
-        return StellarSdk.Memo.return(memoContent);
-      case StellarSdk.MemoNone:
-      default:
-        return StellarSdk.Memo.none();
-    }
-  };
-
   const handleSend = async () => {
     const { privateKey } = await loadPrivateKey(keyStore.id, keyStore.password);
     const result = await dispatch(
@@ -276,7 +262,8 @@ const ConfirmTransaction = (props: ConfirmProps) => {
         amount: formData.amount,
         // Round to nearest Stroom
         fee: Math.round(Number(formData.fee) * 1e7),
-        memo: createMemo(formData.memoType, formData.memoContent),
+        memoType: formData.memoType,
+        memoContent: formData.memoContent,
       }),
     );
 
