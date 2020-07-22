@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useRedux } from "hooks/useRedux";
 import { TransactionHistory } from "components/TransactionHistory";
-import { SendTransactionFlow } from "components/SendTransactionFlow";
+import { SendTransactionFlow } from "components/SendTransaction/SendTransactionFlow";
 import { Modal } from "components/Modal";
 
 const El = styled.div`
