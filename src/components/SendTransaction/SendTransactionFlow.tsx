@@ -10,7 +10,7 @@ import { FailedTransaction } from "./FailedTransaction";
 const El = styled.div``;
 
 // CREATE -> CONFIRM -> SUCCESS || ERROR
-enum sendState {
+enum SendState {
   CREATE,
   CONFIRM,
   SUCCESS,
@@ -34,13 +34,13 @@ const initialFormData: FormData = {
 };
 
 export const SendTransactionFlow = () => {
-  const [currentStage, setCurrentStage] = useState(sendState.CREATE);
+  const [currentStage, setCurrentStage] = useState(SendState.CREATE);
   const [formData, setFormData] = useState(initialFormData);
 
   return (
     <>
       <div>
-        {currentStage === sendState.CREATE && (
+        {currentStage === SendState.CREATE && (
           <div>
             <CreateTransaction
               onContinue={() => {
@@ -53,14 +53,14 @@ export const SendTransactionFlow = () => {
         )}
       </div>
       <div>
-        {currentStage === sendState.CONFIRM && (
+        {currentStage === SendState.CONFIRM && (
           <El>
             <ConfirmTransaction
               onSuccessfulTx={() => {
-                setCurrentStage(sendState.SUCCESS);
+                setCurrentStage(SendState.SUCCESS);
               }}
               onFailedTx={() => {
-                setCurrentStage(sendState.ERROR);
+                setCurrentStage(SendState.ERROR);
               }}
               formData={formData}
             />
@@ -68,22 +68,22 @@ export const SendTransactionFlow = () => {
         )}
       </div>
       <div>
-        {currentStage === sendState.SUCCESS && (
+        {currentStage === SendState.SUCCESS && (
           <El>
             <SuccessfulTransaction
               onRestartFlow={() => {
                 setFormData(initialFormData);
-                setCurrentStage(sendState.CREATE);
+                setCurrentStage(SendState.CREATE);
               }}
             />
           </El>
         )}
       </div>
       <div>
-        {currentStage === sendState.ERROR && (
+        {currentStage === SendState.ERROR && (
           <El>
             <FailedTransaction
-              onEditTransaction={() => setCurrentStage(sendState.CREATE)}
+              onEditTransaction={() => setCurrentStage(SendState.CREATE)}
             />
           </El>
         )}
