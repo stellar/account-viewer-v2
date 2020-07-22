@@ -1,6 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
+import {
+  configureStore,
+  getDefaultMiddleware,
+  isPlain,
+} from "@reduxjs/toolkit";
 import { combineReducers, Action } from "redux";
 import { Provider } from "react-redux";
 import { createGlobalStyle } from "styled-components";
@@ -14,6 +18,8 @@ import { reducer as account } from "ducks/account";
 import { reducer as sendTx } from "ducks/sendTransaction";
 import { reducer as txHistory } from "ducks/txHistory";
 import { reducer as keyStore } from "ducks/keyStore";
+
+import BigNumber from "bignumber.js";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -30,6 +36,9 @@ const loggerMiddleware = (store: any) => (next: any) => (
   return dispatchedAction;
 };
 
+const isSerializable = (value: any) =>
+  BigNumber.isBigNumber(value) || isPlain(value);
+
 const store = configureStore({
   reducer: combineReducers({
     account,
@@ -40,13 +49,7 @@ const store = configureStore({
   middleware: [
     ...getDefaultMiddleware({
       serializableCheck: {
-        // Account balances in response are Non-Serializable
-
-        ignoredActions: [
-          "account/fetchAccountAction/fulfilled",
-          "txHistoryAction/fulfilled",
-        ],
-        ignoredPaths: ["account.data.balances.native", "txHistory.data"],
+        isSerializable,
       },
     }),
     loggerMiddleware,
