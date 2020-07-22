@@ -1,12 +1,11 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import { combineReducers, Action } from "redux";
 import { Provider } from "react-redux";
 import { createGlobalStyle } from "styled-components";
 
 import { Landing } from "pages/Landing";
-import { SigninSecretKey } from "pages/SigninSecretKey";
 import { Dashboard } from "pages/Dashboard";
 import { Send } from "pages/Send";
 import { PrivateRoute } from "components/PrivateRoute";
@@ -59,27 +58,10 @@ export const App = () => (
     <Router>
       <div>
         <GlobalStyle />
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Landing</Link>
-            </li>
-            <li>
-              <Link to="/dashboard">Dashboard</Link>
-            </li>
-            <li>
-              <Link to="/send">Send</Link>
-            </li>
-          </ul>
-        </nav>
 
         <Switch>
           <Route exact path="/">
             <Landing />
-          </Route>
-
-          <Route exact path="/auth/secretkey">
-            <SigninSecretKey />
           </Route>
 
           <PrivateRoute exact path="/dashboard">
