@@ -8,10 +8,10 @@ import { createGlobalStyle } from "styled-components";
 import { Landing } from "pages/Landing";
 import { SigninSecretKey } from "pages/SigninSecretKey";
 import { Dashboard } from "pages/Dashboard";
-import { Send } from "pages/Send";
 import { PrivateRoute } from "components/PrivateRoute";
 
 import { reducer as account } from "ducks/account";
+import { reducer as sendTx } from "ducks/sendTransaction";
 import { reducer as txHistory } from "ducks/txHistory";
 import { reducer as keyStore } from "ducks/keyStore";
 
@@ -33,6 +33,7 @@ const loggerMiddleware = (store: any) => (next: any) => (
 const store = configureStore({
   reducer: combineReducers({
     account,
+    sendTx,
     txHistory,
     keyStore,
   }),
@@ -67,9 +68,6 @@ export const App = () => (
             <li>
               <Link to="/dashboard">Dashboard</Link>
             </li>
-            <li>
-              <Link to="/send">Send</Link>
-            </li>
           </ul>
         </nav>
 
@@ -84,10 +82,6 @@ export const App = () => (
 
           <PrivateRoute exact path="/dashboard">
             <Dashboard />
-          </PrivateRoute>
-
-          <PrivateRoute exact path="/send">
-            <Send />
           </PrivateRoute>
 
           {/* TODO: add 404 page */}
