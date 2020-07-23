@@ -27,6 +27,7 @@
     "redux": "^4.0.5",
     "stellar-sdk": "^5.0.4",
     "styled-components": "^5.1.1",
+    "trezor-connect": "^8.1.8",
     "typescript": "~3.7.2"
   },
   "scripts": {
