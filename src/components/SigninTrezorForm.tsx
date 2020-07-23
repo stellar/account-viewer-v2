@@ -118,6 +118,8 @@ export const SigninTrezorForm = ({ onClose }: SigninTrezorFormProps) => {
     dispatch(trezorActions.reset());
   };
 
+  // TODO: once network config is in place, make sure everything is reset
+  // properly (errors cleared, etc)
   useEffect(resetOnMount, []);
   useEffect(handleTrezorStatusChange, [trezorStatus, trezorErrorMessage]);
   useEffect(handleAccountStatusChange, [accountStatus, accountErrorMessage]);

@@ -11,7 +11,7 @@ export const fetchTrezorStellarAddressAction = createAsyncThunk<
   // Types for ThunkAPI
   { rejectValue: RejectMessage }
 >(
-  "wallet/trezor/fetchTrezorStellarAddressAction",
+  "walletTrezor/fetchTrezorStellarAddressAction",
   async (_, { rejectWithValue }) => {
     try {
       const trezorResponse = await TrezorConnect.stellarGetAddress({
@@ -60,7 +60,7 @@ const initialState: InitialState = {
 };
 
 const walletTrezorSlice = createSlice({
-  name: "account",
+  name: "walletTrezor",
   initialState,
   reducers: {
     reset: () => initialState,
