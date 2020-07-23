@@ -37,6 +37,7 @@ const isFederationAddress = (value: string) => value.includes("*");
 export const CreateTransaction = (props: CreateProps) => {
   const { formData, onInput } = props;
   const [isMemoVisible, setIsMemoVisible] = useState(!!formData.memoContent);
+  const [isMemoReadOnly, setIsMemoReadOnly] = useState(false);
   const [
     federationAddressFetchStatus,
     setFederationAddressFetchStatus,
@@ -59,15 +60,23 @@ export const CreateTransaction = (props: CreateProps) => {
       try {
         const response = await FederationServer.resolve(toAccountId);
         setFederationAddressFetchStatus(ActionStatus.SUCCESS);
-        if (response.memo_type || response.memo) {
+
+        if (response.memo) {
           setIsMemoVisible(true);
+          setIsMemoReadOnly(true);
+
+          onInput({
+            ...formData,
+            federationAddress: response.account_id,
+            memoType: response.memo_type || StellarSdk.MemoText,
+            memoContent: response.memo,
+          });
+        } else {
+          onInput({
+            ...formData,
+            federationAddress: response.account_id,
+          });
         }
-        onInput({
-          ...formData,
-          federationAddress: response.account_id,
-          memoType: (response.memo_type as MemoType) || formData.memoType,
-          memoContent: response.memo || formData.memoContent,
-        });
       } catch (err) {
         setFederationAddressFetchStatus(ActionStatus.ERROR);
       }
@@ -150,6 +159,7 @@ export const CreateTransaction = (props: CreateProps) => {
                 });
               }}
               value={formData.memoType}
+              disabled={isMemoReadOnly}
             >
               <option value={StellarSdk.MemoText}>MEMO_TEXT</option>
               <option value={StellarSdk.MemoID}>MEMO_ID</option>
@@ -171,21 +181,24 @@ export const CreateTransaction = (props: CreateProps) => {
                 });
               }}
               value={formData.memoContent as string}
+              disabled={isMemoReadOnly}
             ></TempInputEl>
           </El>
           <El>
-            <TempAnchorEl
-              onClick={() => {
-                onInput({
-                  ...formData,
-                  memoType: StellarSdk.MemoNone,
-                  memoContent: "",
-                });
-                setIsMemoVisible(false);
-              }}
-            >
-              Remove memo:
-            </TempAnchorEl>
+            {!isMemoReadOnly && (
+              <TempAnchorEl
+                onClick={() => {
+                  onInput({
+                    ...formData,
+                    memoType: StellarSdk.MemoNone,
+                    memoContent: "",
+                  });
+                  setIsMemoVisible(false);
+                }}
+              >
+                Remove memo:
+              </TempAnchorEl>
+            )}
           </El>
         </>
       )}
