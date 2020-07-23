@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import StellarSdk, { MemoType , FederationServer } from "stellar-sdk";
+import StellarSdk, { MemoType, FederationServer } from "stellar-sdk";
 import styled from "styled-components";
 import BigNumber from "bignumber.js";
 import { ActionStatus } from "ducks/account";
 import { FormData } from "./SendTransactionFlow";
-
 
 const El = styled.div`
   margin-bottom: 20px;
@@ -63,6 +62,8 @@ export const CreateTransaction = (props: CreateProps) => {
         onInput({
           ...formData,
           federationAddress: response.account_id,
+          memoType: (response.memo_type as MemoType) || formData.memoType,
+          memoContent: response.memo || formData.memoContent,
         });
       } catch (err) {
         setFederationAddressFetchStatus(ActionStatus.ERROR);
@@ -95,7 +96,7 @@ export const CreateTransaction = (props: CreateProps) => {
       {federationAddressFetchStatus && (
         <El>
           {federationAddressFetchStatus === ActionStatus.PENDING && (
-            <El>Loading federation address...</El>
+            <El>Loading federation address…</El>
           )}
           {federationAddressFetchStatus === ActionStatus.SUCCESS && (
             <>
