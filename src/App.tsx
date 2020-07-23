@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import {
   configureStore,
   getDefaultMiddleware,
@@ -10,7 +10,6 @@ import { Provider } from "react-redux";
 import { createGlobalStyle } from "styled-components";
 
 import { Landing } from "pages/Landing";
-import { SigninSecretKey } from "pages/SigninSecretKey";
 import { Dashboard } from "pages/Dashboard";
 import { PrivateRoute } from "components/PrivateRoute";
 
@@ -18,6 +17,7 @@ import { reducer as account } from "ducks/account";
 import { reducer as sendTx } from "ducks/sendTransaction";
 import { reducer as txHistory } from "ducks/txHistory";
 import { reducer as keyStore } from "ducks/keyStore";
+import { reducer as walletTrezor } from "ducks/wallet/trezor";
 
 import BigNumber from "bignumber.js";
 
@@ -45,6 +45,7 @@ const store = configureStore({
     sendTx,
     txHistory,
     keyStore,
+    walletTrezor,
   }),
   middleware: [
     ...getDefaultMiddleware({
@@ -63,24 +64,10 @@ export const App = () => (
     <Router>
       <div>
         <GlobalStyle />
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Landing</Link>
-            </li>
-            <li>
-              <Link to="/dashboard">Dashboard</Link>
-            </li>
-          </ul>
-        </nav>
 
         <Switch>
           <Route exact path="/">
             <Landing />
-          </Route>
-
-          <Route exact path="/auth/secretkey">
-            <SigninSecretKey />
           </Route>
 
           <PrivateRoute exact path="/dashboard">

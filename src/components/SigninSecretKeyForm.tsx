@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { Keypair } from "stellar-sdk";
@@ -12,11 +12,6 @@ const WarningEl = styled.div`
   background-color: #f3e5e5;
   color: #681e1e;
   padding: 20px;
-  margin-bottom: 20px;
-`;
-
-const TempLinkEl = styled(Link)`
-  display: block;
   margin-bottom: 20px;
 `;
 
@@ -34,7 +29,17 @@ const TempErrorEl = styled.div`
   margin-bottom: 20px;
 `;
 
-export const SigninSecretKey = () => {
+const TempLinkButtonEl = styled.div`
+  margin-bottom: 20px;
+  text-decoration: underline;
+  cursor: pointer;
+`;
+
+interface SigninSecretKeyFormProps {
+  onClose?: () => void;
+}
+
+export const SigninSecretKeyForm = ({ onClose }: SigninSecretKeyFormProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -127,7 +132,7 @@ export const SigninSecretKey = () => {
             I understand the risks of pasting my secret key
           </TempButtonEl>
 
-          <TempLinkEl to="/">Cancel</TempLinkEl>
+          <TempLinkButtonEl onClick={onClose}>Cancel</TempLinkButtonEl>
         </div>
       )}
 
