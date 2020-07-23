@@ -1,18 +1,25 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
+import {
+  configureStore,
+  getDefaultMiddleware,
+  isPlain,
+} from "@reduxjs/toolkit";
 import { combineReducers, Action } from "redux";
 import { Provider } from "react-redux";
 import { createGlobalStyle } from "styled-components";
 
 import { Landing } from "pages/Landing";
 import { Dashboard } from "pages/Dashboard";
-import { Send } from "pages/Send";
 import { PrivateRoute } from "components/PrivateRoute";
 
 import { reducer as account } from "ducks/account";
+import { reducer as sendTx } from "ducks/sendTransaction";
 import { reducer as txHistory } from "ducks/txHistory";
 import { reducer as keyStore } from "ducks/keyStore";
+import { reducer as walletTrezor } from "ducks/wallet/trezor";
+
+import BigNumber from "bignumber.js";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -29,22 +36,21 @@ const loggerMiddleware = (store: any) => (next: any) => (
   return dispatchedAction;
 };
 
+const isSerializable = (value: any) =>
+  BigNumber.isBigNumber(value) || isPlain(value);
+
 const store = configureStore({
   reducer: combineReducers({
     account,
+    sendTx,
     txHistory,
     keyStore,
+    walletTrezor,
   }),
   middleware: [
     ...getDefaultMiddleware({
       serializableCheck: {
-        // Account balances in response are Non-Serializable
-
-        ignoredActions: [
-          "account/fetchAccountAction/fulfilled",
-          "txHistoryAction/fulfilled",
-        ],
-        ignoredPaths: ["account.data.balances.native", "txHistory.data"],
+        isSerializable,
       },
     }),
     loggerMiddleware,
@@ -66,10 +72,6 @@ export const App = () => (
 
           <PrivateRoute exact path="/dashboard">
             <Dashboard />
-          </PrivateRoute>
-
-          <PrivateRoute exact path="/send">
-            <Send />
           </PrivateRoute>
 
           {/* TODO: add 404 page */}

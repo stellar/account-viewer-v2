@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useRedux } from "hooks/useRedux";
 import { TransactionHistory } from "components/TransactionHistory";
+import { SendTransactionFlow } from "components/SendTransaction/SendTransactionFlow";
+import { Modal } from "components/Modal";
 
 const El = styled.div`
   padding-bottom: 10px;
@@ -13,6 +15,7 @@ const TempButtonEl = styled.button`
 
 export const Dashboard = () => {
   const { account } = useRedux(["account"]);
+  const [isSendTxModalVisible, setIsSendTxModalVisible] = useState(false);
 
   let nativeBalance = 0;
   if (account.data) {
@@ -25,11 +28,21 @@ export const Dashboard = () => {
       <El>{account.publicKey}</El>
       <El>Your Balance</El>
       <El>{nativeBalance} lumens</El>
-      <TempButtonEl>Send</TempButtonEl>
+      <TempButtonEl onClick={() => setIsSendTxModalVisible(true)}>
+        Send
+      </TempButtonEl>
       <TempButtonEl>Receive</TempButtonEl>
       <El>
         <TransactionHistory />
       </El>
+      <Modal
+        visible={isSendTxModalVisible}
+        onClose={() => setIsSendTxModalVisible(false)}
+      >
+        <div>
+          <SendTransactionFlow />
+        </div>
+      </Modal>
     </El>
   );
 };
