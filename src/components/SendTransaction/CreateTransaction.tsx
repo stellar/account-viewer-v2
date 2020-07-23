@@ -1,10 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import StellarSdk, { MemoType } from "stellar-sdk";
 import styled from "styled-components";
 import BigNumber from "bignumber.js";
+import { useDispatch } from "react-redux";
+import {
+  federationAccountSlice,
+  fetchFederationAddressAction,
+} from "ducks/federationAddress";
+import { useRedux } from "hooks/useRedux";
+import { ActionStatus } from "ducks/account";
 import { FormData } from "./SendTransactionFlow";
 
-const El = styled.div``;
+const El = styled.div`
+  margin-bottom: 20px;
+`;
 
 const TempInputEl = styled.input`
   margin-bottom: 20px;
@@ -29,10 +38,13 @@ interface CreateProps {
   formData: FormData;
 }
 
+const isFederationAddress = (value: string) => value.includes("*");
+
 export const CreateTransaction = (props: CreateProps) => {
   const { formData, onInput } = props;
-
+  const { federationAddress } = useRedux(["federationAddress"]);
   const [isMemoVisible, setIsMemoVisible] = useState(!!formData.memoContent);
+  const dispatch = useDispatch();
 
   const memoPlaceholderMap: { [index: string]: string } = {
     [StellarSdk.MemoText]: "Up to 28 characters",
@@ -44,6 +56,22 @@ export const CreateTransaction = (props: CreateProps) => {
     [StellarSdk.MemoNone]: "",
   };
 
+  const fetchIfFederationAddress = () => {
+    const { toAccountId } = formData;
+    if (isFederationAddress(toAccountId)) {
+      dispatch(fetchFederationAddressAction(toAccountId));
+    } else if (federationAddress.status) {
+        dispatch(federationAccountSlice.actions.resetAction());
+      }
+  };
+
+  useEffect(() => {
+    if (federationAddress.status) {
+      dispatch(federationAccountSlice.actions.resetAction());
+    }
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <El>
       <h1>Send Lumens</h1>
@@ -54,10 +82,27 @@ export const CreateTransaction = (props: CreateProps) => {
           onChange={(e) =>
             onInput({ ...formData, toAccountId: e.target.value })
           }
+          onBlur={fetchIfFederationAddress}
           value={formData.toAccountId}
           placeholder="Recipient's public key or federation address"
         ></TempInputEl>
       </El>
+      {federationAddress.status && (
+        <El>
+          {federationAddress.status === ActionStatus.PENDING && (
+            <El>Loading federation address...</El>
+          )}
+          {federationAddress.status === ActionStatus.SUCCESS && (
+            <>
+              <El>Federation Address: {formData.toAccountId}</El>
+              <El>Resolves to: {federationAddress.publicKey}</El>
+            </>
+          )}
+          {federationAddress.status === ActionStatus.ERROR && (
+            <El>Federation Address not found</El>
+          )}
+        </El>
+      )}
       <El>
         Amount (lumens) :{" "}
         <TempInputEl

@@ -21,7 +21,11 @@ interface ConfirmProps {
 }
 
 export const ConfirmTransaction = (props: ConfirmProps) => {
-  const { sendTx, keyStore } = useRedux(["sendTx", "keyStore"]);
+  const { sendTx, keyStore, federationAddress } = useRedux([
+    "sendTx",
+    "keyStore",
+    "federationAddress",
+  ]);
   const { formData, onSuccessfulTx, onFailedTx } = props;
   const dispatch = useDispatch();
 
@@ -30,7 +34,8 @@ export const ConfirmTransaction = (props: ConfirmProps) => {
     const result = await dispatch(
       sendTxAction({
         secret: privateKey,
-        toAccountId: formData.toAccountId,
+        // federationAddress.publicKey exists only if valid fed address given
+        toAccountId: federationAddress.publicKey || formData.toAccountId,
         amount: formData.amount,
         // Round to nearest Stroom
         fee: Math.round(Number(formData.fee) * 1e7),
