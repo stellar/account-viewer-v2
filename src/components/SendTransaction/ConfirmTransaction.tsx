@@ -30,7 +30,8 @@ export const ConfirmTransaction = (props: ConfirmProps) => {
     const result = await dispatch(
       sendTxAction({
         secret: privateKey,
-        toAccountId: formData.toAccountId,
+        // formData.federationAddress exists only if valid fed address given
+        toAccountId: formData.federationAddress || formData.toAccountId,
         amount: formData.amount,
         // Round to nearest Stroom
         fee: Math.round(Number(formData.fee) * 1e7),
