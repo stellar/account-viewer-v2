@@ -1,15 +1,10 @@
-import React, { useState, useEffect } from "react";
-import StellarSdk, { MemoType } from "stellar-sdk";
+import React, { useState } from "react";
+import StellarSdk, { MemoType , FederationServer } from "stellar-sdk";
 import styled from "styled-components";
 import BigNumber from "bignumber.js";
-import { useDispatch } from "react-redux";
-import {
-  federationAccountSlice,
-  fetchFederationAddressAction,
-} from "ducks/federationAddress";
-import { useRedux } from "hooks/useRedux";
 import { ActionStatus } from "ducks/account";
 import { FormData } from "./SendTransactionFlow";
+
 
 const El = styled.div`
   margin-bottom: 20px;
@@ -42,9 +37,11 @@ const isFederationAddress = (value: string) => value.includes("*");
 
 export const CreateTransaction = (props: CreateProps) => {
   const { formData, onInput } = props;
-  const { federationAddress } = useRedux(["federationAddress"]);
   const [isMemoVisible, setIsMemoVisible] = useState(!!formData.memoContent);
-  const dispatch = useDispatch();
+  const [
+    federationAddressFetchStatus,
+    setFederationAddressFetchStatus,
+  ] = useState<string | null>(null);
 
   const memoPlaceholderMap: { [index: string]: string } = {
     [StellarSdk.MemoText]: "Up to 28 characters",
@@ -56,21 +53,29 @@ export const CreateTransaction = (props: CreateProps) => {
     [StellarSdk.MemoNone]: "",
   };
 
-  const fetchIfFederationAddress = () => {
+  const fetchIfFederationAddress = async () => {
     const { toAccountId } = formData;
     if (isFederationAddress(toAccountId)) {
-      dispatch(fetchFederationAddressAction(toAccountId));
-    } else if (federationAddress.status) {
-        dispatch(federationAccountSlice.actions.resetAction());
+      setFederationAddressFetchStatus(ActionStatus.PENDING);
+      try {
+        const response = await FederationServer.resolve(toAccountId);
+        setFederationAddressFetchStatus(ActionStatus.SUCCESS);
+        onInput({
+          ...formData,
+          federationAddress: response.account_id,
+        });
+      } catch (err) {
+        setFederationAddressFetchStatus(ActionStatus.ERROR);
       }
+    } else {
+      resetFederationAddressInput();
+    }
   };
 
-  useEffect(() => {
-    if (federationAddress.status) {
-      dispatch(federationAccountSlice.actions.resetAction());
-    }
-    // eslint-disable-next-line
-  }, []);
+  const resetFederationAddressInput = () => {
+    setFederationAddressFetchStatus(null);
+    onInput({ ...formData, federationAddress: undefined });
+  };
 
   return (
     <El>
@@ -87,18 +92,18 @@ export const CreateTransaction = (props: CreateProps) => {
           placeholder="Recipient's public key or federation address"
         ></TempInputEl>
       </El>
-      {federationAddress.status && (
+      {federationAddressFetchStatus && (
         <El>
-          {federationAddress.status === ActionStatus.PENDING && (
+          {federationAddressFetchStatus === ActionStatus.PENDING && (
             <El>Loading federation address...</El>
           )}
-          {federationAddress.status === ActionStatus.SUCCESS && (
+          {federationAddressFetchStatus === ActionStatus.SUCCESS && (
             <>
               <El>Federation Address: {formData.toAccountId}</El>
-              <El>Resolves to: {federationAddress.publicKey}</El>
+              <El>Resolves to: {formData.federationAddress}</El>
             </>
           )}
-          {federationAddress.status === ActionStatus.ERROR && (
+          {federationAddressFetchStatus === ActionStatus.ERROR && (
             <El>Federation Address not found</El>
           )}
         </El>

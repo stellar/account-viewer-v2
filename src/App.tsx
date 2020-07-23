@@ -18,7 +18,6 @@ import { reducer as account } from "ducks/account";
 import { reducer as sendTx } from "ducks/sendTransaction";
 import { reducer as txHistory } from "ducks/txHistory";
 import { reducer as keyStore } from "ducks/keyStore";
-import { reducer as federationAddress } from "ducks/federationAddress";
 
 import BigNumber from "bignumber.js";
 
@@ -46,7 +45,6 @@ const store = configureStore({
     sendTx,
     txHistory,
     keyStore,
-    federationAddress,
   }),
   middleware: [
     ...getDefaultMiddleware({
