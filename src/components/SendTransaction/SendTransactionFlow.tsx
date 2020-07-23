@@ -39,8 +39,6 @@ export const SendTransactionFlow = () => {
   const [currentStage, setCurrentStage] = useState(SendState.CREATE);
   const [formData, setFormData] = useState(initialFormData);
 
-  console.log(formData);
-
   return (
     <>
       <div>

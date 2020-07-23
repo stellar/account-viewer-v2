@@ -59,6 +59,9 @@ export const CreateTransaction = (props: CreateProps) => {
       try {
         const response = await FederationServer.resolve(toAccountId);
         setFederationAddressFetchStatus(ActionStatus.SUCCESS);
+        if (response.memo_type || response.memo) {
+          setIsMemoVisible(true);
+        }
         onInput({
           ...formData,
           federationAddress: response.account_id,
