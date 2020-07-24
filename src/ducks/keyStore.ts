@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { storePrivateKey, CreateKeyManagerResponse } from "helpers/keyManager";
+import { RejectMessage } from "constants/types.d";
 
 export const storePrivateKeyAction = createAsyncThunk<
   CreateKeyManagerResponse,
@@ -16,10 +17,6 @@ export const storePrivateKeyAction = createAsyncThunk<
   }
   return result;
 });
-
-interface RejectMessage {
-  errorMessage: string;
-}
 
 interface InitialState {
   id: string;

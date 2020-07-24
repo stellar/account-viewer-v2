@@ -1,5 +1,6 @@
 import { KeyManager, KeyManagerPlugins, KeyType } from "@stellar/wallet-sdk";
-import { Keypair, Networks } from "stellar-sdk";
+import { Keypair } from "stellar-sdk";
+import { getNetworkConfig } from "constants/settings";
 
 export interface CreateKeyManagerResponse {
   id: string;
@@ -13,8 +14,7 @@ const createKeyManager = () => {
 
   const keyManager = new KeyManager({
     keyStore: localKeyStore,
-    // TODO - network config
-    defaultNetworkPassphrase: Networks.TESTNET,
+    defaultNetworkPassphrase: getNetworkConfig().network,
   });
 
   keyManager.registerEncrypter(KeyManagerPlugins.ScryptEncrypter);
@@ -37,8 +37,7 @@ export const storePrivateKey = async (secret: string) => {
         type: KeyType.plaintextKey,
         publicKey: keyPair.publicKey(),
         privateKey: keyPair.secret(),
-        // TODO - network config
-        network: Networks.TESTNET,
+        network: getNetworkConfig().network,
       },
       password: result.password,
       encrypterName: KeyManagerPlugins.ScryptEncrypter.name,

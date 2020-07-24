@@ -5,11 +5,12 @@ import StellarSdk, {
   MemoValue,
   Keypair,
 } from "stellar-sdk";
+import { getNetworkConfig } from "constants/settings";
 
 export const submitPaymentTransaction = async (
   params: PaymentTransactionParams,
 ) => {
-  const server = new StellarSdk.Server("https://horizon-testnet.stellar.org");
+  const server = new StellarSdk.Server(getNetworkConfig().url);
   const keypair = Keypair.fromSecret(params.secret);
   let transaction = await buildPaymentTransaction(params);
   transaction = await signTransaction(transaction, keypair);
@@ -55,14 +56,14 @@ export const buildPaymentTransaction = async ({
 }: PaymentTransactionParams) => {
   let transaction;
   try {
-    const server = new StellarSdk.Server("https://horizon-testnet.stellar.org");
+    const server = new StellarSdk.Server(getNetworkConfig().url);
     const keypair = Keypair.fromSecret(secret);
     const sequence = (await server.loadAccount(keypair.publicKey())).sequence;
     const source = await new StellarSdk.Account(keypair.publicKey(), sequence);
 
     transaction = new StellarSdk.TransactionBuilder(source, {
       fee,
-      networkPassphrase: StellarSdk.Networks.TESTNET,
+      networkPassphrase: getNetworkConfig().network,
       timebounds: await server.fetchTimebounds(100),
     }).addOperation(
       StellarSdk.Operation.payment({

@@ -4,9 +4,10 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { Keypair } from "stellar-sdk";
 
-import { fetchAccountAction, ActionStatus } from "ducks/account";
+import { fetchAccountAction } from "ducks/account";
 import { storePrivateKeyAction } from "ducks/keyStore";
 import { useRedux } from "hooks/useRedux";
+import { ActionStatus } from "constants/types.d";
 
 const WarningEl = styled.div`
   background-color: #f3e5e5;

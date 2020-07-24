@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { DataProvider, Types } from "@stellar/wallet-sdk";
-import StellarSdk from "stellar-sdk";
-import { ActionStatus } from "./account";
+import { getNetworkConfig } from "constants/settings";
+import { ActionStatus, RejectMessage } from "constants/types.d";
 
 export const fetchTxHistoryAction = createAsyncThunk<
   Array<Types.Payment>,
@@ -9,9 +9,9 @@ export const fetchTxHistoryAction = createAsyncThunk<
   { rejectValue: RejectMessage }
 >("txHistoryAction", async (publicKey, { rejectWithValue }) => {
   const dataProvider = new DataProvider({
-    serverUrl: "https://horizon-testnet.stellar.org",
+    serverUrl: getNetworkConfig().url,
     accountOrKey: publicKey,
-    networkPassphrase: StellarSdk.Networks.TESTNET,
+    networkPassphrase: getNetworkConfig().network,
   });
   let payments: Array<Types.Payment> | null = null;
   try {
@@ -23,10 +23,6 @@ export const fetchTxHistoryAction = createAsyncThunk<
   }
   return payments;
 });
-
-interface RejectMessage {
-  errorMessage: string;
-}
 
 interface InitialTxHistoryState {
   data: Array<Types.Payment>;

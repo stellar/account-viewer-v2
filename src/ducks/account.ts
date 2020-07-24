@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { DataProvider, Types } from "@stellar/wallet-sdk";
-import StellarSdk from "stellar-sdk";
+import { getNetworkConfig } from "constants/settings";
+import { ActionStatus, RejectMessage } from "constants/types.d";
 
 export const fetchAccountAction = createAsyncThunk<
   // Return type of the payload creator
@@ -11,10 +12,9 @@ export const fetchAccountAction = createAsyncThunk<
   { rejectValue: RejectMessage }
 >("account/fetchAccountAction", async (publicKey, { rejectWithValue }) => {
   const dataProvider = new DataProvider({
-    // TODO: move to config (support mainnet and testnet)
-    serverUrl: "https://horizon-testnet.stellar.org",
+    serverUrl: getNetworkConfig().url,
     accountOrKey: publicKey,
-    networkPassphrase: StellarSdk.Networks.TESTNET,
+    networkPassphrase: getNetworkConfig().network,
   });
 
   let stellarAccount: Types.AccountDetails | null = null;
@@ -29,16 +29,6 @@ export const fetchAccountAction = createAsyncThunk<
 
   return stellarAccount;
 });
-
-interface RejectMessage {
-  errorMessage: string;
-}
-
-export enum ActionStatus {
-  PENDING = "PENDING",
-  SUCCESS = "SUCCESS",
-  ERROR = "ERROR",
-}
 
 interface InitialState {
   data: Types.AccountDetails | null;
