@@ -4,9 +4,9 @@ import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { useRedux } from "hooks/useRedux";
 import { loadPrivateKey } from "helpers/keyManager";
+import { stroopsFromLumens } from "helpers/stroopConversion";
 import { sendTxAction } from "ducks/sendTransaction";
 import { ActionStatus } from "ducks/account";
-import { stroopsFromLumens } from "helpers/stroopConversion";
 import { FormData } from "./SendTransactionFlow";
 
 const El = styled.div``;
