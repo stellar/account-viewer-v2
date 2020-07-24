@@ -19,6 +19,7 @@ enum SendState {
 
 export interface FormData {
   toAccountId: string;
+  federationAddress?: string;
   amount: BigNumber;
   fee: string;
   memoType: MemoType;
@@ -27,6 +28,7 @@ export interface FormData {
 
 const initialFormData: FormData = {
   toAccountId: "",
+  federationAddress: undefined,
   amount: new BigNumber(0),
   fee: String(StellarSdk.BASE_FEE / 1e7),
   memoType: StellarSdk.MemoNone,

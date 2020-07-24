@@ -1,10 +1,14 @@
 import React, { useState } from "react";
-import StellarSdk, { MemoType } from "stellar-sdk";
+import StellarSdk, { MemoType , FederationServer } from "stellar-sdk";
 import styled from "styled-components";
 import BigNumber from "bignumber.js";
+import { ActionStatus } from "ducks/account";
 import { FormData } from "./SendTransactionFlow";
 
-const El = styled.div``;
+
+const El = styled.div`
+  margin-bottom: 20px;
+`;
 
 const TempInputEl = styled.input`
   margin-bottom: 20px;
@@ -29,10 +33,15 @@ interface CreateProps {
   formData: FormData;
 }
 
+const isFederationAddress = (value: string) => value.includes("*");
+
 export const CreateTransaction = (props: CreateProps) => {
   const { formData, onInput } = props;
-
   const [isMemoVisible, setIsMemoVisible] = useState(!!formData.memoContent);
+  const [
+    federationAddressFetchStatus,
+    setFederationAddressFetchStatus,
+  ] = useState<string | null>(null);
 
   const memoPlaceholderMap: { [index: string]: string } = {
     [StellarSdk.MemoText]: "Up to 28 characters",
@@ -42,6 +51,30 @@ export const CreateTransaction = (props: CreateProps) => {
     [StellarSdk.MemoReturn]:
       "32-byte hash in hexadecimal format (64 [0-9a-f] characters)",
     [StellarSdk.MemoNone]: "",
+  };
+
+  const fetchIfFederationAddress = async () => {
+    const { toAccountId } = formData;
+    if (isFederationAddress(toAccountId)) {
+      setFederationAddressFetchStatus(ActionStatus.PENDING);
+      try {
+        const response = await FederationServer.resolve(toAccountId);
+        setFederationAddressFetchStatus(ActionStatus.SUCCESS);
+        onInput({
+          ...formData,
+          federationAddress: response.account_id,
+        });
+      } catch (err) {
+        setFederationAddressFetchStatus(ActionStatus.ERROR);
+      }
+    } else {
+      resetFederationAddressInput();
+    }
+  };
+
+  const resetFederationAddressInput = () => {
+    setFederationAddressFetchStatus(null);
+    onInput({ ...formData, federationAddress: undefined });
   };
 
   return (
@@ -54,10 +87,27 @@ export const CreateTransaction = (props: CreateProps) => {
           onChange={(e) =>
             onInput({ ...formData, toAccountId: e.target.value })
           }
+          onBlur={fetchIfFederationAddress}
           value={formData.toAccountId}
           placeholder="Recipient's public key or federation address"
         ></TempInputEl>
       </El>
+      {federationAddressFetchStatus && (
+        <El>
+          {federationAddressFetchStatus === ActionStatus.PENDING && (
+            <El>Loading federation address...</El>
+          )}
+          {federationAddressFetchStatus === ActionStatus.SUCCESS && (
+            <>
+              <El>Federation Address: {formData.toAccountId}</El>
+              <El>Resolves to: {formData.federationAddress}</El>
+            </>
+          )}
+          {federationAddressFetchStatus === ActionStatus.ERROR && (
+            <El>Federation Address not found</El>
+          )}
+        </El>
+      )}
       <El>
         Amount (lumens) :{" "}
         <TempInputEl
