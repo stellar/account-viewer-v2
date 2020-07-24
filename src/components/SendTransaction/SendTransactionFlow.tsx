@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import StellarSdk, { MemoType, MemoValue } from "stellar-sdk";
 import styled from "styled-components";
 import BigNumber from "bignumber.js";
+
+import { lumensFromStroops } from "helpers/stroopConversion";
 import { CreateTransaction } from "./CreateTransaction";
 import { ConfirmTransaction } from "./ConfirmTransaction";
 import { SuccessfulTransaction } from "./SuccessfulTransaction";
@@ -21,7 +23,6 @@ export interface FormData {
   toAccountId: string;
   federationAddress?: string;
   amount: BigNumber;
-  fee: string;
   memoType: MemoType;
   memoContent: MemoValue;
 }
@@ -30,7 +31,6 @@ const initialFormData: FormData = {
   toAccountId: "",
   federationAddress: undefined,
   amount: new BigNumber(0),
-  fee: String(StellarSdk.BASE_FEE / 1e7),
   memoType: StellarSdk.MemoNone,
   memoContent: "",
 };
@@ -38,6 +38,9 @@ const initialFormData: FormData = {
 export const SendTransactionFlow = () => {
   const [currentStage, setCurrentStage] = useState(SendState.CREATE);
   const [formData, setFormData] = useState(initialFormData);
+  const [maxFee, setMaxFee] = useState(
+    lumensFromStroops(StellarSdk.BASE_FEE).toString(),
+  );
 
   return (
     <>
@@ -50,6 +53,8 @@ export const SendTransactionFlow = () => {
               }}
               onInput={setFormData}
               formData={formData}
+              setMaxFee={setMaxFee}
+              maxFee={maxFee}
             />
           </div>
         )}
@@ -65,6 +70,7 @@ export const SendTransactionFlow = () => {
                 setCurrentStage(SendState.ERROR);
               }}
               formData={formData}
+              maxFee={maxFee}
             />
           </El>
         )}

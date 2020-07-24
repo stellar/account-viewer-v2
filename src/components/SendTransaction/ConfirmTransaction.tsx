@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { useRedux } from "hooks/useRedux";
 import { loadPrivateKey } from "helpers/keyManager";
+import { stroopsFromLumens } from "helpers/stroopConversion";
 import { sendTxAction } from "ducks/sendTransaction";
 import { ActionStatus } from "ducks/account";
 import { FormData } from "./SendTransactionFlow";
@@ -18,11 +19,12 @@ interface ConfirmProps {
   onSuccessfulTx: () => void;
   onFailedTx: () => void;
   formData: FormData;
+  maxFee: string;
 }
 
 export const ConfirmTransaction = (props: ConfirmProps) => {
   const { sendTx, keyStore } = useRedux(["sendTx", "keyStore"]);
-  const { formData, onSuccessfulTx, onFailedTx } = props;
+  const { formData, onSuccessfulTx, onFailedTx, maxFee } = props;
   const dispatch = useDispatch();
 
   const handleSend = async () => {
@@ -33,8 +35,7 @@ export const ConfirmTransaction = (props: ConfirmProps) => {
         // formData.federationAddress exists only if valid fed address given
         toAccountId: formData.federationAddress || formData.toAccountId,
         amount: formData.amount,
-        // Round to nearest Stroom
-        fee: Math.round(Number(formData.fee) * 1e7),
+        fee: stroopsFromLumens(maxFee).toNumber(),
         memoType: formData.memoType,
         memoContent: formData.memoContent,
       }),
@@ -53,7 +54,7 @@ export const ConfirmTransaction = (props: ConfirmProps) => {
       <El>Sending to address: {formData.toAccountId}</El>
       <El>Amount: {formData.amount.toString()}</El>
       <El>Memo: {formData.memoContent}</El>
-      <El>Fee: {formData.fee}</El>
+      <El>Fee: {maxFee}</El>
       <TempButtonEl onClick={handleSend}>Send</TempButtonEl>
       {sendTx.status === ActionStatus.PENDING && (
         <El>Submitting Transaction</El>
