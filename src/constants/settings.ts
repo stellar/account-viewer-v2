@@ -35,5 +35,3 @@ export const getNetworkConfig = () => {
   const network = isTestnet() ? NetworkType.TESTNET : NetworkType.PUBLIC;
   return networkConfig[network];
 };
-
-export const getServer = () => new StellarSdk.Server(getNetworkConfig().url);
