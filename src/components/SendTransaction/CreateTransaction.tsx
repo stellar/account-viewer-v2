@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import StellarSdk, { MemoType , FederationServer } from "stellar-sdk";
+import StellarSdk, { MemoType, FederationServer } from "stellar-sdk";
 import styled from "styled-components";
 import BigNumber from "bignumber.js";
 import { ActionStatus } from "ducks/account";
 import { FormData } from "./SendTransactionFlow";
-
 
 const El = styled.div`
   margin-bottom: 20px;
@@ -38,6 +37,13 @@ const isFederationAddress = (value: string) => value.includes("*");
 export const CreateTransaction = (props: CreateProps) => {
   const { formData, onInput } = props;
   const [isMemoVisible, setIsMemoVisible] = useState(!!formData.memoContent);
+  const [isMemoTypeFromFederation, setIsMemoTypeFromFederation] = useState(
+    false,
+  );
+  const [
+    isMemoContentFromFederation,
+    setIsMemoContentFromFederation,
+  ] = useState(false);
   const [
     federationAddressFetchStatus,
     setFederationAddressFetchStatus,
@@ -60,10 +66,28 @@ export const CreateTransaction = (props: CreateProps) => {
       try {
         const response = await FederationServer.resolve(toAccountId);
         setFederationAddressFetchStatus(ActionStatus.SUCCESS);
-        onInput({
-          ...formData,
-          federationAddress: response.account_id,
-        });
+
+        if (response.memo || response.memo_type) {
+          setIsMemoVisible(true);
+          if (response.memo_type) {
+            setIsMemoTypeFromFederation(true);
+          }
+          if (response.memo) {
+            setIsMemoContentFromFederation(true);
+          }
+
+          onInput({
+            ...formData,
+            federationAddress: response.account_id,
+            memoType: response.memo_type || StellarSdk.MemoText,
+            memoContent: response.memo || "",
+          });
+        } else {
+          onInput({
+            ...formData,
+            federationAddress: response.account_id,
+          });
+        }
       } catch (err) {
         setFederationAddressFetchStatus(ActionStatus.ERROR);
       }
@@ -95,7 +119,7 @@ export const CreateTransaction = (props: CreateProps) => {
       {federationAddressFetchStatus && (
         <El>
           {federationAddressFetchStatus === ActionStatus.PENDING && (
-            <El>Loading federation address...</El>
+            <El>Loading federation address…</El>
           )}
           {federationAddressFetchStatus === ActionStatus.SUCCESS && (
             <>
@@ -137,7 +161,7 @@ export const CreateTransaction = (props: CreateProps) => {
       {isMemoVisible && (
         <>
           <El>
-            Memo Type:{" "}
+            Memo Type:
             <TempSelectInputEl
               onChange={(e) => {
                 onInput({
@@ -146,6 +170,7 @@ export const CreateTransaction = (props: CreateProps) => {
                 });
               }}
               value={formData.memoType}
+              disabled={isMemoTypeFromFederation}
             >
               <option value={StellarSdk.MemoText}>MEMO_TEXT</option>
               <option value={StellarSdk.MemoID}>MEMO_ID</option>
@@ -167,21 +192,27 @@ export const CreateTransaction = (props: CreateProps) => {
                 });
               }}
               value={formData.memoContent as string}
+              disabled={isMemoContentFromFederation}
             ></TempInputEl>
+            {(isMemoContentFromFederation || isMemoTypeFromFederation) && (
+              <El>Memo information is provided by the federation address</El>
+            )}
           </El>
           <El>
-            <TempAnchorEl
-              onClick={() => {
-                onInput({
-                  ...formData,
-                  memoType: StellarSdk.MemoNone,
-                  memoContent: "",
-                });
-                setIsMemoVisible(false);
-              }}
-            >
-              Remove memo:
-            </TempAnchorEl>
+            {!isMemoContentFromFederation && (
+              <TempAnchorEl
+                onClick={() => {
+                  onInput({
+                    ...formData,
+                    memoType: StellarSdk.MemoNone,
+                    memoContent: "",
+                  });
+                  setIsMemoVisible(false);
+                }}
+              >
+                Remove memo:
+              </TempAnchorEl>
+            )}
           </El>
         </>
       )}
