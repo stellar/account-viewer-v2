@@ -33,7 +33,7 @@ export const ConfirmTransaction = (props: ConfirmProps) => {
         // formData.federationAddress exists only if valid fed address given
         toAccountId: formData.federationAddress || formData.toAccountId,
         amount: formData.amount,
-        // Round to nearest Stroom
+        // Round to nearest Stroop
         fee: Math.round(Number(formData.fee) * 1e7),
         memoType: formData.memoType,
         memoContent: formData.memoContent,
