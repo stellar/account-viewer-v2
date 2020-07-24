@@ -56,6 +56,32 @@ export const CreateTransaction = (props: CreateProps) => {
     NetworkCongestion.LOW,
   );
 
+  const fetchNetworkBaseFee = async () => {
+    // TODO - network config
+    const server = new StellarSdk.Server("https://horizon-testnet.stellar.org");
+    try {
+      const feeStats = await server.feeStats();
+      setRecommendedFee(
+        lumensFromStroops(feeStats.fee_charged.mode).toString(),
+      );
+      onInput({
+        ...formData,
+        fee: lumensFromStroops(feeStats.fee_charged.mode).toString(),
+      });
+      if (
+        feeStats.ledger_capacity_usage > 0.5 &&
+        feeStats.ledger_capacity_usage <= 0.75
+      ) {
+        setNetworkCongestion(NetworkCongestion.MEDIUM);
+      } else if (feeStats.ledger_capacity_usage > 0.75) {
+        setNetworkCongestion(NetworkCongestion.HIGH);
+      }
+    } catch (err) {
+      // use default values
+      
+    }
+  };
+
   useEffect(() => {
     fetchNetworkBaseFee();
     // eslint-disable-next-line
@@ -93,32 +119,6 @@ export const CreateTransaction = (props: CreateProps) => {
   const resetFederationAddressInput = () => {
     setFederationAddressFetchStatus(null);
     onInput({ ...formData, federationAddress: undefined });
-  };
-
-  const fetchNetworkBaseFee = async () => {
-    // TODO - network config
-    const server = new StellarSdk.Server("https://horizon-testnet.stellar.org");
-    try {
-      const feeStats = await server.feeStats();
-      setRecommendedFee(
-        lumensFromStroops(feeStats.fee_charged.mode).toString(),
-      );
-      onInput({
-        ...formData,
-        fee: lumensFromStroops(feeStats.fee_charged.mode).toString(),
-      });
-      if (
-        feeStats.ledger_capacity_usage > 0.5 &&
-        feeStats.ledger_capacity_usage <= 0.75
-      ) {
-        setNetworkCongestion(NetworkCongestion.MEDIUM);
-      } else if (feeStats.ledger_capacity_usage > 0.75) {
-        setNetworkCongestion(NetworkCongestion.HIGH);
-      }
-    } catch (err) {
-      // use default values
-      
-    }
   };
 
   return (
