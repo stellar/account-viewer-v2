@@ -37,7 +37,13 @@ const isFederationAddress = (value: string) => value.includes("*");
 export const CreateTransaction = (props: CreateProps) => {
   const { formData, onInput } = props;
   const [isMemoVisible, setIsMemoVisible] = useState(!!formData.memoContent);
-  const [isMemoReadOnly, setIsMemoReadOnly] = useState(false);
+  const [isMemoTypeFromFederation, setIsMemoTypeFromFederation] = useState(
+    false,
+  );
+  const [
+    isMemoContentFromFederation,
+    setIsMemoContentFromFederation,
+  ] = useState(false);
   const [
     federationAddressFetchStatus,
     setFederationAddressFetchStatus,
@@ -61,15 +67,20 @@ export const CreateTransaction = (props: CreateProps) => {
         const response = await FederationServer.resolve(toAccountId);
         setFederationAddressFetchStatus(ActionStatus.SUCCESS);
 
-        if (response.memo) {
+        if (response.memo || response.memo_type) {
           setIsMemoVisible(true);
-          setIsMemoReadOnly(true);
+          if (response.memo_type) {
+            setIsMemoTypeFromFederation(true);
+          }
+          if (response.memo) {
+            setIsMemoContentFromFederation(true);
+          }
 
           onInput({
             ...formData,
             federationAddress: response.account_id,
             memoType: response.memo_type || StellarSdk.MemoText,
-            memoContent: response.memo,
+            memoContent: response.memo || "",
           });
         } else {
           onInput({
@@ -150,7 +161,7 @@ export const CreateTransaction = (props: CreateProps) => {
       {isMemoVisible && (
         <>
           <El>
-            Memo Type:{" "}
+            Memo Type:
             <TempSelectInputEl
               onChange={(e) => {
                 onInput({
@@ -159,7 +170,7 @@ export const CreateTransaction = (props: CreateProps) => {
                 });
               }}
               value={formData.memoType}
-              disabled={isMemoReadOnly}
+              disabled={isMemoTypeFromFederation}
             >
               <option value={StellarSdk.MemoText}>MEMO_TEXT</option>
               <option value={StellarSdk.MemoID}>MEMO_ID</option>
@@ -181,11 +192,14 @@ export const CreateTransaction = (props: CreateProps) => {
                 });
               }}
               value={formData.memoContent as string}
-              disabled={isMemoReadOnly}
+              disabled={isMemoContentFromFederation}
             ></TempInputEl>
+            {(isMemoContentFromFederation || isMemoTypeFromFederation) && (
+              <El>Memo information is provided by the federation address</El>
+            )}
           </El>
           <El>
-            {!isMemoReadOnly && (
+            {!isMemoContentFromFederation && (
               <TempAnchorEl
                 onClick={() => {
                   onInput({
