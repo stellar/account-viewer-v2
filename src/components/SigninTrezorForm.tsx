@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 // @ts-ignore
 import TrezorConnect from "trezor-connect";
 
-import { fetchAccountAction } from "ducks/account";
+import { fetchAccountAction, reset as resetAccount } from "ducks/account";
 import {
   fetchTrezorStellarAddressAction,
   reset as resetTrezor,
@@ -111,13 +111,13 @@ export const SigninTrezorForm = ({ onClose }: SigninTrezorFormProps) => {
     }
   };
 
-  const resetOnMount = () => {
+  const resetOnUnmount = () => {
     dispatch(resetTrezor());
+    dispatch(resetAccount());
   };
 
-  // TODO: once network config is in place, make sure everything is reset
-  // properly (errors cleared, etc)
-  useEffect(resetOnMount, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => resetOnUnmount, []);
   useEffect(handleTrezorStatusChange, [trezorStatus, trezorErrorMessage]);
   useEffect(handleAccountStatusChange, [accountStatus, accountErrorMessage]);
 

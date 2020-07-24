@@ -47,7 +47,9 @@ const initialState: InitialState = {
 const accountSlice = createSlice({
   name: "account",
   initialState,
-  reducers: {},
+  reducers: {
+    reset: () => initialState,
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchAccountAction.pending, (state) => ({
       ...state,
@@ -74,3 +76,4 @@ const accountSlice = createSlice({
 });
 
 export const { reducer } = accountSlice;
+export const { reset } = accountSlice.actions;
