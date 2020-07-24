@@ -31,6 +31,8 @@ interface CreateProps {
   onContinue: () => void;
   onInput: (formData: FormData) => void;
   formData: FormData;
+  setMaxFee: (maxFee: string) => void;
+  maxFee: string;
 }
 
 const isFederationAddress = (value: string) => value.includes("*");
@@ -43,7 +45,7 @@ const NetworkCongestion = {
 };
 
 export const CreateTransaction = (props: CreateProps) => {
-  const { formData, onInput } = props;
+  const { formData, onInput, maxFee, setMaxFee } = props;
   const [isMemoVisible, setIsMemoVisible] = useState(!!formData.memoContent);
   const [isMemoTypeFromFederation, setIsMemoTypeFromFederation] = useState(
     false,
@@ -63,35 +65,33 @@ export const CreateTransaction = (props: CreateProps) => {
     NetworkCongestion.LOW,
   );
 
-  const fetchNetworkBaseFee = async () => {
-    // TODO - network config
-    const server = new StellarSdk.Server("https://horizon-testnet.stellar.org");
-    try {
-      const feeStats = await server.feeStats();
-      setRecommendedFee(
-        lumensFromStroops(feeStats.fee_charged.mode).toString(),
-      );
-      onInput({
-        ...formData,
-        fee: lumensFromStroops(feeStats.fee_charged.mode).toString(),
-      });
-      if (
-        feeStats.ledger_capacity_usage > 0.5 &&
-        feeStats.ledger_capacity_usage <= 0.75
-      ) {
-        setNetworkCongestion(NetworkCongestion.MEDIUM);
-      } else if (feeStats.ledger_capacity_usage > 0.75) {
-        setNetworkCongestion(NetworkCongestion.HIGH);
-      }
-    } catch (err) {
-      // use default values
-    }
-  };
-
   useEffect(() => {
+    const fetchNetworkBaseFee = async () => {
+      // TODO - network config
+      const server = new StellarSdk.Server(
+        "https://horizon-testnet.stellar.org",
+      );
+      try {
+        const feeStats = await server.feeStats();
+        const networkFee = lumensFromStroops(
+          feeStats.fee_charged.mode,
+        ).toString();
+        setRecommendedFee(networkFee);
+        setMaxFee(networkFee);
+        if (
+          feeStats.ledger_capacity_usage > 0.5 &&
+          feeStats.ledger_capacity_usage <= 0.75
+        ) {
+          setNetworkCongestion(NetworkCongestion.MEDIUM);
+        } else if (feeStats.ledger_capacity_usage > 0.75) {
+          setNetworkCongestion(NetworkCongestion.HIGH);
+        }
+      } catch (err) {
+        // use default values
+      }
+    };
     fetchNetworkBaseFee();
-    // eslint-disable-next-line
-  }, []);
+  }, [setMaxFee]);
 
   const memoPlaceholderMap: { [index: string]: string } = {
     [StellarSdk.MemoText]: "Up to 28 characters",
@@ -264,9 +264,9 @@ export const CreateTransaction = (props: CreateProps) => {
         Fee (lumens) :{" "}
         <TempInputEl
           type="number"
-          value={formData.fee}
+          value={maxFee}
           onChange={(e) => {
-            onInput({ ...formData, fee: e.target.value });
+            setMaxFee(e.target.value);
           }}
         ></TempInputEl>
       </El>
