@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import StellarSdk, { MemoType , FederationServer } from "stellar-sdk";
+import StellarSdk, { MemoType, FederationServer } from "stellar-sdk";
 import styled from "styled-components";
 import BigNumber from "bignumber.js";
-import { ActionStatus } from "ducks/account";
+import { ActionStatus } from "constants/types.d";
 import { FormData } from "./SendTransactionFlow";
-
 
 const El = styled.div`
   margin-bottom: 20px;
