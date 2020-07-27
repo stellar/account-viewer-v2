@@ -1,34 +1,38 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { DataProvider, Types } from "@stellar/wallet-sdk";
-import { getNetworkConfig } from "constants/settings";
+import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { ActionStatus, RejectMessage } from "constants/types.d";
+import { isTestnetSelector } from "ducks/settings";
+import { RootState } from "App";
 
 export const fetchAccountAction = createAsyncThunk<
-  // Return type of the payload creator
   Types.AccountDetails,
-  // First argument to the payload creator
   string,
-  // Types for ThunkAPI
-  { rejectValue: RejectMessage }
->("account/fetchAccountAction", async (publicKey, { rejectWithValue }) => {
-  const dataProvider = new DataProvider({
-    serverUrl: getNetworkConfig().url,
-    accountOrKey: publicKey,
-    networkPassphrase: getNetworkConfig().network,
-  });
+  { rejectValue: RejectMessage; state: RootState }
+>(
+  "account/fetchAccountAction",
+  async (publicKey, { rejectWithValue, getState }) => {
+    const isTestnet = isTestnetSelector(getState());
 
-  let stellarAccount: Types.AccountDetails | null = null;
-
-  try {
-    stellarAccount = await dataProvider.fetchAccountDetails();
-  } catch (error) {
-    return rejectWithValue({
-      errorMessage: error.response?.detail || error.toString(),
+    const dataProvider = new DataProvider({
+      serverUrl: getNetworkConfig(isTestnet).url,
+      accountOrKey: publicKey,
+      networkPassphrase: getNetworkConfig(isTestnet).network,
     });
-  }
 
-  return stellarAccount;
-});
+    let stellarAccount: Types.AccountDetails | null = null;
+
+    try {
+      stellarAccount = await dataProvider.fetchAccountDetails();
+    } catch (error) {
+      return rejectWithValue({
+        errorMessage: error.response?.detail || error.toString(),
+      });
+    }
+
+    return stellarAccount;
+  },
+);
 
 interface InitialState {
   data: Types.AccountDetails | null;

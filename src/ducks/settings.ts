@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "App";
 
 interface InitialState {
   isTestnet: boolean;
@@ -22,6 +23,8 @@ const settingsSlice = createSlice({
     }),
   },
 });
+
+export const isTestnetSelector = (state: RootState) => state.settings.isTestnet;
 
 export const { reducer } = settingsSlice;
 export const { update } = settingsSlice.actions;

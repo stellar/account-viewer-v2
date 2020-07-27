@@ -1,6 +1,4 @@
 import StellarSdk from "stellar-sdk";
-import { store } from "App";
-import { NetworkType } from "constants/types.d";
 
 interface NetworkItemConfig {
   url: string;
@@ -24,14 +22,4 @@ export const networkConfig: NetworkConfig = {
     network: StellarSdk.Networks.PUBLIC,
     stellarExpertTxUrl: "https://stellar.expert/explorer/public/tx/",
   },
-};
-
-const isTestnet = () => {
-  const { settings } = store.getState();
-  return settings.isTestnet;
-};
-
-export const getNetworkConfig = () => {
-  const network = isTestnet() ? NetworkType.TESTNET : NetworkType.PUBLIC;
-  return networkConfig[network];
 };

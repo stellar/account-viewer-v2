@@ -1,17 +1,21 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { DataProvider, Types } from "@stellar/wallet-sdk";
-import { getNetworkConfig } from "constants/settings";
+import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { ActionStatus, RejectMessage } from "constants/types.d";
+import { isTestnetSelector } from "ducks/settings";
+import { RootState } from "App";
 
 export const fetchTxHistoryAction = createAsyncThunk<
   Array<Types.Payment>,
   string,
-  { rejectValue: RejectMessage }
->("txHistoryAction", async (publicKey, { rejectWithValue }) => {
+  { rejectValue: RejectMessage; state: RootState }
+>("txHistoryAction", async (publicKey, { rejectWithValue, getState }) => {
+  const isTestnet = isTestnetSelector(getState());
+
   const dataProvider = new DataProvider({
-    serverUrl: getNetworkConfig().url,
+    serverUrl: getNetworkConfig(isTestnet).url,
     accountOrKey: publicKey,
-    networkPassphrase: getNetworkConfig().network,
+    networkPassphrase: getNetworkConfig(isTestnet).network,
   });
   let payments: Array<Types.Payment> | null = null;
   try {
