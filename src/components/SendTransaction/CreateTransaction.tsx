@@ -1,8 +1,10 @@
-import React, { useState } from "react";
-import StellarSdk, { MemoType, FederationServer } from "stellar-sdk";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import StellarSdk, { MemoType, FederationServer } from "stellar-sdk";
 import BigNumber from "bignumber.js";
+
 import { ActionStatus } from "constants/types.d";
+import { lumensFromStroops } from "helpers/stroopConversion";
 import { FormData } from "./SendTransactionFlow";
 
 const El = styled.div`
@@ -30,17 +32,67 @@ interface CreateProps {
   onContinue: () => void;
   onInput: (formData: FormData) => void;
   formData: FormData;
+  setMaxFee: (maxFee: string) => void;
+  maxFee: string;
 }
 
 const isFederationAddress = (value: string) => value.includes("*");
 
+// TODO - move to constants folder
+const NetworkCongestion = {
+  LOW: "LOW",
+  MEDIUM: "MEDIUM",
+  HIGH: "HIGH",
+};
+
 export const CreateTransaction = (props: CreateProps) => {
-  const { formData, onInput } = props;
+  const { formData, onInput, maxFee, setMaxFee } = props;
   const [isMemoVisible, setIsMemoVisible] = useState(!!formData.memoContent);
+  const [isMemoTypeFromFederation, setIsMemoTypeFromFederation] = useState(
+    false,
+  );
+  const [
+    isMemoContentFromFederation,
+    setIsMemoContentFromFederation,
+  ] = useState(false);
   const [
     federationAddressFetchStatus,
     setFederationAddressFetchStatus,
   ] = useState<string | null>(null);
+  const [recomendedFee, setRecommendedFee] = useState(
+    lumensFromStroops(StellarSdk.BASE_FEE).toString(),
+  );
+  const [networkCongestion, setNetworkCongestion] = useState(
+    NetworkCongestion.LOW,
+  );
+
+  useEffect(() => {
+    const fetchNetworkBaseFee = async () => {
+      // TODO - network config
+      const server = new StellarSdk.Server(
+        "https://horizon-testnet.stellar.org",
+      );
+      try {
+        const feeStats = await server.feeStats();
+        const networkFee = lumensFromStroops(
+          feeStats.fee_charged.mode,
+        ).toString();
+        setRecommendedFee(networkFee);
+        setMaxFee(networkFee);
+        if (
+          feeStats.ledger_capacity_usage > 0.5 &&
+          feeStats.ledger_capacity_usage <= 0.75
+        ) {
+          setNetworkCongestion(NetworkCongestion.MEDIUM);
+        } else if (feeStats.ledger_capacity_usage > 0.75) {
+          setNetworkCongestion(NetworkCongestion.HIGH);
+        }
+      } catch (err) {
+        // use default values
+      }
+    };
+    fetchNetworkBaseFee();
+  }, [setMaxFee]);
 
   const memoPlaceholderMap: { [index: string]: string } = {
     [StellarSdk.MemoText]: "Up to 28 characters",
@@ -59,10 +111,28 @@ export const CreateTransaction = (props: CreateProps) => {
       try {
         const response = await FederationServer.resolve(toAccountId);
         setFederationAddressFetchStatus(ActionStatus.SUCCESS);
-        onInput({
-          ...formData,
-          federationAddress: response.account_id,
-        });
+
+        if (response.memo || response.memo_type) {
+          setIsMemoVisible(true);
+          if (response.memo_type) {
+            setIsMemoTypeFromFederation(true);
+          }
+          if (response.memo) {
+            setIsMemoContentFromFederation(true);
+          }
+
+          onInput({
+            ...formData,
+            federationAddress: response.account_id,
+            memoType: response.memo_type || StellarSdk.MemoText,
+            memoContent: response.memo || "",
+          });
+        } else {
+          onInput({
+            ...formData,
+            federationAddress: response.account_id,
+          });
+        }
       } catch (err) {
         setFederationAddressFetchStatus(ActionStatus.ERROR);
       }
@@ -94,7 +164,7 @@ export const CreateTransaction = (props: CreateProps) => {
       {federationAddressFetchStatus && (
         <El>
           {federationAddressFetchStatus === ActionStatus.PENDING && (
-            <El>Loading federation address...</El>
+            <El>Loading federation address…</El>
           )}
           {federationAddressFetchStatus === ActionStatus.SUCCESS && (
             <>
@@ -136,7 +206,7 @@ export const CreateTransaction = (props: CreateProps) => {
       {isMemoVisible && (
         <>
           <El>
-            Memo Type:{" "}
+            Memo Type:
             <TempSelectInputEl
               onChange={(e) => {
                 onInput({
@@ -145,6 +215,7 @@ export const CreateTransaction = (props: CreateProps) => {
                 });
               }}
               value={formData.memoType}
+              disabled={isMemoTypeFromFederation}
             >
               <option value={StellarSdk.MemoText}>MEMO_TEXT</option>
               <option value={StellarSdk.MemoID}>MEMO_ID</option>
@@ -166,21 +237,27 @@ export const CreateTransaction = (props: CreateProps) => {
                 });
               }}
               value={formData.memoContent as string}
+              disabled={isMemoContentFromFederation}
             ></TempInputEl>
+            {(isMemoContentFromFederation || isMemoTypeFromFederation) && (
+              <El>Memo information is provided by the federation address</El>
+            )}
           </El>
           <El>
-            <TempAnchorEl
-              onClick={() => {
-                onInput({
-                  ...formData,
-                  memoType: StellarSdk.MemoNone,
-                  memoContent: "",
-                });
-                setIsMemoVisible(false);
-              }}
-            >
-              Remove memo:
-            </TempAnchorEl>
+            {!isMemoContentFromFederation && (
+              <TempAnchorEl
+                onClick={() => {
+                  onInput({
+                    ...formData,
+                    memoType: StellarSdk.MemoNone,
+                    memoContent: "",
+                  });
+                  setIsMemoVisible(false);
+                }}
+              >
+                Remove memo:
+              </TempAnchorEl>
+            )}
           </El>
         </>
       )}
@@ -188,11 +265,14 @@ export const CreateTransaction = (props: CreateProps) => {
         Fee (lumens) :{" "}
         <TempInputEl
           type="number"
-          value={formData.fee}
+          value={maxFee}
           onChange={(e) => {
-            onInput({ ...formData, fee: e.target.value });
+            setMaxFee(e.target.value);
           }}
         ></TempInputEl>
+      </El>
+      <El>
+        <b>{networkCongestion} congestion!</b> Recommended fee: {recomendedFee}
       </El>
       <button onClick={props.onContinue}>Continue</button>
     </El>
