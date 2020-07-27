@@ -65,7 +65,7 @@ export const CreateTransaction = (props: CreateProps) => {
   useEffect(() => {
     const fetchNetworkBaseFee = async () => {
       const server = new StellarSdk.Server(
-        getNetworkConfig(settings.isTestnet),
+        getNetworkConfig(settings.isTestnet).url,
       );
       try {
         const feeStats = await server.feeStats();
@@ -86,6 +86,7 @@ export const CreateTransaction = (props: CreateProps) => {
         // use default values
       }
     };
+
     fetchNetworkBaseFee();
   }, [setMaxFee, settings.isTestnet]);
 
