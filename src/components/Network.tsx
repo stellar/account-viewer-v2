@@ -29,14 +29,12 @@ export const Network = ({ children }: NetworkProps) => {
     (isDevelopment && !settings.isTestnet) ||
     (!isDevelopment && settings.isTestnet);
 
-  const handleTestnetParamChange = () => {
+  useEffect(() => {
     if (testnetParam) {
       // route and store will reset when page reloads on query change
       dispatch(update({ isTestnet }));
     }
-  };
-
-  useEffect(handleTestnetParamChange, [isTestnet]);
+  }, [isTestnet, dispatch, testnetParam]);
 
   return (
     <>

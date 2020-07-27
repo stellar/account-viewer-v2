@@ -3,8 +3,10 @@ import styled from "styled-components";
 import StellarSdk, { MemoType, FederationServer } from "stellar-sdk";
 import BigNumber from "bignumber.js";
 
-import { ActionStatus } from "constants/types.d";
+import { ActionStatus, NetworkCongestion } from "constants/types.d";
+import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { lumensFromStroops } from "helpers/stroopConversion";
+import { useRedux } from "hooks/useRedux";
 import { FormData } from "./SendTransactionFlow";
 
 const El = styled.div`
@@ -38,15 +40,9 @@ interface CreateProps {
 
 const isFederationAddress = (value: string) => value.includes("*");
 
-// TODO - move to constants folder
-const NetworkCongestion = {
-  LOW: "LOW",
-  MEDIUM: "MEDIUM",
-  HIGH: "HIGH",
-};
-
 export const CreateTransaction = (props: CreateProps) => {
   const { formData, onInput, maxFee, setMaxFee } = props;
+  const { settings } = useRedux(["settings"]);
   const [isMemoVisible, setIsMemoVisible] = useState(!!formData.memoContent);
   const [isMemoTypeFromFederation, setIsMemoTypeFromFederation] = useState(
     false,
@@ -68,9 +64,8 @@ export const CreateTransaction = (props: CreateProps) => {
 
   useEffect(() => {
     const fetchNetworkBaseFee = async () => {
-      // TODO - network config
       const server = new StellarSdk.Server(
-        "https://horizon-testnet.stellar.org",
+        getNetworkConfig(settings.isTestnet).url,
       );
       try {
         const feeStats = await server.feeStats();
@@ -91,8 +86,9 @@ export const CreateTransaction = (props: CreateProps) => {
         // use default values
       }
     };
+
     fetchNetworkBaseFee();
-  }, [setMaxFee]);
+  }, [setMaxFee, settings.isTestnet]);
 
   const memoPlaceholderMap: { [index: string]: string } = {
     [StellarSdk.MemoText]: "Up to 28 characters",

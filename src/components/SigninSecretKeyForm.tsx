@@ -50,7 +50,7 @@ export const SigninSecretKeyForm = ({ onClose }: SigninSecretKeyFormProps) => {
   const [secretKey, setSecretKey] = useState("");
   const [pageError, setPageError] = useState("");
 
-  const handleStatusChange = () => {
+  useEffect(() => {
     if (errorMessage) {
       setPageError(errorMessage);
       return;
@@ -63,9 +63,7 @@ export const SigninSecretKeyForm = ({ onClose }: SigninSecretKeyFormProps) => {
         setPageError("Something went wrong, please try again.");
       }
     }
-  };
-
-  useEffect(handleStatusChange, [status, errorMessage]);
+  }, [status, errorMessage, history, isAuthenticated]);
 
   let failedAttempts = 0;
 

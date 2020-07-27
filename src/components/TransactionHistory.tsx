@@ -13,13 +13,11 @@ export const TransactionHistory = () => {
   const accountId = account.data?.id;
   const dispatch = useDispatch();
 
-  const handleAccountIdChange = () => {
+  useEffect(() => {
     if (accountId) {
       dispatch(fetchTxHistoryAction(accountId));
     }
-  };
-
-  useEffect(handleAccountIdChange, [accountId]);
+  }, [accountId, dispatch]);
 
   return (
     <El>

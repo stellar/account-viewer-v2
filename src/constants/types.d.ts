@@ -12,3 +12,9 @@ export enum ActionStatus {
 export interface RejectMessage {
   errorMessage: string;
 }
+
+export enum NetworkCongestion {
+  LOW = "LOW",
+  MEDIUM = "MEDIUM",
+  HIGH = "HIGH",
+}

@@ -77,7 +77,15 @@ export const SigninTrezorForm = ({ onClose }: SigninTrezorFormProps) => {
     fetchTrezorLogin();
   };
 
-  const handleTrezorStatusChange = () => {
+  useEffect(
+    () => () => {
+      dispatch(resetTrezor());
+      dispatch(resetAccount());
+    },
+    [dispatch],
+  );
+
+  useEffect(() => {
     if (trezorErrorMessage) {
       setPageError(trezorErrorMessage);
       return;
@@ -94,9 +102,9 @@ export const SigninTrezorForm = ({ onClose }: SigninTrezorFormProps) => {
         setPageError("Something went wrong, please try again.");
       }
     }
-  };
+  }, [trezorStatus, trezorErrorMessage, dispatch, trezorData]);
 
-  const handleAccountStatusChange = () => {
+  useEffect(() => {
     if (accountErrorMessage) {
       setPageError(accountErrorMessage);
       return;
@@ -109,17 +117,7 @@ export const SigninTrezorForm = ({ onClose }: SigninTrezorFormProps) => {
         setPageError("Something went wrong, please try again.");
       }
     }
-  };
-
-  const resetOnUnmount = () => {
-    dispatch(resetTrezor());
-    dispatch(resetAccount());
-  };
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => resetOnUnmount, []);
-  useEffect(handleTrezorStatusChange, [trezorStatus, trezorErrorMessage]);
-  useEffect(handleAccountStatusChange, [accountStatus, accountErrorMessage]);
+  }, [accountStatus, accountErrorMessage, history, isAuthenticated]);
 
   return (
     <div>
