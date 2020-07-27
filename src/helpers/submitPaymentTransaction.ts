@@ -1,18 +1,25 @@
-import { PaymentTransactionParams } from "ducks/sendTransaction";
 import StellarSdk, {
   Transaction,
   MemoType,
   MemoValue,
   Keypair,
 } from "stellar-sdk";
+import { PaymentTransactionParams } from "ducks/sendTransaction";
+import { getNetworkConfig } from "helpers/getNetworkConfig";
+import { store } from "App";
 
 export const submitPaymentTransaction = async (
   params: PaymentTransactionParams,
 ) => {
-  const server = new StellarSdk.Server("https://horizon-testnet.stellar.org");
+  const { settings } = store.getState();
+  const server = new StellarSdk.Server(
+    getNetworkConfig(settings.isTestnet).url,
+  );
+
   const keypair = Keypair.fromSecret(params.secret);
   let transaction = await buildPaymentTransaction(params);
   transaction = await signTransaction(transaction, keypair);
+
   const result = await server.submitTransaction(transaction);
   return result;
 };
@@ -55,14 +62,17 @@ export const buildPaymentTransaction = async ({
 }: PaymentTransactionParams) => {
   let transaction;
   try {
-    const server = new StellarSdk.Server("https://horizon-testnet.stellar.org");
+    const { settings } = store.getState();
+    const server = new StellarSdk.Server(
+      getNetworkConfig(settings.isTestnet).url,
+    );
     const keypair = Keypair.fromSecret(secret);
     const sequence = (await server.loadAccount(keypair.publicKey())).sequence;
     const source = await new StellarSdk.Account(keypair.publicKey(), sequence);
 
     transaction = new StellarSdk.TransactionBuilder(source, {
       fee,
-      networkPassphrase: StellarSdk.Networks.TESTNET,
+      networkPassphrase: getNetworkConfig(settings.isTestnet).network,
       timebounds: await server.fetchTimebounds(100),
     }).addOperation(
       StellarSdk.Operation.payment({

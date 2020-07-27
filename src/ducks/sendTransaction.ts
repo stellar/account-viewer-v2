@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { MemoType, MemoValue, Horizon } from "stellar-sdk";
 import BigNumber from "bignumber.js";
 import { submitPaymentTransaction } from "helpers/submitPaymentTransaction";
-import { ActionStatus } from "./account";
+import { ActionStatus } from "constants/types.d";
 
 export interface PaymentTransactionParams {
   secret: string;

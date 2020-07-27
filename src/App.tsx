@@ -8,18 +8,19 @@ import {
 import { combineReducers, Action } from "redux";
 import { Provider } from "react-redux";
 import { createGlobalStyle } from "styled-components";
+import BigNumber from "bignumber.js";
 
 import { Landing } from "pages/Landing";
 import { Dashboard } from "pages/Dashboard";
+import { Network } from "components/Network";
 import { PrivateRoute } from "components/PrivateRoute";
 
 import { reducer as account } from "ducks/account";
-import { reducer as sendTx } from "ducks/sendTransaction";
-import { reducer as txHistory } from "ducks/txHistory";
 import { reducer as keyStore } from "ducks/keyStore";
+import { reducer as sendTx } from "ducks/sendTransaction";
+import { reducer as settings } from "ducks/settings";
+import { reducer as txHistory } from "ducks/txHistory";
 import { reducer as walletTrezor } from "ducks/wallet/trezor";
-
-import BigNumber from "bignumber.js";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -39,12 +40,13 @@ const loggerMiddleware = (store: any) => (next: any) => (
 const isSerializable = (value: any) =>
   BigNumber.isBigNumber(value) || isPlain(value);
 
-const store = configureStore({
+export const store = configureStore({
   reducer: combineReducers({
     account,
-    sendTx,
-    txHistory,
     keyStore,
+    sendTx,
+    settings,
+    txHistory,
     walletTrezor,
   }),
   middleware: [
@@ -58,11 +60,12 @@ const store = configureStore({
 });
 
 export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof store.getState>;
 
 export const App = () => (
   <Provider store={store}>
     <Router>
-      <div>
+      <Network>
         <GlobalStyle />
 
         <Switch>
@@ -76,7 +79,7 @@ export const App = () => (
 
           {/* TODO: add 404 page */}
         </Switch>
-      </div>
+      </Network>
     </Router>
   </Provider>
 );

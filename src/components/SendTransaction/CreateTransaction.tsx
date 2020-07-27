@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import StellarSdk, { MemoType, FederationServer } from "stellar-sdk";
 import styled from "styled-components";
+import StellarSdk, { MemoType, FederationServer } from "stellar-sdk";
 import BigNumber from "bignumber.js";
 
-import { ActionStatus } from "ducks/account";
+import { ActionStatus } from "constants/types.d";
 import { lumensFromStroops } from "helpers/stroopConversion";
 import { FormData } from "./SendTransactionFlow";
 

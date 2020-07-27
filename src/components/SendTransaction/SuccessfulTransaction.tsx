@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useRedux } from "hooks/useRedux";
+import { getNetworkConfig } from "helpers/getNetworkConfig";
 
 const El = styled.div``;
 
@@ -17,15 +18,17 @@ const TempAnchorEl = styled.a`
 
 export const SuccessfulTransaction = (props: { onRestartFlow: () => void }) => {
   const { onRestartFlow } = props;
-  const { sendTx } = useRedux("sendTx");
+  const { sendTx, settings } = useRedux("sendTx", "settings");
+
   return (
     <El>
       <h1>Success</h1>
       <El>{sendTx.data.result_xdr}</El>
       <El>
-        {/* } TODO - network config */}
         <TempAnchorEl
-          href={`https://stellar.expert/explorer/testnet/tx/${sendTx.data.id}`}
+          href={`${getNetworkConfig(settings.isTestnet).stellarExpertTxUrl}${
+            sendTx.data.id
+          }`}
           target="_blank"
         >
           See details on StellarExpert

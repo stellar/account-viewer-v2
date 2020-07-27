@@ -6,7 +6,7 @@ import { useRedux } from "hooks/useRedux";
 import { loadPrivateKey } from "helpers/keyManager";
 import { stroopsFromLumens } from "helpers/stroopConversion";
 import { sendTxAction } from "ducks/sendTransaction";
-import { ActionStatus } from "ducks/account";
+import { ActionStatus } from "constants/types.d";
 import { FormData } from "./SendTransactionFlow";
 
 const El = styled.div``;

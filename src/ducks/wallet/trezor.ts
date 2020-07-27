@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 // @types/trezor-connect doesn't have .stellarGetAddress()
 // @ts-ignore
 import TrezorConnect from "trezor-connect";
+import { ActionStatus, RejectMessage } from "constants/types.d";
 
 export const fetchTrezorStellarAddressAction = createAsyncThunk<
   // Return type of the payload creator
@@ -36,16 +37,6 @@ export const fetchTrezorStellarAddressAction = createAsyncThunk<
     }
   },
 );
-
-interface RejectMessage {
-  errorMessage: string;
-}
-
-export enum ActionStatus {
-  PENDING = "PENDING",
-  SUCCESS = "SUCCESS",
-  ERROR = "ERROR",
-}
 
 interface InitialState {
   data: string | null;
@@ -93,4 +84,5 @@ const walletTrezorSlice = createSlice({
   },
 });
 
-export const { reducer, actions } = walletTrezorSlice;
+export const { reducer } = walletTrezorSlice;
+export const { reset } = walletTrezorSlice.actions;

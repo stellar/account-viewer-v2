@@ -1,44 +1,38 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { DataProvider, Types } from "@stellar/wallet-sdk";
-import StellarSdk from "stellar-sdk";
+import { getNetworkConfig } from "helpers/getNetworkConfig";
+import { ActionStatus, RejectMessage } from "constants/types.d";
+import { isTestnetSelector } from "ducks/settings";
+import { RootState } from "App";
 
 export const fetchAccountAction = createAsyncThunk<
-  // Return type of the payload creator
   Types.AccountDetails,
-  // First argument to the payload creator
   string,
-  // Types for ThunkAPI
-  { rejectValue: RejectMessage }
->("account/fetchAccountAction", async (publicKey, { rejectWithValue }) => {
-  const dataProvider = new DataProvider({
-    // TODO: move to config (support mainnet and testnet)
-    serverUrl: "https://horizon-testnet.stellar.org",
-    accountOrKey: publicKey,
-    networkPassphrase: StellarSdk.Networks.TESTNET,
-  });
+  { rejectValue: RejectMessage; state: RootState }
+>(
+  "account/fetchAccountAction",
+  async (publicKey, { rejectWithValue, getState }) => {
+    const isTestnet = isTestnetSelector(getState());
 
-  let stellarAccount: Types.AccountDetails | null = null;
-
-  try {
-    stellarAccount = await dataProvider.fetchAccountDetails();
-  } catch (error) {
-    return rejectWithValue({
-      errorMessage: error.response?.detail || error.toString(),
+    const dataProvider = new DataProvider({
+      serverUrl: getNetworkConfig(isTestnet).url,
+      accountOrKey: publicKey,
+      networkPassphrase: getNetworkConfig(isTestnet).network,
     });
-  }
 
-  return stellarAccount;
-});
+    let stellarAccount: Types.AccountDetails | null = null;
 
-interface RejectMessage {
-  errorMessage: string;
-}
+    try {
+      stellarAccount = await dataProvider.fetchAccountDetails();
+    } catch (error) {
+      return rejectWithValue({
+        errorMessage: error.response?.detail || error.toString(),
+      });
+    }
 
-export enum ActionStatus {
-  PENDING = "PENDING",
-  SUCCESS = "SUCCESS",
-  ERROR = "ERROR",
-}
+    return stellarAccount;
+  },
+);
 
 interface InitialState {
   data: Types.AccountDetails | null;
@@ -57,7 +51,9 @@ const initialState: InitialState = {
 const accountSlice = createSlice({
   name: "account",
   initialState,
-  reducers: {},
+  reducers: {
+    reset: () => initialState,
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchAccountAction.pending, (state) => ({
       ...state,
@@ -84,3 +80,4 @@ const accountSlice = createSlice({
 });
 
 export const { reducer } = accountSlice;
+export const { reset } = accountSlice.actions;

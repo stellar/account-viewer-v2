@@ -6,16 +6,13 @@ import { useDispatch } from "react-redux";
 // @ts-ignore
 import TrezorConnect from "trezor-connect";
 
-import {
-  fetchAccountAction,
-  ActionStatus as AccountActionStatus,
-} from "ducks/account";
+import { fetchAccountAction, reset as resetAccount } from "ducks/account";
 import {
   fetchTrezorStellarAddressAction,
-  ActionStatus as TrezorActionStatus,
-  actions as trezorActions,
+  reset as resetTrezor,
 } from "ducks/wallet/trezor";
 import { useRedux } from "hooks/useRedux";
+import { ActionStatus } from "constants/types.d";
 
 const InfoEl = styled.div`
   background-color: #dbdbdb;
@@ -86,7 +83,7 @@ export const SigninTrezorForm = ({ onClose }: SigninTrezorFormProps) => {
       return;
     }
 
-    if (trezorStatus === TrezorActionStatus.SUCCESS) {
+    if (trezorStatus === ActionStatus.SUCCESS) {
       if (trezorData) {
         try {
           dispatch(fetchAccountAction(trezorData));
@@ -105,7 +102,7 @@ export const SigninTrezorForm = ({ onClose }: SigninTrezorFormProps) => {
       return;
     }
 
-    if (accountStatus === AccountActionStatus.SUCCESS) {
+    if (accountStatus === ActionStatus.SUCCESS) {
       if (isAuthenticated) {
         history.push("/dashboard");
       } else {
@@ -114,13 +111,13 @@ export const SigninTrezorForm = ({ onClose }: SigninTrezorFormProps) => {
     }
   };
 
-  const resetOnMount = () => {
-    dispatch(trezorActions.reset());
+  const resetOnUnmount = () => {
+    dispatch(resetTrezor());
+    dispatch(resetAccount());
   };
 
-  // TODO: once network config is in place, make sure everything is reset
-  // properly (errors cleared, etc)
-  useEffect(resetOnMount, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => resetOnUnmount, []);
   useEffect(handleTrezorStatusChange, [trezorStatus, trezorErrorMessage]);
   useEffect(handleAccountStatusChange, [accountStatus, accountErrorMessage]);
 
@@ -135,7 +132,7 @@ export const SigninTrezorForm = ({ onClose }: SigninTrezorFormProps) => {
         </>
       )}
 
-      {trezorStatus === TrezorActionStatus.PENDING && (
+      {trezorStatus === ActionStatus.PENDING && (
         <InfoEl>Please follow the instructions in the Trezor popup.</InfoEl>
       )}
 
