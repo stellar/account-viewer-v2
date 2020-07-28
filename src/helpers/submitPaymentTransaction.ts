@@ -8,17 +8,8 @@ import StellarSdk, {
 import { AuthType } from "constants/types.d";
 import { PaymentTransactionParams } from "ducks/sendTransaction";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
-import { trezorSignTransaction } from "helpers/wallet/trezorSignTransaction";
+import { getTrezorSignature } from "helpers/wallet/getTrezorSignature";
 import { store } from "config/store";
-
-const getSignature = (transaction: Transaction, authType: AuthType) => {
-  switch (authType) {
-    case AuthType.TREZOR:
-      return trezorSignTransaction(transaction);
-    default:
-      throw new Error(`Sorry, we don’t support ${authType}.`);
-  }
-};
 
 export const submitPaymentTransaction = async (
   params: PaymentTransactionParams,
@@ -50,7 +41,8 @@ export const signTransaction = async (
       const keypair = Keypair.fromSecret(params.secret);
       transaction.sign(keypair);
     } else {
-      const signature = await getSignature(transaction, authType);
+      // TODO: Trezor signing will be in wallet-sdk
+      const signature = await getTrezorSignature(transaction);
 
       transaction.addSignature(params.publicKey, signature);
     }

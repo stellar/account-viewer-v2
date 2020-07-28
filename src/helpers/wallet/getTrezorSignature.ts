@@ -3,7 +3,7 @@ import { Transaction } from "stellar-sdk";
 import TrezorConnect from "trezor-connect";
 import { transformTransaction } from "helpers/wallet/trezorTransformTransaction";
 
-export const trezorSignTransaction = async (transaction: Transaction) => {
+export const getTrezorSignature = async (transaction: Transaction) => {
   try {
     const params = transformTransaction("m/44'/148'/0'", transaction);
     const response = await TrezorConnect.stellarSignTransaction(params);
