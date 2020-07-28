@@ -9,7 +9,7 @@ import { AuthType } from "constants/types.d";
 import { PaymentTransactionParams } from "ducks/sendTransaction";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { trezorSignTransaction } from "helpers/wallet/trezorSignTransaction";
-import { store } from "App";
+import { store } from "config/store";
 
 const getSignature = (transaction: Transaction, authType: AuthType) => {
   switch (authType) {

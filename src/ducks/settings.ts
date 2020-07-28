@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AuthType } from "constants/types.d";
-import { RootState } from "App";
+import { RootState } from "config/store";
 
 interface InitialState {
   authType?: AuthType;

@@ -4,7 +4,7 @@ import BigNumber from "bignumber.js";
 import { submitPaymentTransaction } from "helpers/submitPaymentTransaction";
 import { ActionStatus, AuthType } from "constants/types.d";
 import { settingsSelector } from "ducks/settings";
-import { RootState } from "App";
+import { RootState } from "config/store";
 
 export interface PaymentTransactionParams {
   publicKey: string;

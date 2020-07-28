@@ -3,7 +3,7 @@ import { DataProvider, Types } from "@stellar/wallet-sdk";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { ActionStatus, RejectMessage } from "constants/types.d";
 import { settingsSelector } from "ducks/settings";
-import { RootState } from "App";
+import { RootState } from "config/store";
 
 export const fetchTxHistoryAction = createAsyncThunk<
   Array<Types.Payment>,
