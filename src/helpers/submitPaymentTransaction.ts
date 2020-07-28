@@ -4,21 +4,24 @@ import StellarSdk, {
   MemoValue,
   Keypair,
 } from "stellar-sdk";
+// @ts-ignore
+import { AuthType } from "constants/types.d";
 import { PaymentTransactionParams } from "ducks/sendTransaction";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
-import { store } from "App";
+import { getTrezorSignature } from "helpers/wallet/getTrezorSignature";
+import { store } from "config/store";
 
 export const submitPaymentTransaction = async (
   params: PaymentTransactionParams,
+  authType?: AuthType,
 ) => {
   const { settings } = store.getState();
   const server = new StellarSdk.Server(
     getNetworkConfig(settings.isTestnet).url,
   );
 
-  const keypair = Keypair.fromSecret(params.secret);
   let transaction = await buildPaymentTransaction(params);
-  transaction = await signTransaction(transaction, keypair);
+  transaction = await signTransaction(transaction, params, authType);
 
   const result = await server.submitTransaction(transaction);
   return result;
@@ -26,13 +29,27 @@ export const submitPaymentTransaction = async (
 
 export const signTransaction = async (
   transaction: Transaction,
-  keypair: Keypair,
+  params: PaymentTransactionParams,
+  authType?: AuthType,
 ) => {
   try {
-    await transaction.sign(keypair);
+    if (!authType) {
+      throw new Error(`Bad authentication`);
+    }
+
+    if (authType === AuthType.PRIVATE_KEY) {
+      const keypair = Keypair.fromSecret(params.secret);
+      transaction.sign(keypair);
+    } else {
+      // TODO: Trezor signing will be in wallet-sdk
+      const signature = await getTrezorSignature(transaction);
+
+      transaction.addSignature(params.publicKey, signature);
+    }
   } catch (err) {
     throw new Error(`Failed to sign transaction, error: ${err.toString()}`);
   }
+
   return transaction;
 };
 
@@ -52,23 +69,25 @@ const createMemo = (memoType: MemoType, memoContent: MemoValue) => {
   }
 };
 
-export const buildPaymentTransaction = async ({
-  secret,
-  toAccountId,
-  amount,
-  fee,
-  memoType,
-  memoContent,
-}: PaymentTransactionParams) => {
+export const buildPaymentTransaction = async (
+  params: PaymentTransactionParams,
+) => {
   let transaction;
   try {
+    const {
+      publicKey,
+      amount,
+      fee,
+      toAccountId,
+      memoContent,
+      memoType,
+    } = params;
     const { settings } = store.getState();
     const server = new StellarSdk.Server(
       getNetworkConfig(settings.isTestnet).url,
     );
-    const keypair = Keypair.fromSecret(secret);
-    const sequence = (await server.loadAccount(keypair.publicKey())).sequence;
-    const source = await new StellarSdk.Account(keypair.publicKey(), sequence);
+    const sequence = (await server.loadAccount(publicKey)).sequence;
+    const source = await new StellarSdk.Account(publicKey, sequence);
 
     transaction = new StellarSdk.TransactionBuilder(source, {
       fee,

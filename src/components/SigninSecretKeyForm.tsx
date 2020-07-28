@@ -6,8 +6,9 @@ import { Keypair } from "stellar-sdk";
 
 import { fetchAccountAction } from "ducks/account";
 import { storePrivateKeyAction } from "ducks/keyStore";
+import { update } from "ducks/settings";
 import { useRedux } from "hooks/useRedux";
-import { ActionStatus } from "constants/types.d";
+import { ActionStatus, AuthType } from "constants/types.d";
 
 const WarningEl = styled.div`
   background-color: #f3e5e5;
@@ -59,11 +60,12 @@ export const SigninSecretKeyForm = ({ onClose }: SigninSecretKeyFormProps) => {
     if (status === ActionStatus.SUCCESS) {
       if (isAuthenticated) {
         history.push("/dashboard");
+        dispatch(update({ authType: AuthType.PRIVATE_KEY }));
       } else {
         setPageError("Something went wrong, please try again.");
       }
     }
-  }, [status, errorMessage, history, isAuthenticated]);
+  }, [status, errorMessage, dispatch, history, isAuthenticated]);
 
   let failedAttempts = 0;
 

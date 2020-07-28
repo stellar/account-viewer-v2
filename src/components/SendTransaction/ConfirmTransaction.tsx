@@ -23,7 +23,12 @@ interface ConfirmProps {
 }
 
 export const ConfirmTransaction = (props: ConfirmProps) => {
-  const { sendTx, keyStore } = useRedux(["sendTx", "keyStore"]);
+  const { sendTx, keyStore, account, settings } = useRedux([
+    "sendTx",
+    "keyStore",
+    "account",
+    "settings",
+  ]);
   const { formData, onSuccessfulTx, onFailedTx, maxFee } = props;
   const dispatch = useDispatch();
 
@@ -31,6 +36,7 @@ export const ConfirmTransaction = (props: ConfirmProps) => {
     const { privateKey } = await loadPrivateKey(keyStore.id, keyStore.password);
     const result = await dispatch(
       sendTxAction({
+        publicKey: account.data?.id,
         secret: privateKey,
         // formData.federationAddress exists only if valid fed address given
         toAccountId: formData.federationAddress || formData.toAccountId,
@@ -57,7 +63,7 @@ export const ConfirmTransaction = (props: ConfirmProps) => {
       <El>Fee: {maxFee}</El>
       <TempButtonEl onClick={handleSend}>Send</TempButtonEl>
       {sendTx.status === ActionStatus.PENDING && (
-        <El>Submitting Transaction</El>
+        <El>{`Submitting Transaction. Follow ${settings.authType} instructions`}</El>
       )}
     </>
   );

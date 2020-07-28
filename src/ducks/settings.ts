@@ -1,7 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "App";
+import { AuthType } from "constants/types.d";
+import { RootState } from "config/store";
 
 interface InitialState {
+  authType?: AuthType;
   isTestnet: boolean;
 }
 
@@ -10,6 +12,7 @@ interface Setting {
 }
 
 const initialState: InitialState = {
+  authType: undefined,
   isTestnet: process.env.NODE_ENV === "development",
 };
 
@@ -24,7 +27,7 @@ const settingsSlice = createSlice({
   },
 });
 
-export const isTestnetSelector = (state: RootState) => state.settings.isTestnet;
+export const settingsSelector = (state: RootState) => state.settings;
 
 export const { reducer } = settingsSlice;
 export const { update } = settingsSlice.actions;

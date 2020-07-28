@@ -1,7 +1,7 @@
 import { KeyManager, KeyManagerPlugins, KeyType } from "@stellar/wallet-sdk";
 import { Keypair } from "stellar-sdk";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
-import { store } from "App";
+import { store } from "config/store";
 
 export interface CreateKeyManagerResponse {
   id: string;

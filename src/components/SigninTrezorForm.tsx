@@ -7,12 +7,13 @@ import { useDispatch } from "react-redux";
 import TrezorConnect from "trezor-connect";
 
 import { fetchAccountAction, reset as resetAccount } from "ducks/account";
+import { update } from "ducks/settings";
 import {
   fetchTrezorStellarAddressAction,
   reset as resetTrezor,
 } from "ducks/wallet/trezor";
 import { useRedux } from "hooks/useRedux";
-import { ActionStatus } from "constants/types.d";
+import { ActionStatus, AuthType } from "constants/types.d";
 
 const InfoEl = styled.div`
   background-color: #dbdbdb;
@@ -79,10 +80,12 @@ export const SigninTrezorForm = ({ onClose }: SigninTrezorFormProps) => {
 
   useEffect(
     () => () => {
-      dispatch(resetTrezor());
-      dispatch(resetAccount());
+      if (pageError) {
+        dispatch(resetTrezor());
+        dispatch(resetAccount());
+      }
     },
-    [dispatch],
+    [dispatch, pageError],
   );
 
   useEffect(() => {
@@ -113,11 +116,12 @@ export const SigninTrezorForm = ({ onClose }: SigninTrezorFormProps) => {
     if (accountStatus === ActionStatus.SUCCESS) {
       if (isAuthenticated) {
         history.push("/dashboard");
+        dispatch(update({ authType: AuthType.TREZOR }));
       } else {
         setPageError("Something went wrong, please try again.");
       }
     }
-  }, [accountStatus, accountErrorMessage, history, isAuthenticated]);
+  }, [accountStatus, accountErrorMessage, dispatch, history, isAuthenticated]);
 
   return (
     <div>

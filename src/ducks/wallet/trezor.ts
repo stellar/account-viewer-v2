@@ -5,11 +5,8 @@ import TrezorConnect from "trezor-connect";
 import { ActionStatus, RejectMessage } from "constants/types.d";
 
 export const fetchTrezorStellarAddressAction = createAsyncThunk<
-  // Return type of the payload creator
   string,
-  // First argument to the payload creator
   undefined,
-  // Types for ThunkAPI
   { rejectValue: RejectMessage }
 >(
   "walletTrezor/fetchTrezorStellarAddressAction",
