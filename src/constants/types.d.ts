@@ -18,3 +18,11 @@ export enum NetworkCongestion {
   MEDIUM = "MEDIUM",
   HIGH = "HIGH",
 }
+
+export enum AuthType {
+  ALBEDO = "ALBEDO",
+  LEDGER = "LEDGER",
+  LYRA = "LYRA",
+  PRIVATE_KEY = "PRIVATE_KEY",
+  TREZOR = "TREZOR",
+}

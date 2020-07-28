@@ -2,25 +2,30 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { MemoType, MemoValue, Horizon } from "stellar-sdk";
 import BigNumber from "bignumber.js";
 import { submitPaymentTransaction } from "helpers/submitPaymentTransaction";
-import { ActionStatus } from "constants/types.d";
+import { ActionStatus, AuthType } from "constants/types.d";
+import { settingsSelector } from "ducks/settings";
+import { RootState } from "App";
 
 export interface PaymentTransactionParams {
+  publicKey: string;
   secret: string;
   toAccountId: string;
   amount: BigNumber;
   fee: number;
   memoType: MemoType;
   memoContent: MemoValue;
+  authType?: AuthType;
 }
 
 export const sendTxAction = createAsyncThunk<
   Horizon.TransactionResponse,
   PaymentTransactionParams,
-  { rejectValue: RejectMessage }
->("sendTxAction", async (params, { rejectWithValue }) => {
+  { rejectValue: RejectMessage; state: RootState }
+>("sendTxAction", async (params, { rejectWithValue, getState }) => {
   let result;
   try {
-    result = await submitPaymentTransaction(params);
+    const { authType } = settingsSelector(getState());
+    result = await submitPaymentTransaction(params, authType);
   } catch (error) {
     return rejectWithValue({
       errorData: error.response?.data || { message: error.message },
