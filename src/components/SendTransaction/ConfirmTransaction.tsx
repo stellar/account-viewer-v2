@@ -33,7 +33,10 @@ export const ConfirmTransaction = (props: ConfirmProps) => {
   const dispatch = useDispatch();
 
   const handleSend = async () => {
-    const { privateKey } = await loadPrivateKey(keyStore.id, keyStore.password);
+    const { privateKey } = await loadPrivateKey(
+      keyStore.keyStoreId,
+      keyStore.password,
+    );
     const result = await dispatch(
       sendTxAction({
         publicKey: account.data?.id,
