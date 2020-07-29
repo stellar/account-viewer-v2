@@ -70,8 +70,7 @@ export const SigninTrezorForm = ({ onClose }: SigninTrezorFormProps) => {
 
   const initTrezor = () => {
     TrezorConnect.manifest({
-      // TODO: Email to use to be contacted by Trezor for maintenance, etc.
-      email: "info@stellar.org",
+      email: "accounts+trezor@stellar.org",
       appUrl: "https://accountviewer.stellar.org/",
     });
 

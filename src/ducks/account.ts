@@ -55,9 +55,8 @@ const accountSlice = createSlice({
     reset: () => initialState,
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchAccountAction.pending, (state) => ({
-      ...state,
-      data: null,
+    builder.addCase(fetchAccountAction.pending, () => ({
+      ...initialState,
       status: ActionStatus.PENDING,
     }));
 

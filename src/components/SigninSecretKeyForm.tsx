@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { Keypair } from "stellar-sdk";
 
-import { fetchAccountAction } from "ducks/account";
+import { fetchAccountAction, reset } from "ducks/account";
 import { storePrivateKeyAction } from "ducks/keyStore";
 import { update } from "ducks/settings";
 import { useRedux } from "hooks/useRedux";
@@ -66,6 +66,15 @@ export const SigninSecretKeyForm = ({ onClose }: SigninSecretKeyFormProps) => {
       }
     }
   }, [status, errorMessage, dispatch, history, isAuthenticated]);
+
+  useEffect(
+    () => () => {
+      if (errorMessage) {
+        dispatch(reset());
+      }
+    },
+    [errorMessage, dispatch],
+  );
 
   let failedAttempts = 0;
 
