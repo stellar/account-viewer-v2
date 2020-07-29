@@ -15,7 +15,7 @@ const TempButtonEl = styled.button`
 
 export const ReceiveTransaction = () => {
   const { account } = useRedux(["account"]);
-  const [isIdCopied, setIsIdCopied] = useState(false);
+  const [isAccountIdCopied, setAccountIsIdCopied] = useState(false);
   const accountId = account.data?.id;
 
   return (
@@ -31,8 +31,13 @@ export const ReceiveTransaction = () => {
         <QRCode value={accountId}></QRCode>
       </El>
       <El>{accountId}</El>
-      <CopyToClipboard text={accountId} onCopy={() => setIsIdCopied(true)}>
-        <TempButtonEl>{isIdCopied ? "Copied" : "Copy public key"}</TempButtonEl>
+      <CopyToClipboard
+        text={accountId}
+        onCopy={() => setAccountIsIdCopied(true)}
+      >
+        <TempButtonEl>
+          {isAccountIdCopied ? "Copied" : "Copy public key"}
+        </TempButtonEl>
       </CopyToClipboard>
     </El>
   );

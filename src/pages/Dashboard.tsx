@@ -48,8 +48,8 @@ export const Dashboard = () => {
         visible={isSendTxModalVisible || isReceiveTxModalVisible}
         onClose={resetModalStates}
       >
-        <div>{isSendTxModalVisible && <SendTransactionFlow />}</div>
-        <div>{isReceiveTxModalVisible && <ReceiveTransaction />}</div>
+        {isSendTxModalVisible && <SendTransactionFlow />}
+        {isReceiveTxModalVisible && <ReceiveTransaction />}
       </Modal>
     </El>
   );
