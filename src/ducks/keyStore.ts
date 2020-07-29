@@ -19,13 +19,13 @@ export const storePrivateKeyAction = createAsyncThunk<
 });
 
 interface InitialState {
-  id: string;
+  keyStoreId: string;
   password: string;
   errorMessage?: string;
 }
 
 const initialState: InitialState = {
-  id: "",
+  keyStoreId: "",
   password: "",
   errorMessage: undefined,
 };
@@ -40,7 +40,7 @@ const keyStoreSlice = createSlice({
     }));
     builder.addCase(storePrivateKeyAction.fulfilled, (state, action) => ({
       ...state,
-      id: action.payload.id,
+      keyStoreId: action.payload.id,
       password: action.payload.password,
     }));
     builder.addCase(storePrivateKeyAction.rejected, (state, action) => ({
