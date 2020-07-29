@@ -16,8 +16,10 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.4.0",
     "@stellar/wallet-sdk": "^0.1.0-rc.4",
+    "@types/qrcode.react": "^1.0.1",
     "bignumber.js": "^9.0.0",
     "lodash": "^4.17.17",
+    "qrcode.react": "^1.0.0",
     "react": "^16.13.1",
     "react-copy-to-clipboard": "^5.0.2",
     "react-dom": "^16.13.1",
