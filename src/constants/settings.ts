@@ -23,3 +23,5 @@ export const networkConfig: NetworkConfig = {
     stellarExpertTxUrl: "https://stellar.expert/explorer/public/tx/",
   },
 };
+
+export const qrCodeUrl = "https://stellar-wallet-apis.fnando.now.sh/api";

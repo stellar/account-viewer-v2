@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useRedux } from "hooks/useRedux";
 import { TransactionHistory } from "components/TransactionHistory";
 import { SendTransactionFlow } from "components/SendTransaction/SendTransactionFlow";
+import { ReceiveTransaction } from "components/ReceiveTransaction";
 import { Modal } from "components/Modal";
 
 const El = styled.div`
@@ -16,11 +17,17 @@ const TempButtonEl = styled.button`
 export const Dashboard = () => {
   const { account } = useRedux(["account"]);
   const [isSendTxModalVisible, setIsSendTxModalVisible] = useState(false);
+  const [isReceiveTxModalVisible, setIsReceiveTxModalVisible] = useState(false);
 
   let nativeBalance = 0;
   if (account.data) {
     nativeBalance = account.data.balances.native.total.toString();
   }
+
+  const resetModalStates = () => {
+    setIsSendTxModalVisible(false);
+    setIsReceiveTxModalVisible(false);
+  };
 
   return (
     <El>
@@ -31,17 +38,18 @@ export const Dashboard = () => {
       <TempButtonEl onClick={() => setIsSendTxModalVisible(true)}>
         Send
       </TempButtonEl>
-      <TempButtonEl>Receive</TempButtonEl>
+      <TempButtonEl onClick={() => setIsReceiveTxModalVisible(true)}>
+        Receive
+      </TempButtonEl>
       <El>
         <TransactionHistory />
       </El>
       <Modal
-        visible={isSendTxModalVisible}
-        onClose={() => setIsSendTxModalVisible(false)}
+        visible={isSendTxModalVisible || isReceiveTxModalVisible}
+        onClose={resetModalStates}
       >
-        <div>
-          <SendTransactionFlow />
-        </div>
+        <div>{isSendTxModalVisible && <SendTransactionFlow />}</div>
+        <div>{isReceiveTxModalVisible && <ReceiveTransaction />}</div>
       </Modal>
     </El>
   );
