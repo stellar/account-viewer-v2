@@ -20,7 +20,7 @@ const settingsSlice = createSlice({
   name: "settings",
   initialState,
   reducers: {
-    update: (state, action: PayloadAction<Setting>) => ({
+    updateSettingsAction: (state, action: PayloadAction<Setting>) => ({
       ...state,
       ...action.payload,
     }),
@@ -30,4 +30,4 @@ const settingsSlice = createSlice({
 export const settingsSelector = (state: RootState) => state.settings;
 
 export const { reducer } = settingsSlice;
-export const { update } = settingsSlice.actions;
+export const { updateSettingsAction } = settingsSlice.actions;

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { update } from "ducks/settings";
+import { updateSettingsAction } from "ducks/settings";
 import { useRedux } from "hooks/useRedux";
 
 const BannerEl = styled.div`
@@ -32,7 +32,7 @@ export const Network = ({ children }: NetworkProps) => {
   useEffect(() => {
     if (testnetParam) {
       // route and store will reset when page reloads on query change
-      dispatch(update({ isTestnet }));
+      dispatch(updateSettingsAction({ isTestnet }));
     }
   }, [isTestnet, dispatch, testnetParam]);
 

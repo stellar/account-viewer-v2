@@ -6,11 +6,11 @@ import { useDispatch } from "react-redux";
 // @ts-ignore
 import TrezorConnect from "trezor-connect";
 
-import { fetchAccountAction, reset as resetAccount } from "ducks/account";
-import { update } from "ducks/settings";
+import { fetchAccountAction, resetAccountAction } from "ducks/account";
+import { updateSettingsAction } from "ducks/settings";
 import {
   fetchTrezorStellarAddressAction,
-  reset as resetTrezor,
+  resetTrezorAction,
 } from "ducks/wallet/trezor";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType } from "constants/types.d";
@@ -70,8 +70,7 @@ export const SigninTrezorForm = ({ onClose }: SigninTrezorFormProps) => {
 
   const initTrezor = () => {
     TrezorConnect.manifest({
-      // TODO: Email to use to be contacted by Trezor for maintenance, etc.
-      email: "info@stellar.org",
+      email: "accounts+trezor@stellar.org",
       appUrl: "https://accountviewer.stellar.org/",
     });
 
@@ -81,8 +80,8 @@ export const SigninTrezorForm = ({ onClose }: SigninTrezorFormProps) => {
   useEffect(
     () => () => {
       if (pageError) {
-        dispatch(resetTrezor());
-        dispatch(resetAccount());
+        dispatch(resetTrezorAction());
+        dispatch(resetAccountAction());
       }
     },
     [dispatch, pageError],
@@ -116,7 +115,7 @@ export const SigninTrezorForm = ({ onClose }: SigninTrezorFormProps) => {
     if (accountStatus === ActionStatus.SUCCESS) {
       if (isAuthenticated) {
         history.push("/dashboard");
-        dispatch(update({ authType: AuthType.TREZOR }));
+        dispatch(updateSettingsAction({ authType: AuthType.TREZOR }));
       } else {
         setPageError("Something went wrong, please try again.");
       }
