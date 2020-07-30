@@ -4,7 +4,9 @@ MAINTAINER SDF Ops Team <ops@stellar.org>
 
 RUN mkdir -p /app
 WORKDIR /app
-COPY package.json yarn.lock tsconfig.json /app
+COPY package.json yarn.lock tsconfig.json /app/
+COPY src /app/src
+COPY public /app/public
 
 RUN apt-get update && apt-get install -y curl git make apt-transport-https && \
     curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - && \
@@ -14,5 +16,3 @@ RUN apt-get update && apt-get install -y curl git make apt-transport-https && \
     apt-get update && apt-get install -y nodejs yarn && apt-get clean
 
 RUN yarn install
-COPY src /app/src
-COPY public /app/public
