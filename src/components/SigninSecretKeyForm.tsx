@@ -4,9 +4,9 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { Keypair } from "stellar-sdk";
 
-import { fetchAccountAction } from "ducks/account";
+import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storePrivateKeyAction } from "ducks/keyStore";
-import { update } from "ducks/settings";
+import { updateSettingsAction } from "ducks/settings";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType } from "constants/types.d";
 
@@ -60,12 +60,21 @@ export const SigninSecretKeyForm = ({ onClose }: SigninSecretKeyFormProps) => {
     if (status === ActionStatus.SUCCESS) {
       if (isAuthenticated) {
         history.push("/dashboard");
-        dispatch(update({ authType: AuthType.PRIVATE_KEY }));
+        dispatch(updateSettingsAction({ authType: AuthType.PRIVATE_KEY }));
       } else {
         setPageError("Something went wrong, please try again.");
       }
     }
   }, [status, errorMessage, dispatch, history, isAuthenticated]);
+
+  useEffect(
+    () => () => {
+      if (errorMessage) {
+        dispatch(resetAccountAction());
+      }
+    },
+    [errorMessage, dispatch],
+  );
 
   let failedAttempts = 0;
 

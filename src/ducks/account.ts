@@ -52,12 +52,11 @@ const accountSlice = createSlice({
   name: "account",
   initialState,
   reducers: {
-    reset: () => initialState,
+    resetAccountAction: () => initialState,
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchAccountAction.pending, (state) => ({
-      ...state,
-      data: null,
+    builder.addCase(fetchAccountAction.pending, () => ({
+      ...initialState,
       status: ActionStatus.PENDING,
     }));
 
@@ -80,4 +79,4 @@ const accountSlice = createSlice({
 });
 
 export const { reducer } = accountSlice;
-export const { reset } = accountSlice.actions;
+export const { resetAccountAction } = accountSlice.actions;
