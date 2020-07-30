@@ -68,9 +68,17 @@ export const startTxHistoryWatcherAction = createAsyncThunk<
             dispatch(updateTxHistoryAction(payment));
           }
         },
-        onError: (error) => {
-          const errorString =
-            error?.toString() || "We couldn't update your payments history";
+        onError: () => {
+          const isDevelopment = process.env.NODE_ENV === "development";
+          const isOnSameNetwork =
+            (isDevelopment && isTestnet) || (!isDevelopment && !isTestnet);
+
+          const errorString = isOnSameNetwork
+            ? "We couldn’t update your payments history at this time."
+            : `Payments history cannot be updated because you are using ${
+                isTestnet ? "TEST" : "PUBLIC"
+              } network in ${isDevelopment ? "DEVELOPMENT" : "PRODUCTION"}.`;
+
           dispatch(updateTxHistoryErrorAction({ errorString, data }));
         },
       });

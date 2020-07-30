@@ -145,6 +145,7 @@ export const SigninSecretKeyForm = ({ onClose }: ModalPageProps) => {
             <h3>Your Secret Key</h3>
             <TempInputEl
               placeholder="Starts with S, example: SCHK...ZLJ&"
+              onChange={() => setErrorMessage("")}
               onBlur={(e) => setSecretKey(e.currentTarget.value)}
               type="password"
             />
