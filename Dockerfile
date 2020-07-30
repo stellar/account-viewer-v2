@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y curl git make apt-transport-https && \
 
 COPY . /app/
 RUN yarn install
-Run yarn build
+RUN yarn build
 
 FROM nginx:1.17
 
