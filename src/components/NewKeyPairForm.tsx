@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Keypair } from "stellar-sdk";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { useErrorMessage } from "hooks/useErrorMessage";
+import { ModalPageProps } from "constants/types.d";
 
 const WarningEl = styled.div`
   background-color: #f3e5e5;
@@ -33,11 +34,7 @@ interface KeyPairType {
   secretKey: string;
 }
 
-interface NewKeyPairFormProps {
-  onClose?: () => void;
-}
-
-export const NewKeyPairForm = ({ onClose }: NewKeyPairFormProps) => {
+export const NewKeyPairForm = ({ onClose }: ModalPageProps) => {
   const [acceptedWarning, setAcceptedWarning] = useState(false);
   const [newKeyPair, setNewKeyPair] = useState<KeyPairType | undefined>();
   const [keyPairCopyString, setKeyPairCopyString] = useState("");

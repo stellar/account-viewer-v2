@@ -13,11 +13,7 @@ const BannerEl = styled.div`
   color: #fff;
 `;
 
-interface NetworkProps {
-  children: React.ReactNode;
-}
-
-export const Network = ({ children }: NetworkProps) => {
+export const Network = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useDispatch();
   const { settings } = useRedux(["settings"]);
   const queryParams = new URLSearchParams(useLocation().search);

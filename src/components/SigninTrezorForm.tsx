@@ -14,7 +14,7 @@ import {
 } from "ducks/wallet/trezor";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
-import { ActionStatus, AuthType } from "constants/types.d";
+import { ActionStatus, AuthType, ModalPageProps } from "constants/types.d";
 
 const InfoEl = styled.div`
   background-color: #dbdbdb;
@@ -37,11 +37,7 @@ const TempErrorEl = styled.div`
   margin-bottom: 20px;
 `;
 
-interface SigninTrezorFormProps {
-  onClose?: () => void;
-}
-
-export const SigninTrezorForm = ({ onClose }: SigninTrezorFormProps) => {
+export const SigninTrezorForm = ({ onClose }: ModalPageProps) => {
   const history = useHistory();
   const dispatch = useDispatch();
 

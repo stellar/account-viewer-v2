@@ -30,18 +30,23 @@ const TempAnchorEl = styled.a`
   text-decoration: underline;
 `;
 
-interface CreateProps {
-  onContinue: () => void;
-  onInput: (formData: FormData) => void;
-  formData: FormData;
-  setMaxFee: (maxFee: string) => void;
-  maxFee: string;
-}
-
 const isFederationAddress = (value: string) => value.includes("*");
 
-export const CreateTransaction = (props: CreateProps) => {
-  const { formData, onInput, maxFee, setMaxFee } = props;
+interface CreateTransactionProps {
+  formData: FormData;
+  maxFee: string;
+  onContinue: () => void;
+  onInput: (formData: FormData) => void;
+  setMaxFee: (maxFee: string) => void;
+}
+
+export const CreateTransaction = ({
+  formData,
+  maxFee,
+  onContinue,
+  onInput,
+  setMaxFee,
+}: CreateTransactionProps) => {
   const { settings } = useRedux(["settings"]);
   const [isMemoVisible, setIsMemoVisible] = useState(!!formData.memoContent);
   const [isMemoTypeFromFederation, setIsMemoTypeFromFederation] = useState(
@@ -270,7 +275,7 @@ export const CreateTransaction = (props: CreateProps) => {
       <El>
         <b>{networkCongestion} congestion!</b> Recommended fee: {recomendedFee}
       </El>
-      <button onClick={props.onContinue}>Continue</button>
+      <button onClick={onContinue}>Continue</button>
     </El>
   );
 };

@@ -15,21 +15,25 @@ const TempButtonEl = styled.button`
   margin-bottom: 20px;
 `;
 
-interface ConfirmProps {
-  onSuccessfulTx: () => void;
-  onFailedTx: () => void;
+interface ConfirmTransactionProps {
   formData: FormData;
   maxFee: string;
+  onSuccessfulTx: () => void;
+  onFailedTx: () => void;
 }
 
-export const ConfirmTransaction = (props: ConfirmProps) => {
+export const ConfirmTransaction = ({
+  formData,
+  maxFee,
+  onSuccessfulTx,
+  onFailedTx,
+}: ConfirmTransactionProps) => {
   const { sendTx, keyStore, account, settings } = useRedux([
     "sendTx",
     "keyStore",
     "account",
     "settings",
   ]);
-  const { formData, onSuccessfulTx, onFailedTx, maxFee } = props;
   const dispatch = useDispatch();
 
   const handleSend = async () => {

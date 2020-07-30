@@ -9,8 +9,11 @@ const TempButtonEl = styled.button`
   margin-bottom: 20px;
 `;
 
-export const FailedTransaction = (props: { onEditTransaction: () => void }) => {
-  const { onEditTransaction } = props;
+export const FailedTransaction = ({
+  onEditTransaction,
+}: {
+  onEditTransaction: () => void;
+}) => {
   const { sendTx } = useRedux("sendTx");
 
   return (

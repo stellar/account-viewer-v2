@@ -9,7 +9,7 @@ import { storePrivateKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
-import { ActionStatus, AuthType } from "constants/types.d";
+import { ActionStatus, AuthType, ModalPageProps } from "constants/types.d";
 
 const WarningEl = styled.div`
   background-color: #f3e5e5;
@@ -38,11 +38,7 @@ const TempLinkButtonEl = styled.div`
   cursor: pointer;
 `;
 
-interface SigninSecretKeyFormProps {
-  onClose?: () => void;
-}
-
-export const SigninSecretKeyForm = ({ onClose }: SigninSecretKeyFormProps) => {
+export const SigninSecretKeyForm = ({ onClose }: ModalPageProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
 

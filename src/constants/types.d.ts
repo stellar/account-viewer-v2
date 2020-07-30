@@ -26,3 +26,7 @@ export enum AuthType {
   PRIVATE_KEY = "PRIVATE_KEY",
   TREZOR = "TREZOR",
 }
+
+export interface ModalPageProps {
+  onClose?: () => void;
+}
