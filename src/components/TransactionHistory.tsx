@@ -12,6 +12,7 @@ import {
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
+import { ErrorMessage } from "components/ErrorMessage";
 
 const El = styled.div`
   padding-bottom: 10px;
@@ -35,11 +36,6 @@ const TempLinkButtonEl = styled.div`
   margin-bottom: 20px;
   text-decoration: underline;
   cursor: pointer;
-`;
-
-const TempErrorEl = styled.div`
-  color: #c00;
-  margin-bottom: 20px;
 `;
 
 export const TransactionHistory = () => {
@@ -87,7 +83,7 @@ export const TransactionHistory = () => {
     <El>
       <h2>Payments History</h2>
 
-      {errorMessage && <TempErrorEl>{errorMessage}</TempErrorEl>}
+      <ErrorMessage message={errorMessage} />
 
       {hasTransactions && (
         <El>

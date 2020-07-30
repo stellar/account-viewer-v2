@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Keypair } from "stellar-sdk";
 import CopyToClipboard from "react-copy-to-clipboard";
-import { useErrorMessage } from "hooks/useErrorMessage";
 import { ModalPageProps } from "constants/types.d";
+import { ErrorMessage } from "components/ErrorMessage";
+import { useErrorMessage } from "hooks/useErrorMessage";
 
 const WarningEl = styled.div`
   background-color: #f3e5e5;
@@ -21,11 +22,6 @@ const KeyPairWrapperEl = styled.div`
 `;
 
 const ConfirmWrapperEl = styled.div`
-  margin-bottom: 20px;
-`;
-
-const TempErrorEl = styled.div`
-  color: #c00;
   margin-bottom: 20px;
 `;
 
@@ -185,7 +181,7 @@ ${keypair.secret()}`);
             </label>
           </ConfirmWrapperEl>
 
-          {errorMessage && <TempErrorEl>{errorMessage}</TempErrorEl>}
+          <ErrorMessage message={errorMessage} />
 
           <TempButtonEl onClick={handleDone}>Close</TempButtonEl>
         </div>

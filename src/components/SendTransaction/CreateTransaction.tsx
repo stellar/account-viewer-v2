@@ -60,7 +60,7 @@ export const CreateTransaction = ({
     federationAddressFetchStatus,
     setFederationAddressFetchStatus,
   ] = useState<string | null>(null);
-  const [recomendedFee, setRecommendedFee] = useState(
+  const [recommendedFee, setRecommendedFee] = useState(
     lumensFromStroops(StellarSdk.BASE_FEE).toString(),
   );
   const [networkCongestion, setNetworkCongestion] = useState(
@@ -273,7 +273,7 @@ export const CreateTransaction = ({
         ></TempInputEl>
       </El>
       <El>
-        <b>{networkCongestion} congestion!</b> Recommended fee: {recomendedFee}
+        <b>{networkCongestion} congestion!</b> Recommended fee: {recommendedFee}
       </El>
       <button onClick={onContinue}>Continue</button>
     </El>

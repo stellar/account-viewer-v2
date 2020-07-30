@@ -15,6 +15,7 @@ import {
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, ModalPageProps } from "constants/types.d";
+import { ErrorMessage } from "components/ErrorMessage";
 
 const InfoEl = styled.div`
   background-color: #dbdbdb;
@@ -30,11 +31,6 @@ const TempLinkButtonEl = styled.div`
   margin-bottom: 20px;
   text-decoration: underline;
   cursor: pointer;
-`;
-
-const TempErrorEl = styled.div`
-  color: #c00;
-  margin-bottom: 20px;
 `;
 
 export const SigninTrezorForm = ({ onClose }: ModalPageProps) => {
@@ -120,7 +116,7 @@ export const SigninTrezorForm = ({ onClose }: ModalPageProps) => {
         <InfoEl>Please follow the instructions in the Trezor popup.</InfoEl>
       )}
 
-      {errorMessage && <TempErrorEl>{errorMessage}</TempErrorEl>}
+      <ErrorMessage message={errorMessage} />
 
       <TempLinkButtonEl onClick={onClose}>Cancel</TempLinkButtonEl>
     </div>

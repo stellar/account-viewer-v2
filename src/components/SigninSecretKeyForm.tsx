@@ -10,6 +10,7 @@ import { updateSettingsAction } from "ducks/settings";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, ModalPageProps } from "constants/types.d";
+import { ErrorMessage } from "components/ErrorMessage";
 
 const WarningEl = styled.div`
   background-color: #f3e5e5;
@@ -25,11 +26,6 @@ const TempButtonEl = styled.button`
 const TempInputEl = styled.input`
   margin-bottom: 20px;
   min-width: 300px;
-`;
-
-const TempErrorEl = styled.div`
-  color: #c00;
-  margin-bottom: 20px;
 `;
 
 const TempLinkButtonEl = styled.div`
@@ -154,7 +150,7 @@ export const SigninSecretKeyForm = ({ onClose }: ModalPageProps) => {
             />
           </div>
 
-          {errorMessage && <TempErrorEl>{errorMessage}</TempErrorEl>}
+          <ErrorMessage message={errorMessage} />
 
           <TempButtonEl
             onClick={handleSignIn}
