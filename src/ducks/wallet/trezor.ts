@@ -51,7 +51,7 @@ const walletTrezorSlice = createSlice({
   name: "walletTrezor",
   initialState,
   reducers: {
-    resetAction: () => initialState,
+    resetTrezorAction: () => initialState,
   },
   extraReducers: (builder) => {
     builder.addCase(fetchTrezorStellarAddressAction.pending, (state) => ({
@@ -82,4 +82,4 @@ const walletTrezorSlice = createSlice({
 });
 
 export const { reducer } = walletTrezorSlice;
-export const { resetAction } = walletTrezorSlice.actions;
+export const { resetTrezorAction } = walletTrezorSlice.actions;

@@ -6,14 +6,11 @@ import { useDispatch } from "react-redux";
 // @ts-ignore
 import TrezorConnect from "trezor-connect";
 
-import {
-  fetchAccountAction,
-  resetAction as resetAccountAction,
-} from "ducks/account";
-import { updateAction } from "ducks/settings";
+import { fetchAccountAction, resetAccountAction } from "ducks/account";
+import { updateSettingsAction } from "ducks/settings";
 import {
   fetchTrezorStellarAddressAction,
-  resetAction as resetTrezorAction,
+  resetTrezorAction,
 } from "ducks/wallet/trezor";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType } from "constants/types.d";
@@ -118,7 +115,7 @@ export const SigninTrezorForm = ({ onClose }: SigninTrezorFormProps) => {
     if (accountStatus === ActionStatus.SUCCESS) {
       if (isAuthenticated) {
         history.push("/dashboard");
-        dispatch(updateAction({ authType: AuthType.TREZOR }));
+        dispatch(updateSettingsAction({ authType: AuthType.TREZOR }));
       } else {
         setPageError("Something went wrong, please try again.");
       }

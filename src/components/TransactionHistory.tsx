@@ -51,7 +51,13 @@ export const TransactionHistory = () => {
   const dispatch = useDispatch();
   const [showAllTxs, setShowAllTxs] = useState(false);
   const [pageError, setPageError] = useState("");
-  const { status, data, isTxWatcherStarted, errorMessage } = txHistory;
+  const {
+    status,
+    data,
+    isTxWatcherStarted,
+    errorMessage,
+    hasMoreTx,
+  } = txHistory;
 
   useEffect(() => {
     if (accountId) {
@@ -130,15 +136,17 @@ export const TransactionHistory = () => {
               </ItemRowEl>
             ))}
           </El>
-          <El>
-            <a
-              href={`${
-                getNetworkConfig(settings.isTestnet).stellarExpertAccountUrl
-              }${accountId}`}
-            >
-              View full list of transactions
-            </a>
-          </El>
+          {hasMoreTx && (
+            <El>
+              <a
+                href={`${
+                  getNetworkConfig(settings.isTestnet).stellarExpertAccountUrl
+                }${accountId}`}
+              >
+                View full list of transactions
+              </a>
+            </El>
+          )}
         </>
       )}
     </El>
