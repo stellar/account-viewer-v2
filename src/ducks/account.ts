@@ -26,7 +26,7 @@ export const fetchAccountAction = createAsyncThunk<
       stellarAccount = await dataProvider.fetchAccountDetails();
     } catch (error) {
       return rejectWithValue({
-        errorMessage: error.response?.detail || error.toString(),
+        errorString: error.response?.detail || error.toString(),
       });
     }
 
@@ -38,14 +38,14 @@ interface InitialState {
   data: Types.AccountDetails | null;
   isAuthenticated: boolean;
   status: ActionStatus | undefined;
-  errorMessage?: string;
+  errorString?: string;
 }
 
 const initialState: InitialState = {
   data: null,
   isAuthenticated: false,
   status: undefined,
-  errorMessage: undefined,
+  errorString: undefined,
 };
 
 const accountSlice = createSlice({
@@ -73,7 +73,7 @@ const accountSlice = createSlice({
       ...state,
       data: null,
       status: ActionStatus.ERROR,
-      errorMessage: action.payload?.errorMessage,
+      errorString: action.payload?.errorString,
     }));
   },
 });

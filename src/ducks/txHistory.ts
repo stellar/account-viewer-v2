@@ -34,7 +34,7 @@ export const fetchTxHistoryAction = createAsyncThunk<
     data = transactions?.records;
   } catch (error) {
     return rejectWithValue({
-      errorMessage: error.response?.detail || error.toString(),
+      errorString: error.response?.detail || error.toString(),
     });
   }
 
@@ -69,16 +69,16 @@ export const startTxHistoryWatcherAction = createAsyncThunk<
           }
         },
         onError: (error) => {
-          const errorMessage =
+          const errorString =
             error?.toString() || "We couldn't update your payments history";
-          dispatch(updateTxHistoryErrorAction({ errorMessage, data }));
+          dispatch(updateTxHistoryErrorAction({ errorString, data }));
         },
       });
 
       return true;
     } catch (error) {
       return rejectWithValue({
-        errorMessage: error.response?.detail || error.toString(),
+        errorString: error.response?.detail || error.toString(),
       });
     }
   },
@@ -88,7 +88,7 @@ interface InitialTxHistoryState {
   data: Array<Types.Payment>;
   hasMoreTxs?: boolean;
   isTxWatcherStarted: boolean;
-  errorMessage?: string;
+  errorString?: string;
   status: ActionStatus | undefined;
 }
 
@@ -96,7 +96,7 @@ const initialTxHistoryState: InitialTxHistoryState = {
   data: [],
   hasMoreTxs: false,
   isTxWatcherStarted: false,
-  errorMessage: undefined,
+  errorString: undefined,
   status: undefined,
 };
 
@@ -113,7 +113,7 @@ export const txHistorySlice = createSlice({
       // TODO: temp solution to pass "data" until BigNumber issue is fixed
       data: action.payload.data,
       status: ActionStatus.ERROR,
-      errorMessage: action.payload.errorMessage,
+      errorString: action.payload.errorString,
     }),
     stopTxHistoryWatcherAction: () => {
       if (txHistoryWatcherStopper) {
@@ -139,7 +139,7 @@ export const txHistorySlice = createSlice({
       ...state,
       data: [],
       status: ActionStatus.ERROR,
-      errorMessage: action.payload?.errorMessage,
+      errorString: action.payload?.errorString,
     }));
 
     // TODO: figure out why it breaks for BigNumber amount
@@ -153,7 +153,7 @@ export const txHistorySlice = createSlice({
     builder.addCase(startTxHistoryWatcherAction.rejected, (state, action) => ({
       ...state,
       status: ActionStatus.ERROR,
-      errorMessage: action.payload?.errorMessage,
+      errorString: action.payload?.errorString,
     }));
   },
 });

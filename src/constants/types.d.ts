@@ -10,7 +10,7 @@ export enum ActionStatus {
 }
 
 export interface RejectMessage {
-  errorMessage: string;
+  errorString: string;
 }
 
 export enum NetworkCongestion {

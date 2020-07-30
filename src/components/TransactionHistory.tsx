@@ -9,6 +9,7 @@ import {
   fetchTxHistoryAction,
   startTxHistoryWatcherAction,
 } from "ducks/txHistory";
+import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 
@@ -50,14 +51,15 @@ export const TransactionHistory = () => {
   const accountId = account.data?.id;
   const dispatch = useDispatch();
   const [showAllTxs, setShowAllTxs] = useState(false);
-  const [pageError, setPageError] = useState("");
   const {
     status,
     data,
     isTxWatcherStarted,
-    errorMessage,
+    errorString,
     hasMoreTx,
   } = txHistory;
+
+  const { errorMessage } = useErrorMessage(errorString);
 
   useEffect(() => {
     if (accountId) {
@@ -70,12 +72,6 @@ export const TransactionHistory = () => {
       dispatch(startTxHistoryWatcherAction(accountId));
     }
   }, [status, isTxWatcherStarted, accountId, dispatch]);
-
-  useEffect(() => {
-    if (errorMessage) {
-      setPageError(errorMessage);
-    }
-  }, [errorMessage]);
 
   const filterOutSmallAmounts = (transactions: Types.Payment[]) =>
     transactions.filter((tx) =>
@@ -91,7 +87,7 @@ export const TransactionHistory = () => {
     <El>
       <h2>Payments History</h2>
 
-      {pageError && <TempErrorEl>{pageError}</TempErrorEl>}
+      {errorMessage && <TempErrorEl>{errorMessage}</TempErrorEl>}
 
       {hasTransactions && (
         <El>

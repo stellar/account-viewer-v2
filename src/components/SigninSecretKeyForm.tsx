@@ -7,6 +7,7 @@ import { Keypair } from "stellar-sdk";
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storePrivateKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
+import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType } from "constants/types.d";
 
@@ -46,35 +47,23 @@ export const SigninSecretKeyForm = ({ onClose }: SigninSecretKeyFormProps) => {
   const history = useHistory();
 
   const { account } = useRedux(["account"]);
-  const { status, isAuthenticated, errorMessage } = account;
+  const { status, isAuthenticated, errorString } = account;
   const [acceptedWarning, setAcceptedWarning] = useState(false);
   const [secretKey, setSecretKey] = useState("");
-  const [pageError, setPageError] = useState("");
+  const { errorMessage, setErrorMessage } = useErrorMessage(errorString, () => {
+    dispatch(resetAccountAction());
+  });
 
   useEffect(() => {
-    if (errorMessage) {
-      setPageError(errorMessage);
-      return;
-    }
-
     if (status === ActionStatus.SUCCESS) {
       if (isAuthenticated) {
         history.push("/dashboard");
         dispatch(updateSettingsAction({ authType: AuthType.PRIVATE_KEY }));
       } else {
-        setPageError("Something went wrong, please try again.");
+        setErrorMessage("Something went wrong, please try again.");
       }
     }
-  }, [status, errorMessage, dispatch, history, isAuthenticated]);
-
-  useEffect(
-    () => () => {
-      if (errorMessage) {
-        dispatch(resetAccountAction());
-      }
-    },
-    [errorMessage, dispatch],
-  );
+  }, [status, dispatch, history, isAuthenticated, setErrorMessage]);
 
   let failedAttempts = 0;
 
@@ -107,7 +96,7 @@ export const SigninSecretKeyForm = ({ onClose }: SigninSecretKeyFormProps) => {
         failedAttempts -= 1;
       }, 2 ** failedAttempts * 1000);
 
-      setPageError(`Something went wrong. ${e.toString()}`);
+      setErrorMessage(`Something went wrong. ${e.toString()}`);
     }
   };
 
@@ -169,7 +158,7 @@ export const SigninSecretKeyForm = ({ onClose }: SigninSecretKeyFormProps) => {
             />
           </div>
 
-          {pageError && <TempErrorEl>{pageError}</TempErrorEl>}
+          {errorMessage && <TempErrorEl>{errorMessage}</TempErrorEl>}
 
           <TempButtonEl
             onClick={handleSignIn}

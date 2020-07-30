@@ -5,13 +5,16 @@ export const useErrorMessage = (message = "", onUnmount?: () => void) => {
 
   useEffect(() => {
     setErrorMessage(message);
+  }, [message]);
 
-    return () => {
+  useEffect(
+    () => () => {
       if (onUnmount && errorMessage) {
         onUnmount();
       }
-    };
-  }, [message, errorMessage, onUnmount]);
+    },
+    [errorMessage, onUnmount],
+  );
 
   return {
     errorMessage,

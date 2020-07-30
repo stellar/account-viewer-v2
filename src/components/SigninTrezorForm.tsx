@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -12,6 +12,7 @@ import {
   fetchTrezorStellarAddressAction,
   resetTrezorAction,
 } from "ducks/wallet/trezor";
+import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType } from "constants/types.d";
 
@@ -48,23 +49,29 @@ export const SigninTrezorForm = ({ onClose }: SigninTrezorFormProps) => {
   const {
     data: trezorData,
     status: trezorStatus,
-    errorMessage: trezorErrorMessage,
+    errorString: trezorErrorMessage,
   } = walletTrezor;
   const {
     status: accountStatus,
     isAuthenticated,
-    errorMessage: accountErrorMessage,
+    errorString: accountErrorMessage,
   } = account;
 
-  const [pageError, setPageError] = useState("");
+  const { errorMessage, setErrorMessage } = useErrorMessage(
+    trezorErrorMessage || accountErrorMessage,
+    () => {
+      dispatch(resetTrezorAction());
+      dispatch(resetAccountAction());
+    },
+  );
 
   const fetchTrezorLogin = () => {
-    setPageError("");
+    setErrorMessage("");
 
     try {
       dispatch(fetchTrezorStellarAddressAction());
     } catch (e) {
-      setPageError(`Something went wrong. ${e.toString()}`);
+      setErrorMessage(`Something went wrong. ${e.toString()}`);
     }
   };
 
@@ -77,50 +84,30 @@ export const SigninTrezorForm = ({ onClose }: SigninTrezorFormProps) => {
     fetchTrezorLogin();
   };
 
-  useEffect(
-    () => () => {
-      if (pageError) {
-        dispatch(resetTrezorAction());
-        dispatch(resetAccountAction());
-      }
-    },
-    [dispatch, pageError],
-  );
-
   useEffect(() => {
-    if (trezorErrorMessage) {
-      setPageError(trezorErrorMessage);
-      return;
-    }
-
     if (trezorStatus === ActionStatus.SUCCESS) {
       if (trezorData) {
         try {
           dispatch(fetchAccountAction(trezorData));
         } catch (e) {
-          setPageError(`Something went wrong. ${e.toString()}`);
+          setErrorMessage(`Something went wrong. ${e.toString()}`);
         }
       } else {
-        setPageError("Something went wrong, please try again.");
+        setErrorMessage("Something went wrong, please try again.");
       }
     }
-  }, [trezorStatus, trezorErrorMessage, dispatch, trezorData]);
+  }, [trezorStatus, dispatch, trezorData, setErrorMessage]);
 
   useEffect(() => {
-    if (accountErrorMessage) {
-      setPageError(accountErrorMessage);
-      return;
-    }
-
     if (accountStatus === ActionStatus.SUCCESS) {
       if (isAuthenticated) {
         history.push("/dashboard");
         dispatch(updateSettingsAction({ authType: AuthType.TREZOR }));
       } else {
-        setPageError("Something went wrong, please try again.");
+        setErrorMessage("Something went wrong, please try again.");
       }
     }
-  }, [accountStatus, accountErrorMessage, dispatch, history, isAuthenticated]);
+  }, [accountStatus, dispatch, history, isAuthenticated, setErrorMessage]);
 
   return (
     <div>
@@ -137,7 +124,7 @@ export const SigninTrezorForm = ({ onClose }: SigninTrezorFormProps) => {
         <InfoEl>Please follow the instructions in the Trezor popup.</InfoEl>
       )}
 
-      {pageError && <TempErrorEl>{pageError}</TempErrorEl>}
+      {errorMessage && <TempErrorEl>{errorMessage}</TempErrorEl>}
 
       <TempLinkButtonEl onClick={onClose}>Cancel</TempLinkButtonEl>
     </div>

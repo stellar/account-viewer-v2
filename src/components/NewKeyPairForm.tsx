@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Keypair } from "stellar-sdk";
 import CopyToClipboard from "react-copy-to-clipboard";
+import { useErrorMessage } from "hooks/useErrorMessage";
 
 const WarningEl = styled.div`
   background-color: #f3e5e5;
@@ -42,7 +43,7 @@ export const NewKeyPairForm = ({ onClose }: NewKeyPairFormProps) => {
   const [keyPairCopyString, setKeyPairCopyString] = useState("");
   const [isKeyPairCopied, setIsKeyPairCopied] = useState(false);
   const [confirmSavedSecretKey, setConfirmSavedSecretKey] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const { errorMessage, setErrorMessage } = useErrorMessage("");
 
   const generateNewKeyPair = () => {
     const keypair = Keypair.random();
@@ -79,6 +80,8 @@ ${keypair.secret()}`);
     if (onClose) {
       onClose();
     }
+
+    setErrorMessage("");
   };
 
   const handleCopyKeys = () => {

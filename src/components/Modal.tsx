@@ -5,9 +5,6 @@ import styled from "styled-components";
 const ModalEl = styled.div`
   position: fixed;
   background-color: #fff;
-  width: 80vw;
-  max-width: 800px;
-  max-height: 70vh;
   z-index: 101;
   top: 50%;
   left: 50%;
@@ -17,7 +14,9 @@ const ModalEl = styled.div`
 `;
 
 const ModalContentEl = styled.div`
-  height: 100%;
+  width: 80vw;
+  max-width: 800px;
+  max-height: 70vh;
   overflow-y: auto;
 `;
 

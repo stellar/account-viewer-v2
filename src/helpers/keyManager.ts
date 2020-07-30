@@ -6,7 +6,7 @@ import { store } from "config/store";
 export interface CreateKeyManagerResponse {
   id: string;
   password: string;
-  errorMessage?: string;
+  errorString?: string;
 }
 
 const createKeyManager = () => {
@@ -31,7 +31,7 @@ export const storePrivateKey = async (secret: string) => {
   const result: CreateKeyManagerResponse = {
     id: "",
     password: "Stellar Development Foundation",
-    errorMessage: undefined,
+    errorString: undefined,
   };
 
   try {
@@ -48,7 +48,7 @@ export const storePrivateKey = async (secret: string) => {
 
     result.id = metaData.id;
   } catch (err) {
-    result.errorMessage = err;
+    result.errorString = err;
     return result;
   }
 
