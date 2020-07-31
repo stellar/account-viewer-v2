@@ -1,5 +1,5 @@
 import { KeyManager, KeyManagerPlugins, KeyType } from "@stellar/wallet-sdk";
-import { Keypair } from "stellar-sdk";
+import { Keypair, Transaction } from "stellar-sdk";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { store } from "config/store";
 
@@ -55,6 +55,37 @@ export const storePrivateKey = async (secret: string) => {
   return result;
 };
 
+export const storeWalletKey = async (publicKey: string) => {
+  const keyManager = createKeyManager();
+  const { settings } = store.getState();
+
+  const result: CreateKeyManagerResponse = {
+    id: "",
+    password: "Stellar Development Foundation",
+    errorMessage: undefined,
+  };
+
+  try {
+    const metaData = await keyManager.storeKey({
+      key: {
+        type: KeyType.trezor,
+        publicKey,
+        privateKey: "",
+        network: getNetworkConfig(settings.isTestnet).network,
+      },
+      password: result.password,
+      encrypterName: KeyManagerPlugins.ScryptEncrypter.name,
+    });
+
+    result.id = metaData.id;
+  } catch (err) {
+    result.errorMessage = err;
+    return result;
+  }
+
+  return result;
+};
+
 export const loadPrivateKey = async (id: string, password: string) => {
   const keyManager = createKeyManager();
   let result;
@@ -64,4 +95,18 @@ export const loadPrivateKey = async (id: string, password: string) => {
     return err;
   }
   return result;
+};
+
+export const signTransaction = (
+  id: string,
+  password: string,
+  transaction: Transaction,
+): Promise<Transaction> => {
+  const keyManager = createKeyManager();
+
+  return keyManager.signTransaction({
+    id,
+    password,
+    transaction,
+  });
 };

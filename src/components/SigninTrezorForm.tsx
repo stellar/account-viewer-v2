@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import TrezorConnect from "trezor-connect";
 
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
+import { storeWalletKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
 import {
   fetchTrezorStellarAddressAction,
@@ -97,6 +98,7 @@ export const SigninTrezorForm = ({ onClose }: SigninTrezorFormProps) => {
       if (trezorData) {
         try {
           dispatch(fetchAccountAction(trezorData));
+          dispatch(storeWalletKeyAction(trezorData));
         } catch (e) {
           setPageError(`Something went wrong. ${e.toString()}`);
         }

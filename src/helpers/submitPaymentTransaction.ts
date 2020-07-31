@@ -4,12 +4,12 @@ import StellarSdk, {
   MemoValue,
   Keypair,
 } from "stellar-sdk";
-// @ts-ignore
 import { AuthType } from "constants/types.d";
 import { PaymentTransactionParams } from "ducks/sendTransaction";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
-import { getTrezorSignature } from "helpers/wallet/getTrezorSignature";
+// import { getTrezorSignature } from "helpers/wallet/getTrezorSignature";
 import { store } from "config/store";
+import { signTransaction as keyManagerSignTransaction } from "helpers/keyManager";
 
 export const submitPaymentTransaction = async (
   params: PaymentTransactionParams,
@@ -32,6 +32,8 @@ export const signTransaction = async (
   params: PaymentTransactionParams,
   authType?: AuthType,
 ) => {
+  const { keyStore } = store.getState();
+
   try {
     if (!authType) {
       throw new Error(`Bad authentication`);
@@ -42,9 +44,14 @@ export const signTransaction = async (
       transaction.sign(keypair);
     } else {
       // TODO: Trezor signing will be in wallet-sdk
-      const signature = await getTrezorSignature(transaction);
+      // const signature = await getTrezorSignature(transaction);
+      // transaction.addSignature(params.publicKey, signature);
 
-      transaction.addSignature(params.publicKey, signature);
+      return await keyManagerSignTransaction(
+        keyStore.keyStoreId,
+        keyStore.password,
+        transaction,
+      );
     }
   } catch (err) {
     throw new Error(`Failed to sign transaction, error: ${err.toString()}`);
