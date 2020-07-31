@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { DataProvider, Types } from "@stellar/wallet-sdk";
+import { getErrorString } from "helpers/getErrorString";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { ActionStatus, RejectMessage } from "constants/types.d";
 import { TX_HISTORY_LIMIT } from "constants/settings";
@@ -34,7 +35,7 @@ export const fetchTxHistoryAction = createAsyncThunk<
     data = transactions?.records;
   } catch (error) {
     return rejectWithValue({
-      errorString: error.response?.detail || error.toString(),
+      errorString: getErrorString(error),
     });
   }
 
@@ -86,7 +87,7 @@ export const startTxHistoryWatcherAction = createAsyncThunk<
       return true;
     } catch (error) {
       return rejectWithValue({
-        errorString: error.response?.detail || error.toString(),
+        errorString: getErrorString(error),
       });
     }
   },

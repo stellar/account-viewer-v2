@@ -49,13 +49,13 @@ export const SigninTrezorForm = ({ onClose }: ModalPageProps) => {
     errorString: accountErrorMessage,
   } = account;
 
-  const { errorMessage, setErrorMessage } = useErrorMessage(
-    trezorErrorMessage || accountErrorMessage,
-    () => {
+  const { errorMessage, setErrorMessage } = useErrorMessage({
+    initialMessage: trezorErrorMessage || accountErrorMessage,
+    onUnmount: () => {
       dispatch(resetTrezorAction());
       dispatch(resetAccountAction());
     },
-  );
+  });
 
   const fetchTrezorLogin = () => {
     setErrorMessage("");

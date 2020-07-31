@@ -55,7 +55,7 @@ export const TransactionHistory = () => {
     hasMoreTx,
   } = txHistory;
 
-  const { errorMessage } = useErrorMessage(errorString);
+  const { errorMessage } = useErrorMessage({ initialMessage: errorString });
 
   useEffect(() => {
     if (accountId) {

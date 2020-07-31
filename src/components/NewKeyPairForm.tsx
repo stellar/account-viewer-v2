@@ -36,7 +36,9 @@ export const NewKeyPairForm = ({ onClose }: ModalPageProps) => {
   const [keyPairCopyString, setKeyPairCopyString] = useState("");
   const [isKeyPairCopied, setIsKeyPairCopied] = useState(false);
   const [confirmSavedSecretKey, setConfirmSavedSecretKey] = useState(false);
-  const { errorMessage, setErrorMessage } = useErrorMessage("");
+  const { errorMessage, setErrorMessage } = useErrorMessage({
+    initialMessage: "",
+  });
 
   const generateNewKeyPair = () => {
     const keypair = Keypair.random();

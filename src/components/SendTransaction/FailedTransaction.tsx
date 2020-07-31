@@ -18,13 +18,10 @@ export const FailedTransaction = ({
 
   return (
     <El>
-      <h1>
-        Transaction Failed with Status Code {sendTx.errorData.status || 400}
-      </h1>
+      <h1>Transaction Failed</h1>
       <El>See details below for more information.</El>
       {/* eslint-disable camelcase */}
-      <El>{sendTx.errorData.extras?.result_xdr}</El>
-      <El>{sendTx.errorData.message}</El>
+      <El>{sendTx.errorString}</El>
       <El>
         <TempButtonEl onClick={onEditTransaction}>
           Edit Transaction

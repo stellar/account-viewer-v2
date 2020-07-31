@@ -4,6 +4,7 @@ import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { ActionStatus, RejectMessage } from "constants/types.d";
 import { settingsSelector } from "ducks/settings";
 import { RootState } from "config/store";
+import { getErrorString } from "helpers/getErrorString";
 
 export const fetchAccountAction = createAsyncThunk<
   Types.AccountDetails,
@@ -26,7 +27,7 @@ export const fetchAccountAction = createAsyncThunk<
       stellarAccount = await dataProvider.fetchAccountDetails();
     } catch (error) {
       return rejectWithValue({
-        errorString: error.response?.detail || error.toString(),
+        errorString: getErrorString(error),
       });
     }
 

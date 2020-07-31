@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getErrorString } from "helpers/getErrorString";
 import { storePrivateKey, CreateKeyManagerResponse } from "helpers/keyManager";
 import { RejectMessage } from "constants/types.d";
 
@@ -12,7 +13,7 @@ export const storePrivateKeyAction = createAsyncThunk<
     result = await storePrivateKey(secret);
   } catch (error) {
     return rejectWithValue({
-      errorString: error.response?.detail || error.toString(),
+      errorString: getErrorString(error),
     });
   }
   return result;

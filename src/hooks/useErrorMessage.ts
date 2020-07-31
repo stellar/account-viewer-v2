@@ -1,11 +1,17 @@
 import { useState, useEffect } from "react";
 
-export const useErrorMessage = (message = "", onUnmount?: () => void) => {
-  const [errorMessage, setErrorMessage] = useState(message);
+export const useErrorMessage = ({
+  initialMessage,
+  onUnmount,
+}: {
+  initialMessage: string;
+  onUnmount?: () => void;
+}) => {
+  const [errorMessage, setErrorMessage] = useState(initialMessage);
 
   useEffect(() => {
-    setErrorMessage(message);
-  }, [message]);
+    setErrorMessage(initialMessage);
+  }, [initialMessage]);
 
   useEffect(
     () => () => {

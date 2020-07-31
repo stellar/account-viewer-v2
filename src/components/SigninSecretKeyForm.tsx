@@ -42,8 +42,11 @@ export const SigninSecretKeyForm = ({ onClose }: ModalPageProps) => {
   const { status, isAuthenticated, errorString } = account;
   const [acceptedWarning, setAcceptedWarning] = useState(false);
   const [secretKey, setSecretKey] = useState("");
-  const { errorMessage, setErrorMessage } = useErrorMessage(errorString, () => {
-    dispatch(resetAccountAction());
+  const { errorMessage, setErrorMessage } = useErrorMessage({
+    initialMessage: errorString,
+    onUnmount: () => {
+      dispatch(resetAccountAction());
+    },
   });
 
   useEffect(() => {
