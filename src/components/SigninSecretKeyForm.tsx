@@ -7,8 +7,10 @@ import { Keypair } from "stellar-sdk";
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storePrivateKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
+import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
-import { ActionStatus, AuthType } from "constants/types.d";
+import { ActionStatus, AuthType, ModalPageProps } from "constants/types.d";
+import { ErrorMessage } from "components/ErrorMessage";
 
 const WarningEl = styled.div`
   background-color: #f3e5e5;
@@ -26,55 +28,37 @@ const TempInputEl = styled.input`
   min-width: 300px;
 `;
 
-const TempErrorEl = styled.div`
-  color: #c00;
-  margin-bottom: 20px;
-`;
-
 const TempLinkButtonEl = styled.div`
   margin-bottom: 20px;
   text-decoration: underline;
   cursor: pointer;
 `;
 
-interface SigninSecretKeyFormProps {
-  onClose?: () => void;
-}
-
-export const SigninSecretKeyForm = ({ onClose }: SigninSecretKeyFormProps) => {
+export const SigninSecretKeyForm = ({ onClose }: ModalPageProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
   const { account } = useRedux(["account"]);
-  const { status, isAuthenticated, errorMessage } = account;
+  const { status, isAuthenticated, errorString } = account;
   const [acceptedWarning, setAcceptedWarning] = useState(false);
   const [secretKey, setSecretKey] = useState("");
-  const [pageError, setPageError] = useState("");
+  const { errorMessage, setErrorMessage } = useErrorMessage({
+    initialMessage: errorString,
+    onUnmount: () => {
+      dispatch(resetAccountAction());
+    },
+  });
 
   useEffect(() => {
-    if (errorMessage) {
-      setPageError(errorMessage);
-      return;
-    }
-
     if (status === ActionStatus.SUCCESS) {
       if (isAuthenticated) {
         history.push("/dashboard");
         dispatch(updateSettingsAction({ authType: AuthType.PRIVATE_KEY }));
       } else {
-        setPageError("Something went wrong, please try again.");
+        setErrorMessage("Something went wrong, please try again.");
       }
     }
-  }, [status, errorMessage, dispatch, history, isAuthenticated]);
-
-  useEffect(
-    () => () => {
-      if (errorMessage) {
-        dispatch(resetAccountAction());
-      }
-    },
-    [errorMessage, dispatch],
-  );
+  }, [status, dispatch, history, isAuthenticated, setErrorMessage]);
 
   let failedAttempts = 0;
 
@@ -107,7 +91,7 @@ export const SigninSecretKeyForm = ({ onClose }: SigninSecretKeyFormProps) => {
         failedAttempts -= 1;
       }, 2 ** failedAttempts * 1000);
 
-      setPageError(`Something went wrong. ${e.toString()}`);
+      setErrorMessage(`Something went wrong. ${e.toString()}`);
     }
   };
 
@@ -164,12 +148,13 @@ export const SigninSecretKeyForm = ({ onClose }: SigninSecretKeyFormProps) => {
             <h3>Your Secret Key</h3>
             <TempInputEl
               placeholder="Starts with S, example: SCHK...ZLJ&"
+              onChange={() => setErrorMessage("")}
               onBlur={(e) => setSecretKey(e.currentTarget.value)}
               type="password"
             />
           </div>
 
-          {pageError && <TempErrorEl>{pageError}</TempErrorEl>}
+          <ErrorMessage message={errorMessage} />
 
           <TempButtonEl
             onClick={handleSignIn}

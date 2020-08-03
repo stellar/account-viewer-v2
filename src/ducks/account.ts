@@ -4,6 +4,7 @@ import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { ActionStatus, RejectMessage } from "constants/types.d";
 import { settingsSelector } from "ducks/settings";
 import { RootState } from "config/store";
+import { getErrorString } from "helpers/getErrorString";
 
 export const fetchAccountAction = createAsyncThunk<
   Types.AccountDetails,
@@ -26,7 +27,7 @@ export const fetchAccountAction = createAsyncThunk<
       stellarAccount = await dataProvider.fetchAccountDetails();
     } catch (error) {
       return rejectWithValue({
-        errorMessage: error.response?.detail || error.toString(),
+        errorString: getErrorString(error),
       });
     }
 
@@ -38,14 +39,14 @@ interface InitialState {
   data: Types.AccountDetails | null;
   isAuthenticated: boolean;
   status: ActionStatus | undefined;
-  errorMessage?: string;
+  errorString?: string;
 }
 
 const initialState: InitialState = {
   data: null,
   isAuthenticated: false,
   status: undefined,
-  errorMessage: undefined,
+  errorString: undefined,
 };
 
 const accountSlice = createSlice({
@@ -73,7 +74,7 @@ const accountSlice = createSlice({
       ...state,
       data: null,
       status: ActionStatus.ERROR,
-      errorMessage: action.payload?.errorMessage,
+      errorString: action.payload?.errorString,
     }));
   },
 });

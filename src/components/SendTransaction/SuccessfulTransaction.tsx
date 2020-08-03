@@ -16,8 +16,11 @@ const TempAnchorEl = styled.a`
   text-decoration: underline;
 `;
 
-export const SuccessfulTransaction = (props: { onRestartFlow: () => void }) => {
-  const { onRestartFlow } = props;
+export const SuccessfulTransaction = ({
+  onRestartFlow,
+}: {
+  onRestartFlow: () => void;
+}) => {
   const { sendTx, settings } = useRedux("sendTx", "settings");
 
   return (

@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getErrorString } from "helpers/getErrorString";
 import { storePrivateKey, CreateKeyManagerResponse } from "helpers/keyManager";
 import { RejectMessage } from "constants/types.d";
 
@@ -12,7 +13,7 @@ export const storePrivateKeyAction = createAsyncThunk<
     result = await storePrivateKey(secret);
   } catch (error) {
     return rejectWithValue({
-      errorMessage: error.response?.detail || error.toString(),
+      errorString: getErrorString(error),
     });
   }
   return result;
@@ -21,13 +22,13 @@ export const storePrivateKeyAction = createAsyncThunk<
 interface InitialState {
   keyStoreId: string;
   password: string;
-  errorMessage?: string;
+  errorString?: string;
 }
 
 const initialState: InitialState = {
   keyStoreId: "",
   password: "",
-  errorMessage: undefined,
+  errorString: undefined,
 };
 
 const keyStoreSlice = createSlice({
@@ -45,7 +46,7 @@ const keyStoreSlice = createSlice({
     }));
     builder.addCase(storePrivateKeyAction.rejected, (state, action) => ({
       ...state,
-      errorMessage: action?.payload?.errorMessage,
+      errorString: action?.payload?.errorString,
     }));
   },
 });

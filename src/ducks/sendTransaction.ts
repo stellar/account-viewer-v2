@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { MemoType, MemoValue, Horizon } from "stellar-sdk";
 import BigNumber from "bignumber.js";
+import { getErrorString } from "helpers/getErrorString";
 import { submitPaymentTransaction } from "helpers/submitPaymentTransaction";
-import { ActionStatus, AuthType } from "constants/types.d";
+import { ActionStatus, AuthType, RejectMessage } from "constants/types.d";
 import { settingsSelector } from "ducks/settings";
 import { RootState } from "config/store";
 
@@ -28,29 +29,23 @@ export const sendTxAction = createAsyncThunk<
     result = await submitPaymentTransaction(params, authType);
   } catch (error) {
     return rejectWithValue({
-      errorData: error.response?.data || { message: error.message },
+      errorString: getErrorString(error),
     });
   }
 
   return result;
 });
 
-type TxErrorResponse = any;
-
-interface RejectMessage {
-  errorData: TxErrorResponse;
-}
-
 interface InitialState {
   data: Horizon.TransactionResponse | null;
   status: ActionStatus | undefined;
-  errorData?: TxErrorResponse;
+  errorString?: string;
 }
 
 const initialState: InitialState = {
   data: null,
   status: undefined,
-  errorData: undefined,
+  errorString: undefined,
 };
 
 const sendTxSlice = createSlice({
@@ -71,7 +66,7 @@ const sendTxSlice = createSlice({
       ...state,
       data: null,
       status: ActionStatus.ERROR,
-      errorData: action.payload?.errorData,
+      errorString: action.payload?.errorString,
     }));
   },
 });
