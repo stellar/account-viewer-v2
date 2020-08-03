@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { KeyType } from "@stellar/wallet-sdk";
 import {
   storePrivateKey,
   storeWalletKey,
@@ -23,21 +24,29 @@ export const storePrivateKeyAction = createAsyncThunk<
   return result;
 });
 
+interface WalletKeyActionProps {
+  publicKey: string;
+  keyType: KeyType;
+}
+
 export const storeWalletKeyAction = createAsyncThunk<
   CreateKeyManagerResponse,
-  string,
+  WalletKeyActionProps,
   { rejectValue: RejectMessage }
->("keyManagerWalletAction", async (publicKey: string, { rejectWithValue }) => {
-  let result;
-  try {
-    result = await storeWalletKey(publicKey);
-  } catch (error) {
-    return rejectWithValue({
-      errorString: getErrorString(error),
-    });
-  }
-  return result;
-});
+>(
+  "keyManagerWalletAction",
+  async ({ publicKey, keyType }, { rejectWithValue }) => {
+    let result;
+    try {
+      result = await storeWalletKey({ publicKey, keyType });
+    } catch (error) {
+      return rejectWithValue({
+        errorString: getErrorString(error),
+      });
+    }
+    return result;
+  },
+);
 
 interface InitialState {
   keyStoreId: string;
@@ -69,11 +78,17 @@ const keyStoreSlice = createSlice({
       errorString: action?.payload?.errorString,
     }));
 
-    // TODO: add all cases
+    builder.addCase(storeWalletKeyAction.pending, () => ({
+      ...initialState,
+    }));
     builder.addCase(storeWalletKeyAction.fulfilled, (state, action) => ({
       ...state,
       keyStoreId: action.payload.id,
       password: action.payload.password,
+    }));
+    builder.addCase(storeWalletKeyAction.rejected, (state, action) => ({
+      ...state,
+      errorString: action?.payload?.errorString,
     }));
   },
 });

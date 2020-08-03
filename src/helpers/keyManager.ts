@@ -56,7 +56,13 @@ export const storePrivateKey = async (secret: string) => {
   return result;
 };
 
-export const storeWalletKey = async (publicKey: string) => {
+export const storeWalletKey = async ({
+  publicKey,
+  keyType,
+}: {
+  publicKey: string;
+  keyType: KeyType;
+}) => {
   const keyManager = createKeyManager();
   const { settings } = store.getState();
 
@@ -69,8 +75,7 @@ export const storeWalletKey = async (publicKey: string) => {
   try {
     const metaData = await keyManager.storeKey({
       key: {
-        // TODO: make type generic (use for Ledger as well)
-        type: KeyType.trezor,
+        type: keyType,
         publicKey,
         privateKey: "",
         network: getNetworkConfig(settings.isTestnet).network,
@@ -88,22 +93,32 @@ export const storeWalletKey = async (publicKey: string) => {
   return result;
 };
 
-export const loadPrivateKey = async (id: string, password: string) => {
+export const loadPrivateKey = async ({
+  id,
+  password,
+}: {
+  id: string;
+  password: string;
+}) => {
   const keyManager = createKeyManager();
   let result;
   try {
     result = await keyManager.loadKey(id, password);
-  } catch (err) {
-    return err;
+  } catch (error) {
+    return error;
   }
   return result;
 };
 
-export const signTransaction = (
-  id: string,
-  password: string,
-  transaction: Transaction,
-): Promise<Transaction> => {
+export const signTransaction = ({
+  id,
+  password,
+  transaction,
+}: {
+  id: string;
+  password: string;
+  transaction: Transaction;
+}): Promise<Transaction> => {
   const keyManager = createKeyManager();
 
   return keyManager.signTransaction({

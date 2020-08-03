@@ -15,6 +15,7 @@ import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, ModalPageProps } from "constants/types.d";
 import { ErrorMessage } from "components/ErrorMessage";
+import { KeyType } from "@stellar/wallet-sdk";
 
 const InfoEl = styled.div`
   background-color: #dbdbdb;
@@ -80,7 +81,12 @@ export const SigninTrezorForm = ({ onClose }: ModalPageProps) => {
       if (trezorData) {
         try {
           dispatch(fetchAccountAction(trezorData));
-          dispatch(storeWalletKeyAction(trezorData));
+          dispatch(
+            storeWalletKeyAction({
+              publicKey: trezorData,
+              keyType: KeyType.trezor,
+            }),
+          );
         } catch (e) {
           setErrorMessage(`Something went wrong. ${e.toString()}`);
         }
