@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import TrezorConnect from "trezor-connect";
+import { KeyType } from "@stellar/wallet-sdk";
 
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storeWalletKeyAction } from "ducks/keyStore";
@@ -15,7 +16,6 @@ import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, ModalPageProps } from "constants/types.d";
 import { ErrorMessage } from "components/ErrorMessage";
-import { KeyType } from "@stellar/wallet-sdk";
 
 const InfoEl = styled.div`
   background-color: #dbdbdb;
