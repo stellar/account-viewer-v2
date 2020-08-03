@@ -30,18 +30,23 @@ const TempAnchorEl = styled.a`
   text-decoration: underline;
 `;
 
-interface CreateProps {
-  onContinue: () => void;
-  onInput: (formData: FormData) => void;
-  formData: FormData;
-  setMaxFee: (maxFee: string) => void;
-  maxFee: string;
-}
-
 const isFederationAddress = (value: string) => value.includes("*");
 
-export const CreateTransaction = (props: CreateProps) => {
-  const { formData, onInput, maxFee, setMaxFee } = props;
+interface CreateTransactionProps {
+  formData: FormData;
+  maxFee: string;
+  onContinue: () => void;
+  onInput: (formData: FormData) => void;
+  setMaxFee: (maxFee: string) => void;
+}
+
+export const CreateTransaction = ({
+  formData,
+  maxFee,
+  onContinue,
+  onInput,
+  setMaxFee,
+}: CreateTransactionProps) => {
   const { settings } = useRedux(["settings"]);
   const [isMemoVisible, setIsMemoVisible] = useState(!!formData.memoContent);
   const [isMemoTypeFromFederation, setIsMemoTypeFromFederation] = useState(
@@ -55,7 +60,7 @@ export const CreateTransaction = (props: CreateProps) => {
     federationAddressFetchStatus,
     setFederationAddressFetchStatus,
   ] = useState<string | null>(null);
-  const [recomendedFee, setRecommendedFee] = useState(
+  const [recommendedFee, setRecommendedFee] = useState(
     lumensFromStroops(StellarSdk.BASE_FEE).toString(),
   );
   const [networkCongestion, setNetworkCongestion] = useState(
@@ -268,9 +273,9 @@ export const CreateTransaction = (props: CreateProps) => {
         ></TempInputEl>
       </El>
       <El>
-        <b>{networkCongestion} congestion!</b> Recommended fee: {recomendedFee}
+        <b>{networkCongestion} congestion!</b> Recommended fee: {recommendedFee}
       </El>
-      <button onClick={props.onContinue}>Continue</button>
+      <button onClick={onContinue}>Continue</button>
     </El>
   );
 };

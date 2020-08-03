@@ -6,6 +6,7 @@ import StellarSdk, {
 } from "stellar-sdk";
 import { AuthType } from "constants/types.d";
 import { PaymentTransactionParams } from "ducks/sendTransaction";
+import { getErrorString } from "helpers/getErrorString";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { store } from "config/store";
 import { signTransaction as keyManagerSignTransaction } from "helpers/keyManager";
@@ -52,8 +53,10 @@ export const signTransaction = async (
         transaction,
       );
     }
-  } catch (err) {
-    throw new Error(`Failed to sign transaction, error: ${err.toString()}`);
+  } catch (error) {
+    throw new Error(
+      `Failed to sign transaction, error: ${getErrorString(error)}`,
+    );
   }
 
   return transaction;
@@ -112,8 +115,10 @@ export const buildPaymentTransaction = async (
     }
 
     transaction = transaction.build();
-  } catch (err) {
-    throw new Error(`Failed to build transaction, error: ${err.toString()})}`);
+  } catch (error) {
+    throw new Error(
+      `Failed to build transaction, error: ${getErrorString(error)})}`,
+    );
   }
   return transaction;
 };

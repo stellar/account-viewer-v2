@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { DataProvider, Types } from "@stellar/wallet-sdk";
+import { getErrorString } from "helpers/getErrorString";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { ActionStatus, RejectMessage } from "constants/types.d";
 import { TX_HISTORY_LIMIT } from "constants/settings";
@@ -34,7 +35,7 @@ export const fetchTxHistoryAction = createAsyncThunk<
     data = transactions?.records;
   } catch (error) {
     return rejectWithValue({
-      errorMessage: error.response?.detail || error.toString(),
+      errorString: getErrorString(error),
     });
   }
 
@@ -68,17 +69,25 @@ export const startTxHistoryWatcherAction = createAsyncThunk<
             dispatch(updateTxHistoryAction(payment));
           }
         },
-        onError: (error) => {
-          const errorMessage =
-            error?.toString() || "We couldn't update your payments history";
-          dispatch(updateTxHistoryErrorAction({ errorMessage, data }));
+        onError: () => {
+          const isDevelopment = process.env.NODE_ENV === "development";
+          const isOnSameNetwork =
+            (isDevelopment && isTestnet) || (!isDevelopment && !isTestnet);
+
+          const errorString = isOnSameNetwork
+            ? "We couldn’t update your payments history at this time."
+            : `Payments history cannot be updated because you are using ${
+                isTestnet ? "TEST" : "PUBLIC"
+              } network in ${isDevelopment ? "DEVELOPMENT" : "PRODUCTION"}.`;
+
+          dispatch(updateTxHistoryErrorAction({ errorString, data }));
         },
       });
 
       return true;
     } catch (error) {
       return rejectWithValue({
-        errorMessage: error.response?.detail || error.toString(),
+        errorString: getErrorString(error),
       });
     }
   },
@@ -88,7 +97,7 @@ interface InitialTxHistoryState {
   data: Array<Types.Payment>;
   hasMoreTxs?: boolean;
   isTxWatcherStarted: boolean;
-  errorMessage?: string;
+  errorString?: string;
   status: ActionStatus | undefined;
 }
 
@@ -96,7 +105,7 @@ const initialTxHistoryState: InitialTxHistoryState = {
   data: [],
   hasMoreTxs: false,
   isTxWatcherStarted: false,
-  errorMessage: undefined,
+  errorString: undefined,
   status: undefined,
 };
 
@@ -113,7 +122,7 @@ export const txHistorySlice = createSlice({
       // TODO: temp solution to pass "data" until BigNumber issue is fixed
       data: action.payload.data,
       status: ActionStatus.ERROR,
-      errorMessage: action.payload.errorMessage,
+      errorString: action.payload.errorString,
     }),
     stopTxHistoryWatcherAction: () => {
       if (txHistoryWatcherStopper) {
@@ -139,7 +148,7 @@ export const txHistorySlice = createSlice({
       ...state,
       data: [],
       status: ActionStatus.ERROR,
-      errorMessage: action.payload?.errorMessage,
+      errorString: action.payload?.errorString,
     }));
 
     // TODO: figure out why it breaks for BigNumber amount
@@ -153,7 +162,7 @@ export const txHistorySlice = createSlice({
     builder.addCase(startTxHistoryWatcherAction.rejected, (state, action) => ({
       ...state,
       status: ActionStatus.ERROR,
-      errorMessage: action.payload?.errorMessage,
+      errorString: action.payload?.errorString,
     }));
   },
 });

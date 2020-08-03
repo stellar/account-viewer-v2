@@ -16,19 +16,19 @@ export const fetchTrezorStellarAddressAction = createAsyncThunk<
       });
 
       if (!trezorResponse.success) {
-        const errorMessage = trezorResponse.payload?.error
+        const errorString = trezorResponse.payload?.error
           ? `Couldn't connect to your Trezor device: ${trezorResponse.payload?.error}`
           : "Couldn't connect to your Trezor device, please try again.";
 
         return rejectWithValue({
-          errorMessage,
+          errorString,
         });
       }
 
       return trezorResponse.payload.address;
     } catch (error) {
       return rejectWithValue({
-        errorMessage: error.toString(),
+        errorString: error.toString(),
       });
     }
   },
@@ -37,13 +37,13 @@ export const fetchTrezorStellarAddressAction = createAsyncThunk<
 interface InitialState {
   data: string | null;
   status: ActionStatus | undefined;
-  errorMessage?: string;
+  errorString?: string;
 }
 
 const initialState: InitialState = {
   data: null,
   status: undefined,
-  errorMessage: undefined,
+  errorString: undefined,
 };
 
 const walletTrezorSlice = createSlice({
@@ -74,7 +74,7 @@ const walletTrezorSlice = createSlice({
         ...state,
         data: null,
         status: ActionStatus.ERROR,
-        errorMessage: action.payload?.errorMessage,
+        errorString: action.payload?.errorString,
       }),
     );
   },

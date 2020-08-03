@@ -10,7 +10,7 @@ export enum ActionStatus {
 }
 
 export interface RejectMessage {
-  errorMessage: string;
+  errorString: string;
 }
 
 export enum NetworkCongestion {
@@ -25,4 +25,8 @@ export enum AuthType {
   LYRA = "LYRA",
   PRIVATE_KEY = "PRIVATE_KEY",
   TREZOR = "TREZOR",
+}
+
+export interface ModalPageProps {
+  onClose?: () => void;
 }

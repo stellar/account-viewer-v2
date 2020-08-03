@@ -4,6 +4,7 @@ import {
   storeWalletKey,
   CreateKeyManagerResponse,
 } from "helpers/keyManager";
+import { getErrorString } from "helpers/getErrorString";
 import { RejectMessage } from "constants/types.d";
 
 export const storePrivateKeyAction = createAsyncThunk<
@@ -16,7 +17,7 @@ export const storePrivateKeyAction = createAsyncThunk<
     result = await storePrivateKey(secret);
   } catch (error) {
     return rejectWithValue({
-      errorMessage: error.response?.detail || error.toString(),
+      errorString: getErrorString(error),
     });
   }
   return result;
@@ -32,7 +33,7 @@ export const storeWalletKeyAction = createAsyncThunk<
     result = await storeWalletKey(publicKey);
   } catch (error) {
     return rejectWithValue({
-      errorMessage: error.response?.detail || error.toString(),
+      errorString: getErrorString(error),
     });
   }
   return result;
@@ -41,13 +42,13 @@ export const storeWalletKeyAction = createAsyncThunk<
 interface InitialState {
   keyStoreId: string;
   password: string;
-  errorMessage?: string;
+  errorString?: string;
 }
 
 const initialState: InitialState = {
   keyStoreId: "",
   password: "",
-  errorMessage: undefined,
+  errorString: undefined,
 };
 
 const keyStoreSlice = createSlice({
@@ -65,7 +66,7 @@ const keyStoreSlice = createSlice({
     }));
     builder.addCase(storePrivateKeyAction.rejected, (state, action) => ({
       ...state,
-      errorMessage: action?.payload?.errorMessage,
+      errorString: action?.payload?.errorString,
     }));
 
     // TODO: add all cases
