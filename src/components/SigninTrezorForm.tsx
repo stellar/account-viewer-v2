@@ -2,11 +2,11 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-// TODO: check for future updates @types/trezor-connect doesn't have .stellarGetAddress()
-// @ts-ignore
 import TrezorConnect from "trezor-connect";
+import { KeyType } from "@stellar/wallet-sdk";
 
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
+import { storeWalletKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
 import {
   fetchTrezorStellarAddressAction,
@@ -81,6 +81,12 @@ export const SigninTrezorForm = ({ onClose }: ModalPageProps) => {
       if (trezorData) {
         try {
           dispatch(fetchAccountAction(trezorData));
+          dispatch(
+            storeWalletKeyAction({
+              publicKey: trezorData,
+              keyType: KeyType.trezor,
+            }),
+          );
         } catch (e) {
           setErrorMessage(`Something went wrong. ${e.toString()}`);
         }

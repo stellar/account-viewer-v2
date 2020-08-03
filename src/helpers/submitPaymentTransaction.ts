@@ -1,51 +1,37 @@
-import StellarSdk, {
-  Transaction,
-  MemoType,
-  MemoValue,
-  Keypair,
-} from "stellar-sdk";
-// @ts-ignore
+import StellarSdk, { MemoType, MemoValue, Keypair } from "stellar-sdk";
 import { AuthType } from "constants/types.d";
 import { PaymentTransactionParams } from "ducks/sendTransaction";
 import { getErrorString } from "helpers/getErrorString";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
-import { getTrezorSignature } from "helpers/wallet/getTrezorSignature";
 import { store } from "config/store";
+import { signTransaction } from "helpers/keyManager";
 
 export const submitPaymentTransaction = async (
   params: PaymentTransactionParams,
   authType?: AuthType,
 ) => {
-  const { settings } = store.getState();
+  const { settings, keyStore } = store.getState();
   const server = new StellarSdk.Server(
     getNetworkConfig(settings.isTestnet).url,
   );
 
+  if (!authType) {
+    throw new Error(`Bad authentication`);
+  }
+
   let transaction = await buildPaymentTransaction(params);
-  transaction = await signTransaction(transaction, params, authType);
 
-  const result = await server.submitTransaction(transaction);
-  return result;
-};
-
-export const signTransaction = async (
-  transaction: Transaction,
-  params: PaymentTransactionParams,
-  authType?: AuthType,
-) => {
+  // Sign transaction
   try {
-    if (!authType) {
-      throw new Error(`Bad authentication`);
-    }
-
     if (authType === AuthType.PRIVATE_KEY) {
-      const keypair = Keypair.fromSecret(params.secret);
-      transaction.sign(keypair);
+      transaction = transaction.sign(Keypair.fromSecret(params.secret));
     } else {
-      // TODO: Trezor signing will be in wallet-sdk
-      const signature = await getTrezorSignature(transaction);
-
-      transaction.addSignature(params.publicKey, signature);
+      // Ledger, Trezor
+      transaction = await signTransaction({
+        id: keyStore.keyStoreId,
+        password: keyStore.password,
+        transaction,
+      });
     }
   } catch (error) {
     throw new Error(
@@ -53,7 +39,8 @@ export const signTransaction = async (
     );
   }
 
-  return transaction;
+  const result = await server.submitTransaction(transaction);
+  return result;
 };
 
 const createMemo = (memoType: MemoType, memoContent: MemoValue) => {
