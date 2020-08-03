@@ -1,6 +1,4 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-// @types/trezor-connect doesn't have .stellarGetAddress()
-// @ts-ignore
 import TrezorConnect from "trezor-connect";
 import { ActionStatus, RejectMessage } from "constants/types.d";
 
@@ -12,6 +10,7 @@ export const fetchTrezorStellarAddressAction = createAsyncThunk<
   "walletTrezor/fetchTrezorStellarAddressAction",
   async (_, { rejectWithValue }) => {
     try {
+      // @ts-ignore @types/trezor-connect doesn't have stellarGetAddress()
       const trezorResponse = await TrezorConnect.stellarGetAddress({
         path: "m/44'/148'/0'",
       });

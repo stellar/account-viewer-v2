@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-// TODO: check for future updates @types/trezor-connect doesn't have .stellarGetAddress()
-// @ts-ignore
 import TrezorConnect from "trezor-connect";
 
 import { fetchAccountAction, resetAccountAction } from "ducks/account";

@@ -7,7 +7,6 @@ import StellarSdk, {
 import { AuthType } from "constants/types.d";
 import { PaymentTransactionParams } from "ducks/sendTransaction";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
-// import { getTrezorSignature } from "helpers/wallet/getTrezorSignature";
 import { store } from "config/store";
 import { signTransaction as keyManagerSignTransaction } from "helpers/keyManager";
 
