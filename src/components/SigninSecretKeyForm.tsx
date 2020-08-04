@@ -3,9 +3,10 @@ import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { Keypair } from "stellar-sdk";
+import { KeyType } from "@stellar/wallet-sdk";
 
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
-import { storePrivateKeyAction } from "ducks/keyStore";
+import { storeKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
@@ -39,7 +40,8 @@ export const SigninSecretKeyForm = ({ onClose }: ModalPageProps) => {
   const history = useHistory();
 
   const { account } = useRedux(["account"]);
-  const { status, isAuthenticated, errorString } = account;
+  const { status, isAuthenticated, errorString, data } = account;
+  const accountId = data?.id;
   const [acceptedWarning, setAcceptedWarning] = useState(false);
   const [secretKey, setSecretKey] = useState("");
   const { errorMessage, setErrorMessage } = useErrorMessage({
@@ -54,15 +56,30 @@ export const SigninSecretKeyForm = ({ onClose }: ModalPageProps) => {
       if (isAuthenticated) {
         history.push("/dashboard");
         dispatch(updateSettingsAction({ authType: AuthType.PRIVATE_KEY }));
+        dispatch(
+          storeKeyAction({
+            publicKey: accountId,
+            privateKey: secretKey,
+            keyType: KeyType.plaintextKey,
+          }),
+        );
       } else {
         setErrorMessage("Something went wrong, please try again.");
       }
     }
-  }, [status, dispatch, history, isAuthenticated, setErrorMessage]);
+  }, [
+    status,
+    history,
+    isAuthenticated,
+    setErrorMessage,
+    dispatch,
+    accountId,
+    secretKey,
+  ]);
 
   let failedAttempts = 0;
 
-  const handleSignIn = async () => {
+  const handleSignIn = () => {
     if (!secretKey) {
       // TODO:
       // eslint-disable-next-line
@@ -80,10 +97,7 @@ export const SigninSecretKeyForm = ({ onClose }: ModalPageProps) => {
       const keypair = Keypair.fromSecret(secretKey);
       const publicKey = keypair.publicKey();
 
-      const result = await dispatch(fetchAccountAction(publicKey));
-      if (fetchAccountAction.fulfilled.match(result as any)) {
-        dispatch(storePrivateKeyAction(secretKey));
-      }
+      dispatch(fetchAccountAction(publicKey));
     } catch (e) {
       // Rate limit with exponential backoff.
       failedAttempts += 1;
