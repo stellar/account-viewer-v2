@@ -6,6 +6,8 @@ import { settingsSelector } from "ducks/settings";
 import { RootState } from "config/store";
 import { getErrorString } from "helpers/getErrorString";
 
+let accountWatcherStopper: any;
+
 export const fetchAccountAction = createAsyncThunk<
   Types.AccountDetails,
   string,
@@ -35,6 +37,47 @@ export const fetchAccountAction = createAsyncThunk<
   },
 );
 
+export const startAccountWatcherAction = createAsyncThunk<
+  boolean,
+  string,
+  { rejectValue: RejectMessage; state: RootState }
+>(
+  "txHistoryWatcherAction",
+  (publicKey, { rejectWithValue, getState, dispatch }) => {
+    try {
+      const { isTestnet } = settingsSelector(getState());
+      const { data } = accountSelector(getState());
+
+      const dataProvider = new DataProvider({
+        serverUrl: getNetworkConfig(isTestnet).url,
+        accountOrKey: publicKey,
+        networkPassphrase: getNetworkConfig(isTestnet).network,
+      });
+
+      accountWatcherStopper = dataProvider.watchAccountDetails({
+        onMessage: (accountDetails: Types.AccountDetails) => {
+          console.log(
+            "ACCOUNT WATCHER :: SUCCESS accountDetails: ",
+            accountDetails,
+          );
+          dispatch(updateAccountAction(accountDetails));
+        },
+        onError: () => {
+          console.log("ACCOUNT WATCHER :: ERROR: ");
+          const errorString = "We couldn’t update your account at this time.";
+          dispatch(updateAccountErrorAction({ errorString, data }));
+        },
+      });
+
+      return true;
+    } catch (error) {
+      return rejectWithValue({
+        errorString: getErrorString(error),
+      });
+    }
+  },
+);
+
 interface InitialState {
   data: Types.AccountDetails | null;
   isAuthenticated: boolean;
@@ -54,6 +97,24 @@ const accountSlice = createSlice({
   initialState,
   reducers: {
     resetAccountAction: () => initialState,
+    updateAccountAction: (state, action) => ({
+      ...state,
+      data: action.payload,
+    }),
+    updateAccountErrorAction: (state, action) => ({
+      ...state,
+      // TODO: temp solution to pass "data" until BigNumber issue is fixed
+      data: action.payload.data,
+      status: ActionStatus.ERROR,
+      errorString: action.payload.errorString,
+    }),
+    stopAccountWatcherAction: () => {
+      if (accountWatcherStopper) {
+        accountWatcherStopper();
+      }
+
+      return initialState;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchAccountAction.pending, () => ({
@@ -79,5 +140,12 @@ const accountSlice = createSlice({
   },
 });
 
+export const accountSelector = (state: RootState) => state.account;
+
 export const { reducer } = accountSlice;
-export const { resetAccountAction } = accountSlice.actions;
+export const {
+  resetAccountAction,
+  updateAccountAction,
+  updateAccountErrorAction,
+  stopAccountWatcherAction,
+} = accountSlice.actions;
