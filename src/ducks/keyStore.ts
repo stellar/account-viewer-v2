@@ -15,7 +15,7 @@ export const storeKeyAction = createAsyncThunk<
   WalletKeyActionProps,
   { rejectValue: RejectMessage }
 >(
-  "keyManagerWalletAction",
+  "keyStore/storeKeyAction",
   async ({ publicKey, privateKey, keyType }, { rejectWithValue }) => {
     let result;
     try {
