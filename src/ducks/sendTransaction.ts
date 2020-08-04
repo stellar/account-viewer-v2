@@ -19,7 +19,7 @@ export const sendTxAction = createAsyncThunk<
   Horizon.TransactionResponse,
   PaymentTransactionParams,
   { rejectValue: RejectMessage; state: RootState }
->("sendTxAction", async (params, { rejectWithValue }) => {
+>("sendTx/sendTxAction", async (params, { rejectWithValue }) => {
   let result;
   try {
     result = await submitPaymentTransaction(params);

@@ -16,41 +16,44 @@ export const fetchTxHistoryAction = createAsyncThunk<
   },
   string,
   { rejectValue: RejectMessage; state: RootState }
->("txHistoryAction", async (publicKey, { rejectWithValue, getState }) => {
-  const { isTestnet } = settingsSelector(getState());
+>(
+  "txHistory/fetchTxHistoryAction",
+  async (publicKey, { rejectWithValue, getState }) => {
+    const { isTestnet } = settingsSelector(getState());
 
-  const dataProvider = new DataProvider({
-    serverUrl: getNetworkConfig(isTestnet).url,
-    accountOrKey: publicKey,
-    networkPassphrase: getNetworkConfig(isTestnet).network,
-  });
-  let data: Array<Types.Payment> | null = null;
-  let hasMoreTxs = false;
-
-  try {
-    const transactions = await dataProvider.fetchPayments({
-      limit: TX_HISTORY_LIMIT,
+    const dataProvider = new DataProvider({
+      serverUrl: getNetworkConfig(isTestnet).url,
+      accountOrKey: publicKey,
+      networkPassphrase: getNetworkConfig(isTestnet).network,
     });
-    hasMoreTxs = (await transactions.next())?.records.length > 0;
-    data = transactions?.records;
-  } catch (error) {
-    return rejectWithValue({
-      errorString: getErrorString(error),
-    });
-  }
+    let data: Array<Types.Payment> | null = null;
+    let hasMoreTxs = false;
 
-  return {
-    data,
-    hasMoreTxs,
-  };
-});
+    try {
+      const transactions = await dataProvider.fetchPayments({
+        limit: TX_HISTORY_LIMIT,
+      });
+      hasMoreTxs = (await transactions.next())?.records.length > 0;
+      data = transactions?.records;
+    } catch (error) {
+      return rejectWithValue({
+        errorString: getErrorString(error),
+      });
+    }
+
+    return {
+      data,
+      hasMoreTxs,
+    };
+  },
+);
 
 export const startTxHistoryWatcherAction = createAsyncThunk<
   boolean,
   string,
   { rejectValue: RejectMessage; state: RootState }
 >(
-  "txHistoryWatcherAction",
+  "txHistory/startTxHistoryWatcherAction",
   (publicKey, { rejectWithValue, getState, dispatch }) => {
     try {
       const { isTestnet } = settingsSelector(getState());

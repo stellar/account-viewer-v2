@@ -6,6 +6,7 @@ import { ReceiveTransaction } from "components/ReceiveTransaction";
 import { Modal } from "components/Modal";
 import { startAccountWatcherAction } from "ducks/account";
 import { useRedux } from "hooks/useRedux";
+import { ActionStatus } from "constants/types.d";
 
 const El = styled.div`
   padding-bottom: 10px;
@@ -18,13 +19,16 @@ const TempButtonEl = styled.button`
 export const BalanceInfo = () => {
   const dispatch = useDispatch();
   const { account } = useRedux(["account"]);
+  const { status, data, isAccountWatcherStarted } = account;
   const [isSendTxModalVisible, setIsSendTxModalVisible] = useState(false);
   const [isReceiveTxModalVisible, setIsReceiveTxModalVisible] = useState(false);
-  const publicAddress = account.data.id;
+  const publicAddress = data.id;
 
   useEffect(() => {
-    dispatch(startAccountWatcherAction(publicAddress));
-  }, [dispatch, publicAddress]);
+    if (status === ActionStatus.SUCCESS && !isAccountWatcherStarted) {
+      dispatch(startAccountWatcherAction(publicAddress));
+    }
+  }, [dispatch, publicAddress, status, isAccountWatcherStarted]);
 
   let nativeBalance = 0;
   if (account.data) {

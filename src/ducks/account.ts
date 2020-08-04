@@ -42,7 +42,7 @@ export const startAccountWatcherAction = createAsyncThunk<
   string,
   { rejectValue: RejectMessage; state: RootState }
 >(
-  "txHistoryWatcherAction",
+  "account/startAccountWatcherAction",
   (publicKey, { rejectWithValue, getState, dispatch }) => {
     try {
       const { isTestnet } = settingsSelector(getState());
@@ -56,14 +56,9 @@ export const startAccountWatcherAction = createAsyncThunk<
 
       accountWatcherStopper = dataProvider.watchAccountDetails({
         onMessage: (accountDetails: Types.AccountDetails) => {
-          console.log(
-            "ACCOUNT WATCHER :: SUCCESS accountDetails: ",
-            accountDetails,
-          );
           dispatch(updateAccountAction(accountDetails));
         },
         onError: () => {
-          console.log("ACCOUNT WATCHER :: ERROR: ");
           const errorString = "We couldn’t update your account at this time.";
           dispatch(updateAccountErrorAction({ errorString, data }));
         },
@@ -81,6 +76,7 @@ export const startAccountWatcherAction = createAsyncThunk<
 interface InitialState {
   data: Types.AccountDetails | null;
   isAuthenticated: boolean;
+  isAccountWatcherStarted: boolean;
   status: ActionStatus | undefined;
   errorString?: string;
 }
@@ -88,6 +84,7 @@ interface InitialState {
 const initialState: InitialState = {
   data: null,
   isAuthenticated: false,
+  isAccountWatcherStarted: false,
   status: undefined,
   errorString: undefined,
 };
@@ -121,7 +118,6 @@ const accountSlice = createSlice({
       ...initialState,
       status: ActionStatus.PENDING,
     }));
-
     builder.addCase(fetchAccountAction.fulfilled, (state, action) => ({
       ...state,
       data: { ...action.payload },
@@ -130,10 +126,23 @@ const accountSlice = createSlice({
       // sure we have the response data to set isAuthenticated correctly.
       isAuthenticated: !!action.payload,
     }));
-
     builder.addCase(fetchAccountAction.rejected, (state, action) => ({
       ...state,
       data: null,
+      status: ActionStatus.ERROR,
+      errorString: action.payload?.errorString,
+    }));
+
+    // TODO: figure out why it breaks for BigNumber amount
+    // @ts-ignore
+    builder.addCase(startAccountWatcherAction.fulfilled, (state, action) => ({
+      ...state,
+      isAccountWatcherStarted: action.payload,
+    }));
+
+    // @ts-ignore
+    builder.addCase(startAccountWatcherAction.rejected, (state, action) => ({
+      ...state,
       status: ActionStatus.ERROR,
       errorString: action.payload?.errorString,
     }));
