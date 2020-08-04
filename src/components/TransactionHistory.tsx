@@ -52,7 +52,7 @@ export const TransactionHistory = () => {
     data,
     isTxWatcherStarted,
     errorString,
-    hasMoreTx,
+    hasMoreTxs,
   } = txHistory;
 
   const { errorMessage } = useErrorMessage({ initialMessage: errorString });
@@ -128,7 +128,7 @@ export const TransactionHistory = () => {
               </ItemRowEl>
             ))}
           </El>
-          {hasMoreTx && (
+          {hasMoreTxs && (
             <El>
               <a
                 href={`${
