@@ -6,7 +6,7 @@ import TrezorConnect from "trezor-connect";
 import { KeyType } from "@stellar/wallet-sdk";
 
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
-import { storeWalletKeyAction } from "ducks/keyStore";
+import { storeKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
 import {
   fetchTrezorStellarAddressAction,
@@ -82,7 +82,7 @@ export const SigninTrezorForm = ({ onClose }: ModalPageProps) => {
         try {
           dispatch(fetchAccountAction(trezorData));
           dispatch(
-            storeWalletKeyAction({
+            storeKeyAction({
               publicKey: trezorData,
               keyType: KeyType.trezor,
             }),

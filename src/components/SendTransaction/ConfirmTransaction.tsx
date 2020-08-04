@@ -3,7 +3,6 @@ import styled from "styled-components";
 
 import { useDispatch } from "react-redux";
 import { useRedux } from "hooks/useRedux";
-import { loadPrivateKey } from "helpers/keyManager";
 import { stroopsFromLumens } from "helpers/stroopConversion";
 import { sendTxAction } from "ducks/sendTransaction";
 import { ActionStatus } from "constants/types.d";
@@ -28,7 +27,7 @@ export const ConfirmTransaction = ({
   onSuccessfulTx,
   onFailedTx,
 }: ConfirmTransactionProps) => {
-  const { sendTx, keyStore, account, settings } = useRedux([
+  const { sendTx, account, settings } = useRedux([
     "sendTx",
     "keyStore",
     "account",
@@ -37,14 +36,9 @@ export const ConfirmTransaction = ({
   const dispatch = useDispatch();
 
   const handleSend = async () => {
-    const { privateKey } = await loadPrivateKey({
-      id: keyStore.keyStoreId,
-      password: keyStore.password,
-    });
     const result = await dispatch(
       sendTxAction({
         publicKey: account.data?.id,
-        secret: privateKey,
         // formData.federationAddress exists only if valid fed address given
         toAccountId: formData.federationAddress || formData.toAccountId,
         amount: formData.amount,
