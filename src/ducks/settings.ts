@@ -3,7 +3,7 @@ import { AuthType } from "constants/types.d";
 import { RootState } from "config/store";
 
 interface InitialState {
-  authType?: AuthType;
+  authType: AuthType | undefined;
   isTestnet: boolean;
 }
 
