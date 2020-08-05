@@ -4,8 +4,9 @@ import { Provider } from "react-redux";
 import { createGlobalStyle } from "styled-components";
 
 import { store } from "config/store";
-import { Landing } from "pages/Landing";
 import { Dashboard } from "pages/Dashboard";
+import { Landing } from "pages/Landing";
+import { NotFound } from "pages/NotFound";
 import { Network } from "components/Network";
 import { PrivateRoute } from "components/PrivateRoute";
 
@@ -30,7 +31,7 @@ export const App = () => (
             <Dashboard />
           </PrivateRoute>
 
-          {/* TODO: add 404 page */}
+          <Route component={NotFound} />
         </Switch>
       </Network>
     </Router>
