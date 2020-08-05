@@ -30,3 +30,5 @@ export enum AuthType {
 export interface ModalPageProps {
   onClose?: () => void;
 }
+
+export const DefaultStellarBipPath = "44'/148'/0'";

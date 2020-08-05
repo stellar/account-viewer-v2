@@ -12,6 +12,7 @@ import { reducer as sendTx } from "ducks/sendTransaction";
 import { reducer as settings } from "ducks/settings";
 import { reducer as txHistory } from "ducks/txHistory";
 import { reducer as walletTrezor } from "ducks/wallet/trezor";
+import { reducer as walletLedger } from "ducks/wallet/ledger";
 
 export type RootState = ReturnType<typeof store.getState>;
 
@@ -35,6 +36,7 @@ export const store = configureStore({
     settings,
     txHistory,
     walletTrezor,
+    walletLedger,
   }),
   middleware: [
     ...getDefaultMiddleware({

@@ -33,7 +33,7 @@ const TempLinkButtonEl = styled.div`
   cursor: pointer;
 `;
 
-export const SigninTrezorForm = ({ onClose }: ModalPageProps) => {
+export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
