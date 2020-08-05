@@ -44,13 +44,13 @@ export const SignInLedgerForm = () => {
       dispatch(updateSettingsAction({ authType: AuthType.LEDGER }));
       dispatch(
         storeKeyAction({
-          publicKey: walletLedger.publicKey,
+          publicKey: walletLedger.data.publicKey,
           keyType: KeyType.ledger,
           path: ledgerBipPath,
         }),
       );
     }
-  }, [dispatch, account, history, walletLedger.publicKey, ledgerBipPath]);
+  }, [dispatch, account, history, walletLedger, ledgerBipPath]);
 
   const handleLedgerSignIn = () => {
     dispatch(fetchLedgerStellarAddressAction(ledgerBipPath));
@@ -60,17 +60,25 @@ export const SignInLedgerForm = () => {
     <div>
       <h2>Connect with Ledger</h2>
       <div>
-        {walletLedger.status === ActionStatus.PENDING && (
+        {(walletLedger.status === ActionStatus.PENDING ||
+          walletLedger.status === ActionStatus.SUCCESS) && (
           <div>
             <p>Scanning for Ledger Wallet connection …</p>
             <p>More instructions about connection to the wallet</p>
           </div>
         )}
-        {walletLedger.status === ActionStatus.ERROR && (
+        {(walletLedger.status === ActionStatus.ERROR ||
+          account.status === ActionStatus.ERROR) && (
           <div>
             <p>Connection failed</p>
           </div>
         )}
+        {walletLedger.status === ActionStatus.SUCCESS &&
+          account.status === ActionStatus.SUCCESS && (
+            <div>
+              <p>Ledger wallet connected</p>
+            </div>
+          )}
       </div>
       <div>
         <TempCheckboxEl
