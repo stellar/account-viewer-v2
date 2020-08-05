@@ -2,9 +2,13 @@ import {
   configureStore,
   getDefaultMiddleware,
   isPlain,
+  createAction,
+  CombinedState,
 } from "@reduxjs/toolkit";
 import { combineReducers, Action } from "redux";
 import BigNumber from "bignumber.js";
+
+import { RESET_STORE_ACTION_TYPE } from "constants/settings";
 
 import { reducer as account } from "ducks/account";
 import { reducer as keyStore } from "ducks/keyStore";
@@ -27,15 +31,24 @@ const loggerMiddleware = (store: any) => (next: any) => (
 const isSerializable = (value: any) =>
   BigNumber.isBigNumber(value) || isPlain(value);
 
+const reducers = combineReducers({
+  account,
+  keyStore,
+  sendTx,
+  settings,
+  txHistory,
+  walletTrezor,
+});
+
+export const resetStoreAction = createAction(RESET_STORE_ACTION_TYPE);
+
+const rootReducer = (state: CombinedState<any>, action: Action) => {
+  const newState = action.type === RESET_STORE_ACTION_TYPE ? undefined : state;
+  return reducers(newState, action);
+};
+
 export const store = configureStore({
-  reducer: combineReducers({
-    account,
-    keyStore,
-    sendTx,
-    settings,
-    txHistory,
-    walletTrezor,
-  }),
+  reducer: rootReducer,
   middleware: [
     ...getDefaultMiddleware({
       serializableCheck: {

@@ -34,13 +34,13 @@ export const fetchTrezorStellarAddressAction = createAsyncThunk<
   },
 );
 
-interface InitialState {
+interface WalletTrezorInitialState {
   data: string | null;
   status: ActionStatus | undefined;
   errorString?: string;
 }
 
-const initialState: InitialState = {
+const initialState: WalletTrezorInitialState = {
   data: null,
   status: undefined,
   errorString: undefined,

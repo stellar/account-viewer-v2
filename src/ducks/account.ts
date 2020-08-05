@@ -73,7 +73,7 @@ export const startAccountWatcherAction = createAsyncThunk<
   },
 );
 
-interface InitialState {
+interface AccountInitialState {
   data: Types.AccountDetails | null;
   isAuthenticated: boolean;
   isAccountWatcherStarted: boolean;
@@ -81,7 +81,7 @@ interface InitialState {
   errorString?: string;
 }
 
-const initialState: InitialState = {
+const initialState: AccountInitialState = {
   data: null,
   isAuthenticated: false,
   isAccountWatcherStarted: false,
@@ -108,6 +108,7 @@ const accountSlice = createSlice({
     stopAccountWatcherAction: () => {
       if (accountWatcherStopper) {
         accountWatcherStopper();
+        accountWatcherStopper = undefined;
       }
 
       return initialState;

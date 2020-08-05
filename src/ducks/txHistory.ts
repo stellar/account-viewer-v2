@@ -96,7 +96,7 @@ export const startTxHistoryWatcherAction = createAsyncThunk<
   },
 );
 
-interface InitialTxHistoryState {
+interface TxHistoryInitialState {
   data: Array<Types.Payment>;
   hasMoreTxs?: boolean;
   isTxWatcherStarted: boolean;
@@ -104,7 +104,7 @@ interface InitialTxHistoryState {
   status: ActionStatus | undefined;
 }
 
-const initialTxHistoryState: InitialTxHistoryState = {
+const initialTxHistoryState: TxHistoryInitialState = {
   data: [],
   hasMoreTxs: false,
   isTxWatcherStarted: false,
@@ -130,6 +130,7 @@ export const txHistorySlice = createSlice({
     stopTxHistoryWatcherAction: () => {
       if (txHistoryWatcherStopper) {
         txHistoryWatcherStopper();
+        txHistoryWatcherStopper = undefined;
       }
 
       return initialTxHistoryState;
