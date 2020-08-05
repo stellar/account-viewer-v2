@@ -3,9 +3,8 @@ import { ActionStatus, RejectMessage } from "constants/types.d";
 import LedgerTransport from "@ledgerhq/hw-transport-u2f";
 import LedgerApi from "@ledgerhq/hw-app-str";
 
-// ALEC TODO - types
 export const fetchLedgerStellarAddressAction = createAsyncThunk<
-  any,
+  { publicKey: string },
   string,
   { rejectValue: RejectMessage }
 >(
@@ -25,7 +24,7 @@ export const fetchLedgerStellarAddressAction = createAsyncThunk<
 );
 
 interface InitialState {
-  data: null | string;
+  data: null | { publicKey: string };
   status?: string;
   errorString?: string;
 }
