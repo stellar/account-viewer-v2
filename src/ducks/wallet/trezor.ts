@@ -3,7 +3,7 @@ import TrezorConnect from "trezor-connect";
 import { ActionStatus, RejectMessage } from "constants/types.d";
 
 export const fetchTrezorStellarAddressAction = createAsyncThunk<
-  string,
+  { publicKey: string },
   undefined,
   { rejectValue: RejectMessage }
 >(
@@ -25,7 +25,7 @@ export const fetchTrezorStellarAddressAction = createAsyncThunk<
         });
       }
 
-      return trezorResponse.payload.address;
+      return { publicKey: trezorResponse.payload.address };
     } catch (error) {
       return rejectWithValue({
         errorString: error.toString(),
@@ -35,7 +35,7 @@ export const fetchTrezorStellarAddressAction = createAsyncThunk<
 );
 
 interface WalletTrezorInitialState {
-  data: string | null;
+  data: { publicKey: string } | null;
   status: ActionStatus | undefined;
   errorString?: string;
 }

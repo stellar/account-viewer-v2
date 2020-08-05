@@ -80,10 +80,10 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
     if (trezorStatus === ActionStatus.SUCCESS) {
       if (trezorData) {
         try {
-          dispatch(fetchAccountAction(trezorData));
+          dispatch(fetchAccountAction(trezorData.publicKey));
           dispatch(
             storeKeyAction({
-              publicKey: trezorData,
+              publicKey: trezorData.publicKey,
               keyType: KeyType.trezor,
             }),
           );
