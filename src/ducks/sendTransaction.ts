@@ -32,13 +32,13 @@ export const sendTxAction = createAsyncThunk<
   return result;
 });
 
-interface InitialState {
+interface SendTxInitialState {
   data: Horizon.TransactionResponse | null;
   status: ActionStatus | undefined;
   errorString?: string;
 }
 
-const initialState: InitialState = {
+const initialState: SendTxInitialState = {
   data: null,
   status: undefined,
   errorString: undefined,

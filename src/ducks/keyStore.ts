@@ -30,13 +30,13 @@ export const storeKeyAction = createAsyncThunk<
   },
 );
 
-interface InitialState {
+interface KeyStoreInitialState {
   keyStoreId: string;
   password: string;
   errorString?: string;
 }
 
-const initialState: InitialState = {
+const initialState: KeyStoreInitialState = {
   keyStoreId: "",
   password: "",
   errorString: undefined,
