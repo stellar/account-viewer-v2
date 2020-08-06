@@ -28,10 +28,12 @@ export const storeKey = async ({
   publicKey,
   privateKey,
   keyType,
+  path,
 }: {
   publicKey: string;
   privateKey?: string;
   keyType: KeyType;
+  path?: string;
 }) => {
   const keyManager = createKeyManager();
   const { settings } = store.getState();
@@ -49,6 +51,7 @@ export const storeKey = async ({
         publicKey,
         privateKey: privateKey || "",
         network: getNetworkConfig(settings.isTestnet).network,
+        path,
       },
       password: result.password,
       encrypterName: KeyManagerPlugins.ScryptEncrypter.name,

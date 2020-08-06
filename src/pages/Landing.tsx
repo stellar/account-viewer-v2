@@ -3,8 +3,9 @@ import styled from "styled-components";
 
 import { Modal } from "components/Modal";
 import { NewKeyPairForm } from "components/NewKeyPairForm";
-import { SigninSecretKeyForm } from "components/SigninSecretKeyForm";
-import { SigninTrezorForm } from "components/SigninTrezorForm";
+import { SignInSecretKeyForm } from "components/SignIn/SignInSecretKeyForm";
+import { SignInTrezorForm } from "components/SignIn/SignInTrezorForm";
+import { SignInLedgerForm } from "components/SignIn/SignInLedgerForm";
 
 const TempLinkButtonEl = styled.div`
   margin-bottom: 20px;
@@ -35,11 +36,11 @@ export const Landing = () => {
   const renderModal = () => {
     switch (activeModal) {
       case ModalType.SIGNIN_SECRET_KEY:
-        return <SigninSecretKeyForm onClose={closeModal} />;
+        return <SignInSecretKeyForm onClose={closeModal} />;
       case ModalType.SIGNIN_TREZOR:
-        return <SigninTrezorForm onClose={closeModal} />;
+        return <SignInTrezorForm onClose={closeModal} />;
       case ModalType.SIGNIN_LEDGER:
-        return <div>Ledger</div>;
+        return <SignInLedgerForm />;
       case ModalType.SIGNIN_LYRA:
         return <div>Lyra</div>;
       case ModalType.SIGNIN_ALBEDO:

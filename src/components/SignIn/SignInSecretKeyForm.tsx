@@ -35,7 +35,7 @@ const TempLinkButtonEl = styled.div`
   cursor: pointer;
 `;
 
-export const SigninSecretKeyForm = ({ onClose }: ModalPageProps) => {
+export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
 

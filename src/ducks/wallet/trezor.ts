@@ -1,9 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import TrezorConnect from "trezor-connect";
-import { ActionStatus, RejectMessage } from "constants/types.d";
+
+import {
+  ActionStatus,
+  RejectMessage,
+  WalletInitialState,
+} from "constants/types.d";
 
 export const fetchTrezorStellarAddressAction = createAsyncThunk<
-  string,
+  { publicKey: string },
   undefined,
   { rejectValue: RejectMessage }
 >(
@@ -25,7 +30,7 @@ export const fetchTrezorStellarAddressAction = createAsyncThunk<
         });
       }
 
-      return trezorResponse.payload.address;
+      return { publicKey: trezorResponse.payload.address };
     } catch (error) {
       return rejectWithValue({
         errorString: error.toString(),
@@ -34,13 +39,7 @@ export const fetchTrezorStellarAddressAction = createAsyncThunk<
   },
 );
 
-interface WalletTrezorInitialState {
-  data: string | null;
-  status: ActionStatus | undefined;
-  errorString?: string;
-}
-
-const initialState: WalletTrezorInitialState = {
+const initialState: WalletInitialState = {
   data: null,
   status: undefined,
   errorString: undefined,

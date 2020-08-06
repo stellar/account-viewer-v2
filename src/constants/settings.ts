@@ -31,3 +31,5 @@ export const networkConfig: NetworkConfig = {
     stellarExpertAccountUrl: "https://stellar.expert/explorer/public/account/",
   },
 };
+
+export const defaultStellarBipPath = "44'/148'/0'";

@@ -16,6 +16,7 @@ import { reducer as sendTx } from "ducks/sendTransaction";
 import { reducer as settings } from "ducks/settings";
 import { reducer as txHistory } from "ducks/txHistory";
 import { reducer as walletTrezor } from "ducks/wallet/trezor";
+import { reducer as walletLedger } from "ducks/wallet/ledger";
 
 export type RootState = ReturnType<typeof store.getState>;
 
@@ -38,6 +39,7 @@ const reducers = combineReducers({
   settings,
   txHistory,
   walletTrezor,
+  walletLedger,
 });
 
 export const resetStoreAction = createAction(RESET_STORE_ACTION_TYPE);

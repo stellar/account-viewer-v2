@@ -30,3 +30,9 @@ export enum AuthType {
 export interface ModalPageProps {
   onClose?: () => void;
 }
+
+interface WalletInitialState {
+  data: { publicKey: string } | null;
+  status: ActionStatus | undefined;
+  errorString?: string;
+}

@@ -33,7 +33,7 @@ const TempLinkButtonEl = styled.div`
   cursor: pointer;
 `;
 
-export const SigninTrezorForm = ({ onClose }: ModalPageProps) => {
+export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -80,10 +80,10 @@ export const SigninTrezorForm = ({ onClose }: ModalPageProps) => {
     if (trezorStatus === ActionStatus.SUCCESS) {
       if (trezorData) {
         try {
-          dispatch(fetchAccountAction(trezorData));
+          dispatch(fetchAccountAction(trezorData.publicKey));
           dispatch(
             storeKeyAction({
-              publicKey: trezorData,
+              publicKey: trezorData.publicKey,
               keyType: KeyType.trezor,
             }),
           );

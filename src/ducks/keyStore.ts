@@ -8,6 +8,7 @@ interface WalletKeyActionProps {
   publicKey: string;
   privateKey?: string;
   keyType: KeyType;
+  path?: string;
 }
 
 export const storeKeyAction = createAsyncThunk<
@@ -16,10 +17,10 @@ export const storeKeyAction = createAsyncThunk<
   { rejectValue: RejectMessage }
 >(
   "keyStore/storeKeyAction",
-  async ({ publicKey, privateKey, keyType }, { rejectWithValue }) => {
+  async ({ publicKey, privateKey, keyType, path }, { rejectWithValue }) => {
     let result;
     try {
-      result = await storeKey({ publicKey, privateKey, keyType });
+      result = await storeKey({ publicKey, privateKey, keyType, path });
     } catch (error) {
       return rejectWithValue({
         errorString: getErrorString(error),
