@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { KeyType } from "@stellar/wallet-sdk";
-import {
-  ActionStatus,
-  DefaultStellarBipPath,
-  AuthType,
-} from "constants/types.d";
+
+import { ErrorMessage } from "components/ErrorMessage";
+import { defaultStellarBipPath } from "constants/settings";
+import { ActionStatus, AuthType } from "constants/types.d";
 import { fetchAccountAction } from "ducks/account";
 import { storeKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
 import { fetchLedgerStellarAddressAction } from "ducks/wallet/ledger";
+import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
-import { useDispatch } from "react-redux";
 
 // Note: need to be on https to test Ledger
 
@@ -30,7 +30,20 @@ export const SignInLedgerForm = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [isUsingDefaultAccount, setIsUsingDefaultAccount] = useState(true);
-  const [ledgerBipPath, setLedgerBipPath] = useState(DefaultStellarBipPath);
+  const [ledgerBipPath, setLedgerBipPath] = useState(defaultStellarBipPath);
+
+  const { errorMessage, setErrorMessage } = useErrorMessage({
+    initialMessage: "",
+  });
+
+  useEffect(() => {
+    if (
+      walletLedger.status === ActionStatus.ERROR ||
+      account.status === ActionStatus.ERROR
+    ) {
+      setErrorMessage("Connection failed");
+    }
+  }, [walletLedger, account, setErrorMessage]);
 
   useEffect(() => {
     if (walletLedger.status === ActionStatus.SUCCESS) {
@@ -53,6 +66,7 @@ export const SignInLedgerForm = () => {
   }, [dispatch, account, history, walletLedger, ledgerBipPath]);
 
   const handleLedgerSignIn = () => {
+    setErrorMessage("");
     dispatch(fetchLedgerStellarAddressAction(ledgerBipPath));
   };
 
@@ -67,18 +81,13 @@ export const SignInLedgerForm = () => {
             <p>More instructions about connection to the wallet</p>
           </div>
         )}
-        {(walletLedger.status === ActionStatus.ERROR ||
-          account.status === ActionStatus.ERROR) && (
-          <div>
-            <p>Connection failed</p>
-          </div>
-        )}
         {walletLedger.status === ActionStatus.SUCCESS &&
           account.status === ActionStatus.SUCCESS && (
             <div>
               <p>Ledger wallet connected</p>
             </div>
           )}
+        <ErrorMessage message={errorMessage} />
       </div>
       <div>
         <TempCheckboxEl

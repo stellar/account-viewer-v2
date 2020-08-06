@@ -31,4 +31,8 @@ export interface ModalPageProps {
   onClose?: () => void;
 }
 
-export const DefaultStellarBipPath = "44'/148'/0'";
+interface WalletInitialState {
+  data: { publicKey: string } | null;
+  status: ActionStatus | undefined;
+  errorString?: string;
+}

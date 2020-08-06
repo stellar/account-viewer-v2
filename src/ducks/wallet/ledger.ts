@@ -1,7 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { ActionStatus, RejectMessage } from "constants/types.d";
 import LedgerTransport from "@ledgerhq/hw-transport-u2f";
 import LedgerApi from "@ledgerhq/hw-app-str";
+
+import {
+  ActionStatus,
+  RejectMessage,
+  WalletInitialState,
+} from "constants/types.d";
 
 export const fetchLedgerStellarAddressAction = createAsyncThunk<
   { publicKey: string },
@@ -23,13 +28,7 @@ export const fetchLedgerStellarAddressAction = createAsyncThunk<
   },
 );
 
-interface InitialState {
-  data: null | { publicKey: string };
-  status?: string;
-  errorString?: string;
-}
-
-const initialState: InitialState = {
+const initialState: WalletInitialState = {
   data: null,
   status: undefined,
   errorString: undefined,
