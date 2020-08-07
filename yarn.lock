@@ -1530,6 +1530,11 @@
   resolved "https://registry.yarnpkg.com/@stellar/eslint-config/-/eslint-config-1.0.3.tgz#a8deb73f721d2a6c8c9d9a016f8f184f7ffd9a74"
   integrity sha512-mHFuaecAJWHrQjLVytcfm9c7BHdbs6zJ1GMJD2FXGFwzDSXM/tX2ZBTdJG2oOeeifBsf3z43mbiQiHlgYBvxaA==
 
+"@stellar/lyra-api@^1.0.0-alpha.2":
+  version "1.0.0-alpha.2"
+  resolved "https://registry.yarnpkg.com/@stellar/lyra-api/-/lyra-api-1.0.0-alpha.2.tgz#8863998dd9588c946e17449a35bba4bfd8f21092"
+  integrity sha512-1Y3a2KSpCL3Cg/qHJYHRe5kRA4gz8JnQedRPwwUp9q+Bd6UaTPOmgKVUMRrYRTAaLx87JtZUQObHTPc4owcJQg==
+
 "@stellar/prettier-config@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@stellar/prettier-config/-/prettier-config-1.0.1.tgz#498a66dc13c66859e3787dabdf958233ddbe9253"
