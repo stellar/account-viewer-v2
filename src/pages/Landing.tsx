@@ -3,8 +3,8 @@ import styled from "styled-components";
 
 import { Modal } from "components/Modal";
 import { NewKeyPairForm } from "components/NewKeyPairForm";
-import { SignInLedgerForm } from "components/SignIn/SignInLedgerForm";
 import { SignInLyraForm } from "components/SignIn/SignInLyraForm";
+import { SignInLedgerForm } from "components/SignIn/SignInLedgerForm";
 import { SignInSecretKeyForm } from "components/SignIn/SignInSecretKeyForm";
 import { SignInTrezorForm } from "components/SignIn/SignInTrezorForm";
 
