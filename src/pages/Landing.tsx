@@ -6,6 +6,7 @@ import { NewKeyPairForm } from "components/NewKeyPairForm";
 import { SignInSecretKeyForm } from "components/SignIn/SignInSecretKeyForm";
 import { SignInTrezorForm } from "components/SignIn/SignInTrezorForm";
 import { SignInLedgerForm } from "components/SignIn/SignInLedgerForm";
+import { SignInAlbedoForm } from "components/SignIn/SignInAlbedoForm";
 
 const TempLinkButtonEl = styled.div`
   margin-bottom: 20px;
@@ -44,7 +45,7 @@ export const Landing = () => {
       case ModalType.SIGNIN_LYRA:
         return <div>Lyra</div>;
       case ModalType.SIGNIN_ALBEDO:
-        return <div>Albedo</div>;
+        return <SignInAlbedoForm onClose={closeModal} />;
       case ModalType.NEW_KEY_PAIR:
         return <NewKeyPairForm onClose={closeModal} />;
       default:
