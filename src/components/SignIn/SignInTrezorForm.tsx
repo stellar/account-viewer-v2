@@ -59,12 +59,7 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
 
   const fetchTrezorLogin = () => {
     setErrorMessage("");
-
-    try {
-      dispatch(fetchTrezorStellarAddressAction());
-    } catch (e) {
-      setErrorMessage(`Something went wrong. ${e.toString()}`);
-    }
+    dispatch(fetchTrezorStellarAddressAction());
   };
 
   const initTrezor = () => {
@@ -79,17 +74,13 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
   useEffect(() => {
     if (trezorStatus === ActionStatus.SUCCESS) {
       if (trezorData) {
-        try {
-          dispatch(fetchAccountAction(trezorData.publicKey));
-          dispatch(
-            storeKeyAction({
-              publicKey: trezorData.publicKey,
-              keyType: KeyType.trezor,
-            }),
-          );
-        } catch (e) {
-          setErrorMessage(`Something went wrong. ${e.toString()}`);
-        }
+        dispatch(fetchAccountAction(trezorData.publicKey));
+        dispatch(
+          storeKeyAction({
+            publicKey: trezorData.publicKey,
+            keyType: KeyType.trezor,
+          }),
+        );
       } else {
         setErrorMessage("Something went wrong, please try again.");
       }

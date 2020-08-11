@@ -52,6 +52,7 @@ const sendTxSlice = createSlice({
     builder.addCase(sendTxAction.pending, (state) => ({
       ...state,
       status: ActionStatus.PENDING,
+      errorString: undefined,
     }));
     builder.addCase(sendTxAction.fulfilled, (state, action) => ({
       ...state,

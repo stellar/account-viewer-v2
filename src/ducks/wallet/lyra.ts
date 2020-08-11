@@ -45,9 +45,8 @@ const walletLyraSlice = createSlice({
     resetLyraAction: () => initialState,
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchLyraStellarAddressAction.pending, (state) => ({
-      ...state,
-      data: null,
+    builder.addCase(fetchLyraStellarAddressAction.pending, () => ({
+      ...initialState,
       status: ActionStatus.PENDING,
     }));
 

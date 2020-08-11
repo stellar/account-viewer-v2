@@ -59,12 +59,7 @@ export const SignInLyraForm = ({ onClose }: ModalPageProps) => {
 
   const fetchLyraLogin = () => {
     setErrorMessage("");
-
-    try {
-      dispatch(fetchLyraStellarAddressAction());
-    } catch (e) {
-      setErrorMessage(`Something went wrong. ${e.toString()}`);
-    }
+    dispatch(fetchLyraStellarAddressAction());
   };
 
   const initLyra = () => {
@@ -81,17 +76,13 @@ export const SignInLyraForm = ({ onClose }: ModalPageProps) => {
   useEffect(() => {
     if (lyraStatus === ActionStatus.SUCCESS) {
       if (lyraData) {
-        try {
-          dispatch(fetchAccountAction(lyraData.publicKey));
-          dispatch(
-            storeKeyAction({
-              publicKey: lyraData.publicKey,
-              keyType: KeyType.lyra,
-            }),
-          );
-        } catch (e) {
-          setErrorMessage(`Something went wrong. ${e.toString()}`);
-        }
+        dispatch(fetchAccountAction(lyraData.publicKey));
+        dispatch(
+          storeKeyAction({
+            publicKey: lyraData.publicKey,
+            keyType: KeyType.lyra,
+          }),
+        );
       } else {
         setErrorMessage("Something went wrong, please try again.");
       }
