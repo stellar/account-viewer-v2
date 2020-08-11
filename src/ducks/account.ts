@@ -38,7 +38,7 @@ export const fetchAccountAction = createAsyncThunk<
 );
 
 export const startAccountWatcherAction = createAsyncThunk<
-  boolean,
+  { isAccountWatcherStarted: boolean },
   string,
   { rejectValue: RejectMessage; state: RootState }
 >(
@@ -46,7 +46,6 @@ export const startAccountWatcherAction = createAsyncThunk<
   (publicKey, { rejectWithValue, getState, dispatch }) => {
     try {
       const { isTestnet } = settingsSelector(getState());
-      const { data } = accountSelector(getState());
 
       const dataProvider = new DataProvider({
         serverUrl: getNetworkConfig(isTestnet).url,
@@ -60,11 +59,11 @@ export const startAccountWatcherAction = createAsyncThunk<
         },
         onError: () => {
           const errorString = "We couldn’t update your account at this time.";
-          dispatch(updateAccountErrorAction({ errorString, data }));
+          dispatch(updateAccountErrorAction({ errorString }));
         },
       });
 
-      return true;
+      return { isAccountWatcherStarted: true };
     } catch (error) {
       return rejectWithValue({
         errorString: getErrorString(error),
@@ -94,17 +93,13 @@ const accountSlice = createSlice({
   initialState,
   reducers: {
     resetAccountAction: () => initialState,
-    updateAccountAction: (state, action) => ({
-      ...state,
-      data: action.payload,
-    }),
-    updateAccountErrorAction: (state, action) => ({
-      ...state,
-      // TODO: temp solution to pass "data" until BigNumber issue is fixed
-      data: action.payload.data,
-      status: ActionStatus.ERROR,
-      errorString: action.payload.errorString,
-    }),
+    updateAccountAction: (state, action) => {
+      state.data = action.payload;
+    },
+    updateAccountErrorAction: (state, action) => {
+      state.status = ActionStatus.ERROR;
+      state.errorString = action.payload.errorString;
+    },
     stopAccountWatcherAction: () => {
       if (accountWatcherStopper) {
         accountWatcherStopper();
@@ -115,38 +110,28 @@ const accountSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchAccountAction.pending, () => ({
-      ...initialState,
-      status: ActionStatus.PENDING,
-    }));
-    builder.addCase(fetchAccountAction.fulfilled, (state, action) => ({
-      ...state,
-      data: { ...action.payload },
-      status: ActionStatus.SUCCESS,
-      // If something went wrong, action.payload could be null. Just making
-      // sure we have the response data to set isAuthenticated correctly.
-      isAuthenticated: !!action.payload,
-    }));
-    builder.addCase(fetchAccountAction.rejected, (state, action) => ({
-      ...state,
-      data: null,
-      status: ActionStatus.ERROR,
-      errorString: action.payload?.errorString,
-    }));
+    builder.addCase(fetchAccountAction.pending, (state) => {
+      state = initialState;
+      state.status = ActionStatus.PENDING;
+    });
+    builder.addCase(fetchAccountAction.fulfilled, (state, action) => {
+      state.data = action.payload;
+      state.isAuthenticated = !!action.payload;
+      state.status = ActionStatus.SUCCESS;
+    });
+    builder.addCase(fetchAccountAction.rejected, (state, action) => {
+      state.status = ActionStatus.ERROR;
+      state.errorString = action.payload?.errorString;
+    });
 
-    // TODO: figure out why it breaks for BigNumber amount
-    // @ts-ignore
-    builder.addCase(startAccountWatcherAction.fulfilled, (state, action) => ({
-      ...state,
-      isAccountWatcherStarted: action.payload,
-    }));
+    builder.addCase(startAccountWatcherAction.fulfilled, (state, action) => {
+      state.isAccountWatcherStarted = action.payload.isAccountWatcherStarted;
+    });
 
-    // @ts-ignore
-    builder.addCase(startAccountWatcherAction.rejected, (state, action) => ({
-      ...state,
-      status: ActionStatus.ERROR,
-      errorString: action.payload?.errorString,
-    }));
+    builder.addCase(startAccountWatcherAction.rejected, (state, action) => {
+      state.status = ActionStatus.ERROR;
+      state.errorString = action.payload?.errorString;
+    });
   },
 });
 

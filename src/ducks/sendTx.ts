@@ -49,22 +49,18 @@ const sendTxSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(sendTxAction.pending, (state) => ({
-      ...state,
-      status: ActionStatus.PENDING,
-      errorString: undefined,
-    }));
-    builder.addCase(sendTxAction.fulfilled, (state, action) => ({
-      ...state,
-      data: action.payload,
-      status: ActionStatus.SUCCESS,
-    }));
-    builder.addCase(sendTxAction.rejected, (state, action) => ({
-      ...state,
-      data: null,
-      status: ActionStatus.ERROR,
-      errorString: action.payload?.errorString,
-    }));
+    builder.addCase(sendTxAction.pending, (state) => {
+      state.status = ActionStatus.PENDING;
+      state.errorString = undefined;
+    });
+    builder.addCase(sendTxAction.fulfilled, (state, action) => {
+      state.data = action.payload;
+      state.status = ActionStatus.SUCCESS;
+    });
+    builder.addCase(sendTxAction.rejected, (state, action) => {
+      state.status = ActionStatus.ERROR;
+      state.errorString = action.payload?.errorString;
+    });
   },
 });
 

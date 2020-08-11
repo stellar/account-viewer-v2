@@ -45,29 +45,24 @@ const walletLyraSlice = createSlice({
     resetLyraAction: () => initialState,
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchLyraStellarAddressAction.pending, () => ({
-      ...initialState,
-      status: ActionStatus.PENDING,
-    }));
+    builder.addCase(fetchLyraStellarAddressAction.pending, (state) => {
+      state = initialState;
+      state.status = ActionStatus.PENDING;
+    });
 
     builder.addCase(
       fetchLyraStellarAddressAction.fulfilled,
-      (state, action) => ({
-        ...state,
-        data: action.payload,
-        status: ActionStatus.SUCCESS,
-      }),
+      (state, action) => {
+        state.data = action.payload;
+        state.status = ActionStatus.SUCCESS;
+      },
     );
 
-    builder.addCase(
-      fetchLyraStellarAddressAction.rejected,
-      (state, action) => ({
-        ...state,
-        data: null,
-        status: ActionStatus.ERROR,
-        errorString: action.payload?.errorString,
-      }),
-    );
+    builder.addCase(fetchLyraStellarAddressAction.rejected, (state, action) => {
+      state.data = null;
+      state.status = ActionStatus.ERROR;
+      state.errorString = action.payload?.errorString;
+    });
   },
 });
 

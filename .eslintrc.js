@@ -4,5 +4,7 @@ module.exports = {
     "no-console": 0,
     "import/no-unresolved": "off",
     "react/jsx-filename-extension": [1, { extensions: [".tsx", ".jsx"] }],
+    // TODO: remove before commit
+    "no-param-reassign": 0,
   },
 };
