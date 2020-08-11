@@ -36,7 +36,7 @@ const TempLinkButtonEl = styled.span`
 const FlexRowEl = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
 `;
 
 const TableEl = styled.table`
@@ -89,12 +89,12 @@ export const TransactionHistory = () => {
     visibleTransactions && visibleTransactions.length > 0;
 
   const getFormattedPublicKey = (pk: string) =>
-    `${pk.slice(0, 8)  }...${  pk.slice(52)}`;
+    `${pk.slice(0, 8)}…${pk.slice(52)}`;
 
   const getFormattedAmount = (pt: Types.Payment) => {
     const amount = new BigNumber(pt.amount).toString();
     const { isRecipient, token } = pt;
-    return `${(isRecipient ? "+ " : "- ") + amount  } ${  token.code}`;
+    return `${(isRecipient ? "+ " : "- ") + amount} ${token.code}`;
   };
 
   const getFormattedMemo = (pt: Types.Payment) => {
