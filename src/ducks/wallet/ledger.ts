@@ -39,10 +39,12 @@ const walletLedgerSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchLedgerStellarAddressAction.pending, (state) => {
-      state = initialState;
-      state.status = ActionStatus.PENDING;
-    });
+    builder.addCase(
+      fetchLedgerStellarAddressAction.pending,
+      (state = initialState) => {
+        state.status = ActionStatus.PENDING;
+      },
+    );
     builder.addCase(
       fetchLedgerStellarAddressAction.fulfilled,
       (state, action) => {
