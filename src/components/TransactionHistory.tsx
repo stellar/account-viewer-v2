@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
+import moment from "moment";
 import styled from "styled-components";
+import StellarSdk from "stellar-sdk";
 import { useDispatch } from "react-redux";
 import { BigNumber } from "bignumber.js";
 import { Types } from "@stellar/wallet-sdk";
@@ -18,24 +20,31 @@ const El = styled.div`
   padding-bottom: 10px;
 `;
 
-const ItemRowEl = styled.div`
-  margin-bottom: 20px;
-  border-bottom: 1px solid #ccc;
+const ItemRowEl = styled.tr``;
+
+const ItemCellEl = styled.td`
+  padding: 8px;
+  heigh: 30px;
 `;
 
-const ItemCellEl = styled.div`
-  margin-bottom: 10px;
-`;
-
-const ItemCellTitleEl = styled.div`
-  margin-bottom: 10px;
-  font-weight: bold;
-`;
-
-const TempLinkButtonEl = styled.div`
+const TempLinkButtonEl = styled.span`
   margin-bottom: 20px;
   text-decoration: underline;
   cursor: pointer;
+`;
+
+const FlexRowEl = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+`;
+
+const TableEl = styled.table`
+  width: 100%;
+`;
+
+const TableHeadEl = styled.thead`
+  text-align: left;
 `;
 
 export const TransactionHistory = () => {
@@ -79,55 +88,104 @@ export const TransactionHistory = () => {
   const hasVisibleTransactions =
     visibleTransactions && visibleTransactions.length > 0;
 
+  const getFormattedPublicKey = (pk: string) =>
+    `${pk.slice(0, 8)  }...${  pk.slice(52)}`;
+
+  const getFormattedAmount = (pt: Types.Payment) => {
+    const amount = new BigNumber(pt.amount).toString();
+    const { isRecipient, token } = pt;
+    return `${(isRecipient ? "+ " : "- ") + amount  } ${  token.code}`;
+  };
+
+  const getFormattedMemo = (pt: Types.Payment) => {
+    let memoType;
+    switch (pt.memoType) {
+      case StellarSdk.MemoText:
+        memoType = "MEMO_TEXT";
+        break;
+      case StellarSdk.MemoHash:
+        memoType = "MEMO_HASH";
+        break;
+      case StellarSdk.MemoID:
+        memoType = "MEMO_ID";
+        break;
+      case StellarSdk.MemoReturn:
+        memoType = "MEMO_RETURN";
+        break;
+      default:
+        memoType = "";
+        break;
+    }
+    return (
+      <El>
+        <div>{memoType}</div>
+        <div>{pt.memo}</div>
+      </El>
+    );
+  };
+
   return (
     <El>
-      <h2>Payments History</h2>
+      <FlexRowEl>
+        <div>
+          <h2>Payments History</h2>
+        </div>
+        <div>
+          {hasTransactions && (
+            <El>
+              <div>
+                {`${
+                  showAllTxs ? "Including" : "Hiding"
+                } payments smaller than 0.5XLM`}{" "}
+                <TempLinkButtonEl onClick={() => setShowAllTxs(!showAllTxs)}>
+                  {showAllTxs ? "Hide small payments" : "Show all"}
+                </TempLinkButtonEl>
+              </div>
+            </El>
+          )}
+        </div>
+      </FlexRowEl>
 
       <ErrorMessage message={errorMessage} />
-
-      {hasTransactions && (
-        <El>
-          <div>
-            {`${
-              showAllTxs ? "Including" : "Hiding"
-            } payments smaller than 0.5XLM`}{" "}
-            <TempLinkButtonEl onClick={() => setShowAllTxs(!showAllTxs)}>
-              {showAllTxs ? "Hide small payments" : "Show all"}
-            </TempLinkButtonEl>
-          </div>
-        </El>
-      )}
 
       {!hasVisibleTransactions && <El>There are no payments to show</El>}
 
       {hasVisibleTransactions && (
         <>
-          <El>
-            {visibleTransactions?.map((pt: any) => (
-              <ItemRowEl key={pt.id}>
-                <ItemCellTitleEl>Date/Time</ItemCellTitleEl>
-                <ItemCellEl>{new Date(pt.timestamp).toString()}</ItemCellEl>
-                <ItemCellTitleEl>Address</ItemCellTitleEl>
-                <ItemCellEl>{pt.otherAccount?.publicKey}</ItemCellEl>
-                <ItemCellTitleEl>Amount</ItemCellTitleEl>
-                <ItemCellEl>{new BigNumber(pt.amount).toString()}</ItemCellEl>
-                <ItemCellTitleEl>Memo</ItemCellTitleEl>
-                <ItemCellEl>
-                  {pt.memoType} {pt.memo}
-                </ItemCellEl>
-                <ItemCellTitleEl>Operation ID</ItemCellTitleEl>
-                <ItemCellEl>
-                  <a
-                    href={`${
-                      getNetworkConfig(settings.isTestnet).stellarExpertTxUrl
-                    }${pt.transactionId}`}
-                  >
-                    {pt.id}
-                  </a>
-                </ItemCellEl>
-              </ItemRowEl>
-            ))}
-          </El>
+          <TableEl>
+            <TableHeadEl>
+              <tr>
+                <th>Date/Time</th>
+                <th>Address</th>
+                <th>Amount</th>
+                <th>Memo</th>
+                <th>Operation ID</th>
+              </tr>
+            </TableHeadEl>
+            <tbody>
+              {visibleTransactions?.map((pt: any) => (
+                <ItemRowEl key={pt.id}>
+                  <ItemCellEl>
+                    {moment.unix(pt.timestamp).format("l HH:mm")}
+                  </ItemCellEl>
+                  <ItemCellEl>
+                    {getFormattedPublicKey(pt.otherAccount?.publicKey)}
+                  </ItemCellEl>
+                  <ItemCellEl>{getFormattedAmount(pt)}</ItemCellEl>
+                  <ItemCellEl>{getFormattedMemo(pt)}</ItemCellEl>
+                  <ItemCellEl>
+                    <a
+                      href={`${
+                        getNetworkConfig(settings.isTestnet).stellarExpertTxUrl
+                      }${pt.transactionId}`}
+                    >
+                      {pt.id}
+                    </a>
+                  </ItemCellEl>
+                </ItemRowEl>
+              ))}
+            </tbody>
+          </TableEl>
           {hasMoreTxs && (
             <El>
               <a
