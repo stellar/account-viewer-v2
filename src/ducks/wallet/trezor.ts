@@ -52,9 +52,8 @@ const walletTrezorSlice = createSlice({
     resetTrezorAction: () => initialState,
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchTrezorStellarAddressAction.pending, (state) => ({
-      ...state,
-      data: null,
+    builder.addCase(fetchTrezorStellarAddressAction.pending, () => ({
+      ...initialState,
       status: ActionStatus.PENDING,
     }));
 

@@ -1,17 +1,17 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
+import { isConnected } from "@stellar/lyra-api";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import TrezorConnect from "trezor-connect";
 import { KeyType } from "@stellar/wallet-sdk";
 
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storeKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
 import {
-  fetchTrezorStellarAddressAction,
-  resetTrezorAction,
-} from "ducks/wallet/trezor";
+  fetchLyraStellarAddressAction,
+  resetLyraAction,
+} from "ducks/wallet/lyra";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, ModalPageProps } from "constants/types.d";
@@ -33,16 +33,16 @@ const TempLinkButtonEl = styled.div`
   cursor: pointer;
 `;
 
-export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
+export const SignInLyraForm = ({ onClose }: ModalPageProps) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const { walletTrezor, account } = useRedux(["walletTrezor", "account"]);
+  const { walletLyra, account } = useRedux(["walletLyra", "account"]);
   const {
-    data: trezorData,
-    status: trezorStatus,
-    errorString: trezorErrorMessage,
-  } = walletTrezor;
+    data: lyraData,
+    status: lyraStatus,
+    errorString: lyraErrorMessage,
+  } = walletLyra;
   const {
     status: accountStatus,
     isAuthenticated,
@@ -50,48 +50,50 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
   } = account;
 
   const { errorMessage, setErrorMessage } = useErrorMessage({
-    initialMessage: trezorErrorMessage || accountErrorMessage,
+    initialMessage: lyraErrorMessage || accountErrorMessage,
     onUnmount: () => {
-      dispatch(resetTrezorAction());
+      dispatch(resetLyraAction());
       dispatch(resetAccountAction());
     },
   });
 
-  const fetchTrezorLogin = () => {
+  const fetchLyraLogin = () => {
     setErrorMessage("");
-    dispatch(fetchTrezorStellarAddressAction());
+    dispatch(fetchLyraStellarAddressAction());
   };
 
-  const initTrezor = () => {
-    TrezorConnect.manifest({
-      email: "accounts+trezor@stellar.org",
-      appUrl: "https://accountviewer.stellar.org/",
-    });
+  const initLyra = () => {
+    if (!isConnected()) {
+      setErrorMessage(
+        "Please install or activate Lyra extension, and refresh the page to try again.",
+      );
+      return;
+    }
 
-    fetchTrezorLogin();
+    fetchLyraLogin();
   };
 
   useEffect(() => {
-    if (trezorStatus === ActionStatus.SUCCESS) {
-      if (trezorData) {
-        dispatch(fetchAccountAction(trezorData.publicKey));
+    if (lyraStatus === ActionStatus.SUCCESS) {
+      if (lyraData) {
+        dispatch(fetchAccountAction(lyraData.publicKey));
         dispatch(
           storeKeyAction({
-            publicKey: trezorData.publicKey,
-            keyType: KeyType.trezor,
+            publicKey: lyraData.publicKey,
+            keyType: KeyType.lyra,
           }),
         );
       } else {
         setErrorMessage("Something went wrong, please try again.");
       }
     }
-  }, [trezorStatus, dispatch, trezorData, setErrorMessage]);
+  }, [lyraStatus, dispatch, lyraData, setErrorMessage]);
 
   useEffect(() => {
     if (accountStatus === ActionStatus.SUCCESS) {
       if (isAuthenticated) {
         history.push("/dashboard");
-        dispatch(updateSettingsAction({ authType: AuthType.TREZOR }));
+        dispatch(updateSettingsAction({ authType: AuthType.LYRA }));
       } else {
         setErrorMessage("Something went wrong, please try again.");
       }
@@ -100,17 +102,17 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
 
   return (
     <div>
-      <h1>Sign in with Trezor</h1>
+      <h1>Sign in with Lyra</h1>
 
-      {!trezorStatus && (
+      {!lyraStatus && (
         <>
           <InfoEl>Some instructions</InfoEl>
-          <TempButtonEl onClick={initTrezor}>Sign in with Trezor</TempButtonEl>
+          <TempButtonEl onClick={initLyra}>Sign in with Lyra</TempButtonEl>
         </>
       )}
 
-      {trezorStatus === ActionStatus.PENDING && (
-        <InfoEl>Please follow the instructions in the Trezor popup.</InfoEl>
+      {lyraStatus === ActionStatus.PENDING && (
+        <InfoEl>Please follow the instructions in the Lyra popup.</InfoEl>
       )}
 
       <ErrorMessage message={errorMessage} />

@@ -1530,6 +1530,11 @@
   resolved "https://registry.yarnpkg.com/@stellar/eslint-config/-/eslint-config-1.0.3.tgz#a8deb73f721d2a6c8c9d9a016f8f184f7ffd9a74"
   integrity sha512-mHFuaecAJWHrQjLVytcfm9c7BHdbs6zJ1GMJD2FXGFwzDSXM/tX2ZBTdJG2oOeeifBsf3z43mbiQiHlgYBvxaA==
 
+"@stellar/lyra-api@^1.0.0-alpha.2":
+  version "1.0.0-alpha.2"
+  resolved "https://registry.yarnpkg.com/@stellar/lyra-api/-/lyra-api-1.0.0-alpha.2.tgz#8863998dd9588c946e17449a35bba4bfd8f21092"
+  integrity sha512-1Y3a2KSpCL3Cg/qHJYHRe5kRA4gz8JnQedRPwwUp9q+Bd6UaTPOmgKVUMRrYRTAaLx87JtZUQObHTPc4owcJQg==
+
 "@stellar/prettier-config@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@stellar/prettier-config/-/prettier-config-1.0.1.tgz#498a66dc13c66859e3787dabdf958233ddbe9253"
@@ -1540,13 +1545,14 @@
   resolved "https://registry.yarnpkg.com/@stellar/tsconfig/-/tsconfig-1.0.2.tgz#18e9b1a1d6076e116bb405d11fc034401155292d"
   integrity sha512-lC51QSlYRM8K3oGe0/WGPq+p9+u+yPzwZXSKrZXKOe4sq79vzfiqFbQyp5enOffFzXlahcDyTgY67mBOkJytfw==
 
-"@stellar/wallet-sdk@^0.1.0-rc.9":
-  version "0.1.0-rc.9"
-  resolved "https://registry.yarnpkg.com/@stellar/wallet-sdk/-/wallet-sdk-0.1.0-rc.9.tgz#79ba2cac0904bbf2977fe9ee5cbfeba9d148e39e"
-  integrity sha512-WbehcGjIcIHlxMTQ9iljBtJFDJPGMgvVregxCBR8pl1lX1QE+NV/Q9mZgeDtGXK7UyMFiTk2q3L0bNNU+SGmZQ==
+"@stellar/wallet-sdk@^0.1.0-rc.10":
+  version "0.1.0-rc.10"
+  resolved "https://registry.yarnpkg.com/@stellar/wallet-sdk/-/wallet-sdk-0.1.0-rc.10.tgz#3389c0749deb10991f3537b13c4b67fcad8ca958"
+  integrity sha512-a7hCtTrT+t4Z4ngETjrNdL1mykiFdGPHIzQSlhjQ4wF2nUVAQeskLPY5KOox9AHekbPiclu+UbAo/Okrk+ATjw==
   dependencies:
     "@ledgerhq/hw-app-str" "^4.48.0"
     "@ledgerhq/hw-transport-u2f" "^4.48.0"
+    "@stellar/lyra-api" "^1.0.0-alpha.2"
     "@types/jest" "^24.0.11"
     change-case "^3.1.0"
     lodash "^4.17.14"

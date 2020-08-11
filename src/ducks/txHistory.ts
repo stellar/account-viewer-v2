@@ -141,6 +141,7 @@ export const txHistorySlice = createSlice({
       ...state,
       data: [],
       status: ActionStatus.PENDING,
+      errorString: undefined,
     }));
     builder.addCase(fetchTxHistoryAction.fulfilled, (state, action) => ({
       ...state,
