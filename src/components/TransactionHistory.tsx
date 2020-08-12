@@ -92,7 +92,7 @@ export const TransactionHistory = () => {
     pk ? `${pk.slice(0, 8)}…${pk.slice(52)}` : "";
 
   const getFormattedAmount = (pt: Types.Payment) => {
-    if (!pt.amount) {
+    if (!pt?.amount) {
       return "";
     }
     const amount = new BigNumber(pt.amount).toString();
