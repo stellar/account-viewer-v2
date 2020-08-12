@@ -52,29 +52,28 @@ const walletTrezorSlice = createSlice({
     resetTrezorAction: () => initialState,
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchTrezorStellarAddressAction.pending, (state) => ({
-      ...state,
-      data: null,
-      status: ActionStatus.PENDING,
-    }));
+    builder.addCase(
+      fetchTrezorStellarAddressAction.pending,
+      (state = initialState) => {
+        state.status = ActionStatus.PENDING;
+      },
+    );
 
     builder.addCase(
       fetchTrezorStellarAddressAction.fulfilled,
-      (state, action) => ({
-        ...state,
-        data: action.payload,
-        status: ActionStatus.SUCCESS,
-      }),
+      (state, action) => {
+        state.data = action.payload;
+        state.status = ActionStatus.SUCCESS;
+      },
     );
 
     builder.addCase(
       fetchTrezorStellarAddressAction.rejected,
-      (state, action) => ({
-        ...state,
-        data: null,
-        status: ActionStatus.ERROR,
-        errorString: action.payload?.errorString,
-      }),
+      (state, action) => {
+        state.data = null;
+        state.status = ActionStatus.ERROR;
+        state.errorString = action.payload?.errorString;
+      },
     );
   },
 });

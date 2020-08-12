@@ -58,28 +58,19 @@ export const SignInAlbedoForm = ({ onClose }: ModalPageProps) => {
 
   const fetchAlbedoLogin = () => {
     setErrorMessage("");
-
-    try {
-      dispatch(fetchAlbedoStellarAddressAction());
-    } catch (e) {
-      setErrorMessage(`Something went wrong. ${e.toString()}`);
-    }
+    dispatch(fetchAlbedoStellarAddressAction());
   };
 
   useEffect(() => {
     if (albedoStatus === ActionStatus.SUCCESS) {
       if (albedoData) {
-        try {
-          dispatch(fetchAccountAction(albedoData.publicKey));
-          dispatch(
-            storeKeyAction({
-              publicKey: albedoData.publicKey,
-              keyType: KeyType.albedo,
-            }),
-          );
-        } catch (e) {
-          setErrorMessage(`Something went wrong. ${e.toString()}`);
-        }
+        dispatch(fetchAccountAction(albedoData.publicKey));
+        dispatch(
+          storeKeyAction({
+            publicKey: albedoData.publicKey,
+            keyType: KeyType.albedo,
+          }),
+        );
       } else {
         setErrorMessage("Something went wrong, please try again.");
       }

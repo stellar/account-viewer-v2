@@ -37,33 +37,33 @@ const initialState: WalletInitialState = {
 const walletLedgerSlice = createSlice({
   name: "walletLedger",
   initialState,
-  reducers: {},
+  reducers: {
+    resetLedgerAction: () => initialState,
+  },
   extraReducers: (builder) => {
-    builder.addCase(fetchLedgerStellarAddressAction.pending, (state) => ({
-      ...state,
-      data: null,
-      status: ActionStatus.PENDING,
-      errorString: undefined,
-    }));
+    builder.addCase(
+      fetchLedgerStellarAddressAction.pending,
+      (state = initialState) => {
+        state.status = ActionStatus.PENDING;
+      },
+    );
     builder.addCase(
       fetchLedgerStellarAddressAction.fulfilled,
-      (state, action) => ({
-        ...state,
-        data: action.payload,
-        status: ActionStatus.SUCCESS,
-        errorString: undefined,
-      }),
+      (state, action) => {
+        state.data = action.payload;
+        state.status = ActionStatus.SUCCESS;
+      },
     );
     builder.addCase(
       fetchLedgerStellarAddressAction.rejected,
-      (state, action) => ({
-        ...state,
-        data: null,
-        status: ActionStatus.ERROR,
-        errorString: action.payload?.errorString,
-      }),
+      (state, action) => {
+        state.data = null;
+        state.status = ActionStatus.ERROR;
+        state.errorString = action.payload?.errorString;
+      },
     );
   },
 });
 
 export const { reducer } = walletLedgerSlice;
+export const { resetLedgerAction } = walletLedgerSlice.actions;

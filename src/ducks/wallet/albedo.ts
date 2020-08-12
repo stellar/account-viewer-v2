@@ -39,29 +39,28 @@ const walletAlbedoSlice = createSlice({
     resetAlbedoAction: () => initialState,
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchAlbedoStellarAddressAction.pending, (state) => ({
-      ...state,
-      data: null,
-      status: ActionStatus.PENDING,
-    }));
+    builder.addCase(
+      fetchAlbedoStellarAddressAction.pending,
+      (state = initialState) => {
+        state.status = ActionStatus.PENDING;
+      },
+    );
 
     builder.addCase(
       fetchAlbedoStellarAddressAction.fulfilled,
-      (state, action) => ({
-        ...state,
-        data: action.payload,
-        status: ActionStatus.SUCCESS,
-      }),
+      (state, action) => {
+        state.data = action.payload;
+        state.status = ActionStatus.SUCCESS;
+      },
     );
 
     builder.addCase(
       fetchAlbedoStellarAddressAction.rejected,
-      (state, action) => ({
-        ...state,
-        data: null,
-        status: ActionStatus.ERROR,
-        errorString: action.payload?.errorString,
-      }),
+      (state, action) => {
+        state.data = null;
+        state.status = ActionStatus.ERROR;
+        state.errorString = action.payload?.errorString;
+      },
     );
   },
 });

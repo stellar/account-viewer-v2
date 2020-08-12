@@ -49,7 +49,7 @@ export const fetchTxHistoryAction = createAsyncThunk<
 );
 
 export const startTxHistoryWatcherAction = createAsyncThunk<
-  boolean,
+  { isTxWatcherStarted: boolean },
   string,
   { rejectValue: RejectMessage; state: RootState }
 >(
@@ -83,11 +83,11 @@ export const startTxHistoryWatcherAction = createAsyncThunk<
                 isTestnet ? "TEST" : "PUBLIC"
               } network in ${isDevelopment ? "DEVELOPMENT" : "PRODUCTION"}.`;
 
-          dispatch(updateTxHistoryErrorAction({ errorString, data }));
+          dispatch(updateTxHistoryErrorAction({ errorString }));
         },
       });
 
-      return true;
+      return { isTxWatcherStarted: true };
     } catch (error) {
       return rejectWithValue({
         errorString: getErrorString(error),
@@ -116,17 +116,13 @@ export const txHistorySlice = createSlice({
   name: "txHistory",
   initialState: initialTxHistoryState,
   reducers: {
-    updateTxHistoryAction: (state, action) => ({
-      ...state,
-      data: [action.payload, ...state.data],
-    }),
-    updateTxHistoryErrorAction: (state, action) => ({
-      ...state,
-      // TODO: temp solution to pass "data" until BigNumber issue is fixed
-      data: action.payload.data,
-      status: ActionStatus.ERROR,
-      errorString: action.payload.errorString,
-    }),
+    updateTxHistoryAction: (state, action) => {
+      state.data = [action.payload, ...state.data];
+    },
+    updateTxHistoryErrorAction: (state, action) => {
+      state.status = ActionStatus.ERROR;
+      state.errorString = action.payload.errorString;
+    },
     stopTxHistoryWatcherAction: () => {
       if (txHistoryWatcherStopper) {
         txHistoryWatcherStopper();
@@ -137,37 +133,27 @@ export const txHistorySlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchTxHistoryAction.pending, (state) => ({
-      ...state,
-      data: [],
-      status: ActionStatus.PENDING,
-    }));
-    builder.addCase(fetchTxHistoryAction.fulfilled, (state, action) => ({
-      ...state,
-      data: action.payload.data,
-      hasMoreTxs: action.payload.hasMoreTxs,
-      status: ActionStatus.SUCCESS,
-    }));
-    builder.addCase(fetchTxHistoryAction.rejected, (state, action) => ({
-      ...state,
-      data: [],
-      status: ActionStatus.ERROR,
-      errorString: action.payload?.errorString,
-    }));
+    builder.addCase(fetchTxHistoryAction.pending, (state) => {
+      state.status = ActionStatus.PENDING;
+      state.errorString = undefined;
+    });
+    builder.addCase(fetchTxHistoryAction.fulfilled, (state, action) => {
+      state.data = action.payload.data;
+      state.hasMoreTxs = action.payload.hasMoreTxs;
+      state.status = ActionStatus.SUCCESS;
+    });
+    builder.addCase(fetchTxHistoryAction.rejected, (state, action) => {
+      state.status = ActionStatus.ERROR;
+      state.errorString = action.payload?.errorString;
+    });
 
-    // TODO: figure out why it breaks for BigNumber amount
-    // @ts-ignore
-    builder.addCase(startTxHistoryWatcherAction.fulfilled, (state, action) => ({
-      ...state,
-      isTxWatcherStarted: action.payload,
-    }));
-
-    // @ts-ignore
-    builder.addCase(startTxHistoryWatcherAction.rejected, (state, action) => ({
-      ...state,
-      status: ActionStatus.ERROR,
-      errorString: action.payload?.errorString,
-    }));
+    builder.addCase(startTxHistoryWatcherAction.fulfilled, (state, action) => {
+      state.isTxWatcherStarted = action.payload.isTxWatcherStarted;
+    });
+    builder.addCase(startTxHistoryWatcherAction.rejected, (state, action) => {
+      state.status = ActionStatus.ERROR;
+      state.errorString = action.payload?.errorString;
+    });
   },
 });
 
