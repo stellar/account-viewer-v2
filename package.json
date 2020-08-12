@@ -63,7 +63,7 @@
     ]
   },
   "devDependencies": {
-    "@stellar/eslint-config": "^1.0.3",
+    "@stellar/eslint-config": "^1.0.4",
     "@stellar/prettier-config": "^1.0.1",
     "@stellar/tsconfig": "^1.0.2",
     "@testing-library/jest-dom": "^4.2.4",

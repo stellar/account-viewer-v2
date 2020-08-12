@@ -1,5 +1,5 @@
 import StellarSdk, { MemoType, MemoValue } from "stellar-sdk";
-import { PaymentTransactionParams } from "ducks/sendTransaction";
+import { PaymentTransactionParams } from "ducks/sendTx";
 import { getErrorString } from "helpers/getErrorString";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { store } from "config/store";

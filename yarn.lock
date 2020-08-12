@@ -1525,10 +1525,10 @@
   resolved "https://registry.yarnpkg.com/@sheerun/mutationobserver-shim/-/mutationobserver-shim-0.3.3.tgz#5405ee8e444ed212db44e79351f0c70a582aae25"
   integrity sha512-DetpxZw1fzPD5xUBrIAoplLChO2VB8DlL5Gg+I1IR9b2wPqYIca2WSUxL5g1vLeR4MsQq1NeWriXAVffV+U1Fw==
 
-"@stellar/eslint-config@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@stellar/eslint-config/-/eslint-config-1.0.3.tgz#a8deb73f721d2a6c8c9d9a016f8f184f7ffd9a74"
-  integrity sha512-mHFuaecAJWHrQjLVytcfm9c7BHdbs6zJ1GMJD2FXGFwzDSXM/tX2ZBTdJG2oOeeifBsf3z43mbiQiHlgYBvxaA==
+"@stellar/eslint-config@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@stellar/eslint-config/-/eslint-config-1.0.4.tgz#bd5c23f4d2f7f038909c5910e4c0ca6dbd035ea1"
+  integrity sha512-lxhnBVUBA6/B/cVT6PHMbjXxxtapcpmItIhvBOvqyd4jJlXvDDk575wO7SADOk2PEc/DE+ozjsQzOx3uvU8taA==
 
 "@stellar/lyra-api@^1.0.0-alpha.2":
   version "1.0.0-alpha.2"

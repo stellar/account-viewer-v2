@@ -47,18 +47,14 @@ const keyStoreSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(storeKeyAction.pending, () => ({
-      ...initialState,
-    }));
-    builder.addCase(storeKeyAction.fulfilled, (state, action) => ({
-      ...state,
-      keyStoreId: action.payload.id,
-      password: action.payload.password,
-    }));
-    builder.addCase(storeKeyAction.rejected, (state, action) => ({
-      ...state,
-      errorString: action?.payload?.errorString,
-    }));
+    builder.addCase(storeKeyAction.pending, () => initialState);
+    builder.addCase(storeKeyAction.fulfilled, (state, action) => {
+      state.keyStoreId = action.payload.id;
+      state.password = action.payload.password;
+    });
+    builder.addCase(storeKeyAction.rejected, (state, action) => {
+      state.errorString = action?.payload?.errorString;
+    });
   },
 });
 
