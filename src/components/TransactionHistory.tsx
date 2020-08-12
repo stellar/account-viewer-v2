@@ -89,9 +89,12 @@ export const TransactionHistory = () => {
     visibleTransactions && visibleTransactions.length > 0;
 
   const getFormattedPublicKey = (pk: string) =>
-    `${pk.slice(0, 8)}…${pk.slice(52)}`;
+    pk ? `${pk.slice(0, 8)}…${pk.slice(52)}` : "";
 
   const getFormattedAmount = (pt: Types.Payment) => {
+    if (!pt.amount) {
+      return "";
+    }
     const amount = new BigNumber(pt.amount).toString();
     const { isRecipient, token } = pt;
     return `${(isRecipient ? "+ " : "- ") + amount} ${token.code}`;
@@ -163,7 +166,7 @@ export const TransactionHistory = () => {
               </tr>
             </TableHeadEl>
             <tbody>
-              {visibleTransactions?.map((pt: any) => (
+              {visibleTransactions?.map((pt: Types.Payment) => (
                 <ItemRowEl key={pt.id}>
                   <ItemCellEl>
                     {moment.unix(pt.timestamp).format("l HH:mm")}
