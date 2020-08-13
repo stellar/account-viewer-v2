@@ -7,6 +7,11 @@
   resolved "https://registry.yarnpkg.com/@albedo-link/intent/-/intent-0.9.0.tgz#cc5b6e2822b4f1b2c78be334e9fe82f9facf11f7"
   integrity sha512-NYxJCJebB7oFtycS/GID0z+/IIYE+OGAzk14nqUy8N9FegcjKyFngQisRswXM8FZLrLmHO5lv643Qx3YE4PX0g==
 
+"@albedo-link/intent@^0.9.2":
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/@albedo-link/intent/-/intent-0.9.2.tgz#64d198a3a8fb4ed70ab17dee555f2fe59f5dcac6"
+  integrity sha512-toETcSL3seYeNvP9mxUdzpJ/7UxekF6+XrqnFWrlT7Khwne/ufEE2+kT7Zqc4Zp2awNZZtlyKzTdLEud4c+uEw==
+
 "@babel/code-frame@7.8.3":
   version "7.8.3"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.8.3.tgz#33e25903d7481181534e12ec0a25f16b6fcf419e"
@@ -1530,10 +1535,10 @@
   resolved "https://registry.yarnpkg.com/@sheerun/mutationobserver-shim/-/mutationobserver-shim-0.3.3.tgz#5405ee8e444ed212db44e79351f0c70a582aae25"
   integrity sha512-DetpxZw1fzPD5xUBrIAoplLChO2VB8DlL5Gg+I1IR9b2wPqYIca2WSUxL5g1vLeR4MsQq1NeWriXAVffV+U1Fw==
 
-"@stellar/eslint-config@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@stellar/eslint-config/-/eslint-config-1.0.4.tgz#bd5c23f4d2f7f038909c5910e4c0ca6dbd035ea1"
-  integrity sha512-lxhnBVUBA6/B/cVT6PHMbjXxxtapcpmItIhvBOvqyd4jJlXvDDk575wO7SADOk2PEc/DE+ozjsQzOx3uvU8taA==
+"@stellar/eslint-config@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@stellar/eslint-config/-/eslint-config-1.0.5.tgz#00616eb6342e839ffa5c0d9e2539dccd64ede764"
+  integrity sha512-RpkhdJffBU1oEsdyAJgfKHDSRJCWbyNOp08F1UP0yGp1tBLp0FopURl7m1Nx2Xd1o1PkN6h01wV6lpdiCbZWYQ==
 
 "@stellar/lyra-api@^1.0.0-alpha.2":
   version "1.0.0-alpha.2"
@@ -1550,11 +1555,12 @@
   resolved "https://registry.yarnpkg.com/@stellar/tsconfig/-/tsconfig-1.0.2.tgz#18e9b1a1d6076e116bb405d11fc034401155292d"
   integrity sha512-lC51QSlYRM8K3oGe0/WGPq+p9+u+yPzwZXSKrZXKOe4sq79vzfiqFbQyp5enOffFzXlahcDyTgY67mBOkJytfw==
 
-"@stellar/wallet-sdk@^0.1.0-rc.10":
-  version "0.1.0-rc.10"
-  resolved "https://registry.yarnpkg.com/@stellar/wallet-sdk/-/wallet-sdk-0.1.0-rc.10.tgz#3389c0749deb10991f3537b13c4b67fcad8ca958"
-  integrity sha512-a7hCtTrT+t4Z4ngETjrNdL1mykiFdGPHIzQSlhjQ4wF2nUVAQeskLPY5KOox9AHekbPiclu+UbAo/Okrk+ATjw==
+"@stellar/wallet-sdk@^0.1.0-rc.11":
+  version "0.1.0-rc.11"
+  resolved "https://registry.yarnpkg.com/@stellar/wallet-sdk/-/wallet-sdk-0.1.0-rc.11.tgz#115870869c85e0481c517bc4b973d943a8f7f673"
+  integrity sha512-8WaYN4nJMoiF2A1m5LPmi65MwLCii61IUj6IZjmfKsZAlDTxee+MyrL9CeqKiJ/lFdV4+E+m2M/5cwaH48UmlA==
   dependencies:
+    "@albedo-link/intent" "^0.9.2"
     "@ledgerhq/hw-app-str" "^4.48.0"
     "@ledgerhq/hw-transport-u2f" "^4.48.0"
     "@stellar/lyra-api" "^1.0.0-alpha.2"

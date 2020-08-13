@@ -19,7 +19,7 @@
     "@ledgerhq/hw-transport-u2f": "^5.21.0",
     "@reduxjs/toolkit": "^1.4.0",
     "@stellar/lyra-api": "^1.0.0-alpha.2",
-    "@stellar/wallet-sdk": "^0.1.0-rc.10",
+    "@stellar/wallet-sdk": "^0.1.0-rc.11",
     "@types/ledgerhq__hw-transport-u2f": "^4.21.1",
     "@types/qrcode.react": "^1.0.1",
     "bignumber.js": "^9.0.0",
@@ -64,7 +64,7 @@
     ]
   },
   "devDependencies": {
-    "@stellar/eslint-config": "^1.0.4",
+    "@stellar/eslint-config": "^1.0.5",
     "@stellar/prettier-config": "^1.0.1",
     "@stellar/tsconfig": "^1.0.2",
     "@testing-library/jest-dom": "^4.2.4",
