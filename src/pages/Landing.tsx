@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import { Modal } from "components/Modal";
 import { NewKeyPairForm } from "components/NewKeyPairForm";
+import { SignInAlbedoForm } from "components/SignIn/SignInAlbedoForm";
 import { SignInLedgerForm } from "components/SignIn/SignInLedgerForm";
 import { SignInLyraForm } from "components/SignIn/SignInLyraForm";
 import { SignInSecretKeyForm } from "components/SignIn/SignInSecretKeyForm";
@@ -45,7 +46,7 @@ export const Landing = () => {
       case ModalType.SIGNIN_LYRA:
         return <SignInLyraForm onClose={closeModal} />;
       case ModalType.SIGNIN_ALBEDO:
-        return <div>Albedo</div>;
+        return <SignInAlbedoForm onClose={closeModal} />;
       case ModalType.NEW_KEY_PAIR:
         return <NewKeyPairForm onClose={closeModal} />;
       default:

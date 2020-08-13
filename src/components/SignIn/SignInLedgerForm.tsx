@@ -7,10 +7,13 @@ import { KeyType } from "@stellar/wallet-sdk";
 import { ErrorMessage } from "components/ErrorMessage";
 import { defaultStellarBipPath } from "constants/settings";
 import { ActionStatus, AuthType } from "constants/types.d";
-import { fetchAccountAction } from "ducks/account";
+import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storeKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
-import { fetchLedgerStellarAddressAction } from "ducks/wallet/ledger";
+import {
+  fetchLedgerStellarAddressAction,
+  resetLedgerAction,
+} from "ducks/wallet/ledger";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 
@@ -34,6 +37,10 @@ export const SignInLedgerForm = () => {
 
   const { errorMessage, setErrorMessage } = useErrorMessage({
     initialMessage: "",
+    onUnmount: () => {
+      dispatch(resetLedgerAction());
+      dispatch(resetAccountAction());
+    },
   });
 
   useEffect(() => {

@@ -37,7 +37,9 @@ const initialState: WalletInitialState = {
 const walletLedgerSlice = createSlice({
   name: "walletLedger",
   initialState,
-  reducers: {},
+  reducers: {
+    resetLedgerAction: () => initialState,
+  },
   extraReducers: (builder) => {
     builder.addCase(
       fetchLedgerStellarAddressAction.pending,
@@ -64,3 +66,4 @@ const walletLedgerSlice = createSlice({
 });
 
 export const { reducer } = walletLedgerSlice;
+export const { resetLedgerAction } = walletLedgerSlice.actions;

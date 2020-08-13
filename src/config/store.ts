@@ -15,6 +15,7 @@ import { reducer as keyStore } from "ducks/keyStore";
 import { reducer as sendTx } from "ducks/sendTx";
 import { reducer as settings } from "ducks/settings";
 import { reducer as txHistory } from "ducks/txHistory";
+import { reducer as walletAlbedo } from "ducks/wallet/albedo";
 import { reducer as walletLedger } from "ducks/wallet/ledger";
 import { reducer as walletLyra } from "ducks/wallet/lyra";
 import { reducer as walletTrezor } from "ducks/wallet/trezor";
@@ -39,6 +40,7 @@ const reducers = combineReducers({
   sendTx,
   settings,
   txHistory,
+  walletAlbedo,
   walletLedger,
   walletLyra,
   walletTrezor,
