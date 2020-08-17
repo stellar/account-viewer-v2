@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Provider } from "react-redux";
-// import { createGlobalStyle } from "styled-components";
 
 import { store } from "config/store";
 import { Dashboard } from "pages/Dashboard";
