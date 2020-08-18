@@ -3,7 +3,12 @@ import { createGlobalStyle } from "styled-components";
 import { Normalize } from "styled-normalize";
 
 import { FONTS } from "constants/fonts";
-import { FONT_FAMILY, FONT_WEIGHT, PALETTE } from "constants/styles";
+import {
+  BASE_FONT_SIZE,
+  FONT_FAMILY,
+  FONT_WEIGHT,
+  PALETTE,
+} from "constants/styles";
 
 const Styles = createGlobalStyle`
   body,
@@ -25,7 +30,7 @@ const Styles = createGlobalStyle`
   input,
   textarea,
   button {
-    font-size: 16px;
+    font-size: ${BASE_FONT_SIZE}px;
     font-weight: ${FONT_WEIGHT.normal};
     font-family: ${FONT_FAMILY.base};
     line-height: 1;

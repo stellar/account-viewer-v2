@@ -1,3 +1,5 @@
+export const BASE_FONT_SIZE = 16;
+
 export enum PALETTE {
   black = "#000000",
   black80 = "#333333",
@@ -16,5 +18,6 @@ export enum FONT_FAMILY {
 export enum FONT_WEIGHT {
   light = 300,
   normal = 400,
-  bold = 500,
+  medium = 500,
+  bold = 600,
 }
