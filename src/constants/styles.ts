@@ -1,4 +1,8 @@
 export const BASE_FONT_SIZE = 16;
+export enum SCREEN_SIZES {
+  min = 320,
+  max = 1296,
+}
 
 export enum PALETTE {
   black = "#000000",
