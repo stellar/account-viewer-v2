@@ -8,6 +8,7 @@ import {
   FONT_FAMILY,
   FONT_WEIGHT,
   PALETTE,
+  SCREEN_SIZES,
 } from "constants/styles";
 
 const Styles = createGlobalStyle`
@@ -22,6 +23,8 @@ const Styles = createGlobalStyle`
     min-height: 100vh;
     padding: 0;
     margin: 0;
+    background-color: ${PALETTE.white80};
+    min-width: ${SCREEN_SIZES.min}px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

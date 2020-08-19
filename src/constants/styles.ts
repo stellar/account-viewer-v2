@@ -1,4 +1,8 @@
 export const BASE_FONT_SIZE = 16;
+export enum SCREEN_SIZES {
+  min = 320,
+  max = 1296,
+}
 
 export enum PALETTE {
   black = "#000000",
@@ -7,6 +11,8 @@ export enum PALETTE {
   grey = "#CCCCCC",
   lightGrey = "#E5E5E5",
   white = "#FFFFFF",
+  white80 = "#FAFAFA",
+  white40 = "#E5E5E5",
   purple = "#3E1BDB",
 }
 
@@ -20,4 +26,9 @@ export enum FONT_WEIGHT {
   normal = 400,
   medium = 500,
   bold = 600,
+}
+
+export enum Z_INDEXES {
+  modal = 20,
+  tooltip = 30,
 }
