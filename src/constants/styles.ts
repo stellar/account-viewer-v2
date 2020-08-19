@@ -7,6 +7,8 @@ export enum PALETTE {
   grey = "#CCCCCC",
   lightGrey = "#E5E5E5",
   white = "#FFFFFF",
+  white80 = "#FAFAFA",
+  white40 = "#E5E5E5",
   purple = "#3E1BDB",
 }
 
