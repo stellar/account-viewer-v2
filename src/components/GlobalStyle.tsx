@@ -23,6 +23,7 @@ const Styles = createGlobalStyle`
     padding: 0;
     margin: 0;
     background-color: ${PALETTE.white80};
+    min-width: 320px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

@@ -23,3 +23,8 @@ export enum FONT_WEIGHT {
   medium = 500,
   bold = 600,
 }
+
+export enum Z_INDEXES {
+  modal = 20,
+  tooltip = 30,
+}
