@@ -8,7 +8,7 @@ const WrapperEl = styled.div`
   justify-content: space-between;
   align-items: center;
   position: relative;
-  min-width: 300px;
+  min-width: 250px;
 `;
 
 const ButtonEl = styled.div`
