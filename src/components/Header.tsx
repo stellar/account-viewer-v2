@@ -8,7 +8,7 @@ import {
   pageInsetStyle,
   PALETTE,
 } from "constants/styles";
-import { ReactComponent as StellarLogoFull } from "assets/icons/logo-stellar-lockup.svg";
+import { ReactComponent as StellarLogoFull } from "assets/icons/logo-stellar.svg";
 
 const WrapperEl = styled.div`
   @media (${MEDIA_QUERIES.headerFooterHeight}) {
