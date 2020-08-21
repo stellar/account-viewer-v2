@@ -6,7 +6,7 @@ import { ReceiveTransaction } from "components/ReceiveTransaction";
 import { Modal } from "components/Modal";
 import { startAccountWatcherAction } from "ducks/account";
 import { useRedux } from "hooks/useRedux";
-import { ActionStatus } from "constants/types.d";
+import { ActionStatus } from "types/types.d";
 
 const El = styled.div`
   padding-bottom: 10px;

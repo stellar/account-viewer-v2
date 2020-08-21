@@ -1,4 +1,5 @@
 import { css } from "styled-components";
+import { Theme } from "types/types.d";
 
 export const BASE_FONT_SIZE = 16;
 export enum SCREEN_SIZES {
@@ -19,9 +20,19 @@ export enum PALETTE {
   lightGrey = "#E5E5E5",
   white = "#FFFFFF",
   white80 = "#FAFAFA",
+  white60 = "#F2F2F2",
   white40 = "#E5E5E5",
   purple = "#3E1BDB",
 }
+
+export const THEME: Theme = {
+  landing: {
+    bodyBackground: PALETTE.white80,
+  },
+  dashboard: {
+    bodyBackground: PALETTE.white,
+  },
+};
 
 export enum FONT_FAMILY {
   base = '"IBM Plex Sans", "Helvetica Neue", Arial, sans-serif',

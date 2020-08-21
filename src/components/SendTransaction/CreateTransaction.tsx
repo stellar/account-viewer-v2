@@ -3,7 +3,7 @@ import styled from "styled-components";
 import StellarSdk, { MemoType, FederationServer } from "stellar-sdk";
 import BigNumber from "bignumber.js";
 
-import { ActionStatus, NetworkCongestion } from "constants/types.d";
+import { ActionStatus, NetworkCongestion } from "types/types.d";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { lumensFromStroops } from "helpers/stroopConversion";
 import { useRedux } from "hooks/useRedux";

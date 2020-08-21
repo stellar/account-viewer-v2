@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Keypair } from "stellar-sdk";
 import CopyToClipboard from "react-copy-to-clipboard";
-import { ModalPageProps } from "constants/types.d";
+import { ModalPageProps } from "types/types.d";
 import { ErrorMessage } from "components/ErrorMessage";
 import { useErrorMessage } from "hooks/useErrorMessage";
 

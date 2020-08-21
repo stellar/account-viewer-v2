@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { BigNumber } from "bignumber.js";
 import { Types } from "@stellar/wallet-sdk";
 import { TX_HISTORY_MIN_AMOUNT } from "constants/settings";
-import { ActionStatus } from "constants/types.d";
+import { ActionStatus } from "types/types.d";
 import {
   fetchTxHistoryAction,
   startTxHistoryWatcherAction,
@@ -14,6 +14,7 @@ import {
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
+import { getFormattedPublicKey } from "helpers/getFormattedPublicKey";
 import { ErrorMessage } from "components/ErrorMessage";
 
 const El = styled.div`
@@ -24,7 +25,7 @@ const ItemRowEl = styled.tr``;
 
 const ItemCellEl = styled.td`
   padding: 8px;
-  heigh: 30px;
+  height: 30px;
 `;
 
 const TempLinkButtonEl = styled.span`
@@ -87,9 +88,6 @@ export const TransactionHistory = () => {
   const hasTransactions = data && data.length > 0;
   const hasVisibleTransactions =
     visibleTransactions && visibleTransactions.length > 0;
-
-  const getFormattedPublicKey = (pk: string) =>
-    pk ? `${pk.slice(0, 8)}…${pk.slice(52)}` : "";
 
   const getFormattedAmount = (pt: Types.Payment) => {
     if (!pt?.amount) {

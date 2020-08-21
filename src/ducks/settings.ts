@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AuthType } from "constants/types.d";
+import { AuthType } from "types/types.d";
 import { RootState } from "config/store";
 
 interface SettingsInitialState {
