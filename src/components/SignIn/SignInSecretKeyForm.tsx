@@ -10,7 +10,7 @@ import { storeKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
-import { ActionStatus, AuthType, ModalPageProps } from "constants/types.d";
+import { ActionStatus, AuthType, ModalPageProps } from "types/types.d";
 import { ErrorMessage } from "components/ErrorMessage";
 
 const WarningEl = styled.div`

@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { useRedux } from "hooks/useRedux";
 import { stroopsFromLumens } from "helpers/stroopConversion";
 import { sendTxAction } from "ducks/sendTx";
-import { ActionStatus } from "constants/types.d";
+import { ActionStatus } from "types/types.d";
 import { FormData } from "./SendTransactionFlow";
 
 const El = styled.div``;

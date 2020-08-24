@@ -11,9 +11,9 @@ import { SendTransactionFlow } from "components/SendTransaction/SendTransactionF
 import { ReceiveTransaction } from "components/ReceiveTransaction";
 import { Modal } from "components/Modal";
 import { FONT_WEIGHT, PALETTE } from "constants/styles";
-import { ActionStatus } from "constants/types.d";
 import { startAccountWatcherAction } from "ducks/account";
 import { useRedux } from "hooks/useRedux";
+import { ActionStatus } from "types/types.d";
 
 const WrapperEl = styled.div`
   background-color: ${PALETTE.white80};

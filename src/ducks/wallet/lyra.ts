@@ -1,11 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getPublicKey } from "@stellar/lyra-api";
 
-import {
-  ActionStatus,
-  RejectMessage,
-  WalletInitialState,
-} from "constants/types.d";
+import { ActionStatus, RejectMessage, WalletInitialState } from "types/types.d";
 
 export const fetchLyraStellarAddressAction = createAsyncThunk<
   { publicKey: string },
