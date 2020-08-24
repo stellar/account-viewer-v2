@@ -32,22 +32,53 @@ const LABEL_AMOUNT = "Amount";
 const LABEL_MEMO = "Memo";
 const LABEL_OPERATION_ID = "Operation ID";
 
-const El = styled.div`
-  padding-bottom: 10px;
-`;
-
 const WrapperEl = styled.div`
   ${pageInsetStyle};
   padding-bottom: 2rem;
 `;
 
 const HeadingRowEl = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: block;
+
+  h2 {
+    margin-bottom: 1rem;
+  }
+
+  @media (min-width: 680px) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h2 {
+      margin-bottom: 0;
+    }
+  }
 
   @media (min-width: ${COLUMN_LAYOUT_WIDTH}) {
     margin-bottom: 2rem;
+  }
+`;
+
+const TxToggleLinkEl = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+
+  button {
+    margin-left: -0.2rem;
+    margin-top: 0.2rem;
+  }
+
+  @media (min-width: 680px) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+
+    button {
+      margin-left: 0.5rem;
+      margin-top: -0.25rem;
+    }
   }
 `;
 
@@ -255,7 +286,8 @@ export const TransactionHistory = () => {
     );
 
   const visibleTransactions = showAllTxs ? data : filterOutSmallAmounts(data);
-  const hasTransactions = data && data.length > 0;
+  const hasHiddenTransactions =
+    data.length - filterOutSmallAmounts(data).length > 0;
   const hasVisibleTransactions =
     visibleTransactions && visibleTransactions.length > 0;
 
@@ -300,8 +332,8 @@ export const TransactionHistory = () => {
     <WrapperEl>
       <HeadingRowEl>
         <Heading2>Payments History</Heading2>
-        {hasTransactions && (
-          <div>
+        {hasHiddenTransactions && (
+          <TxToggleLinkEl>
             {`${
               showAllTxs ? "Including" : "Hiding"
             } payments smaller than 0.5 XLM`}{" "}
@@ -311,13 +343,13 @@ export const TransactionHistory = () => {
             >
               {showAllTxs ? "Hide small payments" : "Show all"}
             </TextButton>
-          </div>
+          </TxToggleLinkEl>
         )}
       </HeadingRowEl>
 
       <ErrorMessage message={errorMessage} />
 
-      {!hasVisibleTransactions && <El>There are no payments to show</El>}
+      {!hasVisibleTransactions && <p>There are no payments to show</p>}
 
       {hasVisibleTransactions && (
         <>
