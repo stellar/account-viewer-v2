@@ -14,11 +14,17 @@ import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { getFormattedPublicKey } from "helpers/getFormattedPublicKey";
+import { Avatar } from "components/Avatar";
+import { Heading2 } from "components/basic/Heading";
+import { TextButton, TextButtonVariant } from "components/basic/TextButton";
 import { ErrorMessage } from "components/ErrorMessage";
+import { TextLink } from "components/basic/TextLink";
 
 import { TX_HISTORY_MIN_AMOUNT } from "constants/settings";
-import { FONT_WEIGHT, PALETTE } from "constants/styles";
+import { FONT_WEIGHT, pageInsetStyle, PALETTE } from "constants/styles";
 import { ActionStatus } from "types/types.d";
+
+const COLUMN_LAYOUT_WIDTH = "800px";
 
 const LABEL_DATE_TIME = "Date/Time";
 const LABEL_ADDRESS = "Address";
@@ -28,6 +34,21 @@ const LABEL_OPERATION_ID = "Operation ID";
 
 const El = styled.div`
   padding-bottom: 10px;
+`;
+
+const WrapperEl = styled.div`
+  ${pageInsetStyle};
+  padding-bottom: 2rem;
+`;
+
+const HeadingRowEl = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  @media (min-width: ${COLUMN_LAYOUT_WIDTH}) {
+    margin-bottom: 2rem;
+  }
 `;
 
 const LabelStyle = css`
@@ -43,6 +64,9 @@ const LabelStyle = css`
 const TableEl = styled.table`
   width: 100%;
   border-collapse: collapse;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  color: ${PALETTE.black};
 
   th {
     ${LabelStyle};
@@ -52,10 +76,11 @@ const TableEl = styled.table`
     border-bottom: 1px solid ${PALETTE.white60};
   }
 
-  @media (min-width: 800px) {
+  @media (min-width: ${COLUMN_LAYOUT_WIDTH}) {
     th, td {
       padding-left: 1.5rem;
       padding-right: 1.5rem;
+      vertical-align: top;
     }
 
     th:first-child,
@@ -81,7 +106,7 @@ const TableEl = styled.table`
     }
   }
 
-  @media (max-width: 800px) {
+  @media (max-width: ${COLUMN_LAYOUT_WIDTH}) {
     thead,
     tbody,
     th,
@@ -90,30 +115,41 @@ const TableEl = styled.table`
       display: block;
     }
 
-    /* Hide table headers (but not display: none;, for accessibility) */
-    thead tr {
-      position: absolute;
-      top: -9999px;
-      left: -9999px;
+    thead {
+      border-bottom: none;
+
+      /* Hide table headers (but not "display: none" for accessibility) */
+      tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+      }
+    }
+
+    tr {
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
     }
 
     td {
       position: relative;
       padding-left: 50%;
-      padding-top: 1.5rem;
-      padding-bottom: 1.5rem;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+      text-align: right;
     }
 
     td::before {
       ${LabelStyle};
       position: absolute;
       white-space: nowrap;
-      top: 1.5rem;
+      top: 0.5rem;
       left: 0;
+      line-height: 1.5rem;
     }
 
     /*
-    Label the data
+    Labels
     */
     td:nth-of-type(1)::before {
       content: "${LABEL_DATE_TIME}";
@@ -133,16 +169,53 @@ const TableEl = styled.table`
   }
 `;
 
-const TempLinkButtonEl = styled.span`
-  margin-bottom: 20px;
-  text-decoration: underline;
-  cursor: pointer;
+const AddressEl = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  & > div {
+    margin-top: -0.25rem;
+    margin-right: 0.75rem;
+  }
+
+  @media (max-width: 500px) {
+    margin-top: 0;
+
+    & > div {
+      display: none;
+    }
+  }
+
+  @media (min-width: 500px) and (max-width: ${COLUMN_LAYOUT_WIDTH}) {
+    margin-top: -0.5rem;
+  }
+
+  @media (min-width: ${COLUMN_LAYOUT_WIDTH}) {
+    justify-content: flex-start;
+    margin-top: -0.5rem;
+  }
+
+  @media (min-width: ${COLUMN_LAYOUT_WIDTH}) and (max-width: 980px) {
+    margin-top: 0;
+
+    & > div {
+      display: none;
+    }
+  }
 `;
 
-const FlexRowEl = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+const MemoEl = styled.div`
+  min-height: 1.5rem;
+
+  span {
+    display: block;
+  }
+`;
+
+const BottomLinkEl = styled.div`
+  padding-top: 1.5rem;
+  border-top: 1px solid ${PALETTE.white60};
 `;
 
 export const TransactionHistory = () => {
@@ -192,7 +265,7 @@ export const TransactionHistory = () => {
     }
     const amount = new BigNumber(pt.amount).toString();
     const { isRecipient, token } = pt;
-    return `${(isRecipient ? "+ " : "- ") + amount} ${token.code}`;
+    return `${(isRecipient ? "+" : "-") + amount} ${token.code}`;
   };
 
   const getFormattedMemo = (pt: Types.Payment) => {
@@ -214,35 +287,33 @@ export const TransactionHistory = () => {
         memoType = "";
         break;
     }
+
     return (
-      <El>
-        <div>{memoType}</div>
-        <div>{pt.memo}</div>
-      </El>
+      <MemoEl aria-hidden={!memoType && !pt.memo}>
+        {memoType && <span>{memoType}</span>}
+        {pt.memo && <span>{pt.memo}</span>}
+      </MemoEl>
     );
   };
 
   return (
-    <El>
-      <FlexRowEl>
-        <div>
-          <h2>Payments History</h2>
-        </div>
-        <div>
-          {hasTransactions && (
-            <El>
-              <div>
-                {`${
-                  showAllTxs ? "Including" : "Hiding"
-                } payments smaller than 0.5XLM`}{" "}
-                <TempLinkButtonEl onClick={() => setShowAllTxs(!showAllTxs)}>
-                  {showAllTxs ? "Hide small payments" : "Show all"}
-                </TempLinkButtonEl>
-              </div>
-            </El>
-          )}
-        </div>
-      </FlexRowEl>
+    <WrapperEl>
+      <HeadingRowEl>
+        <Heading2>Payments History</Heading2>
+        {hasTransactions && (
+          <div>
+            {`${
+              showAllTxs ? "Including" : "Hiding"
+            } payments smaller than 0.5 XLM`}{" "}
+            <TextButton
+              onClick={() => setShowAllTxs(!showAllTxs)}
+              variant={TextButtonVariant.secondary}
+            >
+              {showAllTxs ? "Hide small payments" : "Show all"}
+            </TextButton>
+          </div>
+        )}
+      </HeadingRowEl>
 
       <ErrorMessage message={errorMessage} />
 
@@ -264,35 +335,40 @@ export const TransactionHistory = () => {
               {visibleTransactions?.map((pt: Types.Payment) => (
                 <tr key={pt.id}>
                   <td>{moment.unix(pt.timestamp).format("l HH:mm")}</td>
-                  <td>{getFormattedPublicKey(pt.otherAccount?.publicKey)}</td>
+                  <td>
+                    <AddressEl>
+                      <Avatar publicAddress={pt.otherAccount?.publicKey} />{" "}
+                      {getFormattedPublicKey(pt.otherAccount?.publicKey)}
+                    </AddressEl>
+                  </td>
                   <td>{getFormattedAmount(pt)}</td>
                   <td>{getFormattedMemo(pt)}</td>
                   <td>
-                    <a
+                    <TextLink
                       href={`${
                         getNetworkConfig(settings.isTestnet).stellarExpertTxUrl
                       }${pt.transactionId}`}
                     >
                       {pt.id}
-                    </a>
+                    </TextLink>
                   </td>
                 </tr>
               ))}
             </tbody>
           </TableEl>
           {hasMoreTxs && (
-            <El>
-              <a
+            <BottomLinkEl>
+              <TextLink
                 href={`${
                   getNetworkConfig(settings.isTestnet).stellarExpertAccountUrl
                 }${accountId}`}
               >
                 View full list of transactions
-              </a>
-            </El>
+              </TextLink>
+            </BottomLinkEl>
           )}
         </>
       )}
-    </El>
+    </WrapperEl>
   );
 };
