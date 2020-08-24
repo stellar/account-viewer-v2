@@ -10,14 +10,19 @@ import { Heading3 } from "components/basic/Heading";
 import { SendTransactionFlow } from "components/SendTransaction/SendTransactionFlow";
 import { ReceiveTransaction } from "components/ReceiveTransaction";
 import { Modal } from "components/Modal";
-import { FONT_WEIGHT, PALETTE } from "constants/styles";
+import { FONT_WEIGHT, pageInsetStyle, PALETTE } from "constants/styles";
 import { startAccountWatcherAction } from "ducks/account";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus } from "types/types.d";
 
 const WrapperEl = styled.div`
   background-color: ${PALETTE.white80};
-  padding: 2rem 0 2.4rem;
+`;
+
+const InsetEl = styled.div`
+  ${pageInsetStyle};
+  padding-top: 2rem;
+  padding-bottom: 2.4rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -28,7 +33,8 @@ const WrapperEl = styled.div`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 4.5rem 0;
+    padding-top: 4.5rem;
+    padding-bottom: 4.5rem;
   }
 `;
 
@@ -95,33 +101,35 @@ export const BalanceInfo = () => {
 
   return (
     <WrapperEl>
-      <BalanceWrapperEl>
-        <Heading3>Your Balance</Heading3>
-        <BalanceEl>{nativeBalance} Lumens (XLM)</BalanceEl>
-      </BalanceWrapperEl>
+      <InsetEl>
+        <BalanceWrapperEl>
+          <Heading3>Your Balance</Heading3>
+          <BalanceEl>{nativeBalance} Lumens (XLM)</BalanceEl>
+        </BalanceWrapperEl>
 
-      <ButtonsWrapperEl>
-        <Button
-          onClick={() => setIsSendTxModalVisible(true)}
-          icon={<IconSend />}
-        >
-          Send
-        </Button>
-        <Button
-          onClick={() => setIsReceiveTxModalVisible(true)}
-          icon={<IconReceive />}
-        >
-          Receive
-        </Button>
-      </ButtonsWrapperEl>
+        <ButtonsWrapperEl>
+          <Button
+            onClick={() => setIsSendTxModalVisible(true)}
+            icon={<IconSend />}
+          >
+            Send
+          </Button>
+          <Button
+            onClick={() => setIsReceiveTxModalVisible(true)}
+            icon={<IconReceive />}
+          >
+            Receive
+          </Button>
+        </ButtonsWrapperEl>
 
-      <Modal
-        visible={isSendTxModalVisible || isReceiveTxModalVisible}
-        onClose={resetModalStates}
-      >
-        {isSendTxModalVisible && <SendTransactionFlow />}
-        {isReceiveTxModalVisible && <ReceiveTransaction />}
-      </Modal>
+        <Modal
+          visible={isSendTxModalVisible || isReceiveTxModalVisible}
+          onClose={resetModalStates}
+        >
+          {isSendTxModalVisible && <SendTransactionFlow />}
+          {isReceiveTxModalVisible && <ReceiveTransaction />}
+        </Modal>
+      </InsetEl>
     </WrapperEl>
   );
 };

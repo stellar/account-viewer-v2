@@ -6,7 +6,6 @@ import {
   HEADER_HEIGHT_REM,
   HEADER_VERTICAL_PADDING_REM,
   MEDIA_QUERIES,
-  pageInsetStyle,
 } from "constants/styles";
 import { useRedux } from "hooks/useRedux";
 
@@ -15,7 +14,6 @@ const paddingHeight =
   (FOOTER_VERTICAL_PADDING_REM + HEADER_VERTICAL_PADDING_REM) * 2;
 
 const InsetEl = styled.div<{ isAuthenticated: boolean }>`
-  ${pageInsetStyle};
   /* When user is signed in, on smaller screen sizes the Header wraps and is
   twice the height (1.5x in this case). */
   min-height: ${(props) =>
