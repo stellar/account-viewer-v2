@@ -6,7 +6,7 @@ import { KeyType } from "@stellar/wallet-sdk";
 
 import { ErrorMessage } from "components/ErrorMessage";
 import { defaultStellarBipPath } from "constants/settings";
-import { ActionStatus, AuthType } from "constants/types.d";
+import { ActionStatus, AuthType } from "types/types.d";
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storeKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";

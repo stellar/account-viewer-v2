@@ -1,11 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import TrezorConnect from "trezor-connect";
 
-import {
-  ActionStatus,
-  RejectMessage,
-  WalletInitialState,
-} from "constants/types.d";
+import { ActionStatus, RejectMessage, WalletInitialState } from "types/types.d";
 
 export const fetchTrezorStellarAddressAction = createAsyncThunk<
   { publicKey: string },
