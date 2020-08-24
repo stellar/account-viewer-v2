@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import StellarSdk from "stellar-sdk";
 import { useDispatch } from "react-redux";
 import { BigNumber } from "bignumber.js";
 import { Types } from "@stellar/wallet-sdk";
-import { TX_HISTORY_MIN_AMOUNT } from "constants/settings";
-import { ActionStatus } from "constants/types.d";
+
 import {
   fetchTxHistoryAction,
   startTxHistoryWatcherAction,
@@ -16,15 +15,121 @@ import { useRedux } from "hooks/useRedux";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { ErrorMessage } from "components/ErrorMessage";
 
+import { TX_HISTORY_MIN_AMOUNT } from "constants/settings";
+import { FONT_WEIGHT, PALETTE } from "constants/styles";
+import { ActionStatus } from "constants/types.d";
+
+const LABEL_DATE_TIME = "Date/Time";
+const LABEL_ADDRESS = "Address";
+const LABEL_AMOUNT = "Amount";
+const LABEL_MEMO = "Memo";
+const LABEL_OPERATION_ID = "Operation ID";
+
 const El = styled.div`
   padding-bottom: 10px;
 `;
 
-const ItemRowEl = styled.tr``;
+const LabelStyle = css`
+  font-size: 0.875rem;
+  line-height: 1.125rem;
+  color: ${PALETTE.black60};
+  font-weight: ${FONT_WEIGHT.medium};
+  text-transform: uppercase;
+  text-align: left;
+  padding-bottom: 1.0625rem;
+`;
 
-const ItemCellEl = styled.td`
-  padding: 8px;
-  heigh: 30px;
+const TableEl = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    ${LabelStyle};
+  }
+
+  thead, tr:not(:last-child) {
+    border-bottom: 1px solid ${PALETTE.white60};
+  }
+
+  @media (min-width: 800px) {
+    th, td {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+
+    th:first-child,
+    td:first-child {
+      padding-left: 0;
+    }
+
+    th:last-child,
+    td:last-child {
+      padding-right: 0;
+    }
+
+    td {
+      padding-top: 1.5rem;
+      padding-bottom: 1.5rem;
+    }
+
+    th:nth-of-type(3),
+    th:nth-of-type(5),
+    td:nth-of-type(3),
+    td:nth-of-type(5) {
+      text-align: right;
+    }
+  }
+
+  @media (max-width: 800px) {
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+      display: block;
+    }
+
+    /* Hide table headers (but not display: none;, for accessibility) */
+    thead tr {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
+
+    td {
+      position: relative;
+      padding-left: 50%;
+      padding-top: 1.5rem;
+      padding-bottom: 1.5rem;
+    }
+
+    td::before {
+      ${LabelStyle};
+      position: absolute;
+      white-space: nowrap;
+      top: 1.5rem;
+      left: 0;
+    }
+
+    /*
+    Label the data
+    */
+    td:nth-of-type(1)::before {
+      content: "${LABEL_DATE_TIME}";
+    }
+    td:nth-of-type(2):before {
+      content: "${LABEL_ADDRESS}";
+    }
+    td:nth-of-type(3):before {
+      content: "${LABEL_AMOUNT}";
+    }
+    td:nth-of-type(4):before {
+      content: "${LABEL_MEMO}";
+    }
+    td:nth-of-type(5):before {
+      content: "${LABEL_OPERATION_ID}";
+    }
+  }
 `;
 
 const TempLinkButtonEl = styled.span`
@@ -37,14 +142,6 @@ const FlexRowEl = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-`;
-
-const TableEl = styled.table`
-  width: 100%;
-`;
-
-const TableHeadEl = styled.thead`
-  text-align: left;
 `;
 
 export const TransactionHistory = () => {
@@ -156,27 +253,23 @@ export const TransactionHistory = () => {
       {hasVisibleTransactions && (
         <>
           <TableEl>
-            <TableHeadEl>
+            <thead>
               <tr>
-                <th>Date/Time</th>
-                <th>Address</th>
-                <th>Amount</th>
-                <th>Memo</th>
-                <th>Operation ID</th>
+                <th>{LABEL_DATE_TIME}</th>
+                <th>{LABEL_ADDRESS}</th>
+                <th>{LABEL_AMOUNT}</th>
+                <th>{LABEL_MEMO}</th>
+                <th>{LABEL_OPERATION_ID}</th>
               </tr>
-            </TableHeadEl>
+            </thead>
             <tbody>
               {visibleTransactions?.map((pt: Types.Payment) => (
-                <ItemRowEl key={pt.id}>
-                  <ItemCellEl>
-                    {moment.unix(pt.timestamp).format("l HH:mm")}
-                  </ItemCellEl>
-                  <ItemCellEl>
-                    {getFormattedPublicKey(pt.otherAccount?.publicKey)}
-                  </ItemCellEl>
-                  <ItemCellEl>{getFormattedAmount(pt)}</ItemCellEl>
-                  <ItemCellEl>{getFormattedMemo(pt)}</ItemCellEl>
-                  <ItemCellEl>
+                <tr key={pt.id}>
+                  <td>{moment.unix(pt.timestamp).format("l HH:mm")}</td>
+                  <td>{getFormattedPublicKey(pt.otherAccount?.publicKey)}</td>
+                  <td>{getFormattedAmount(pt)}</td>
+                  <td>{getFormattedMemo(pt)}</td>
+                  <td>
                     <a
                       href={`${
                         getNetworkConfig(settings.isTestnet).stellarExpertTxUrl
@@ -184,8 +277,8 @@ export const TransactionHistory = () => {
                     >
                       {pt.id}
                     </a>
-                  </ItemCellEl>
-                </ItemRowEl>
+                  </td>
+                </tr>
               ))}
             </tbody>
           </TableEl>
