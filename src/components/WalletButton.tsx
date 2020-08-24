@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { PALETTE, Z_INDEXES } from "constants/styles";
+import { PALETTE, tooltipStyle } from "constants/styles";
 import { ReactComponent as InfoIcon } from "assets/icons/icon-info.svg";
 
 const WrapperEl = styled.div`
@@ -50,18 +50,8 @@ const InfoButtonEl = styled.div`
 `;
 
 const InfoEl = styled.div<{ isVisible: boolean }>`
-  position: absolute;
+  ${tooltipStyle};
   visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
-  top: 2.7rem;
-  right: -1rem;
-  max-width: 300px;
-  border-radius: 0.25rem;
-  background-color: ${PALETTE.purple};
-  padding: 1rem 1.5rem;
-  color: ${PALETTE.white80};
-  font-size: 0.875rem;
-  line-height: 1.5rem;
-  z-index: ${Z_INDEXES.tooltip};
 `;
 
 interface WalletButtonProps {

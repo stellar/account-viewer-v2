@@ -31,8 +31,16 @@ export interface ModalPageProps {
   onClose?: () => void;
 }
 
-interface WalletInitialState {
+export interface WalletInitialState {
   data: { publicKey: string } | null;
   status: ActionStatus | undefined;
   errorString?: string;
+}
+
+export interface ThemeProps {
+  bodyBackground: string;
+}
+
+export interface Theme {
+  [themeName: string]: ThemeProps;
 }

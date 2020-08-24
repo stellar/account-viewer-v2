@@ -13,11 +13,12 @@ import {
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
+import { getFormattedPublicKey } from "helpers/getFormattedPublicKey";
 import { ErrorMessage } from "components/ErrorMessage";
 
 import { TX_HISTORY_MIN_AMOUNT } from "constants/settings";
 import { FONT_WEIGHT, PALETTE } from "constants/styles";
-import { ActionStatus } from "constants/types.d";
+import { ActionStatus } from "types/types.d";
 
 const LABEL_DATE_TIME = "Date/Time";
 const LABEL_ADDRESS = "Address";
@@ -184,9 +185,6 @@ export const TransactionHistory = () => {
   const hasTransactions = data && data.length > 0;
   const hasVisibleTransactions =
     visibleTransactions && visibleTransactions.length > 0;
-
-  const getFormattedPublicKey = (pk: string) =>
-    pk ? `${pk.slice(0, 8)}…${pk.slice(52)}` : "";
 
   const getFormattedAmount = (pt: Types.Payment) => {
     if (!pt?.amount) {

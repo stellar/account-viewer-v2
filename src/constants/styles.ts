@@ -1,4 +1,5 @@
 import { css } from "styled-components";
+import { Theme } from "types/types.d";
 
 export const BASE_FONT_SIZE = 16;
 export enum SCREEN_SIZES {
@@ -22,7 +23,17 @@ export enum PALETTE {
   white60 = "#F2F2F2",
   white40 = "#E5E5E5",
   purple = "#3E1BDB",
+  charcoal = "#292D3E",
 }
+
+export const THEME: Theme = {
+  landing: {
+    bodyBackground: PALETTE.white80,
+  },
+  dashboard: {
+    bodyBackground: PALETTE.white,
+  },
+};
 
 export enum FONT_FAMILY {
   base = '"IBM Plex Sans", "Helvetica Neue", Arial, sans-serif',
@@ -50,9 +61,23 @@ export const pageInsetStyle = css`
   margin: 0 auto;
   padding: 0 1rem;
   max-width: ${SCREEN_SIZES.max}px;
-  overflow: hidden;
 
   @media (min-width: ${SCREEN_SIZES.mobile}px) {
     padding: 0 3rem;
   }
+`;
+
+export const tooltipStyle = css`
+  position: absolute;
+  top: 2.7rem;
+  right: -1rem;
+  max-width: 300px;
+  border-radius: 0.25rem;
+  background-color: ${PALETTE.purple};
+  padding: 1rem 1.5rem;
+  color: ${PALETTE.white80};
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  z-index: ${Z_INDEXES.tooltip};
+  cursor: default;
 `;
