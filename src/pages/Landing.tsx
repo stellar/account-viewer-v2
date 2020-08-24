@@ -19,7 +19,10 @@ import { SignInSecretKeyForm } from "components/SignIn/SignInSecretKeyForm";
 import { SignInTrezorForm } from "components/SignIn/SignInTrezorForm";
 import { WalletButton } from "components/WalletButton";
 
+import { pageInsetStyle } from "constants/styles";
+
 const WrapperEl = styled.div`
+  ${pageInsetStyle};
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -59,11 +59,13 @@ export enum MEDIA_QUERIES {
 export const pageInsetStyle = css`
   position: relative;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   max-width: ${SCREEN_SIZES.max}px;
 
   @media (min-width: ${SCREEN_SIZES.mobile}px) {
-    padding: 0 3rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
   }
 `;
 
