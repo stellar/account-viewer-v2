@@ -48,13 +48,15 @@ export enum FONT_WEIGHT {
 }
 
 export enum Z_INDEXES {
-  modal = 20,
-  tooltip = 30,
+  tooltip = 20,
+  modal = 30,
 }
 
 export enum MEDIA_QUERIES {
   headerFooterHeight = "min-width: 700px",
 }
+
+export const MODAL_OPEN_CLASS_NAME = "modal-open";
 
 export const pageInsetStyle = css`
   position: relative;

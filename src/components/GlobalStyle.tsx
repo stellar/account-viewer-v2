@@ -7,6 +7,7 @@ import {
   BASE_FONT_SIZE,
   FONT_FAMILY,
   FONT_WEIGHT,
+  MODAL_OPEN_CLASS_NAME,
   PALETTE,
   SCREEN_SIZES,
 } from "constants/styles";
@@ -41,6 +42,9 @@ const Styles = createGlobalStyle`
   /* http://tachyons.io/docs/layout/box-sizing/ */
   body * {
     box-sizing: border-box;
+  }
+  body.${MODAL_OPEN_CLASS_NAME} {
+    overflow: hidden;
   }
 `;
 
