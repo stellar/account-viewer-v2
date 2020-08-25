@@ -58,7 +58,7 @@ const IconWrapperEl = styled.span`
   height: 1rem;
   position: absolute;
   top: 0.125rem;
-  left: 0.125rem;
+  left: 0.0625rem;
 
   svg {
     width: 0.6rem;
