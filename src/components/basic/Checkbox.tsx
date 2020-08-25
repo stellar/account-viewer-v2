@@ -42,12 +42,8 @@ const LabelEl = styled.label`
     margin-top: 0.0625rem;
     width: 1rem;
     height: 1rem;
-    border: 1px solid transparent;
-  }
-
-  &::before {
     border-radius: 0.125rem;
-    border-color: ${PALETTE.white40};
+    border: 1px solid ${PALETTE.white40};
     box-shadow: 0 0.25rem 0.5rem -0.25rem rgba(0, 0, 0, 0.48);
     z-index: 1;
   }
