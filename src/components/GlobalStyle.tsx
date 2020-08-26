@@ -46,6 +46,25 @@ const Styles = createGlobalStyle`
   body.${MODAL_OPEN_CLASS_NAME} {
     overflow: hidden;
   }
+  ul {
+    line-height: 1.5rem;
+    padding: 0 0 0 1rem;
+    margin: 0;
+    list-style-type: none;
+
+    li {
+      position: relative;
+    }
+
+    li::before {
+      content: "-";
+      position: absolute;
+      left: -1rem;
+    }
+  }
+  strong {
+    font-weight: ${FONT_WEIGHT.medium};
+  }
 `;
 
 const fontStyles = FONTS.map(

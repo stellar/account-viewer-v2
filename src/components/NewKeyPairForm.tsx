@@ -2,27 +2,69 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Keypair } from "stellar-sdk";
 import CopyToClipboard from "react-copy-to-clipboard";
-import { ModalPageProps } from "types/types.d";
+
+import { ReactComponent as IconCopy } from "assets/icons/icon-copy.svg";
+
+import { Button, ButtonVariant } from "components/basic/Button";
+import { Checkbox } from "components/basic/Checkbox";
+import { Heading4 } from "components/basic/Heading";
+import { WarningBlock } from "components/basic/WarningBlock";
 import { ErrorMessage } from "components/ErrorMessage";
+import { ModalContent } from "components/ModalContent";
+
+import { FONT_WEIGHT, PALETTE } from "constants/styles";
 import { useErrorMessage } from "hooks/useErrorMessage";
-
-const WarningEl = styled.div`
-  background-color: #f3e5e5;
-  color: #681e1e;
-  padding: 20px;
-  margin-bottom: 20px;
-`;
-
-const TempButtonEl = styled.button`
-  margin-bottom: 20px;
-`;
+import { ModalPageProps } from "types/types.d";
 
 const KeyPairWrapperEl = styled.div`
-  margin-bottom: 20px;
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const KeysEl = styled.div`
+  margin-right: 1.5rem;
+  word-break: break-all;
+  flex: 1;
+`;
+
+const KeyWrapperEl = styled.div`
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+`;
+
+const KeyLabelEl = styled.div`
+  margin-bottom: 0.25rem;
+`;
+
+const KeyValueEl = styled.div`
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: ${FONT_WEIGHT.medium};
+  color: ${PALETTE.black};
+`;
+
+const CopyButtonEl = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 120px;
+  cursor: pointer;
+  height: 2rem;
+
+  svg {
+    fill: ${PALETTE.purple};
+    height: 1.25rem;
+    width: 1.25rem;
+    margin-right: 0.75rem;
+    margin-top: -0.25rem;
+  }
 `;
 
 const ConfirmWrapperEl = styled.div`
-  margin-bottom: 20px;
+  margin-top: 1.5rem;
 `;
 
 interface KeyPairType {
@@ -92,13 +134,21 @@ ${keypair.secret()}`);
     <>
       {/* Show warning */}
       {!acceptedWarning && (
-        <div>
-          <h2>Generate a new key pair</h2>
-
-          <WarningEl>
-            <h3>
+        <ModalContent
+          headlineText="Generate a new key pair"
+          buttonFooter={
+            <>
+              <Button onClick={handleContinue}>Continue</Button>
+              <Button onClick={handleClose} variant={ButtonVariant.secondary}>
+                Cancel
+              </Button>
+            </>
+          }
+        >
+          <WarningBlock>
+            <Heading4>
               ATTENTION: Copying and pasting your secret key is not recommended
-            </h3>
+            </Heading4>
 
             <ul>
               <li>
@@ -113,20 +163,22 @@ ${keypair.secret()}`);
               </li>
               <li>...</li>
             </ul>
-          </WarningEl>
-
-          <TempButtonEl onClick={handleContinue}>Continue</TempButtonEl>
-          <TempButtonEl onClick={handleClose}>Cancel</TempButtonEl>
-        </div>
+          </WarningBlock>
+        </ModalContent>
       )}
 
       {/* Show generate new key pair form */}
       {acceptedWarning && (
-        <div>
-          <h2>New key pair</h2>
-
-          <WarningEl>
-            <h3>ATTENTION:</h3>
+        <ModalContent
+          headlineText="New key pair"
+          buttonFooter={
+            <Button onClick={handleDone} disabled={!confirmSavedSecretKey}>
+              Close
+            </Button>
+          }
+        >
+          <WarningBlock>
+            <Heading4>ATTENTION:</Heading4>
 
             <ul>
               <li>
@@ -148,45 +200,42 @@ ${keypair.secret()}`);
                 </strong>
               </li>
             </ul>
-          </WarningEl>
+          </WarningBlock>
 
           {newKeyPair && (
             <KeyPairWrapperEl>
-              <div>Public Key:</div>
-              <div>
-                <strong>{newKeyPair.publicKey}</strong>
-              </div>
+              <KeysEl>
+                <KeyWrapperEl>
+                  <KeyLabelEl>Public key</KeyLabelEl>
+                  <KeyValueEl>{newKeyPair.publicKey}</KeyValueEl>
+                </KeyWrapperEl>
 
-              <div>Secret Key:</div>
-              <div>
-                <strong>{newKeyPair.secretKey}</strong>
-              </div>
+                <KeyWrapperEl>
+                  <KeyLabelEl>Secret key</KeyLabelEl>
+                  <KeyValueEl>{newKeyPair.secretKey}</KeyValueEl>
+                </KeyWrapperEl>
+              </KeysEl>
 
               <CopyToClipboard text={keyPairCopyString} onCopy={handleCopyKeys}>
-                <TempButtonEl>
+                <CopyButtonEl>
+                  <IconCopy />
                   {isKeyPairCopied ? "Copied keys" : "Copy keys"}
-                </TempButtonEl>
+                </CopyButtonEl>
               </CopyToClipboard>
             </KeyPairWrapperEl>
           )}
 
           <ConfirmWrapperEl>
-            <input
-              type="checkbox"
+            <Checkbox
               id="confirmSavedSecretKey"
-              name="confirmSavedSecretKey"
+              label="I’ve copied my secret key to a safe place"
               checked={!!confirmSavedSecretKey}
               onChange={toggleConfirmSavedSecretKey}
             />
-            <label htmlFor="confirmSavedSecretKey">
-              I’ve copied my secret key to a safe place
-            </label>
           </ConfirmWrapperEl>
 
           <ErrorMessage message={errorMessage} />
-
-          <TempButtonEl onClick={handleDone}>Close</TempButtonEl>
-        </div>
+        </ModalContent>
       )}
     </>
   );

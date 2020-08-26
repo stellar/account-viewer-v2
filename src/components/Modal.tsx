@@ -21,7 +21,7 @@ const ModalEl = styled.div`
   top: 0;
   left: 0;
   transform: translate(0, 0);
-  padding: 4.5rem 1.5rem 3rem;
+  padding: 4.5rem 1.5rem 2rem;
   overflow: hidden;
   box-shadow: 0 1.5rem 3rem -1.5rem rgba(0, 0, 0, 0.16);
 
@@ -36,7 +36,7 @@ const ModalEl = styled.div`
 const ModalContentEl = styled.div`
   min-width: calc(${SCREEN_SIZES.min}px - 3rem);
   width: calc(100vw - 3rem);
-  height: calc(100vh - 7.5rem);
+  height: calc(100vh - 6.5rem);
   overflow-y: auto;
 
   @media (min-width: ${MODAL_MAX_WIDTH}) and (min-height: ${MIN_SCREEN_HEIGHT}) {
