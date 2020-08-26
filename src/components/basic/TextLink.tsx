@@ -7,7 +7,7 @@ export enum TextLinkVariant {
   secondary = "secondary",
 }
 
-const TextLinkEl = styled.a<TextLinkProps>`
+const TextLinkEl = styled.a<{ variant: TextLinkVariant }>`
   font-weight: ${FONT_WEIGHT.normal};
   color: ${PALETTE.black};
   text-decoration: underline;

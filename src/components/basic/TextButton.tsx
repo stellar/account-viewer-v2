@@ -7,7 +7,7 @@ export enum TextButtonVariant {
   secondary = "secondary",
 }
 
-const TextButtonEl = styled.button<TextButtonProps>`
+const TextButtonEl = styled.button<{ variant: TextButtonVariant }>`
   font-size: 1rem;
   line-height: 1.75rem;
   padding: 0.6rem 0.2rem 0.36rem;
@@ -16,6 +16,10 @@ const TextButtonEl = styled.button<TextButtonProps>`
   background: none;
   border: none;
   cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 
   ${(props) =>
     props.variant === TextButtonVariant.secondary &&
@@ -31,18 +35,39 @@ const TextButtonEl = styled.button<TextButtonProps>`
   }
 `;
 
+const IconWrapperEl = styled.span`
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  margin-bottom: 0.3rem;
+  margin-right: 0.75rem;
+  position: relative;
+
+  svg {
+    fill: ${PALETTE.purple};
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+`;
+
 interface TextButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  icon?: React.ReactNode;
   variant?: TextButtonVariant;
   children: string;
 }
 
 export const TextButton: React.FC<TextButtonProps> = ({
+  icon,
   variant = TextButtonVariant.primary,
   children,
   ...props
 }) => (
   <TextButtonEl variant={variant} {...props}>
+    {icon && <IconWrapperEl>{icon}</IconWrapperEl>}
     {children}
   </TextButtonEl>
 );
