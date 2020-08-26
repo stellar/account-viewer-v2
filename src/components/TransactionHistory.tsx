@@ -185,16 +185,16 @@ const TableEl = styled.table`
     td:nth-of-type(1)::before {
       content: "${LABEL_DATE_TIME}";
     }
-    td:nth-of-type(2):before {
+    td:nth-of-type(2)::before {
       content: "${LABEL_ADDRESS}";
     }
-    td:nth-of-type(3):before {
+    td:nth-of-type(3)::before {
       content: "${LABEL_AMOUNT}";
     }
-    td:nth-of-type(4):before {
+    td:nth-of-type(4)::before {
       content: "${LABEL_MEMO}";
     }
-    td:nth-of-type(5):before {
+    td:nth-of-type(5)::before {
       content: "${LABEL_OPERATION_ID}";
     }
   }
