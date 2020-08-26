@@ -1,16 +1,44 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import CopyToClipboard from "react-copy-to-clipboard";
-import { useRedux } from "hooks/useRedux";
 import QRCode from "qrcode.react";
 
-const El = styled.div`
-  text-align: center;
-  padding-bottom: 20px;
+import { ReactComponent as IconCopy } from "assets/icons/icon-copy.svg";
+
+import { Avatar } from "components/Avatar";
+import { TextButton } from "components/basic/TextButton";
+import { ModalContent } from "components/ModalContent";
+import { FONT_WEIGHT, PALETTE } from "constants/styles";
+import { useRedux } from "hooks/useRedux";
+
+const QRCodeWrapperEl = styled.div`
+  margin: 2.5rem 0;
+  display: flex;
+  justify-content: center;
 `;
 
-const TempButtonEl = styled.button`
-  margin-bottom: 20px;
+const ContentWrapperEl = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const AddressWrapperEl = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+`;
+
+const AddressEl = styled.div`
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: ${FONT_WEIGHT.medium};
+  color: ${PALETTE.black};
+  word-break: break-all;
+  margin-left: 1.5rem;
+  max-width: 300px;
+  flex: 1;
 `;
 
 export const ReceiveTransaction = () => {
@@ -19,26 +47,31 @@ export const ReceiveTransaction = () => {
   const accountId = account.data?.id;
 
   return (
-    <El>
-      <El>
-        <h2>Your account QR code</h2>
-      </El>
-      <El>
+    <ModalContent headlineText="Your account QR code">
+      <p>
         Scan this QR code using a Stellar wallet app to make a payment to your
-        account
-      </El>
-      <El>
+        account.
+      </p>
+
+      <QRCodeWrapperEl>
         <QRCode value={accountId}></QRCode>
-      </El>
-      <El>{accountId}</El>
-      <CopyToClipboard
-        text={accountId}
-        onCopy={() => setAccountIsIdCopied(true)}
-      >
-        <TempButtonEl>
-          {isAccountIdCopied ? "Copied" : "Copy public key"}
-        </TempButtonEl>
-      </CopyToClipboard>
-    </El>
+      </QRCodeWrapperEl>
+
+      <ContentWrapperEl>
+        <AddressWrapperEl>
+          <Avatar publicAddress={accountId} />
+          <AddressEl>{accountId}</AddressEl>
+        </AddressWrapperEl>
+
+        <CopyToClipboard
+          text={accountId}
+          onCopy={() => setAccountIsIdCopied(true)}
+        >
+          <TextButton icon={<IconCopy />}>
+            {isAccountIdCopied ? "Copied" : "Copy public key"}
+          </TextButton>
+        </CopyToClipboard>
+      </ContentWrapperEl>
+    </ModalContent>
   );
 };

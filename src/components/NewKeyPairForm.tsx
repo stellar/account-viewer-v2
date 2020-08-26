@@ -6,6 +6,7 @@ import CopyToClipboard from "react-copy-to-clipboard";
 import { ReactComponent as IconCopy } from "assets/svg/icon-copy.svg";
 
 import { Button, ButtonVariant } from "components/basic/Button";
+import { TextButton } from "components/basic/TextButton";
 import { Checkbox } from "components/basic/Checkbox";
 import { Heading4 } from "components/basic/Heading";
 import { InfoBlock, InfoBlockVariant } from "components/basic/InfoBlock";
@@ -47,20 +48,9 @@ const KeyValueEl = styled.div`
 `;
 
 const CopyButtonEl = styled.div`
+  min-width: 130px;
   display: flex;
-  align-items: center;
   justify-content: flex-end;
-  min-width: 120px;
-  cursor: pointer;
-  height: 2rem;
-
-  svg {
-    fill: ${PALETTE.purple};
-    height: 1.25rem;
-    width: 1.25rem;
-    margin-right: 0.75rem;
-    margin-top: -0.25rem;
-  }
 `;
 
 const ConfirmWrapperEl = styled.div`
@@ -218,8 +208,9 @@ ${keypair.secret()}`);
 
               <CopyToClipboard text={keyPairCopyString} onCopy={handleCopyKeys}>
                 <CopyButtonEl>
-                  <IconCopy />
-                  {isKeyPairCopied ? "Copied keys" : "Copy keys"}
+                  <TextButton icon={<IconCopy />}>
+                    {isKeyPairCopied ? "Copied keys" : "Copy keys"}
+                  </TextButton>
                 </CopyButtonEl>
               </CopyToClipboard>
             </KeyPairWrapperEl>

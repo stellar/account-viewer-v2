@@ -34,7 +34,7 @@ const ButtonsWrapperEl = styled.div`
 
 interface ModalContentProps {
   headlineText: string;
-  buttonFooter: React.ReactNode;
+  buttonFooter?: React.ReactNode;
   children: React.ReactNode;
 }
 
@@ -46,6 +46,6 @@ export const ModalContent = ({
   <WrapperEl>
     <HeadlineEl>{headlineText}</HeadlineEl>
     <ContentEl>{children}</ContentEl>
-    <ButtonsWrapperEl>{buttonFooter}</ButtonsWrapperEl>
+    {buttonFooter && <ButtonsWrapperEl>{buttonFooter}</ButtonsWrapperEl>}
   </WrapperEl>
 );
