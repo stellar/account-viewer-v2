@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 
-import { ReactComponent as IconReceive } from "assets/icons/icon-receive.svg";
-import { ReactComponent as IconSend } from "assets/icons/icon-send.svg";
+import { ReactComponent as IconReceive } from "assets/svg/icon-receive.svg";
+import { ReactComponent as IconSend } from "assets/svg/icon-send.svg";
 
 import { Button } from "components/basic/Button";
 import { Heading3 } from "components/basic/Heading";

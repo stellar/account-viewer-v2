@@ -1,15 +1,25 @@
 import React from "react";
 import styled from "styled-components";
+import { PALETTE } from "constants/styles";
 
-const TempErrorEl = styled.div`
-  color: #c00;
-  margin-bottom: 20px;
+const ErrorEl = styled.div`
+  color: ${PALETTE.red};
 `;
 
-export const ErrorMessage = ({ message }: { message: string }) => {
+interface ErrorMessageProps {
+  message: string;
+  marginTop?: string;
+  marginBottom?: string;
+}
+
+export const ErrorMessage = ({
+  message,
+  marginTop = "0",
+  marginBottom = "0",
+}: ErrorMessageProps) => {
   if (!message) {
     return null;
   }
 
-  return <TempErrorEl>{message}</TempErrorEl>;
+  return <ErrorEl style={{ marginTop, marginBottom }}>{message}</ErrorEl>;
 };

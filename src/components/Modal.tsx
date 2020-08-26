@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
 
-import { ReactComponent as IconClose } from "assets/icons/icon-close.svg";
+import { ReactComponent as IconClose } from "assets/svg/icon-close.svg";
 import {
   MODAL_OPEN_CLASS_NAME,
   PALETTE,

@@ -5,34 +5,33 @@ import styled from "styled-components";
 import { Keypair } from "stellar-sdk";
 import { KeyType } from "@stellar/wallet-sdk";
 
+import { ReactComponent as UrlIllustration } from "assets/svg/url-illustration.svg";
+
+import { Button, ButtonVariant } from "components/basic/Button";
+import { Heading4 } from "components/basic/Heading";
+import { Input } from "components/basic/Input";
+import { InfoBlock, InfoBlockVariant } from "components/basic/InfoBlock";
+import { ErrorMessage } from "components/ErrorMessage";
+import { ModalContent } from "components/ModalContent";
+
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storeKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, ModalPageProps } from "types/types.d";
-import { ErrorMessage } from "components/ErrorMessage";
 
-const WarningEl = styled.div`
-  background-color: #f3e5e5;
-  color: #681e1e;
-  padding: 20px;
-  margin-bottom: 20px;
+const InputWrapperEl = styled.div`
+  margin-top: 1.5rem;
 `;
 
-const TempButtonEl = styled.button`
-  margin-bottom: 20px;
-`;
+const IllustrationWrapperEl = styled.div`
+  margin-bottom: 1rem;
 
-const TempInputEl = styled.input`
-  margin-bottom: 20px;
-  min-width: 300px;
-`;
-
-const TempLinkButtonEl = styled.div`
-  margin-bottom: 20px;
-  text-decoration: underline;
-  cursor: pointer;
+  svg {
+    width: 100%;
+    height: 100%;
+  }
 `;
 
 export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
@@ -80,17 +79,18 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
   let failedAttempts = 0;
 
   const handleSignIn = () => {
+    setErrorMessage("");
+
     if (!secretKey) {
-      // TODO:
-      // eslint-disable-next-line
-      alert("Please enter your Secret Key");
+      setErrorMessage("Please enter your secret key.");
       return;
     }
 
     if (failedAttempts > 8) {
-      // TODO:
-      // eslint-disable-next-line
-      alert("Please wait a few seconds before attempting to log in again.");
+      setErrorMessage(
+        "Please wait a few seconds before attempting to log in again.",
+      );
+      return;
     }
 
     try {
@@ -110,16 +110,27 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
   };
 
   return (
-    <div>
-      <h1>Sign in with a Secret Key</h1>
-
-      {/* Show Warning message */}
+    <>
+      {/* Show warning message */}
       {!acceptedWarning && (
-        <div>
-          <WarningEl>
-            <h3>
+        <ModalContent
+          headlineText="Sign in with a secret key"
+          buttonFooter={
+            <>
+              <Button onClick={() => setAcceptedWarning(true)}>
+                I understand the risks of pasting my secret key
+              </Button>
+
+              <Button onClick={onClose} variant={ButtonVariant.secondary}>
+                Cancel
+              </Button>
+            </>
+          }
+        >
+          <InfoBlock variant={InfoBlockVariant.warning}>
+            <Heading4>
               ATTENTION: Copying and pasting your secret key is not recommended
-            </h3>
+            </Heading4>
 
             <ul>
               <li>
@@ -134,50 +145,48 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
               </li>
               <li>...</li>
             </ul>
-          </WarningEl>
-
-          <TempButtonEl onClick={() => setAcceptedWarning(true)}>
-            I understand the risks of pasting my secret key
-          </TempButtonEl>
-
-          <TempLinkButtonEl onClick={onClose}>Cancel</TempLinkButtonEl>
-        </div>
+          </InfoBlock>
+        </ModalContent>
       )}
 
-      {/* Show Enter Secret Key */}
+      {/* Show Enter secret key */}
       {acceptedWarning && (
-        <div>
-          <WarningEl>
-            <p>
-              <strong>accountviewer.stellar.org</strong>
-            </p>
+        <ModalContent
+          headlineText="Sign in with a secret key"
+          buttonFooter={
+            <Button
+              onClick={handleSignIn}
+              disabled={status === ActionStatus.PENDING}
+            >
+              Sign in
+            </Button>
+          }
+        >
+          <InfoBlock>
+            <IllustrationWrapperEl>
+              <UrlIllustration />
+            </IllustrationWrapperEl>
             <p>
               Always check the domain you’re accessing Account Viewer before
               pasting your keys. Scammers can replicate this page in a different
               domain in order to steal your keys.
             </p>
-          </WarningEl>
+          </InfoBlock>
 
-          <div>
-            <h3>Your Secret Key</h3>
-            <TempInputEl
+          <InputWrapperEl>
+            <Input
+              id="enter-secret-key"
               placeholder="Starts with S, example: SCHK...ZLJ&"
               onChange={() => setErrorMessage("")}
               onBlur={(e) => setSecretKey(e.currentTarget.value)}
               type="password"
+              label="Your secret key"
             />
-          </div>
+          </InputWrapperEl>
 
-          <ErrorMessage message={errorMessage} />
-
-          <TempButtonEl
-            onClick={handleSignIn}
-            disabled={status === ActionStatus.PENDING}
-          >
-            Sign in
-          </TempButtonEl>
-        </div>
+          <ErrorMessage message={errorMessage} marginTop="1rem" />
+        </ModalContent>
       )}
-    </div>
+    </>
   );
 };

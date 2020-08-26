@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 
-import { ReactComponent as StellarLogo } from "assets/icons/logo-stellar.svg";
+import { ReactComponent as StellarLogo } from "assets/svg/logo-stellar.svg";
 import { resetStoreAction } from "config/store";
 import { Avatar } from "components/Avatar";
 import { TextButton } from "components/basic/TextButton";

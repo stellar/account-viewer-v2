@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import CopyToClipboard from "react-copy-to-clipboard";
 
-import { ReactComponent as IconCopy } from "assets/icons/icon-copy.svg";
+import { ReactComponent as IconCopy } from "assets/svg/icon-copy.svg";
 import {
   FONT_WEIGHT,
   MEDIA_QUERIES,

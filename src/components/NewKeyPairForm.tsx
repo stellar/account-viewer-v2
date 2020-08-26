@@ -3,12 +3,12 @@ import styled from "styled-components";
 import { Keypair } from "stellar-sdk";
 import CopyToClipboard from "react-copy-to-clipboard";
 
-import { ReactComponent as IconCopy } from "assets/icons/icon-copy.svg";
+import { ReactComponent as IconCopy } from "assets/svg/icon-copy.svg";
 
 import { Button, ButtonVariant } from "components/basic/Button";
 import { Checkbox } from "components/basic/Checkbox";
 import { Heading4 } from "components/basic/Heading";
-import { WarningBlock } from "components/basic/WarningBlock";
+import { InfoBlock, InfoBlockVariant } from "components/basic/InfoBlock";
 import { ErrorMessage } from "components/ErrorMessage";
 import { ModalContent } from "components/ModalContent";
 
@@ -145,7 +145,7 @@ ${keypair.secret()}`);
             </>
           }
         >
-          <WarningBlock>
+          <InfoBlock variant={InfoBlockVariant.warning}>
             <Heading4>
               ATTENTION: Copying and pasting your secret key is not recommended
             </Heading4>
@@ -163,7 +163,7 @@ ${keypair.secret()}`);
               </li>
               <li>...</li>
             </ul>
-          </WarningBlock>
+          </InfoBlock>
         </ModalContent>
       )}
 
@@ -177,7 +177,7 @@ ${keypair.secret()}`);
             </Button>
           }
         >
-          <WarningBlock>
+          <InfoBlock variant={InfoBlockVariant.warning}>
             <Heading4>ATTENTION:</Heading4>
 
             <ul>
@@ -200,7 +200,7 @@ ${keypair.secret()}`);
                 </strong>
               </li>
             </ul>
-          </WarningBlock>
+          </InfoBlock>
 
           {newKeyPair && (
             <KeyPairWrapperEl>
@@ -234,7 +234,7 @@ ${keypair.secret()}`);
             />
           </ConfirmWrapperEl>
 
-          <ErrorMessage message={errorMessage} />
+          <ErrorMessage message={errorMessage} marginTop="1.5rem" />
         </ModalContent>
       )}
     </>
