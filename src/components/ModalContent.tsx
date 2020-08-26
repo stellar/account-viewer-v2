@@ -12,7 +12,9 @@ const HeadlineEl = styled(Heading2)`
   margin-bottom: 1.5rem;
 `;
 
-const ContentEl = styled.div``;
+const ContentEl = styled.div`
+  width: 100%;
+`;
 
 const ButtonsWrapperEl = styled.div`
   display: flex;

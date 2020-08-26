@@ -3,31 +3,42 @@ import styled from "styled-components";
 import StellarSdk, { MemoType, FederationServer } from "stellar-sdk";
 import BigNumber from "bignumber.js";
 
-import { ActionStatus, NetworkCongestion } from "types/types.d";
+import { Button } from "components/basic/Button";
+import { TextButton, TextButtonVariant } from "components/basic/TextButton";
+import { Input } from "components/basic/Input";
+import { ModalContent } from "components/ModalContent";
+
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { lumensFromStroops } from "helpers/stroopConversion";
 import { useRedux } from "hooks/useRedux";
+import { ActionStatus, NetworkCongestion } from "types/types.d";
 import { FormData } from "./SendTransactionFlow";
+
+const RowEl = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  &:not(:last-child) {
+    margin-bottom: 1.5rem;
+  }
+`;
+
+const CellEl = styled.div`
+  width: 100%;
+
+  @media (min-width: 600px) {
+    width: calc(50% - 0.75rem);
+  }
+`;
 
 const El = styled.div`
   margin-bottom: 20px;
 `;
 
-const TempInputEl = styled.input`
-  margin-bottom: 20px;
-  min-width: 300px;
-`;
-
 const TempSelectInputEl = styled.select`
   margin-bottom: 20px;
   min-width: 300px;
-`;
-
-const TempAnchorEl = styled.a`
-  display: block;
-  margin-bottom: 20px;
-  cursor: pointer;
-  text-decoration: underline;
 `;
 
 const isFederationAddress = (value: string) => value.includes("*");
@@ -148,11 +159,14 @@ export const CreateTransaction = ({
   };
 
   return (
-    <El>
-      <h1>Send Lumens</h1>
-      <El>
-        Sending To:{" "}
-        <TempInputEl
+    <ModalContent
+      headlineText="Send Lumens"
+      buttonFooter={<Button onClick={onContinue}>Continue</Button>}
+    >
+      <RowEl>
+        <Input
+          id="send-to"
+          label="Sending To"
           type="text"
           onChange={(e) =>
             onInput({ ...formData, toAccountId: e.target.value })
@@ -160,93 +174,111 @@ export const CreateTransaction = ({
           onBlur={fetchIfFederationAddress}
           value={formData.toAccountId}
           placeholder="Recipient's public key or federation address"
-        ></TempInputEl>
-      </El>
-      {federationAddressFetchStatus && (
-        <El>
-          {federationAddressFetchStatus === ActionStatus.PENDING && (
-            <El>Loading federation address…</El>
-          )}
-          {federationAddressFetchStatus === ActionStatus.SUCCESS && (
-            <>
-              <El>Federation Address: {formData.toAccountId}</El>
-              <El>Resolves to: {formData.federationAddress}</El>
-            </>
-          )}
-          {federationAddressFetchStatus === ActionStatus.ERROR && (
-            <El>Federation Address not found</El>
-          )}
-        </El>
-      )}
-      <El>
-        Amount (lumens) :{" "}
-        <TempInputEl
-          type="number"
-          onChange={(e) => {
-            onInput({
-              ...formData,
-              amount: new BigNumber(e.target.value || 0),
-            });
-          }}
-          value={formData.amount.toString()}
-          placeholder="0"
-        ></TempInputEl>
-      </El>
-      <El>
-        {!isMemoVisible && (
-          <TempAnchorEl
+        />
+
+        {federationAddressFetchStatus && (
+          <El>
+            {federationAddressFetchStatus === ActionStatus.PENDING && (
+              <El>Loading federation address…</El>
+            )}
+            {federationAddressFetchStatus === ActionStatus.SUCCESS && (
+              <>
+                <El>Federation Address: {formData.toAccountId}</El>
+                <El>Resolves to: {formData.federationAddress}</El>
+              </>
+            )}
+            {federationAddressFetchStatus === ActionStatus.ERROR && (
+              <El>Federation Address not found</El>
+            )}
+          </El>
+        )}
+      </RowEl>
+
+      <RowEl>
+        <CellEl>
+          <Input
+            id="send-amount"
+            label="Amount"
+            rightElement="lumens"
+            type="number"
+            onChange={(e) => {
+              onInput({
+                ...formData,
+                amount: new BigNumber(e.target.value || 0),
+              });
+            }}
+            value={formData.amount.toString()}
+            placeholder="0"
+          />
+        </CellEl>
+      </RowEl>
+
+      {!isMemoVisible && (
+        <RowEl>
+          <TextButton
+            variant={TextButtonVariant.secondary}
             onClick={() => {
               onInput({ ...formData, memoType: StellarSdk.MemoText });
               setIsMemoVisible(true);
             }}
           >
             Add memo
-          </TempAnchorEl>
-        )}
-      </El>
+          </TextButton>
+        </RowEl>
+      )}
+
       {isMemoVisible && (
         <>
-          <El>
-            Memo Type:
-            <TempSelectInputEl
-              onChange={(e) => {
-                onInput({
-                  ...formData,
-                  memoType: e.target.value as MemoType,
-                });
-              }}
-              value={formData.memoType}
-              disabled={isMemoTypeFromFederation}
-            >
-              <option value={StellarSdk.MemoText}>MEMO_TEXT</option>
-              <option value={StellarSdk.MemoID}>MEMO_ID</option>
-              <option value={StellarSdk.MemoHash}>MEMO_HASH</option>
-              <option value={StellarSdk.MemoReturn}>MEMO_RETURN</option>
-            </TempSelectInputEl>
-          </El>
-          <El>
-            Memo Content:{" "}
-            <TempInputEl
-              type="text"
-              placeholder={
-                memoPlaceholderMap[formData.memoType || StellarSdk.MemoNone]
-              }
-              onChange={(e) => {
-                onInput({
-                  ...formData,
-                  memoContent: e.target.value,
-                });
-              }}
-              value={formData.memoContent as string}
-              disabled={isMemoContentFromFederation}
-            ></TempInputEl>
-            {(isMemoContentFromFederation || isMemoTypeFromFederation) && (
+          <RowEl>
+            <CellEl>
+              Memo Type:
+              <TempSelectInputEl
+                onChange={(e) => {
+                  onInput({
+                    ...formData,
+                    memoType: e.target.value as MemoType,
+                  });
+                }}
+                value={formData.memoType}
+                disabled={isMemoTypeFromFederation}
+              >
+                <option value={StellarSdk.MemoText}>MEMO_TEXT</option>
+                <option value={StellarSdk.MemoID}>MEMO_ID</option>
+                <option value={StellarSdk.MemoHash}>MEMO_HASH</option>
+                <option value={StellarSdk.MemoReturn}>MEMO_RETURN</option>
+              </TempSelectInputEl>
+            </CellEl>
+
+            <CellEl>
+              <Input
+                id="send-memo-conent"
+                label="Memo content"
+                type="text"
+                placeholder={
+                  memoPlaceholderMap[formData.memoType || StellarSdk.MemoNone]
+                }
+                onChange={(e) => {
+                  onInput({
+                    ...formData,
+                    memoContent: e.target.value,
+                  });
+                }}
+                value={formData.memoContent as string}
+                disabled={isMemoContentFromFederation}
+              />
+            </CellEl>
+          </RowEl>
+
+          {(isMemoContentFromFederation || isMemoTypeFromFederation) && (
+            <RowEl>
               <El>Memo information is provided by the federation address</El>
-            )}
-          </El>
-          <El>
-            {!isMemoContentFromFederation && (
-              <TempAnchorEl
+            </RowEl>
+          )}
+
+          {!isMemoContentFromFederation && (
+            <RowEl>
+              <TextButton
+                variant={TextButtonVariant.secondary}
                 onClick={() => {
                   onInput({
                     ...formData,
@@ -256,26 +288,34 @@ export const CreateTransaction = ({
                   setIsMemoVisible(false);
                 }}
               >
-                Remove memo:
-              </TempAnchorEl>
-            )}
-          </El>
+                Remove memo
+              </TextButton>
+            </RowEl>
+          )}
         </>
       )}
-      <El>
-        Fee (lumens) :{" "}
-        <TempInputEl
-          type="number"
-          value={maxFee}
-          onChange={(e) => {
-            setMaxFee(e.target.value);
-          }}
-        ></TempInputEl>
-      </El>
-      <El>
-        <b>{networkCongestion} congestion!</b> Recommended fee: {recommendedFee}
-      </El>
-      <button onClick={onContinue}>Continue</button>
-    </El>
+
+      <RowEl>
+        <CellEl>
+          <Input
+            id="send-fee"
+            label="Fee"
+            rightElement="lumens"
+            type="number"
+            value={maxFee}
+            onChange={(e) => {
+              setMaxFee(e.target.value);
+            }}
+          />
+        </CellEl>
+      </RowEl>
+
+      <RowEl>
+        <p>
+          <strong>{networkCongestion} congestion!</strong> Recommended fee:{" "}
+          {recommendedFee}.
+        </p>
+      </RowEl>
+    </ModalContent>
   );
 };

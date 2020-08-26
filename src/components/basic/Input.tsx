@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { FONT_WEIGHT, PALETTE } from "constants/styles";
 
 const WrapperEl = styled.div`
-  width: inherit;
+  width: 100%;
 `;
 
 const LabelEl = styled.label`
