@@ -18,9 +18,14 @@ const ButtonsWrapperEl = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  flex-wrap: wrap;
   width: 100%;
-  margin-top: 1.5rem;
   margin-bottom: 1rem;
+  margin-top: 0.75rem;
+
+  button {
+    margin-top: 0.75rem;
+  }
 
   button:nth-child(2) {
     margin-left: 0.5rem;

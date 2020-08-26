@@ -65,6 +65,14 @@ const Styles = createGlobalStyle`
   strong {
     font-weight: ${FONT_WEIGHT.medium};
   }
+  p {
+    line-height: 1.5rem;
+    margin: 0;
+
+    &:not(:last-child) {
+      margin-bottom: 1.5rem;
+    }
+  }
 `;
 
 const fontStyles = FONTS.map(
