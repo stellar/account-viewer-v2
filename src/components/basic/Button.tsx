@@ -1,8 +1,13 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { PALETTE, FONT_WEIGHT } from "constants/styles";
 
-const ButtonEl = styled.button`
+export enum ButtonVariant {
+  primary = "primary",
+  secondary = "secondary",
+}
+
+const ButtonEl = styled.button<{ variant: ButtonVariant }>`
   font-size: 1rem;
   line-height: 1.75rem;
   padding: 0.6rem 1.5rem 0.36rem;
@@ -12,11 +17,20 @@ const ButtonEl = styled.button`
   border: none;
   border-radius: 0.125rem;
   box-shadow: 0 0.5rem 1rem -0.5rem rgba(0, 0, 0, 0.48);
+  border: 1px solid ${PALETTE.purple};
   cursor: pointer;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
+
+  ${(props) =>
+    props.variant === ButtonVariant.secondary &&
+    css`
+      color: ${PALETTE.purple};
+      background-color: ${PALETTE.white};
+      box-shadow: none;
+    `};
 
   &:disabled {
     cursor: not-allowed;
@@ -43,12 +57,18 @@ const IconWrapperEl = styled.span`
 `;
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children: string;
   icon?: React.ReactNode;
+  variant?: ButtonVariant;
+  children: string;
 }
 
-export const Button: React.FC<ButtonProps> = ({ icon, children, ...props }) => (
-  <ButtonEl {...props}>
+export const Button: React.FC<ButtonProps> = ({
+  icon,
+  variant = ButtonVariant.primary,
+  children,
+  ...props
+}) => (
+  <ButtonEl variant={variant} {...props}>
     {icon && <IconWrapperEl>{icon}</IconWrapperEl>}
     {children}
   </ButtonEl>
