@@ -3,12 +3,13 @@ import styled from "styled-components";
 import { Keypair } from "stellar-sdk";
 import CopyToClipboard from "react-copy-to-clipboard";
 
-import { ReactComponent as IconCopy } from "assets/icons/icon-copy.svg";
+import { ReactComponent as IconCopy } from "assets/svg/icon-copy.svg";
 
 import { Button, ButtonVariant } from "components/basic/Button";
+import { TextButton } from "components/basic/TextButton";
 import { Checkbox } from "components/basic/Checkbox";
 import { Heading4 } from "components/basic/Heading";
-import { WarningBlock } from "components/basic/WarningBlock";
+import { InfoBlock, InfoBlockVariant } from "components/basic/InfoBlock";
 import { ErrorMessage } from "components/ErrorMessage";
 import { ModalContent } from "components/ModalContent";
 
@@ -47,20 +48,9 @@ const KeyValueEl = styled.div`
 `;
 
 const CopyButtonEl = styled.div`
+  min-width: 130px;
   display: flex;
-  align-items: center;
   justify-content: flex-end;
-  min-width: 120px;
-  cursor: pointer;
-  height: 2rem;
-
-  svg {
-    fill: ${PALETTE.purple};
-    height: 1.25rem;
-    width: 1.25rem;
-    margin-right: 0.75rem;
-    margin-top: -0.25rem;
-  }
 `;
 
 const ConfirmWrapperEl = styled.div`
@@ -145,7 +135,7 @@ ${keypair.secret()}`);
             </>
           }
         >
-          <WarningBlock>
+          <InfoBlock variant={InfoBlockVariant.warning}>
             <Heading4>
               ATTENTION: Copying and pasting your secret key is not recommended
             </Heading4>
@@ -163,7 +153,7 @@ ${keypair.secret()}`);
               </li>
               <li>...</li>
             </ul>
-          </WarningBlock>
+          </InfoBlock>
         </ModalContent>
       )}
 
@@ -177,7 +167,7 @@ ${keypair.secret()}`);
             </Button>
           }
         >
-          <WarningBlock>
+          <InfoBlock variant={InfoBlockVariant.warning}>
             <Heading4>ATTENTION:</Heading4>
 
             <ul>
@@ -200,7 +190,7 @@ ${keypair.secret()}`);
                 </strong>
               </li>
             </ul>
-          </WarningBlock>
+          </InfoBlock>
 
           {newKeyPair && (
             <KeyPairWrapperEl>
@@ -218,8 +208,9 @@ ${keypair.secret()}`);
 
               <CopyToClipboard text={keyPairCopyString} onCopy={handleCopyKeys}>
                 <CopyButtonEl>
-                  <IconCopy />
-                  {isKeyPairCopied ? "Copied keys" : "Copy keys"}
+                  <TextButton icon={<IconCopy />}>
+                    {isKeyPairCopied ? "Copied keys" : "Copy keys"}
+                  </TextButton>
                 </CopyButtonEl>
               </CopyToClipboard>
             </KeyPairWrapperEl>
@@ -234,7 +225,7 @@ ${keypair.secret()}`);
             />
           </ConfirmWrapperEl>
 
-          <ErrorMessage message={errorMessage} />
+          <ErrorMessage message={errorMessage} marginTop="1.5rem" />
         </ModalContent>
       )}
     </>

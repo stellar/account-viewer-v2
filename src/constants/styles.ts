@@ -25,6 +25,8 @@ export enum PALETTE {
   white40 = "#E5E5E5",
   purple = "#3E1BDB",
   charcoal = "#292D3E",
+  // TODO: get color from design
+  red = "#CC0000",
   lightRed = "#FFEDEE",
 }
 

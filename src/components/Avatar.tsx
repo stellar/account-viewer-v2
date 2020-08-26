@@ -9,7 +9,6 @@ const AvatarWrapperEl = styled.div`
   background-color: ${PALETTE.white80};
   border: 1px solid ${PALETTE.white60};
   border-radius: 1.5rem;
-  margin-top: 0.25rem;
   display: flex;
   align-items: center;
   justify-content: center;

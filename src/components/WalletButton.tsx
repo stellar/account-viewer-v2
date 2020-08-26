@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { PALETTE, tooltipStyle } from "constants/styles";
-import { ReactComponent as InfoIcon } from "assets/icons/icon-info.svg";
+import { ReactComponent as InfoIcon } from "assets/svg/icon-info.svg";
 
 const WrapperEl = styled.div`
   display: flex;

@@ -1,7 +1,7 @@
 import React, { InputHTMLAttributes } from "react";
 import styled from "styled-components";
 import { PALETTE } from "constants/styles";
-import { ReactComponent as IconCheckmark } from "assets/icons/icon-checkmark.svg";
+import { ReactComponent as IconCheckmark } from "assets/svg/icon-checkmark.svg";
 
 const WrapperEl = styled.div`
   display: flex;
