@@ -47,7 +47,9 @@ const initialState: SendTxInitialState = {
 const sendTxSlice = createSlice({
   name: "sendTx",
   initialState,
-  reducers: {},
+  reducers: {
+    resetSendTxAction: () => initialState,
+  },
   extraReducers: (builder) => {
     builder.addCase(sendTxAction.pending, (state) => {
       state.status = ActionStatus.PENDING;
@@ -65,3 +67,4 @@ const sendTxSlice = createSlice({
 });
 
 export const { reducer } = sendTxSlice;
+export const { resetSendTxAction } = sendTxSlice.actions;

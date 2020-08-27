@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { FONT_WEIGHT, PALETTE } from "constants/styles";
 
 const WrapperEl = styled.div`
-  width: inherit;
+  width: 100%;
 `;
 
 const LabelEl = styled.label`
@@ -50,18 +50,33 @@ const RightTextEl = styled.div`
   color: ${PALETTE.black};
 `;
 
+const NoteEl = styled.div`
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  line-height: 1.4rem;
+  color: ${PALETTE.black60};
+`;
+
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   id: string;
   label?: string;
   rightElement?: string;
+  note?: React.ReactNode;
 }
 
-export const Input = ({ id, label, rightElement, ...props }: InputProps) => (
+export const Input = ({
+  id,
+  label,
+  rightElement,
+  note,
+  ...props
+}: InputProps) => (
   <WrapperEl>
     {label && <LabelEl htmlFor={id}>{label}</LabelEl>}
     <InputWrapperEl>
       <InputEl id={id} {...props} />
       {rightElement && <RightTextEl>{rightElement}</RightTextEl>}
     </InputWrapperEl>
+    {note && <NoteEl>{note}</NoteEl>}
   </WrapperEl>
 );

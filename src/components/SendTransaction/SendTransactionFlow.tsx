@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import StellarSdk, { MemoType, MemoValue } from "stellar-sdk";
-import styled from "styled-components";
 import BigNumber from "bignumber.js";
 
 import { lumensFromStroops } from "helpers/stroopConversion";
@@ -8,8 +7,6 @@ import { CreateTransaction } from "./CreateTransaction";
 import { ConfirmTransaction } from "./ConfirmTransaction";
 import { SuccessfulTransaction } from "./SuccessfulTransaction";
 import { FailedTransaction } from "./FailedTransaction";
-
-const El = styled.div``;
 
 // CREATE -> CONFIRM -> SUCCESS || ERROR
 enum SendState {
@@ -35,7 +32,7 @@ const initialFormData: FormData = {
   memoContent: "",
 };
 
-export const SendTransactionFlow = () => {
+export const SendTransactionFlow = ({ onCancel }: { onCancel: () => void }) => {
   const [currentStage, setCurrentStage] = useState(SendState.CREATE);
   const [formData, setFormData] = useState(initialFormData);
   const [maxFee, setMaxFee] = useState(
@@ -44,58 +41,49 @@ export const SendTransactionFlow = () => {
 
   return (
     <>
-      <div>
-        {currentStage === SendState.CREATE && (
-          <div>
-            <CreateTransaction
-              onContinue={() => {
-                setCurrentStage(currentStage + 1);
-              }}
-              onInput={setFormData}
-              formData={formData}
-              setMaxFee={setMaxFee}
-              maxFee={maxFee}
-            />
-          </div>
-        )}
-      </div>
-      <div>
-        {currentStage === SendState.CONFIRM && (
-          <El>
-            <ConfirmTransaction
-              onSuccessfulTx={() => {
-                setCurrentStage(SendState.SUCCESS);
-              }}
-              onFailedTx={() => {
-                setCurrentStage(SendState.ERROR);
-              }}
-              formData={formData}
-              maxFee={maxFee}
-            />
-          </El>
-        )}
-      </div>
-      <div>
-        {currentStage === SendState.SUCCESS && (
-          <El>
-            <SuccessfulTransaction
-              onRestartFlow={() => {
-                setFormData(initialFormData);
-                setCurrentStage(SendState.CREATE);
-              }}
-            />
-          </El>
-        )}
-      </div>
-      <div>
-        {currentStage === SendState.ERROR && (
-          <El>
-            <FailedTransaction
-              onEditTransaction={() => setCurrentStage(SendState.CREATE)}
-            />
-          </El>
-        )}
-      </div>
+      {currentStage === SendState.CREATE && (
+        <CreateTransaction
+          onContinue={() => {
+            setCurrentStage(currentStage + 1);
+          }}
+          onInput={setFormData}
+          onCancel={onCancel}
+          formData={formData}
+          setMaxFee={setMaxFee}
+          maxFee={maxFee}
+        />
+      )}
+
+      {currentStage === SendState.CONFIRM && (
+        <ConfirmTransaction
+          onSuccessfulTx={() => {
+            setCurrentStage(SendState.SUCCESS);
+          }}
+          onFailedTx={() => {
+            setCurrentStage(SendState.ERROR);
+          }}
+          onCancel={onCancel}
+          formData={formData}
+          maxFee={maxFee}
+        />
+      )}
+
+      {currentStage === SendState.SUCCESS && (
+        <SuccessfulTransaction
+          onRestartFlow={() => {
+            setFormData(initialFormData);
+            setCurrentStage(SendState.CREATE);
+          }}
+          onCancel={onCancel}
+        />
+      )}
+
+      {currentStage === SendState.ERROR && (
+        <FailedTransaction
+          onEditTransaction={() => setCurrentStage(SendState.CREATE)}
+          onCancel={onCancel}
+        />
+      )}
     </>
   );
 };

@@ -10,7 +10,7 @@ import {
   Z_INDEXES,
 } from "constants/styles";
 
-const MODAL_MAX_WIDTH = "624px";
+const MODAL_MAX_WIDTH = "650px";
 const MIN_SCREEN_HEIGHT = "700px";
 
 const ModalEl = styled.div`
