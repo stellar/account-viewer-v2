@@ -3,7 +3,7 @@ import styled from "styled-components";
 import CopyToClipboard from "react-copy-to-clipboard";
 import QRCode from "qrcode.react";
 
-import { ReactComponent as IconCopy } from "assets/icons/icon-copy.svg";
+import { ReactComponent as IconCopy } from "assets/svg/icon-copy.svg";
 
 import { Avatar } from "components/Avatar";
 import { TextButton } from "components/basic/TextButton";

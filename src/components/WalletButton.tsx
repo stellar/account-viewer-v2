@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import styled from "styled-components";
-import { PALETTE, tooltipStyle } from "constants/styles";
-import { ReactComponent as InfoIcon } from "assets/svg/icon-info.svg";
+import { InfoButtonWithTooltip } from "components/InfoButtonWithTooltip";
+import { PALETTE } from "constants/styles";
 
 const WrapperEl = styled.div`
   display: flex;
@@ -36,24 +36,6 @@ const LabelEl = styled.span`
   padding-top: 0.1875rem;
 `;
 
-const InfoButtonEl = styled.div`
-  cursor: pointer;
-  width: 1.25rem;
-  height: 1.25rem;
-  margin-left: 0.875rem;
-
-  svg {
-    width: 100%;
-    height: 100%;
-    fill: ${PALETTE.grey};
-  }
-`;
-
-const InfoEl = styled.div<{ isVisible: boolean }>`
-  ${tooltipStyle};
-  visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
-`;
-
 interface WalletButtonProps {
   imageSrc: string;
   imageAlt: string;
@@ -69,54 +51,13 @@ export const WalletButton: React.FC<WalletButtonProps> = ({
   onClick,
   children,
   ...props
-}) => {
-  const toggleEl = useRef<null | HTMLDivElement>(null);
-  const infoEl = useRef<null | HTMLDivElement>(null);
-  const [isInfoVisible, setIsInfoVisible] = useState(false);
+}) => (
+  <WrapperEl>
+    <ButtonEl onClick={onClick} role="button" {...props}>
+      <img src={imageSrc} alt={imageAlt} />
+      <LabelEl>{children}</LabelEl>
+    </ButtonEl>
 
-  useEffect(() => {
-    if (isInfoVisible) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isInfoVisible]);
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (event.target === infoEl?.current) {
-      return;
-    }
-
-    if (!toggleEl?.current?.contains(event.target as Node)) {
-      setIsInfoVisible(false);
-    }
-  };
-
-  return (
-    <WrapperEl>
-      <ButtonEl onClick={onClick} role="button" {...props}>
-        <img src={imageSrc} alt={imageAlt} />
-        <LabelEl>{children}</LabelEl>
-      </ButtonEl>
-
-      <InfoButtonEl
-        ref={toggleEl}
-        onClick={() => setIsInfoVisible((currentState) => !currentState)}
-      >
-        <InfoIcon />
-      </InfoButtonEl>
-
-      <InfoEl
-        ref={infoEl}
-        data-hidden={!isInfoVisible}
-        isVisible={isInfoVisible}
-      >
-        {infoText}
-      </InfoEl>
-    </WrapperEl>
-  );
-};
+    <InfoButtonWithTooltip>{infoText}</InfoButtonWithTooltip>
+  </WrapperEl>
+);
