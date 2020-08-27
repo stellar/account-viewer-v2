@@ -1,9 +1,14 @@
 import React, { useEffect } from "react";
-import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import TrezorConnect from "trezor-connect";
 import { KeyType } from "@stellar/wallet-sdk";
+
+import logoTrezor from "assets/images/logo-trezor.png";
+import { Button, ButtonVariant } from "components/basic/Button";
+import { InfoBlock } from "components/basic/InfoBlock";
+import { ErrorMessage } from "components/ErrorMessage";
+import { ModalWalletContent } from "components/ModalWalletContent";
 
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storeKeyAction } from "ducks/keyStore";
@@ -15,23 +20,6 @@ import {
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, ModalPageProps } from "types/types.d";
-import { ErrorMessage } from "components/ErrorMessage";
-
-const InfoEl = styled.div`
-  background-color: #dbdbdb;
-  padding: 20px;
-  margin-bottom: 20px;
-`;
-
-const TempButtonEl = styled.button`
-  margin-bottom: 20px;
-`;
-
-const TempLinkButtonEl = styled.div`
-  margin-bottom: 20px;
-  text-decoration: underline;
-  cursor: pointer;
-`;
 
 export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
   const history = useHistory();
@@ -99,23 +87,31 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
   }, [accountStatus, dispatch, history, isAuthenticated, setErrorMessage]);
 
   return (
-    <div>
-      <h1>Sign in with Trezor</h1>
-
-      {!trezorStatus && (
+    <ModalWalletContent
+      headlineText="Sign in with Trezor"
+      imageSrc={logoTrezor}
+      imageAlt="Trezor logo"
+      infoText="TODO"
+      buttonFooter={
         <>
-          <InfoEl>Some instructions</InfoEl>
-          <TempButtonEl onClick={initTrezor}>Sign in with Trezor</TempButtonEl>
+          {!trezorStatus && (
+            <Button onClick={initTrezor}>Sign in with Trezor</Button>
+          )}
+          <Button onClick={onClose} variant={ButtonVariant.secondary}>
+            Cancel
+          </Button>
         </>
-      )}
+      }
+    >
+      {!trezorStatus && <InfoBlock>Some instructions</InfoBlock>}
 
       {trezorStatus === ActionStatus.PENDING && (
-        <InfoEl>Please follow the instructions in the Trezor popup.</InfoEl>
+        <InfoBlock>
+          Please follow the instructions in the Trezor popup.
+        </InfoBlock>
       )}
 
       <ErrorMessage message={errorMessage} />
-
-      <TempLinkButtonEl onClick={onClose}>Cancel</TempLinkButtonEl>
-    </div>
+    </ModalWalletContent>
   );
 };
