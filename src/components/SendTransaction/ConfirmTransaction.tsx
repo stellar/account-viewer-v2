@@ -133,27 +133,29 @@ export const ConfirmTransaction = ({
       }
     >
       <TableEl>
-        <tr>
-          <th>Sending to address</th>
-          <td>
-            <AddressWrapperEl>
-              <Avatar publicAddress={formData.toAccountId} />
-              <span>{formData.toAccountId}</span>
-            </AddressWrapperEl>
-          </td>
-        </tr>
-        <tr>
-          <th>Amount</th>
-          <td>{formData.amount.toString()}</td>
-        </tr>
-        <tr>
-          <th>Memo</th>
-          <td>{formData.memoContent}</td>
-        </tr>
-        <tr>
-          <th>Fee</th>
-          <td>{maxFee}</td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Sending to address</th>
+            <td>
+              <AddressWrapperEl>
+                <Avatar publicAddress={formData.toAccountId} />
+                <span>{formData.toAccountId}</span>
+              </AddressWrapperEl>
+            </td>
+          </tr>
+          <tr>
+            <th>Amount</th>
+            <td>{formData.amount.toString()}</td>
+          </tr>
+          <tr>
+            <th>Memo</th>
+            <td>{formData.memoContent}</td>
+          </tr>
+          <tr>
+            <th>Fee</th>
+            <td>{maxFee}</td>
+          </tr>
+        </tbody>
       </TableEl>
 
       {sendTx.status === ActionStatus.PENDING && (

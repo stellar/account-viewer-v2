@@ -12,6 +12,7 @@ import { ReceiveTransaction } from "components/ReceiveTransaction";
 import { Modal } from "components/Modal";
 import { FONT_WEIGHT, pageInsetStyle, PALETTE } from "constants/styles";
 import { startAccountWatcherAction } from "ducks/account";
+import { resetSendTxAction } from "ducks/sendTx";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus } from "types/types.d";
 
@@ -95,6 +96,7 @@ export const BalanceInfo = () => {
   }
 
   const resetModalStates = () => {
+    dispatch(resetSendTxAction());
     setIsSendTxModalVisible(false);
     setIsReceiveTxModalVisible(false);
   };
