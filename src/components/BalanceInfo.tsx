@@ -126,7 +126,14 @@ export const BalanceInfo = () => {
           visible={isSendTxModalVisible || isReceiveTxModalVisible}
           onClose={resetModalStates}
         >
-          {isSendTxModalVisible && <SendTransactionFlow />}
+          {isSendTxModalVisible && (
+            <SendTransactionFlow
+              onCancel={() => {
+                setIsSendTxModalVisible(true);
+                resetModalStates();
+              }}
+            />
+          )}
           {isReceiveTxModalVisible && <ReceiveTransaction />}
         </Modal>
       </InsetEl>

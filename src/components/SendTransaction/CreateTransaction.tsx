@@ -3,7 +3,7 @@ import styled from "styled-components";
 import StellarSdk, { MemoType, FederationServer } from "stellar-sdk";
 import BigNumber from "bignumber.js";
 
-import { Button } from "components/basic/Button";
+import { Button, ButtonVariant } from "components/basic/Button";
 import { TextButton, TextButtonVariant } from "components/basic/TextButton";
 import { Input } from "components/basic/Input";
 import { InfoBlock, InfoBlockVariant } from "components/basic/InfoBlock";
@@ -41,6 +41,7 @@ interface CreateTransactionProps {
   maxFee: string;
   onContinue: () => void;
   onInput: (formData: FormData) => void;
+  onCancel: () => void;
   setMaxFee: (maxFee: string) => void;
 }
 
@@ -49,6 +50,7 @@ export const CreateTransaction = ({
   maxFee,
   onContinue,
   onInput,
+  onCancel,
   setMaxFee,
 }: CreateTransactionProps) => {
   const { settings } = useRedux(["settings"]);
@@ -154,7 +156,14 @@ export const CreateTransaction = ({
   return (
     <ModalContent
       headlineText="Send Lumens"
-      buttonFooter={<Button onClick={onContinue}>Continue</Button>}
+      buttonFooter={
+        <>
+          <Button onClick={onContinue}>Continue</Button>
+          <Button onClick={onCancel} variant={ButtonVariant.secondary}>
+            Cancel
+          </Button>
+        </>
+      }
     >
       <RowEl>
         <Input

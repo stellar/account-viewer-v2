@@ -1,32 +1,32 @@
 import React from "react";
-import styled from "styled-components";
-
+import { Button, ButtonVariant } from "components/basic/Button";
+import { ModalContent } from "components/ModalContent";
 import { ErrorMessage } from "components/ErrorMessage";
 import { useRedux } from "hooks/useRedux";
 
-const El = styled.div``;
-
-const TempButtonEl = styled.button`
-  margin-bottom: 20px;
-`;
-
 export const FailedTransaction = ({
   onEditTransaction,
+  onCancel,
 }: {
   onEditTransaction: () => void;
+  onCancel: () => void;
 }) => {
   const { sendTx } = useRedux("sendTx");
 
   return (
-    <El>
-      <h1>Transaction Failed</h1>
-      <El>See details below for more information.</El>
-      <ErrorMessage message={sendTx.errorString} />
-      <El>
-        <TempButtonEl onClick={onEditTransaction}>
-          Edit Transaction
-        </TempButtonEl>
-      </El>
-    </El>
+    <ModalContent
+      headlineText="Transaction failed"
+      buttonFooter={
+        <>
+          <Button onClick={onEditTransaction}>Edit Transaction</Button>
+          <Button onClick={onCancel} variant={ButtonVariant.secondary}>
+            Close
+          </Button>
+        </>
+      }
+    >
+      <p>See details below for more information.</p>
+      <ErrorMessage message={`Error: ${sendTx.errorString}`} />
+    </ModalContent>
   );
 };
