@@ -30,7 +30,7 @@ const SelectWrapperEl = styled.div`
 
 const SelectEl = styled.select`
   height: 100%;
-  padding: 0.45rem 0.75rem 0.45rem;
+  padding: 0.45rem 2rem 0.45rem 0.75rem;
   font-size: 1rem;
   line-height: 1.5rem;
   color: ${PALETTE.black};
@@ -52,6 +52,7 @@ const IconWrapperEl = styled.span`
   position: absolute;
   top: 0.6875rem;
   right: 0.6rem;
+  pointer-events: none;
 
   svg {
     width: 0.5rem;

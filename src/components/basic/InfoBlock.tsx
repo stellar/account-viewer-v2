@@ -12,6 +12,7 @@ const InfoEl = styled.div<{ variant: InfoBlockVariant }>`
   border-radius: 0.25rem;
   padding: 1.5rem;
   color: ${PALETTE.black};
+  width: 100%;
 
   ${(props) =>
     props.variant === InfoBlockVariant.warning &&

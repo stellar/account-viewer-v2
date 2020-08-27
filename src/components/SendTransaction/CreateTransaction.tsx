@@ -6,6 +6,8 @@ import BigNumber from "bignumber.js";
 import { Button } from "components/basic/Button";
 import { TextButton, TextButtonVariant } from "components/basic/TextButton";
 import { Input } from "components/basic/Input";
+import { InfoBlock, InfoBlockVariant } from "components/basic/InfoBlock";
+import { Select } from "components/basic/Select";
 import { ModalContent } from "components/ModalContent";
 
 import { getNetworkConfig } from "helpers/getNetworkConfig";
@@ -30,15 +32,6 @@ const CellEl = styled.div`
   @media (min-width: 600px) {
     width: calc(50% - 0.75rem);
   }
-`;
-
-const El = styled.div`
-  margin-bottom: 20px;
-`;
-
-const TempSelectInputEl = styled.select`
-  margin-bottom: 20px;
-  min-width: 300px;
 `;
 
 const isFederationAddress = (value: string) => value.includes("*");
@@ -168,29 +161,46 @@ export const CreateTransaction = ({
           id="send-to"
           label="Sending To"
           type="text"
-          onChange={(e) =>
-            onInput({ ...formData, toAccountId: e.target.value })
-          }
+          onChange={(e) => {
+            if (federationAddressFetchStatus) {
+              setFederationAddressFetchStatus(null);
+            }
+
+            onInput({ ...formData, toAccountId: e.target.value });
+          }}
           onBlur={fetchIfFederationAddress}
           value={formData.toAccountId}
           placeholder="Recipient's public key or federation address"
         />
+      </RowEl>
 
+      <RowEl>
         {federationAddressFetchStatus && (
-          <El>
+          <InfoBlock
+            variant={
+              federationAddressFetchStatus === ActionStatus.ERROR
+                ? InfoBlockVariant.warning
+                : InfoBlockVariant.info
+            }
+          >
             {federationAddressFetchStatus === ActionStatus.PENDING && (
-              <El>Loading federation address…</El>
+              <p>Loading federation address…</p>
             )}
+
             {federationAddressFetchStatus === ActionStatus.SUCCESS && (
               <>
-                <El>Federation Address: {formData.toAccountId}</El>
-                <El>Resolves to: {formData.federationAddress}</El>
+                <p>
+                  Federation Address: {formData.toAccountId}
+                  <br />
+                  Resolves to: {formData.federationAddress}
+                </p>
               </>
             )}
+
             {federationAddressFetchStatus === ActionStatus.ERROR && (
-              <El>Federation Address not found</El>
+              <p>Federation Address not found</p>
             )}
-          </El>
+          </InfoBlock>
         )}
       </RowEl>
 
@@ -231,8 +241,9 @@ export const CreateTransaction = ({
         <>
           <RowEl>
             <CellEl>
-              Memo Type:
-              <TempSelectInputEl
+              <Select
+                id="send-memo-type"
+                label="Memo Type"
                 onChange={(e) => {
                   onInput({
                     ...formData,
@@ -246,7 +257,7 @@ export const CreateTransaction = ({
                 <option value={StellarSdk.MemoID}>MEMO_ID</option>
                 <option value={StellarSdk.MemoHash}>MEMO_HASH</option>
                 <option value={StellarSdk.MemoReturn}>MEMO_RETURN</option>
-              </TempSelectInputEl>
+              </Select>
             </CellEl>
 
             <CellEl>
@@ -271,7 +282,9 @@ export const CreateTransaction = ({
 
           {(isMemoContentFromFederation || isMemoTypeFromFederation) && (
             <RowEl>
-              <El>Memo information is provided by the federation address</El>
+              <InfoBlock>
+                Memo information is provided by the federation address
+              </InfoBlock>
             </RowEl>
           )}
 
@@ -306,15 +319,14 @@ export const CreateTransaction = ({
             onChange={(e) => {
               setMaxFee(e.target.value);
             }}
+            note={
+              <>
+                <strong>{networkCongestion} congestion!</strong> Recommended
+                fee: {recommendedFee}.
+              </>
+            }
           />
         </CellEl>
-      </RowEl>
-
-      <RowEl>
-        <p>
-          <strong>{networkCongestion} congestion!</strong> Recommended fee:{" "}
-          {recommendedFee}.
-        </p>
       </RowEl>
     </ModalContent>
   );
