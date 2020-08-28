@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import TrezorConnect from "trezor-connect";
 import { KeyType } from "@stellar/wallet-sdk";
 
-import logoTrezor from "assets/images/logo-trezor.png";
+import logoTrezor from "assets/svg/logo-trezor.svg";
 import { Button, ButtonVariant } from "components/basic/Button";
 import { InfoBlock } from "components/basic/InfoBlock";
 import { ErrorMessage } from "components/ErrorMessage";

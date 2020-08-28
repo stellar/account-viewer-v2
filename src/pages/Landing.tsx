@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-import logoAlbedo from "assets/images/logo-albedo.png";
-import logoLedger from "assets/images/logo-ledger.png";
+// TODO: update Lyra logo once we have it.
 import logoLyra from "assets/images/logo-lyra.png";
-import logoTrezor from "assets/images/logo-trezor.png";
+import logoAlbedo from "assets/svg/logo-albedo.svg";
+import logoLedger from "assets/svg/logo-ledger.svg";
+import logoTrezor from "assets/svg/logo-trezor.svg";
 
 import { Button } from "components/basic/Button";
 import { Heading1, Heading5 } from "components/basic/Heading";

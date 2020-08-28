@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { KeyType } from "@stellar/wallet-sdk";
 
-import logoAlbedo from "assets/images/logo-albedo.png";
+import logoAlbedo from "assets/svg/logo-albedo.svg";
 import { Button, ButtonVariant } from "components/basic/Button";
 import { InfoBlock } from "components/basic/InfoBlock";
 import { ModalWalletContent } from "components/ModalWalletContent";

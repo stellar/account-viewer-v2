@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { KeyType } from "@stellar/wallet-sdk";
 
-import logoLedger from "assets/images/logo-ledger.png";
+import logoLedger from "assets/svg/logo-ledger.svg";
 import { Button, ButtonVariant } from "components/basic/Button";
 import { Checkbox } from "components/basic/Checkbox";
 import { InfoBlock } from "components/basic/InfoBlock";
