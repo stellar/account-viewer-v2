@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { KeyType } from "@stellar/wallet-sdk";
 
+// TODO: update Lyra logo once we have it.
 import logoLyra from "assets/images/logo-lyra.png";
 import { Button, ButtonVariant } from "components/basic/Button";
 import { InfoBlock } from "components/basic/InfoBlock";
