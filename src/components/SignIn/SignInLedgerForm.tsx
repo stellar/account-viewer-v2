@@ -4,9 +4,15 @@ import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { KeyType } from "@stellar/wallet-sdk";
 
+import logoLedger from "assets/images/logo-ledger.png";
+import { Button, ButtonVariant } from "components/basic/Button";
+import { Checkbox } from "components/basic/Checkbox";
+import { InfoBlock } from "components/basic/InfoBlock";
+import { Input } from "components/basic/Input";
 import { ErrorMessage } from "components/ErrorMessage";
+import { ModalWalletContent } from "components/ModalWalletContent";
+
 import { defaultStellarBipPath } from "constants/settings";
-import { ActionStatus, AuthType } from "types/types.d";
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storeKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
@@ -16,27 +22,39 @@ import {
 } from "ducks/wallet/ledger";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
+import { ActionStatus, AuthType, ModalPageProps } from "types/types.d";
+
+const AccountWrapperEl = styled.div`
+  margin-top: 1.5rem;
+
+  & > div:nth-child(2) {
+    margin-top: 1.5rem;
+  }
+`;
 
 // Note: need to be on https to test Ledger
 
-const TempCheckboxEl = styled.input`
-  margin-bottom: 20px;
-`;
-
-const TempInputEl = styled.input`
-  margin-bottom: 20px;
-  min-width: 300px;
-`;
-
-export const SignInLedgerForm = () => {
-  const { walletLedger, account } = useRedux(["walletLedger", "account"]);
+export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
+
+  const { walletLedger, account } = useRedux(["walletLedger", "account"]);
+  const {
+    data: ledgerData,
+    status: ledgerStatus,
+    errorString: ledgerErrorMessage,
+  } = walletLedger;
+  const {
+    status: accountStatus,
+    isAuthenticated,
+    errorString: accountErrorMessage,
+  } = account;
+
   const [isUsingDefaultAccount, setIsUsingDefaultAccount] = useState(true);
   const [ledgerBipPath, setLedgerBipPath] = useState(defaultStellarBipPath);
 
   const { errorMessage, setErrorMessage } = useErrorMessage({
-    initialMessage: "",
+    initialMessage: ledgerErrorMessage || accountErrorMessage,
     onUnmount: () => {
       dispatch(resetLedgerAction());
       dispatch(resetAccountAction());
@@ -45,32 +63,32 @@ export const SignInLedgerForm = () => {
 
   useEffect(() => {
     if (
-      walletLedger.status === ActionStatus.ERROR ||
-      account.status === ActionStatus.ERROR
+      ledgerStatus === ActionStatus.ERROR ||
+      accountStatus === ActionStatus.ERROR
     ) {
       setErrorMessage("Connection failed");
     }
-  }, [walletLedger, account, setErrorMessage]);
+  }, [ledgerStatus, accountStatus, setErrorMessage]);
 
   useEffect(() => {
-    if (walletLedger.status === ActionStatus.SUCCESS) {
-      dispatch(fetchAccountAction(walletLedger.data.publicKey));
+    if (ledgerStatus === ActionStatus.SUCCESS) {
+      dispatch(fetchAccountAction(ledgerData.publicKey));
     }
-  }, [dispatch, walletLedger]);
+  }, [ledgerStatus, ledgerData, dispatch]);
 
   useEffect(() => {
-    if (account.isAuthenticated) {
+    if (isAuthenticated) {
       history.push("/dashboard");
       dispatch(updateSettingsAction({ authType: AuthType.LEDGER }));
       dispatch(
         storeKeyAction({
-          publicKey: walletLedger.data.publicKey,
+          publicKey: ledgerData.publicKey,
           keyType: KeyType.ledger,
           path: ledgerBipPath,
         }),
       );
     }
-  }, [dispatch, account, history, walletLedger, ledgerBipPath]);
+  }, [isAuthenticated, ledgerData, ledgerBipPath, dispatch, history]);
 
   const handleLedgerSignIn = () => {
     setErrorMessage("");
@@ -78,42 +96,57 @@ export const SignInLedgerForm = () => {
   };
 
   return (
-    <div>
-      <h2>Connect with Ledger</h2>
-      <div>
-        {(walletLedger.status === ActionStatus.PENDING ||
-          walletLedger.status === ActionStatus.SUCCESS) && (
-          <div>
-            <p>Scanning for Ledger Wallet connection …</p>
-            <p>More instructions about connection to the wallet</p>
-          </div>
+    <ModalWalletContent
+      headlineText="Connect with Ledger"
+      imageSrc={logoLedger}
+      imageAlt="Ledger logo"
+      // TODO: add text
+      infoText="TODO"
+      buttonFooter={
+        <>
+          <Button onClick={handleLedgerSignIn}>Sign in with Ledger</Button>
+          <Button onClick={onClose} variant={ButtonVariant.secondary}>
+            Cancel
+          </Button>
+        </>
+      }
+    >
+      {!ledgerStatus && <InfoBlock>Some instructions</InfoBlock>}
+
+      {(ledgerStatus === ActionStatus.PENDING ||
+        ledgerStatus === ActionStatus.SUCCESS) && (
+        <InfoBlock>
+          <p>Scanning for Ledger Wallet connection…</p>
+          <p>More instructions about connection to the wallet</p>
+        </InfoBlock>
+      )}
+      {ledgerStatus === ActionStatus.SUCCESS &&
+        accountStatus === ActionStatus.SUCCESS && (
+          <InfoBlock>
+            <p>Ledger wallet connected</p>
+          </InfoBlock>
         )}
-        {walletLedger.status === ActionStatus.SUCCESS &&
-          account.status === ActionStatus.SUCCESS && (
-            <div>
-              <p>Ledger wallet connected</p>
-            </div>
-          )}
-        <ErrorMessage message={errorMessage} />
-      </div>
-      <div>
-        <TempCheckboxEl
-          type="checkbox"
+
+      <ErrorMessage message={errorMessage} />
+
+      {/* TODO: check with design */}
+      <AccountWrapperEl>
+        <Checkbox
+          id="ledger-default-account"
+          label="Use default account"
           checked={isUsingDefaultAccount}
           onChange={() => setIsUsingDefaultAccount(!isUsingDefaultAccount)}
-        />{" "}
-        {isUsingDefaultAccount ? (
-          "Use default account"
-        ) : (
-          <TempInputEl
+        />
+
+        {!isUsingDefaultAccount && (
+          <Input
+            id="ledger-account"
+            label="Enter BIP path"
             value={ledgerBipPath}
             onChange={(e) => setLedgerBipPath(e.target.value)}
           />
         )}
-      </div>
-      <div>
-        <button onClick={handleLedgerSignIn}>Sign in with Ledger</button>
-      </div>
-    </div>
+      </AccountWrapperEl>
+    </ModalWalletContent>
   );
 };
