@@ -86,7 +86,7 @@ export const Landing = () => {
       case ModalType.SIGNIN_TREZOR:
         return <SignInTrezorForm onClose={closeModal} />;
       case ModalType.SIGNIN_LEDGER:
-        return <SignInLedgerForm />;
+        return <SignInLedgerForm onClose={closeModal} />;
       case ModalType.SIGNIN_LYRA:
         return <SignInLyraForm onClose={closeModal} />;
       case ModalType.SIGNIN_ALBEDO:
