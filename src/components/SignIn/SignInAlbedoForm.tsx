@@ -1,8 +1,13 @@
 import React, { useEffect } from "react";
-import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { KeyType } from "@stellar/wallet-sdk";
+
+import logoAlbedo from "assets/images/logo-albedo.png";
+import { Button, ButtonVariant } from "components/basic/Button";
+import { InfoBlock } from "components/basic/InfoBlock";
+import { ModalWalletContent } from "components/ModalWalletContent";
+import { ErrorMessage } from "components/ErrorMessage";
 
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storeKeyAction } from "ducks/keyStore";
@@ -14,23 +19,6 @@ import {
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, ModalPageProps } from "types/types.d";
-import { ErrorMessage } from "components/ErrorMessage";
-
-const InfoEl = styled.div`
-  background-color: #dbdbdb;
-  padding: 20px;
-  margin-bottom: 20px;
-`;
-
-const TempButtonEl = styled.button`
-  margin-bottom: 20px;
-`;
-
-const TempLinkButtonEl = styled.div`
-  margin-bottom: 20px;
-  text-decoration: underline;
-  cursor: pointer;
-`;
 
 export const SignInAlbedoForm = ({ onClose }: ModalPageProps) => {
   const history = useHistory();
@@ -89,25 +77,33 @@ export const SignInAlbedoForm = ({ onClose }: ModalPageProps) => {
   }, [accountStatus, dispatch, history, isAuthenticated, setErrorMessage]);
 
   return (
-    <div>
-      <h1>Sign in with Albedo</h1>
-
-      {!albedoStatus && (
+    <ModalWalletContent
+      headlineText="Sign in with Albedo"
+      imageSrc={logoAlbedo}
+      imageAlt="Albedo logo"
+      // TODO: add text
+      infoText="TODO"
+      buttonFooter={
         <>
-          <InfoEl>Some instructions</InfoEl>
-          <TempButtonEl onClick={fetchAlbedoLogin}>
-            Sign in with Albedo
-          </TempButtonEl>
+          {!albedoStatus && (
+            <Button onClick={fetchAlbedoLogin}>Sign in with Albedo</Button>
+          )}
+          <Button onClick={onClose} variant={ButtonVariant.secondary}>
+            Cancel
+          </Button>
         </>
-      )}
+      }
+    >
+      {/* TODO: add instructions */}
+      {!albedoStatus && <InfoBlock>Some instructions</InfoBlock>}
 
       {albedoStatus === ActionStatus.PENDING && (
-        <InfoEl>Please follow the instructions in the Albedo popup.</InfoEl>
+        <InfoBlock>
+          Please follow the instructions in the Albedo popup.
+        </InfoBlock>
       )}
 
       <ErrorMessage message={errorMessage} />
-
-      <TempLinkButtonEl onClick={onClose}>Cancel</TempLinkButtonEl>
-    </div>
+    </ModalWalletContent>
   );
 };
