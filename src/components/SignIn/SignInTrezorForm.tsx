@@ -91,6 +91,7 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
       headlineText="Sign in with Trezor"
       imageSrc={logoTrezor}
       imageAlt="Trezor logo"
+      // TODO: add text
       infoText="TODO"
       buttonFooter={
         <>
@@ -106,6 +107,7 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
       {!trezorStatus && <InfoBlock>Some instructions</InfoBlock>}
 
       {trezorStatus === ActionStatus.PENDING && (
+        // TODO: add instructions
         <InfoBlock>
           Please follow the instructions in the Trezor popup.
         </InfoBlock>
