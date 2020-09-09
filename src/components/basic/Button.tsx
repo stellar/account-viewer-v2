@@ -10,7 +10,7 @@ export enum ButtonVariant {
 const ButtonEl = styled.button<{ variant: ButtonVariant }>`
   font-size: 1rem;
   line-height: 1.75rem;
-  padding: 0.6rem 1.5rem 0.36rem;
+  padding: 0.5rem 1.5rem;
   font-weight: ${FONT_WEIGHT.medium};
   color: ${PALETTE.white};
   background-color: ${PALETTE.purple};
