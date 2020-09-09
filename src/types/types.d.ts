@@ -44,3 +44,12 @@ export interface ThemeProps {
 export interface Theme {
   [themeName: string]: ThemeProps;
 }
+
+export enum ModalType {
+  SIGNIN_SECRET_KEY = "SIGNIN_SECRET_KEY",
+  SIGNIN_TREZOR = "SIGNIN_TREZOR",
+  SIGNIN_LEDGER = "SIGNIN_LEDGER",
+  SIGNIN_LYRA = "SIGNIN_LYRA",
+  SIGNIN_ALBEDO = "SIGNIN_ALBEDO",
+  NEW_KEY_PAIR = "NEW_KEY_PAIR",
+}

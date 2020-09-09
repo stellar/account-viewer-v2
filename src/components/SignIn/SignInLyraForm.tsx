@@ -14,10 +14,7 @@ import { ErrorMessage } from "components/ErrorMessage";
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storeKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
-import {
-  fetchLyraStellarAddressAction,
-  resetLyraAction,
-} from "ducks/wallet/lyra";
+import { fetchLyraStellarAddressAction } from "ducks/wallet/lyra";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, ModalPageProps } from "types/types.d";
@@ -41,7 +38,8 @@ export const SignInLyraForm = ({ onClose }: ModalPageProps) => {
   const { errorMessage, setErrorMessage } = useErrorMessage({
     initialMessage: lyraErrorMessage || accountErrorMessage,
     onUnmount: () => {
-      dispatch(resetLyraAction());
+      // Reset account store, if there are errors.
+      // walletLyra store is reset every time modal is closed.
       dispatch(resetAccountAction());
     },
   });

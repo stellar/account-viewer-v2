@@ -16,10 +16,7 @@ import { defaultStellarBipPath } from "constants/settings";
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storeKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
-import {
-  fetchLedgerStellarAddressAction,
-  resetLedgerAction,
-} from "ducks/wallet/ledger";
+import { fetchLedgerStellarAddressAction } from "ducks/wallet/ledger";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, ModalPageProps } from "types/types.d";
@@ -56,7 +53,8 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
   const { errorMessage, setErrorMessage } = useErrorMessage({
     initialMessage: ledgerErrorMessage || accountErrorMessage,
     onUnmount: () => {
-      dispatch(resetLedgerAction());
+      // Reset account store, if there are errors.
+      // walletLedger store is reset every time modal is closed.
       dispatch(resetAccountAction());
     },
   });
