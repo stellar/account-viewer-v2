@@ -2,15 +2,19 @@ import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
+
+import { PALETTE } from "constants/styles";
 import { updateSettingsAction } from "ducks/settings";
 import { useRedux } from "hooks/useRedux";
 
 const BannerEl = styled.div`
   width: 100%;
-  padding: 10px 0;
+  padding: 1rem 0;
   text-align: center;
-  background-color: #c00;
-  color: #fff;
+  background-color: ${PALETTE.red};
+  color: ${PALETTE.white};
+  font-size: 1rem;
+  line-height: 1.5rem;
 `;
 
 export const Network = ({ children }: { children: React.ReactNode }) => {

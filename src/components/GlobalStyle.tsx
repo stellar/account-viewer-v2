@@ -73,6 +73,12 @@ const Styles = createGlobalStyle`
       margin-bottom: 1.5rem;
     }
   }
+  /* page wrapper */
+  div#root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
 `;
 
 const fontStyles = FONTS.map(

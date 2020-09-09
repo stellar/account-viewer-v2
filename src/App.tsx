@@ -18,9 +18,9 @@ import { NotFound } from "pages/NotFound";
 export const App = () => (
   <Provider store={store}>
     <Router>
-      <Network>
-        <Theme>
-          <GlobalStyle />
+      <Theme>
+        <GlobalStyle />
+        <Network>
           <Header />
 
           <PageContent>
@@ -38,8 +38,8 @@ export const App = () => (
           </PageContent>
 
           <Footer />
-        </Theme>
-      </Network>
+        </Network>
+      </Theme>
     </Router>
   </Provider>
 );
