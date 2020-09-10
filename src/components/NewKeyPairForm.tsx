@@ -17,44 +17,65 @@ import { FONT_WEIGHT, PALETTE } from "constants/styles";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { ModalPageProps } from "types/types.d";
 
+const INLINE_LAYOUT_WIDTH = "500px";
+
 const KeyPairWrapperEl = styled.div`
   margin-top: 1.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 `;
 
 const KeysEl = styled.div`
-  margin-right: 1.5rem;
   word-break: break-all;
-  flex: 1;
+  margin-bottom: 2rem;
 `;
 
 const KeyWrapperEl = styled.div`
   &:not(:last-child) {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
   }
 `;
 
 const KeyLabelEl = styled.div`
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  line-height: 1.125rem;
+  font-weight: ${FONT_WEIGHT.medium};
+  color: ${PALETTE.black};
 `;
 
 const KeyValueEl = styled.div`
   font-size: 1rem;
   line-height: 1.5rem;
-  font-weight: ${FONT_WEIGHT.medium};
   color: ${PALETTE.black};
 `;
 
 const CopyButtonEl = styled.div`
   min-width: 130px;
-  display: flex;
-  justify-content: flex-end;
+
+  @media (min-width: ${INLINE_LAYOUT_WIDTH}) {
+    margin-bottom: -1rem;
+  }
 `;
 
-const ConfirmWrapperEl = styled.div`
-  margin-top: 1.5rem;
+const ButtonsWrapperEl = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  button {
+    margin-top: 1.5rem;
+    align-self: flex-end;
+  }
+
+  @media (min-width: ${INLINE_LAYOUT_WIDTH}) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    button {
+      margin-top: 0;
+    }
+  }
 `;
 
 interface KeyPairType {
@@ -162,9 +183,16 @@ ${keypair.secret()}`);
         <ModalContent
           headlineText="New key pair"
           buttonFooter={
-            <Button onClick={handleDone} disabled={!confirmSavedSecretKey}>
-              Close
-            </Button>
+            <ButtonsWrapperEl>
+              <Checkbox
+                id="confirmSavedSecretKey"
+                label="I’ve copied my secret key to a safe place"
+                checked={!!confirmSavedSecretKey}
+                onChange={toggleConfirmSavedSecretKey}
+              />
+
+              <Button onClick={handleDone}>Close</Button>
+            </ButtonsWrapperEl>
           }
         >
           <InfoBlock variant={InfoBlockVariant.warning}>
@@ -215,15 +243,6 @@ ${keypair.secret()}`);
               </CopyToClipboard>
             </KeyPairWrapperEl>
           )}
-
-          <ConfirmWrapperEl>
-            <Checkbox
-              id="confirmSavedSecretKey"
-              label="I’ve copied my secret key to a safe place"
-              checked={!!confirmSavedSecretKey}
-              onChange={toggleConfirmSavedSecretKey}
-            />
-          </ConfirmWrapperEl>
 
           <ErrorMessage message={errorMessage} marginTop="1.5rem" />
         </ModalContent>
