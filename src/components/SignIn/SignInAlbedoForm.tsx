@@ -12,10 +12,7 @@ import { ErrorMessage } from "components/ErrorMessage";
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storeKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
-import {
-  fetchAlbedoStellarAddressAction,
-  resetAlbedoAction,
-} from "ducks/wallet/albedo";
+import { fetchAlbedoStellarAddressAction } from "ducks/wallet/albedo";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, ModalPageProps } from "types/types.d";
@@ -39,7 +36,8 @@ export const SignInAlbedoForm = ({ onClose }: ModalPageProps) => {
   const { errorMessage, setErrorMessage } = useErrorMessage({
     initialMessage: albedoErrorMessage || accountErrorMessage,
     onUnmount: () => {
-      dispatch(resetAlbedoAction());
+      // Reset account store, if there are errors.
+      // walletAlbedo store is reset every time modal is closed.
       dispatch(resetAccountAction());
     },
   });

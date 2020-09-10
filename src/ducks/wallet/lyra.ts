@@ -57,9 +57,12 @@ const walletLyraSlice = createSlice({
     );
 
     builder.addCase(fetchLyraStellarAddressAction.rejected, (state, action) => {
-      state.data = null;
-      state.status = ActionStatus.ERROR;
-      state.errorString = action.payload?.errorString;
+      // Do not update state if user has closed modal and left Lyra open
+      if (state.status) {
+        state.data = null;
+        state.status = ActionStatus.ERROR;
+        state.errorString = action.payload?.errorString;
+      }
     });
   },
 });

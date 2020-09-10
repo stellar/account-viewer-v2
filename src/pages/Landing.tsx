@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
 
 // TODO: update Lyra logo once we have it.
 import logoLyra from "assets/images/logo-lyra.png";
@@ -21,6 +22,11 @@ import { SignInTrezorForm } from "components/SignIn/SignInTrezorForm";
 import { WalletButton } from "components/WalletButton";
 
 import { pageInsetStyle } from "constants/styles";
+import { resetAlbedoAction } from "ducks/wallet/albedo";
+import { resetLedgerAction } from "ducks/wallet/ledger";
+import { resetLyraAction } from "ducks/wallet/lyra";
+import { resetTrezorAction } from "ducks/wallet/trezor";
+import { ModalType } from "types/types.d";
 
 const WrapperEl = styled.div`
   ${pageInsetStyle};
@@ -60,17 +66,28 @@ const ButtonsWrapperEl = styled.div`
   }
 `;
 
-enum ModalType {
-  SIGNIN_SECRET_KEY,
-  SIGNIN_TREZOR,
-  SIGNIN_LEDGER,
-  SIGNIN_LYRA,
-  SIGNIN_ALBEDO,
-  NEW_KEY_PAIR,
-}
-
 export const Landing = () => {
+  const dispatch = useDispatch();
   const [activeModal, setActiveModal] = useState<ModalType | null>(null);
+
+  const resetWalletState = (type: ModalType | null) => {
+    switch (type) {
+      case ModalType.SIGNIN_TREZOR:
+        dispatch(resetTrezorAction());
+        break;
+      case ModalType.SIGNIN_LEDGER:
+        dispatch(resetLedgerAction());
+        break;
+      case ModalType.SIGNIN_LYRA:
+        dispatch(resetLyraAction());
+        break;
+      case ModalType.SIGNIN_ALBEDO:
+        dispatch(resetAlbedoAction());
+        break;
+      default:
+      // Do nothing
+    }
+  };
 
   const openModal = (type: ModalType) => {
     setActiveModal(type);
@@ -78,9 +95,10 @@ export const Landing = () => {
 
   const closeModal = () => {
     setActiveModal(null);
+    resetWalletState(activeModal);
   };
 
-  const renderModal = () => {
+  const renderModalContent = () => {
     switch (activeModal) {
       case ModalType.SIGNIN_SECRET_KEY:
         return <SignInSecretKeyForm onClose={closeModal} />;
@@ -161,7 +179,7 @@ export const Landing = () => {
       </ButtonsWrapperEl>
 
       <Modal visible={activeModal !== null} onClose={closeModal}>
-        {renderModal()}
+        {renderModalContent()}
       </Modal>
     </WrapperEl>
   );

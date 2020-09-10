@@ -53,9 +53,12 @@ const walletLedgerSlice = createSlice({
     builder.addCase(
       fetchLedgerStellarAddressAction.rejected,
       (state, action) => {
-        state.data = null;
-        state.status = ActionStatus.ERROR;
-        state.errorString = action.payload?.errorString;
+        // Do not update state if user has closed modal and left Ledger tab open
+        if (state.status) {
+          state.data = null;
+          state.status = ActionStatus.ERROR;
+          state.errorString = action.payload?.errorString;
+        }
       },
     );
   },

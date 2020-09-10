@@ -13,10 +13,7 @@ import { ModalWalletContent } from "components/ModalWalletContent";
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storeKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
-import {
-  fetchTrezorStellarAddressAction,
-  resetTrezorAction,
-} from "ducks/wallet/trezor";
+import { fetchTrezorStellarAddressAction } from "ducks/wallet/trezor";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, ModalPageProps } from "types/types.d";
@@ -40,7 +37,8 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
   const { errorMessage, setErrorMessage } = useErrorMessage({
     initialMessage: trezorErrorMessage || accountErrorMessage,
     onUnmount: () => {
-      dispatch(resetTrezorAction());
+      // Reset account store, if there are errors.
+      // walletTrezor store is reset every time modal is closed.
       dispatch(resetAccountAction());
     },
   });
