@@ -20,7 +20,7 @@ import { ModalPageProps } from "types/types.d";
 const INLINE_LAYOUT_WIDTH = "500px";
 
 const KeyPairWrapperEl = styled.div`
-  margin-top: 1.5rem;
+  margin-top: 1.875rem;
 `;
 
 const KeysEl = styled.div`
