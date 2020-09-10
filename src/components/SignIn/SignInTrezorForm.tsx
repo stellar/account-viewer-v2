@@ -76,7 +76,10 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
   useEffect(() => {
     if (accountStatus === ActionStatus.SUCCESS) {
       if (isAuthenticated) {
-        history.push("/dashboard");
+        history.push({
+          pathname: "/dashboard",
+          search: history.location.search,
+        });
         dispatch(updateSettingsAction({ authType: AuthType.TREZOR }));
       } else {
         setErrorMessage("Something went wrong, please try again.");

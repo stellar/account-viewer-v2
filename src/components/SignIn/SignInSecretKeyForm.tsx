@@ -53,7 +53,10 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
   useEffect(() => {
     if (status === ActionStatus.SUCCESS) {
       if (isAuthenticated) {
-        history.push("/dashboard");
+        history.push({
+          pathname: "/dashboard",
+          search: history.location.search,
+        });
         dispatch(updateSettingsAction({ authType: AuthType.PRIVATE_KEY }));
         dispatch(
           storeKeyAction({

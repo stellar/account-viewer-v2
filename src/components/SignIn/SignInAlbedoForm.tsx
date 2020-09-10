@@ -66,7 +66,10 @@ export const SignInAlbedoForm = ({ onClose }: ModalPageProps) => {
   useEffect(() => {
     if (accountStatus === ActionStatus.SUCCESS) {
       if (isAuthenticated) {
-        history.push("/dashboard");
+        history.push({
+          pathname: "/dashboard",
+          search: history.location.search,
+        });
         dispatch(updateSettingsAction({ authType: AuthType.ALBEDO }));
       } else {
         setErrorMessage("Something went wrong, please try again.");
