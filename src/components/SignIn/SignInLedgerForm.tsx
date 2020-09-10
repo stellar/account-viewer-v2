@@ -76,7 +76,10 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      history.push("/dashboard");
+      history.push({
+        pathname: "/dashboard",
+        search: history.location.search,
+      });
       dispatch(updateSettingsAction({ authType: AuthType.LEDGER }));
       dispatch(
         storeKeyAction({
