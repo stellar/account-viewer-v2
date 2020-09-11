@@ -381,6 +381,7 @@ export const TransactionHistory = () => {
                         getNetworkConfig(settings.isTestnet).stellarExpertTxUrl
                       }${pt.transactionId}`}
                       target="_blank"
+                      rel="noopener"
                     >
                       {pt.id}
                     </TextLink>
@@ -396,6 +397,7 @@ export const TransactionHistory = () => {
                   getNetworkConfig(settings.isTestnet).stellarExpertAccountUrl
                 }${accountId}`}
                 target="_blank"
+                rel="noopener"
               >
                 View full list of transactions
               </TextLink>

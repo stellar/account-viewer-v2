@@ -39,6 +39,7 @@ export const SuccessfulTransaction = ({
             sendTx.data.id
           }`}
           target="_blank"
+          rel="noopener"
         >
           See details on StellarExpert
         </TextLink>
