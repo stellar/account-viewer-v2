@@ -71,7 +71,7 @@
     "@stellar/tsconfig": "^1.0.2",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.1.2",
+    "@testing-library/user-event": "^12.1.4",
     "@types/jest": "^24.0.0",
     "@types/lodash": "^4.14.157",
     "@types/node": "^12.12.48",
