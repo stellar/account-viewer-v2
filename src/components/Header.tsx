@@ -44,12 +44,14 @@ const AccountWrapperEl = styled(BaseEl)`
   justify-content: center;
   order: 1;
   width: 100%;
+  margin-top: 1.2rem;
 
   @media (${MEDIA_QUERIES.headerFooterHeight}) {
     width: auto;
     order: 0;
     flex: 1;
     justify-content: flex-end;
+    margin-top: 0;
   }
 `;
 
