@@ -130,7 +130,6 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
 
       <ErrorMessage message={errorMessage} />
 
-      {/* TODO: check with design */}
       <AccountWrapperEl>
         <Checkbox
           id="ledger-default-account"

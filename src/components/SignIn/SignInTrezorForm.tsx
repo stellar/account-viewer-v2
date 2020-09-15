@@ -114,7 +114,7 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
         </InfoBlock>
       )}
 
-      <ErrorMessage message={errorMessage} />
+      <ErrorMessage message={errorMessage} textAlign="center" />
     </ModalWalletContent>
   );
 };
