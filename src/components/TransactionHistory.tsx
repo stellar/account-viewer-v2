@@ -103,12 +103,14 @@ const TableEl = styled.table`
     ${LabelStyle};
   }
 
-  thead, tr:not(:last-child) {
+  thead,
+  tr:not(:last-child) {
     border-bottom: 1px solid ${PALETTE.white60};
   }
 
   @media (min-width: ${COLUMN_LAYOUT_WIDTH}) {
-    th, td {
+    th,
+    td {
       padding-left: 1.5rem;
       padding-right: 1.5rem;
       vertical-align: top;
@@ -250,11 +252,11 @@ const BottomLinkEl = styled.div`
 `;
 
 export const TransactionHistory = () => {
-  const { account, txHistory, settings } = useRedux([
+  const { account, txHistory, settings } = useRedux(
     "account",
     "txHistory",
     "settings",
-  ]);
+  );
   const accountId = account.data?.id;
   const dispatch = useDispatch();
   const [showAllTxs, setShowAllTxs] = useState(false);

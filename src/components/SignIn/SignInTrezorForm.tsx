@@ -22,7 +22,7 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const { walletTrezor, account } = useRedux(["walletTrezor", "account"]);
+  const { walletTrezor, account } = useRedux("walletTrezor", "account");
   const {
     data: trezorData,
     status: trezorStatus,

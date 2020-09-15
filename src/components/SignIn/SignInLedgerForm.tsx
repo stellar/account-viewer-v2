@@ -35,7 +35,7 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const { walletLedger, account } = useRedux(["walletLedger", "account"]);
+  const { walletLedger, account } = useRedux("walletLedger", "account");
   const {
     data: ledgerData,
     status: ledgerStatus,

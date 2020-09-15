@@ -42,7 +42,7 @@ const AddressEl = styled.div`
 `;
 
 export const ReceiveTransaction = () => {
-  const { account } = useRedux(["account"]);
+  const { account } = useRedux("account");
   const [isAccountIdCopied, setAccountIsIdCopied] = useState(false);
   const accountId = account.data?.id;
 

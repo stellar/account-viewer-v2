@@ -79,12 +79,12 @@ export const ConfirmTransaction = ({
   onFailedTx,
   onCancel,
 }: ConfirmTransactionProps) => {
-  const { sendTx, account, settings } = useRedux([
+  const { sendTx, account, settings } = useRedux(
     "sendTx",
     "keyStore",
     "account",
     "settings",
-  ]);
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {

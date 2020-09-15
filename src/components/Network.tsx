@@ -19,7 +19,7 @@ const BannerEl = styled.div`
 
 export const Network = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useDispatch();
-  const { settings } = useRedux(["settings"]);
+  const { settings } = useRedux("settings");
   const queryParams = new URLSearchParams(useLocation().search);
   const testnetParam = queryParams.get("testnet");
 
