@@ -23,7 +23,7 @@ export const SignInLyraForm = ({ onClose }: ModalPageProps) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const { walletLyra, account } = useRedux(["walletLyra", "account"]);
+  const { walletLyra, account } = useRedux("walletLyra", "account");
   const {
     data: lyraData,
     status: lyraStatus,

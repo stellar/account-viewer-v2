@@ -77,7 +77,7 @@ const BalanceEl = styled.div`
 
 export const BalanceInfo = () => {
   const dispatch = useDispatch();
-  const { account } = useRedux(["account"]);
+  const { account } = useRedux("account");
   const { status, data, isAccountWatcherStarted } = account;
   const [isSendTxModalVisible, setIsSendTxModalVisible] = useState(false);
   const [isReceiveTxModalVisible, setIsReceiveTxModalVisible] = useState(false);

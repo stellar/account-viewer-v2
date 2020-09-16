@@ -88,7 +88,7 @@ const LogoLinkEl = styled.a`
 
 export const Header = () => {
   const dispatch = useDispatch();
-  const { account } = useRedux(["account"]);
+  const { account } = useRedux("account");
   const { isAuthenticated } = account;
 
   const handleSignOut = () => {

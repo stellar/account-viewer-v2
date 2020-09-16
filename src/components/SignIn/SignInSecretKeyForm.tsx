@@ -38,7 +38,7 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const { account } = useRedux(["account"]);
+  const { account } = useRedux("account");
   const { status, isAuthenticated, errorString, data } = account;
   const accountId = data?.id;
   const [acceptedWarning, setAcceptedWarning] = useState(false);

@@ -53,3 +53,10 @@ export enum ModalType {
   SIGNIN_ALBEDO = "SIGNIN_ALBEDO",
   NEW_KEY_PAIR = "NEW_KEY_PAIR",
 }
+
+export interface Store {
+  // TODO: update with proper keys and types
+  [key: string]: any;
+}
+
+export type StoreKey = keyof Store;

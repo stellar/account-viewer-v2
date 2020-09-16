@@ -21,7 +21,7 @@ export const SignInAlbedoForm = ({ onClose }: ModalPageProps) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const { walletAlbedo, account } = useRedux(["walletAlbedo", "account"]);
+  const { walletAlbedo, account } = useRedux("walletAlbedo", "account");
   const {
     data: albedoData,
     status: albedoStatus,

@@ -4,7 +4,7 @@ import { THEME } from "constants/styles";
 import { useRedux } from "hooks/useRedux";
 
 export const Theme = ({ children }: { children: React.ReactNode }) => {
-  const { account } = useRedux(["account"]);
+  const { account } = useRedux("account");
   const { isAuthenticated } = account;
 
   return (
