@@ -347,7 +347,7 @@ export const TransactionHistory = () => {
         )}
       </HeadingRowEl>
 
-      <ErrorMessage message={errorMessage} />
+      <ErrorMessage message={errorMessage} marginBottom="2rem" />
 
       {!hasVisibleTransactions && <p>There are no payments to show</p>}
 

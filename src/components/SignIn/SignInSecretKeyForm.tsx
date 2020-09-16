@@ -85,13 +85,13 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
     setErrorMessage("");
 
     if (!secretKey) {
-      setErrorMessage("Please enter your secret key.");
+      setErrorMessage("Please enter your secret key");
       return;
     }
 
     if (failedAttempts > 8) {
       setErrorMessage(
-        "Please wait a few seconds before attempting to log in again.",
+        "Please wait a few seconds before attempting to log in again",
       );
       return;
     }
