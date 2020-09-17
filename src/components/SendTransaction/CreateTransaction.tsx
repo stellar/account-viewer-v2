@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import StellarSdk, { MemoType, FederationServer } from "stellar-sdk";
+import StellarSdk, { MemoType, FederationServer, StrKey } from "stellar-sdk";
 import BigNumber from "bignumber.js";
 
 import { Button, ButtonVariant } from "components/basic/Button";
@@ -36,6 +36,18 @@ const CellEl = styled.div`
 
 const isFederationAddress = (value: string) => value.includes("*");
 
+enum SendFormIds {
+  SEND_TO = "send-to",
+  SEND_AMOUNT = "send-amount",
+  SEND_MEMO_TYPE = "send-memo-type",
+  SEND_MEMO_CONTENT = "send-memo-content",
+  SEND_FEE = "send-fee",
+}
+
+type ValidatedInput = {
+  [inputId: string]: string;
+};
+
 interface CreateTransactionProps {
   formData: FormData;
   maxFee: string;
@@ -53,7 +65,7 @@ export const CreateTransaction = ({
   onCancel,
   setMaxFee,
 }: CreateTransactionProps) => {
-  const { settings } = useRedux("settings");
+  const { account, settings } = useRedux("account", "settings");
   const [isMemoVisible, setIsMemoVisible] = useState(!!formData.memoContent);
   const [isMemoTypeFromFederation, setIsMemoTypeFromFederation] = useState(
     false,
@@ -72,6 +84,14 @@ export const CreateTransaction = ({
   const [networkCongestion, setNetworkCongestion] = useState(
     NetworkCongestion.LOW,
   );
+  const [inputErrors, setInputErrors] = useState<ValidatedInput>({
+    [SendFormIds.SEND_TO]: "",
+    [SendFormIds.SEND_AMOUNT]: "",
+    [SendFormIds.SEND_MEMO_CONTENT]: "",
+    [SendFormIds.SEND_FEE]: "",
+  });
+
+  const availableBalance = new BigNumber(account.data.balances.native.total);
 
   useEffect(() => {
     const fetchNetworkBaseFee = async () => {
@@ -113,8 +133,10 @@ export const CreateTransaction = ({
 
   const fetchIfFederationAddress = async () => {
     const { toAccountId } = formData;
+
     if (isFederationAddress(toAccountId)) {
       setFederationAddressFetchStatus(ActionStatus.PENDING);
+
       try {
         const response = await FederationServer.resolve(toAccountId);
         setFederationAddressFetchStatus(ActionStatus.SUCCESS);
@@ -153,12 +175,80 @@ export const CreateTransaction = ({
     onInput({ ...formData, federationAddress: undefined });
   };
 
+  const validateInput = (inputId: string) => {
+    const errors: ValidatedInput = {};
+    let message = "";
+
+    switch (inputId) {
+      case SendFormIds.SEND_TO:
+        if (!formData.toAccountId) {
+          message = "Please enter a valid Stellar or Federated address";
+        } else if (
+          !isFederationAddress(formData.toAccountId) &&
+          !StrKey.isValidEd25519PublicKey(formData.toAccountId)
+        ) {
+          message = "Stellar address or public key is invalid";
+        }
+
+        errors[SendFormIds.SEND_TO] = message;
+        break;
+      case SendFormIds.SEND_AMOUNT:
+        if (formData.amount.lte(0)) {
+          message = "Amount must be larger than 0";
+        } else if (formData.amount.gt(availableBalance)) {
+          message = "This amount is larger than your balance";
+        }
+
+        errors[SendFormIds.SEND_AMOUNT] = message;
+        break;
+      case SendFormIds.SEND_MEMO_CONTENT:
+        // TODO: validate memo content
+        break;
+      case SendFormIds.SEND_FEE:
+        // TODO: validate fee
+        break;
+      default:
+        break;
+    }
+
+    return errors;
+  };
+
+  const validate = (event: React.FocusEvent<HTMLInputElement>) => {
+    setInputErrors({ ...inputErrors, ...validateInput(event.target.id) });
+  };
+
+  const clearInputError = (inputId: string) => {
+    setInputErrors({ ...inputErrors, [inputId]: "" });
+  };
+
+  const onSubmit = () => {
+    let errors = {};
+    let hasErrors = false;
+
+    // Loop through inputs we need to validate
+    Object.keys(inputErrors).forEach((inputId) => {
+      errors = { ...errors, ...validateInput(inputId) };
+
+      // Check if input has error message
+      if (!hasErrors && validateInput(inputId)[inputId]) {
+        hasErrors = true;
+      }
+    });
+
+    if (hasErrors) {
+      setInputErrors(errors);
+    } else {
+      onContinue();
+    }
+  };
+
   return (
     <ModalContent
       headlineText="Send Lumens"
       buttonFooter={
         <>
-          <Button onClick={onContinue}>Continue</Button>
+          <Button onClick={onSubmit}>Continue</Button>
           <Button onClick={onCancel} variant={ButtonVariant.secondary}>
             Cancel
           </Button>
@@ -167,17 +257,23 @@ export const CreateTransaction = ({
     >
       <RowEl>
         <Input
-          id="send-to"
+          id={SendFormIds.SEND_TO}
           label="Sending To"
           type="text"
           onChange={(e) => {
+            clearInputError(e.target.id);
+
             if (federationAddressFetchStatus) {
               setFederationAddressFetchStatus(null);
             }
 
             onInput({ ...formData, toAccountId: e.target.value });
           }}
-          onBlur={fetchIfFederationAddress}
+          onBlur={(e) => {
+            validate(e);
+            fetchIfFederationAddress();
+          }}
+          error={inputErrors[SendFormIds.SEND_TO]}
           value={formData.toAccountId}
           placeholder="Recipient's public key or federation address"
         />
@@ -216,16 +312,20 @@ export const CreateTransaction = ({
       <RowEl>
         <CellEl>
           <Input
-            id="send-amount"
+            id={SendFormIds.SEND_AMOUNT}
             label="Amount"
             rightElement="lumens"
             type="number"
             onChange={(e) => {
+              clearInputError(e.target.id);
+
               onInput({
                 ...formData,
                 amount: new BigNumber(e.target.value || 0),
               });
             }}
+            onBlur={validate}
+            error={inputErrors[SendFormIds.SEND_AMOUNT]}
             value={formData.amount.toString()}
             placeholder="0"
           />
@@ -251,7 +351,7 @@ export const CreateTransaction = ({
           <RowEl>
             <CellEl>
               <Select
-                id="send-memo-type"
+                id={SendFormIds.SEND_MEMO_TYPE}
                 label="Memo Type"
                 onChange={(e) => {
                   onInput({
@@ -271,13 +371,15 @@ export const CreateTransaction = ({
 
             <CellEl>
               <Input
-                id="send-memo-conent"
+                id={SendFormIds.SEND_MEMO_CONTENT}
                 label="Memo content"
                 type="text"
                 placeholder={
                   memoPlaceholderMap[formData.memoType || StellarSdk.MemoNone]
                 }
                 onChange={(e) => {
+                  clearInputError(e.target.id);
+
                   onInput({
                     ...formData,
                     memoContent: e.target.value,
@@ -320,14 +422,16 @@ export const CreateTransaction = ({
       <RowEl>
         <CellEl>
           <Input
-            id="send-fee"
+            id={SendFormIds.SEND_FEE}
             label="Fee"
             rightElement="lumens"
             type="number"
             value={maxFee}
             onChange={(e) => {
+              clearInputError(e.target.id);
               setMaxFee(e.target.value);
             }}
+            onBlur={validate}
             note={
               <>
                 <strong>{networkCongestion} congestion!</strong> Recommended
