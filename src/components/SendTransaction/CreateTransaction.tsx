@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import StellarSdk, { MemoType, FederationServer, StrKey } from "stellar-sdk";
+import StellarSdk, {
+  Memo,
+  MemoType,
+  FederationServer,
+  StrKey,
+} from "stellar-sdk";
 import BigNumber from "bignumber.js";
 
 import { Button, ButtonVariant } from "components/basic/Button";
@@ -29,8 +34,16 @@ const RowEl = styled.div`
 const CellEl = styled.div`
   width: 100%;
 
+  &:nth-child(2) {
+    margin-top: 1.5rem;
+  }
+
   @media (min-width: 600px) {
     width: calc(50% - 0.75rem);
+
+    &:nth-child(2) {
+      margin-top: 0;
+    }
   }
 `;
 
@@ -178,6 +191,7 @@ export const CreateTransaction = ({
   const validateInput = (inputId: string) => {
     const errors: ValidatedInput = {};
     let message = "";
+    const memoContent = formData.memoContent as string;
 
     switch (inputId) {
       case SendFormIds.SEND_TO:
@@ -202,13 +216,50 @@ export const CreateTransaction = ({
         errors[SendFormIds.SEND_AMOUNT] = message;
         break;
       case SendFormIds.SEND_FEE:
-        // recommendedFee is min fee
+        // recommendedFee is minimum fee
         errors[SendFormIds.SEND_FEE] = new BigNumber(maxFee).lt(recommendedFee)
           ? `Fee is too small. Minimum fee is ${recommendedFee}.`
           : "";
         break;
       case SendFormIds.SEND_MEMO_CONTENT:
-        // TODO: validate memo content
+        if (isMemoVisible) {
+          if (!memoContent) {
+            message = "Please enter memo content";
+          }
+
+          let memoMessage = "";
+
+          try {
+            switch (formData.memoType) {
+              case StellarSdk.MemoText:
+                memoMessage =
+                  "MEMO_TEXT must contain a maximum of 28 characters";
+                Memo.text(memoContent);
+                break;
+              case StellarSdk.MemoID:
+                memoMessage = "MEMO_ID must be a valid 64 bit unsigned integer";
+                Memo.id(memoContent);
+                break;
+              case StellarSdk.MemoHash:
+                memoMessage =
+                  "MEMO_HASH must be a 32 byte hash represented in hexadecimal (A-Z0-9)";
+                Memo.hash(memoContent);
+                break;
+              case StellarSdk.MemoReturn:
+                memoMessage =
+                  "MEMO_RETURN must be a 32 byte hash represented in hexadecimal (A-Z0-9)";
+                Memo.return(memoContent);
+                break;
+              default:
+                break;
+            }
+          } catch (error) {
+            message = memoMessage;
+          }
+        }
+
+        errors[SendFormIds.SEND_MEMO_CONTENT] = message;
+
         break;
       default:
         break;
@@ -282,8 +333,8 @@ export const CreateTransaction = ({
         />
       </RowEl>
 
-      <RowEl>
-        {federationAddressFetchStatus && (
+      {federationAddressFetchStatus && (
+        <RowEl>
           <InfoBlock
             variant={
               federationAddressFetchStatus === ActionStatus.ERROR
@@ -309,8 +360,8 @@ export const CreateTransaction = ({
               <p>Federation Address not found</p>
             )}
           </InfoBlock>
-        )}
-      </RowEl>
+        </RowEl>
+      )}
 
       <RowEl>
         <CellEl>
@@ -388,8 +439,10 @@ export const CreateTransaction = ({
                     memoContent: e.target.value,
                   });
                 }}
+                onBlur={validate}
                 value={formData.memoContent as string}
                 disabled={isMemoContentFromFederation}
+                error={inputErrors[SendFormIds.SEND_MEMO_CONTENT]}
               />
             </CellEl>
           </RowEl>

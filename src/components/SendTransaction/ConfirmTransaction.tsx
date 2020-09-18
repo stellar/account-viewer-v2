@@ -145,7 +145,10 @@ export const ConfirmTransaction = ({
           </tr>
           <tr>
             <th>Amount</th>
-            <td>{formData.amount.toString()}</td>
+            <td>
+              {formData.amount.toString()}{" "}
+              {formData.amount.eq(1) ? "lumen" : "lumens"}
+            </td>
           </tr>
           <tr>
             <th>Memo</th>
@@ -153,7 +156,7 @@ export const ConfirmTransaction = ({
           </tr>
           <tr>
             <th>Fee</th>
-            <td>{maxFee}</td>
+            <td>{maxFee} lumens</td>
           </tr>
         </tbody>
       </TableEl>
