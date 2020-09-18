@@ -92,7 +92,9 @@ export const BalanceInfo = () => {
   let nativeBalance = 0;
 
   if (account.data) {
-    nativeBalance = account.data.balances.native.total.toString();
+    nativeBalance = account.data.balances
+      ? account.data.balances.native.total.toString()
+      : 0;
   }
 
   const resetModalStates = () => {
@@ -113,6 +115,7 @@ export const BalanceInfo = () => {
           <Button
             onClick={() => setIsSendTxModalVisible(true)}
             icon={<IconSend />}
+            disabled={data.isUnfunded}
           >
             Send
           </Button>

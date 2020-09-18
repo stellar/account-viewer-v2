@@ -1,15 +1,20 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { DataProvider, Types } from "@stellar/wallet-sdk";
+
+import { RootState } from "config/store";
+import { settingsSelector } from "ducks/settings";
+import { getErrorString } from "helpers/getErrorString";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { ActionStatus, RejectMessage } from "types/types.d";
-import { settingsSelector } from "ducks/settings";
-import { RootState } from "config/store";
-import { getErrorString } from "helpers/getErrorString";
+
+interface UnfundedAccount extends Types.AccountDetails {
+  isUnfunded: boolean;
+}
 
 let accountWatcherStopper: any;
 
 export const fetchAccountAction = createAsyncThunk<
-  Types.AccountDetails,
+  Types.AccountDetails | UnfundedAccount,
   string,
   { rejectValue: RejectMessage; state: RootState }
 >(
@@ -26,7 +31,16 @@ export const fetchAccountAction = createAsyncThunk<
     let stellarAccount: Types.AccountDetails | null = null;
 
     try {
-      stellarAccount = await dataProvider.fetchAccountDetails();
+      const accountIsFunded = await dataProvider.isAccountFunded();
+
+      if (accountIsFunded) {
+        stellarAccount = await dataProvider.fetchAccountDetails();
+      } else {
+        stellarAccount = {
+          id: publicKey,
+          isUnfunded: true,
+        } as UnfundedAccount;
+      }
     } catch (error) {
       return rejectWithValue({
         errorString: getErrorString(error),
