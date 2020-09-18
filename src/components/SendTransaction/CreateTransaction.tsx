@@ -408,6 +408,8 @@ export const CreateTransaction = ({
                 id={SendFormIds.SEND_MEMO_TYPE}
                 label="Memo Type"
                 onChange={(e) => {
+                  clearInputError(e.target.id);
+
                   onInput({
                     ...formData,
                     memoType: e.target.value as MemoType,
@@ -460,6 +462,7 @@ export const CreateTransaction = ({
               <TextButton
                 variant={TextButtonVariant.secondary}
                 onClick={() => {
+                  clearInputError(SendFormIds.SEND_MEMO_CONTENT);
                   onInput({
                     ...formData,
                     memoType: StellarSdk.MemoNone,
