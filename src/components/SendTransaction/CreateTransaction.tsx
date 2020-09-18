@@ -87,8 +87,8 @@ export const CreateTransaction = ({
   const [inputErrors, setInputErrors] = useState<ValidatedInput>({
     [SendFormIds.SEND_TO]: "",
     [SendFormIds.SEND_AMOUNT]: "",
-    [SendFormIds.SEND_MEMO_CONTENT]: "",
     [SendFormIds.SEND_FEE]: "",
+    [SendFormIds.SEND_MEMO_CONTENT]: "",
   });
 
   const availableBalance = new BigNumber(account.data.balances.native.total);
@@ -201,11 +201,14 @@ export const CreateTransaction = ({
 
         errors[SendFormIds.SEND_AMOUNT] = message;
         break;
+      case SendFormIds.SEND_FEE:
+        // recommendedFee is min fee
+        errors[SendFormIds.SEND_FEE] = new BigNumber(maxFee).lt(recommendedFee)
+          ? `Fee is too small. Minimum fee is ${recommendedFee}.`
+          : "";
+        break;
       case SendFormIds.SEND_MEMO_CONTENT:
         // TODO: validate memo content
-        break;
-      case SendFormIds.SEND_FEE:
-        // TODO: validate fee
         break;
       default:
         break;
@@ -432,6 +435,7 @@ export const CreateTransaction = ({
               setMaxFee(e.target.value);
             }}
             onBlur={validate}
+            error={inputErrors[SendFormIds.SEND_FEE]}
             note={
               <>
                 <strong>{networkCongestion} congestion!</strong> Recommended
