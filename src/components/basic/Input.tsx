@@ -69,7 +69,6 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: string;
 }
 
-// TODO: improve error for accessibility
 export const Input = ({
   id,
   label,
@@ -81,7 +80,7 @@ export const Input = ({
   <WrapperEl>
     {label && <LabelEl htmlFor={id}>{label}</LabelEl>}
     <InputWrapperEl>
-      <InputEl id={id} {...props} />
+      <InputEl id={id} aria-invalid={!!error} {...props} />
       {rightElement && <RightTextEl>{rightElement}</RightTextEl>}
     </InputWrapperEl>
     {error && <ErrorEl>{error}</ErrorEl>}
