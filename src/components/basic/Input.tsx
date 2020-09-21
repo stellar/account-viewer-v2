@@ -57,11 +57,16 @@ const NoteEl = styled.div`
   color: ${PALETTE.black60};
 `;
 
+const ErrorEl = styled(NoteEl)`
+  color: ${PALETTE.red};
+`;
+
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   id: string;
   label?: string;
   rightElement?: string;
   note?: React.ReactNode;
+  error?: string;
 }
 
 export const Input = ({
@@ -69,14 +74,16 @@ export const Input = ({
   label,
   rightElement,
   note,
+  error,
   ...props
 }: InputProps) => (
   <WrapperEl>
     {label && <LabelEl htmlFor={id}>{label}</LabelEl>}
     <InputWrapperEl>
-      <InputEl id={id} {...props} />
+      <InputEl id={id} aria-invalid={!!error} {...props} />
       {rightElement && <RightTextEl>{rightElement}</RightTextEl>}
     </InputWrapperEl>
+    {error && <ErrorEl>{error}</ErrorEl>}
     {note && <NoteEl>{note}</NoteEl>}
   </WrapperEl>
 );
