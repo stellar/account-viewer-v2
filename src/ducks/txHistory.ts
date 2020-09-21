@@ -1,11 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { DataProvider, Types } from "@stellar/wallet-sdk";
-import { getErrorString } from "helpers/getErrorString";
-import { getNetworkConfig } from "helpers/getNetworkConfig";
-import { ActionStatus, RejectMessage } from "types/types.d";
+import { RootState } from "config/store";
 import { TX_HISTORY_LIMIT } from "constants/settings";
 import { settingsSelector } from "ducks/settings";
-import { RootState } from "config/store";
+import { getErrorString } from "helpers/getErrorString";
+import { getNetworkConfig } from "helpers/getNetworkConfig";
+import {
+  ActionStatus,
+  RejectMessage,
+  TxHistoryInitialState,
+} from "types/types.d";
 
 let txHistoryWatcherStopper: any;
 
@@ -95,14 +99,6 @@ export const startTxHistoryWatcherAction = createAsyncThunk<
     }
   },
 );
-
-interface TxHistoryInitialState {
-  data: Array<Types.Payment>;
-  hasMoreTxs?: boolean;
-  isTxWatcherStarted: boolean;
-  errorString?: string;
-  status: ActionStatus | undefined;
-}
 
 const initialTxHistoryState: TxHistoryInitialState = {
   data: [],

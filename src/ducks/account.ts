@@ -5,7 +5,11 @@ import { RootState } from "config/store";
 import { settingsSelector } from "ducks/settings";
 import { getErrorString } from "helpers/getErrorString";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
-import { ActionStatus, RejectMessage } from "types/types.d";
+import {
+  ActionStatus,
+  RejectMessage,
+  AccountInitialState,
+} from "types/types.d";
 
 interface UnfundedAccount extends Types.AccountDetails {
   isUnfunded: boolean;
@@ -85,14 +89,6 @@ export const startAccountWatcherAction = createAsyncThunk<
     }
   },
 );
-
-interface AccountInitialState {
-  data: Types.AccountDetails | null;
-  isAuthenticated: boolean;
-  isAccountWatcherStarted: boolean;
-  status: ActionStatus | undefined;
-  errorString?: string;
-}
 
 const initialState: AccountInitialState = {
   data: null,
