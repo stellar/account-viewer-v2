@@ -28,7 +28,7 @@ const InputWrapperEl = styled.div`
 
 const InputEl = styled.input`
   height: 100%;
-  padding: 0.7rem 0.75rem 0.4rem;
+  padding: 0.55rem 0.75rem;
   font-size: 1rem;
   line-height: 1.5rem;
   color: ${PALETTE.black};
