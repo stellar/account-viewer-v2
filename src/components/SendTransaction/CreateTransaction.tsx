@@ -29,6 +29,11 @@ const RowEl = styled.div`
   &:not(:last-child) {
     margin-bottom: 1.5rem;
   }
+
+  button {
+    margin-top: -0.5rem;
+    margin-bottom: -0.5rem;
+  }
 `;
 
 const CellEl = styled.div`
