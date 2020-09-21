@@ -7,6 +7,7 @@ import { ReactComponent as IconSend } from "assets/svg/icon-send.svg";
 
 import { Button } from "components/basic/Button";
 import { Heading3 } from "components/basic/Heading";
+import { TextLink } from "components/basic/TextLink";
 import { SendTransactionFlow } from "components/SendTransaction/SendTransactionFlow";
 import { ReceiveTransaction } from "components/ReceiveTransaction";
 import { Modal } from "components/Modal";
@@ -24,18 +25,24 @@ const InsetEl = styled.div`
   ${pageInsetStyle};
   padding-top: 2rem;
   padding-bottom: 2.4rem;
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+
+  @media (min-width: 900px) {
+    padding-top: 4.5rem;
+    padding-bottom: 4.5rem;
+  }
+`;
+
+const BalanceInfoEl = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 2rem;
-  margin-bottom: 3rem;
 
   @media (min-width: 900px) {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding-top: 4.5rem;
-    padding-bottom: 4.5rem;
   }
 `;
 
@@ -75,6 +82,25 @@ const BalanceEl = styled.div`
   }
 `;
 
+const UnfundedAccountEl = styled.div`
+  margin-top: 3rem;
+`;
+
+const PublicKeyEl = styled.div`
+  font-size: 2rem;
+  line-height: 2.5rem;
+  color: ${PALETTE.black};
+  padding-top: 0.5rem;
+  padding-bottom: 1.5rem;
+  word-break: break-all;
+`;
+
+const WarningEl = styled.p`
+  display: inline-block;
+  padding: 1rem;
+  background-color: ${PALETTE.lightYellow};
+`;
+
 export const BalanceInfo = () => {
   const dispatch = useDispatch();
   const { account } = useRedux("account");
@@ -92,7 +118,9 @@ export const BalanceInfo = () => {
   let nativeBalance = 0;
 
   if (account.data) {
-    nativeBalance = account.data.balances.native.total.toString();
+    nativeBalance = account.data.balances
+      ? account.data.balances.native.total.toString()
+      : 0;
   }
 
   const resetModalStates = () => {
@@ -104,25 +132,46 @@ export const BalanceInfo = () => {
   return (
     <WrapperEl>
       <InsetEl>
-        <BalanceWrapperEl>
-          <Heading3>Your Balance</Heading3>
-          <BalanceEl>{nativeBalance} Lumens (XLM)</BalanceEl>
-        </BalanceWrapperEl>
+        <BalanceInfoEl>
+          <BalanceWrapperEl>
+            <Heading3>Your Balance</Heading3>
+            <BalanceEl>{nativeBalance} Lumens (XLM)</BalanceEl>
+          </BalanceWrapperEl>
 
-        <ButtonsWrapperEl>
-          <Button
-            onClick={() => setIsSendTxModalVisible(true)}
-            icon={<IconSend />}
-          >
-            Send
-          </Button>
-          <Button
-            onClick={() => setIsReceiveTxModalVisible(true)}
-            icon={<IconReceive />}
-          >
-            Receive
-          </Button>
-        </ButtonsWrapperEl>
+          <ButtonsWrapperEl>
+            <Button
+              onClick={() => setIsSendTxModalVisible(true)}
+              icon={<IconSend />}
+              disabled={data.isUnfunded}
+            >
+              Send
+            </Button>
+            <Button
+              onClick={() => setIsReceiveTxModalVisible(true)}
+              icon={<IconReceive />}
+            >
+              Receive
+            </Button>
+          </ButtonsWrapperEl>
+        </BalanceInfoEl>
+
+        {data.isUnfunded && (
+          <UnfundedAccountEl>
+            <Heading3>Your Stellar Public Key</Heading3>
+            <PublicKeyEl>{publicAddress}</PublicKeyEl>
+            <WarningEl>
+              This account is currently inactive. To activate it,{" "}
+              <TextLink
+                href="https://developers.stellar.org/docs/glossary/minimum-balance/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                send at least 1 lumen (XLM)
+              </TextLink>{" "}
+              to the Stellar public key displayed above.
+            </WarningEl>
+          </UnfundedAccountEl>
+        )}
 
         <Modal
           visible={isSendTxModalVisible || isReceiveTxModalVisible}
