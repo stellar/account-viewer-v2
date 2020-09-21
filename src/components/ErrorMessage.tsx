@@ -8,7 +8,7 @@ const ErrorEl = styled.div`
 `;
 
 interface ErrorMessageProps {
-  message: string;
+  message?: string;
   marginTop?: string;
   marginBottom?: string;
   textAlign?: "left" | "center" | "right";

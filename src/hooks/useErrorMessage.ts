@@ -4,7 +4,7 @@ export const useErrorMessage = ({
   initialMessage,
   onUnmount,
 }: {
-  initialMessage: string;
+  initialMessage?: string;
   onUnmount?: () => void;
 }) => {
   const [errorMessage, setErrorMessage] = useState(initialMessage);

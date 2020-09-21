@@ -70,7 +70,7 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
 
   useEffect(() => {
     if (ledgerStatus === ActionStatus.SUCCESS) {
-      dispatch(fetchAccountAction(ledgerData.publicKey));
+      dispatch(fetchAccountAction(ledgerData!.publicKey));
     }
   }, [ledgerStatus, ledgerData, dispatch]);
 
@@ -83,7 +83,7 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
       dispatch(updateSettingsAction({ authType: AuthType.LEDGER }));
       dispatch(
         storeKeyAction({
-          publicKey: ledgerData.publicKey,
+          publicKey: ledgerData!.publicKey,
           keyType: KeyType.ledger,
           path: ledgerBipPath,
         }),

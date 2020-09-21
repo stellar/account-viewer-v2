@@ -3,7 +3,7 @@ import { MemoType, MemoValue, Horizon } from "stellar-sdk";
 import BigNumber from "bignumber.js";
 import { getErrorString } from "helpers/getErrorString";
 import { submitPaymentTransaction } from "helpers/submitPaymentTransaction";
-import { ActionStatus, RejectMessage } from "types/types.d";
+import { ActionStatus, SendTxInitialState, RejectMessage } from "types/types.d";
 import { RootState } from "config/store";
 
 export interface PaymentTransactionParams {
@@ -31,12 +31,6 @@ export const sendTxAction = createAsyncThunk<
 
   return result;
 });
-
-interface SendTxInitialState {
-  data: Horizon.TransactionResponse | null;
-  status: ActionStatus | undefined;
-  errorString?: string;
-}
 
 const initialState: SendTxInitialState = {
   data: null,

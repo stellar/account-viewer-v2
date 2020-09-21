@@ -31,12 +31,6 @@ export interface ModalPageProps {
   onClose?: () => void;
 }
 
-export interface WalletInitialState {
-  data: { publicKey: string } | null;
-  status: ActionStatus | undefined;
-  errorString?: string;
-}
-
 export interface ThemeProps {
   bodyBackground: string;
 }
@@ -54,9 +48,60 @@ export enum ModalType {
   NEW_KEY_PAIR = "NEW_KEY_PAIR",
 }
 
-export interface Store {
-  // TODO: update with proper keys and types
+// Store
+export interface AccountInitialState {
+  data: Types.AccountDetails | null;
+  isAuthenticated: boolean;
+  isAccountWatcherStarted: boolean;
+  status: ActionStatus | undefined;
+  errorString?: string;
+}
+
+export interface KeyStoreInitialState {
+  keyStoreId: string;
+  password: string;
+  errorString?: string;
+}
+
+export interface SendTxInitialState {
+  data: Horizon.TransactionResponse | null;
+  status: ActionStatus | undefined;
+  errorString?: string;
+}
+
+export interface SettingsInitialState {
+  authType: AuthType | undefined;
+  isTestnet: boolean;
+}
+
+export interface Setting {
   [key: string]: any;
+}
+
+export interface TxHistoryInitialState {
+  data: Array<Types.Payment>;
+  hasMoreTxs?: boolean;
+  isTxWatcherStarted: boolean;
+  errorString?: string;
+  status: ActionStatus | undefined;
+}
+
+export interface WalletInitialState {
+  data: { publicKey: string } | null;
+  status: ActionStatus | undefined;
+  errorString?: string;
+}
+
+export interface Store {
+  account: AccountInitialState;
+  keyStore: KeyStoreInitialState;
+  sendTx: SendTxInitialState;
+  settings: SettingsInitialState;
+  txHistory: TxHistoryInitialState;
+  walletAlbedo: WalletInitialState;
+  walletLedger: WalletInitialState;
+  walletLyra: WalletInitialState;
+  walletTrezor: WalletInitialState;
 }
 
 export type StoreKey = keyof Store;
