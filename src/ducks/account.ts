@@ -1,10 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { DataProvider, Types } from "@stellar/wallet-sdk";
-import { getNetworkConfig } from "helpers/getNetworkConfig";
-import { ActionStatus, RejectMessage } from "types/types.d";
 import { settingsSelector } from "ducks/settings";
 import { RootState } from "config/store";
 import { getErrorString } from "helpers/getErrorString";
+import { getNetworkConfig } from "helpers/getNetworkConfig";
+import {
+  ActionStatus,
+  RejectMessage,
+  AccountInitialState,
+} from "types/types.d";
 
 let accountWatcherStopper: any;
 
@@ -71,14 +75,6 @@ export const startAccountWatcherAction = createAsyncThunk<
     }
   },
 );
-
-interface AccountInitialState {
-  data: Types.AccountDetails | null;
-  isAuthenticated: boolean;
-  isAccountWatcherStarted: boolean;
-  status: ActionStatus | undefined;
-  errorString?: string;
-}
 
 const initialState: AccountInitialState = {
   data: null,

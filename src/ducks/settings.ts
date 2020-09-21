@@ -1,15 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AuthType } from "types/types.d";
 import { RootState } from "config/store";
-
-interface SettingsInitialState {
-  authType: AuthType | undefined;
-  isTestnet: boolean;
-}
-
-interface Setting {
-  [key: string]: any;
-}
+import { SettingsInitialState, Setting } from "types/types.d";
 
 const initialState: SettingsInitialState = {
   authType: undefined,
