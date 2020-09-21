@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { MemoType, MemoValue, Horizon } from "stellar-sdk";
-import BigNumber from "bignumber.js";
 import { getErrorString } from "helpers/getErrorString";
 import { submitPaymentTransaction } from "helpers/submitPaymentTransaction";
 import { ActionStatus, SendTxInitialState, RejectMessage } from "types/types.d";
@@ -9,7 +8,7 @@ import { RootState } from "config/store";
 export interface PaymentTransactionParams {
   publicKey: string;
   toAccountId: string;
-  amount: BigNumber;
+  amount: string;
   fee: number;
   memoType: MemoType;
   memoContent: MemoValue;

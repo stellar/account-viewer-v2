@@ -207,9 +207,11 @@ export const CreateTransaction = ({
         errors[SendFormIds.SEND_TO] = message;
         break;
       case SendFormIds.SEND_AMOUNT:
-        if (formData.amount.lte(0)) {
+        if (!formData.amount) {
+          message = "Please enter amount";
+        } else if (new BigNumber(formData.amount).lte(0)) {
           message = "Amount must be larger than 0";
-        } else if (formData.amount.gt(availableBalance)) {
+        } else if (new BigNumber(formData.amount).gt(availableBalance)) {
           message = "This amount is larger than your balance";
         }
 
@@ -217,9 +219,13 @@ export const CreateTransaction = ({
         break;
       case SendFormIds.SEND_FEE:
         // recommendedFee is minimum fee
-        errors[SendFormIds.SEND_FEE] = new BigNumber(maxFee).lt(recommendedFee)
-          ? `Fee is too small. Minimum fee is ${recommendedFee}.`
-          : "";
+        if (!maxFee) {
+          message = "Please enter fee";
+        } else if (new BigNumber(maxFee).lt(recommendedFee)) {
+          message = `Fee is too small. Minimum fee is ${recommendedFee}.`;
+        }
+
+        errors[SendFormIds.SEND_FEE] = message;
         break;
       case SendFormIds.SEND_MEMO_CONTENT:
         if (isMemoVisible) {
@@ -375,13 +381,13 @@ export const CreateTransaction = ({
 
               onInput({
                 ...formData,
-                amount: new BigNumber(e.target.value || 0),
+                amount: e.target.value,
               });
             }}
             onBlur={validate}
             error={inputErrors[SendFormIds.SEND_AMOUNT]}
             value={formData.amount.toString()}
-            placeholder="0"
+            placeholder="Amount to send"
           />
         </CellEl>
       </RowEl>
