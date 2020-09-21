@@ -3,6 +3,9 @@
 A simple tool to view an account on the Stellar network and make transactions
 from it.
 
+This app replaces the original Account Viewer with an updated framework and
+design.
+
 ## Developing
 
 We use `create-react-app` with yarn for dependencies.
