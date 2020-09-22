@@ -108,7 +108,9 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
         failedAttempts -= 1;
       }, 2 ** failedAttempts * 1000);
 
-      setErrorMessage(`Something went wrong. ${e.toString()}`);
+      setErrorMessage(
+        `Invalid secret key. Secret keys are uppercase and begin with the letter "S."`,
+      );
     }
   };
 
