@@ -283,10 +283,21 @@ export const TransactionHistory = () => {
     }
   }, [status, isTxWatcherStarted, accountId, dispatch]);
 
+  const isAccountMerge = (pt: Types.Payment) =>
+    pt.type === Horizon.OperationResponseType.accountMerge;
+
   const filterOutSmallAmounts = (transactions: Types.Payment[]) =>
-    transactions.filter((tx) =>
-      new BigNumber(tx.amount).gt(TX_HISTORY_MIN_AMOUNT),
-    );
+    transactions.filter((tx) => {
+      if (isAccountMerge(tx)) {
+        return true;
+      }
+
+      if (tx.isRecipient) {
+        return true;
+      }
+
+      return new BigNumber(tx.amount).gt(TX_HISTORY_MIN_AMOUNT);
+    });
 
   const visibleTransactions = showAllTxs ? data : filterOutSmallAmounts(data);
   const hasHiddenTransactions =
@@ -331,8 +342,6 @@ export const TransactionHistory = () => {
     );
   };
 
-  const isAccountMerge = (pt: Types.Payment) => pt.type === Horizon.OperationResponseType.accountMerge;
-
   return (
     <WrapperEl>
       <HeadingRowEl>
@@ -373,6 +382,7 @@ export const TransactionHistory = () => {
                 <tr key={pt.id}>
                   <td>{moment.unix(pt.timestamp).format("l HH:mm")}</td>
                   <td>
+                    {/* TODO: check with product */}
                     {isAccountMerge(pt) ? (
                       "[account merge]"
                     ) : (
