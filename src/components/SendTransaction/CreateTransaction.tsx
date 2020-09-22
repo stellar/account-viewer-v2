@@ -201,7 +201,8 @@ export const CreateTransaction = ({
           !isFederationAddress(formData.toAccountId) &&
           !StrKey.isValidEd25519PublicKey(formData.toAccountId)
         ) {
-          message = "Stellar address or public key is invalid";
+          message =
+            'Stellar address or public key is invalid. Public keys are uppercase and begin with letter "G".';
         }
 
         errors[SendFormIds.SEND_TO] = message;
