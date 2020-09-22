@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import styled, { css } from "styled-components";
-import StellarSdk from "stellar-sdk";
+import StellarSdk, { Horizon } from "stellar-sdk";
 import { useDispatch } from "react-redux";
 import { BigNumber } from "bignumber.js";
 import { Types } from "@stellar/wallet-sdk";
@@ -331,6 +331,8 @@ export const TransactionHistory = () => {
     );
   };
 
+  const isAccountMerge = (pt: Types.Payment) => pt.type === Horizon.OperationResponseType.accountMerge;
+
   return (
     <WrapperEl>
       <HeadingRowEl>
@@ -371,10 +373,14 @@ export const TransactionHistory = () => {
                 <tr key={pt.id}>
                   <td>{moment.unix(pt.timestamp).format("l HH:mm")}</td>
                   <td>
-                    <AddressEl>
-                      <Avatar publicAddress={pt.otherAccount?.publicKey} />{" "}
-                      {getFormattedPublicKey(pt.otherAccount?.publicKey)}
-                    </AddressEl>
+                    {isAccountMerge(pt) ? (
+                      "[account merge]"
+                    ) : (
+                      <AddressEl>
+                        <Avatar publicAddress={pt.otherAccount?.publicKey} />{" "}
+                        {getFormattedPublicKey(pt.otherAccount?.publicKey)}
+                      </AddressEl>
+                    )}
                   </td>
                   <td>{getFormattedAmount(pt)}</td>
                   <td>{getFormattedMemo(pt)}</td>
