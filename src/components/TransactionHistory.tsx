@@ -251,6 +251,12 @@ const BottomLinkEl = styled.div`
   border-top: 1px solid ${PALETTE.white60};
 `;
 
+const CellNoteEl = styled.span`
+  display: block;
+  font-size: 0.9rem;
+  color: ${PALETTE.black60};
+`;
+
 export const TransactionHistory = () => {
   const { account, txHistory, settings } = useRedux(
     "account",
@@ -304,6 +310,9 @@ export const TransactionHistory = () => {
     data.length - filterOutSmallAmounts(data).length > 0;
   const hasVisibleTransactions =
     visibleTransactions && visibleTransactions.length > 0;
+
+  const getPublicAddress = (pt: Types.Payment) =>
+    pt.mergedAccount?.publicKey || pt.otherAccount?.publicKey;
 
   const getFormattedAmount = (pt: Types.Payment) => {
     if (!pt?.amount) {
@@ -382,17 +391,17 @@ export const TransactionHistory = () => {
                 <tr key={pt.id}>
                   <td>{moment.unix(pt.timestamp).format("l HH:mm")}</td>
                   <td>
-                    {/* TODO: check with product */}
-                    {isAccountMerge(pt) ? (
-                      "[account merge]"
-                    ) : (
-                      <AddressEl>
-                        <Avatar publicAddress={pt.otherAccount?.publicKey} />{" "}
-                        {getFormattedPublicKey(pt.otherAccount?.publicKey)}
-                      </AddressEl>
+                    <AddressEl>
+                      <Avatar publicAddress={getPublicAddress(pt)} />{" "}
+                      {getFormattedPublicKey(getPublicAddress(pt))}
+                    </AddressEl>
+                  </td>
+                  <td>
+                    {getFormattedAmount(pt)}
+                    {isAccountMerge(pt) && (
+                      <CellNoteEl>[account merge]</CellNoteEl>
                     )}
                   </td>
-                  <td>{getFormattedAmount(pt)}</td>
                   <td>{getFormattedMemo(pt)}</td>
                   <td>
                     <TextLink
