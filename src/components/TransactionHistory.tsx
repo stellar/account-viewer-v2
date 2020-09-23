@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import styled, { css } from "styled-components";
-import StellarSdk from "stellar-sdk";
+import StellarSdk, { Horizon } from "stellar-sdk";
 import { useDispatch } from "react-redux";
 import { BigNumber } from "bignumber.js";
 import { Types } from "@stellar/wallet-sdk";
@@ -251,6 +251,12 @@ const BottomLinkEl = styled.div`
   border-top: 1px solid ${PALETTE.white60};
 `;
 
+const CellNoteEl = styled.span`
+  display: block;
+  font-size: 0.9rem;
+  color: ${PALETTE.black60};
+`;
+
 export const TransactionHistory = () => {
   const { account, txHistory, settings } = useRedux(
     "account",
@@ -283,16 +289,30 @@ export const TransactionHistory = () => {
     }
   }, [status, isTxWatcherStarted, accountId, dispatch]);
 
+  const isAccountMerge = (pt: Types.Payment) =>
+    pt.type === Horizon.OperationResponseType.accountMerge;
+
   const filterOutSmallAmounts = (transactions: Types.Payment[]) =>
-    transactions.filter((tx) =>
-      new BigNumber(tx.amount).gt(TX_HISTORY_MIN_AMOUNT),
-    );
+    transactions.filter((tx) => {
+      if (isAccountMerge(tx)) {
+        return true;
+      }
+
+      if (tx.isRecipient) {
+        return true;
+      }
+
+      return new BigNumber(tx.amount).gt(TX_HISTORY_MIN_AMOUNT);
+    });
 
   const visibleTransactions = showAllTxs ? data : filterOutSmallAmounts(data);
   const hasHiddenTransactions =
     data.length - filterOutSmallAmounts(data).length > 0;
   const hasVisibleTransactions =
     visibleTransactions && visibleTransactions.length > 0;
+
+  const getPublicAddress = (pt: Types.Payment) =>
+    pt.mergedAccount?.publicKey || pt.otherAccount?.publicKey;
 
   const getFormattedAmount = (pt: Types.Payment) => {
     if (!pt?.amount) {
@@ -372,11 +392,16 @@ export const TransactionHistory = () => {
                   <td>{moment.unix(pt.timestamp).format("l HH:mm")}</td>
                   <td>
                     <AddressEl>
-                      <Avatar publicAddress={pt.otherAccount?.publicKey} />{" "}
-                      {getFormattedPublicKey(pt.otherAccount?.publicKey)}
+                      <Avatar publicAddress={getPublicAddress(pt)} />{" "}
+                      {getFormattedPublicKey(getPublicAddress(pt))}
                     </AddressEl>
                   </td>
-                  <td>{getFormattedAmount(pt)}</td>
+                  <td>
+                    {getFormattedAmount(pt)}
+                    {isAccountMerge(pt) && (
+                      <CellNoteEl>[account merge]</CellNoteEl>
+                    )}
+                  </td>
                   <td>{getFormattedMemo(pt)}</td>
                   <td>
                     <TextLink
