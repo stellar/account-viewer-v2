@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import StellarSdk, { MemoType, MemoValue } from "stellar-sdk";
+import { useDispatch } from "react-redux";
 
+import { resetSendTxAction } from "ducks/sendTx";
 import { lumensFromStroops } from "helpers/stroopConversion";
 import { CreateTransaction } from "./CreateTransaction";
 import { ConfirmTransaction } from "./ConfirmTransaction";
@@ -32,6 +34,8 @@ const initialFormData: FormData = {
 };
 
 export const SendTransactionFlow = ({ onCancel }: { onCancel: () => void }) => {
+  const dispatch = useDispatch();
+
   const [currentStage, setCurrentStage] = useState(SendState.CREATE);
   const [formData, setFormData] = useState(initialFormData);
   const [maxFee, setMaxFee] = useState(
@@ -72,6 +76,7 @@ export const SendTransactionFlow = ({ onCancel }: { onCancel: () => void }) => {
           onRestartFlow={() => {
             setFormData(initialFormData);
             setCurrentStage(SendState.CREATE);
+            dispatch(resetSendTxAction());
           }}
           onCancel={onCancel}
         />
@@ -79,7 +84,10 @@ export const SendTransactionFlow = ({ onCancel }: { onCancel: () => void }) => {
 
       {currentStage === SendState.ERROR && (
         <FailedTransaction
-          onEditTransaction={() => setCurrentStage(SendState.CREATE)}
+          onEditTransaction={() => {
+            setCurrentStage(SendState.CREATE);
+            dispatch(resetSendTxAction());
+          }}
           onCancel={onCancel}
         />
       )}
