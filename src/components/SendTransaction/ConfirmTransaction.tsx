@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
+import BigNumber from "bignumber.js";
 
 import { ReactComponent as IconSend } from "assets/svg/icon-send.svg";
 import { Button, ButtonVariant } from "components/basic/Button";
@@ -146,8 +147,8 @@ export const ConfirmTransaction = ({
           <tr>
             <th>Amount</th>
             <td>
-              {formData.amount.toString()}{" "}
-              {formData.amount.eq(1) ? "lumen" : "lumens"}
+              {formData.amount}{" "}
+              {new BigNumber(formData.amount).eq(1) ? "lumen" : "lumens"}
             </td>
           </tr>
           {formData.memoContent ? (

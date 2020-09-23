@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import StellarSdk, { MemoType, MemoValue } from "stellar-sdk";
-import BigNumber from "bignumber.js";
 import { useDispatch } from "react-redux";
 
 import { resetSendTxAction } from "ducks/sendTx";
@@ -21,7 +20,7 @@ enum SendState {
 export interface FormData {
   toAccountId: string;
   federationAddress?: string;
-  amount: BigNumber;
+  amount: string;
   memoType: MemoType;
   memoContent: MemoValue;
 }
@@ -29,7 +28,7 @@ export interface FormData {
 const initialFormData: FormData = {
   toAccountId: "",
   federationAddress: undefined,
-  amount: new BigNumber(0),
+  amount: "",
   memoType: StellarSdk.MemoNone,
   memoContent: "",
 };
