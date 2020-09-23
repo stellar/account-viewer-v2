@@ -150,10 +150,12 @@ export const ConfirmTransaction = ({
               {formData.amount.eq(1) ? "lumen" : "lumens"}
             </td>
           </tr>
-          <tr>
-            <th>Memo</th>
-            <td>{formData.memoContent}</td>
-          </tr>
+          {formData.memoContent ? (
+            <tr>
+              <th>Memo</th>
+              <td>{formData.memoContent}</td>
+            </tr>
+          ) : null}
           <tr>
             <th>Fee</th>
             <td>{maxFee} lumens</td>
