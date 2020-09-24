@@ -3,10 +3,12 @@ import styled from "styled-components";
 import { useDispatch } from "react-redux";
 
 import { ReactComponent as StellarLogo } from "assets/svg/logo-stellar.svg";
+import { ReactComponent as IconCopy } from "assets/svg/icon-copy.svg";
+
 import { resetStoreAction } from "config/store";
 import { Avatar } from "components/Avatar";
+import { CopyWithTooltip } from "components/CopyWithTooltip";
 import { TextButton } from "components/basic/TextButton";
-import { CopyPublicAddress } from "components/CopyPublicAddress";
 import {
   FONT_WEIGHT,
   HEADER_HEIGHT_REM,
@@ -17,6 +19,7 @@ import {
 } from "constants/styles";
 import { stopAccountWatcherAction } from "ducks/account";
 import { stopTxHistoryWatcherAction } from "ducks/txHistory";
+import { getFormattedPublicKey } from "helpers/getFormattedPublicKey";
 import { useRedux } from "hooks/useRedux";
 
 const WrapperEl = styled.div`
@@ -86,6 +89,47 @@ const LogoLinkEl = styled.a`
   }
 `;
 
+const CopyPublicKeyButtonEl = styled.div`
+  display: flex;
+  position: relative;
+  align-items: center;
+  margin-left: 0.75rem;
+  margin-right: 0;
+  margin-top: 0.25rem;
+  font-size: 1rem;
+  line-height: 1.75rem;
+  font-weight: ${FONT_WEIGHT.medium};
+  color: ${PALETTE.black};
+
+  svg {
+    fill: ${PALETTE.purple};
+    height: 1.25rem;
+    width: 1.25rem;
+    margin-left: 0.75rem;
+    margin-top: -0.25rem;
+  }
+
+  &::after {
+    content: "";
+    cursor: default;
+    display: none;
+    width: 1px;
+    height: 2rem;
+    background-color: ${PALETTE.grey};
+    position: absolute;
+    top: -0.2rem;
+    right: -1.5rem;
+  }
+
+  @media (${MEDIA_QUERIES.headerFooterHeight}) {
+    margin-right: 2.6rem;
+
+    &::after {
+      display: block;
+    }
+  }
+`;
+
 export const Header = () => {
   const dispatch = useDispatch();
   const { account } = useRedux("account");
@@ -111,7 +155,12 @@ export const Header = () => {
           <>
             <AccountWrapperEl>
               <Avatar publicAddress={account.data?.id} />
-              <CopyPublicAddress publicAddress={account.data?.id} />
+              <CopyWithTooltip copyText={account.data?.id}>
+                <CopyPublicKeyButtonEl>
+                  {getFormattedPublicKey(account.data?.id)}
+                  <IconCopy />
+                </CopyPublicKeyButtonEl>
+              </CopyWithTooltip>
             </AccountWrapperEl>
             <SignOutWrapperEl>
               <TextButton onClick={handleSignOut}>Sign out</TextButton>
