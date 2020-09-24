@@ -42,6 +42,11 @@ export const SendTransactionFlow = ({ onCancel }: { onCancel: () => void }) => {
     lumensFromStroops(StellarSdk.BASE_FEE).toString(),
   );
 
+  const handleBack = () => {
+    setCurrentStage(SendState.CREATE);
+    dispatch(resetSendTxAction());
+  };
+
   return (
     <>
       {currentStage === SendState.CREATE && (
@@ -65,7 +70,7 @@ export const SendTransactionFlow = ({ onCancel }: { onCancel: () => void }) => {
           onFailedTx={() => {
             setCurrentStage(SendState.ERROR);
           }}
-          onCancel={onCancel}
+          onBack={handleBack}
           formData={formData}
           maxFee={maxFee}
         />
@@ -83,13 +88,7 @@ export const SendTransactionFlow = ({ onCancel }: { onCancel: () => void }) => {
       )}
 
       {currentStage === SendState.ERROR && (
-        <FailedTransaction
-          onEditTransaction={() => {
-            setCurrentStage(SendState.CREATE);
-            dispatch(resetSendTxAction());
-          }}
-          onCancel={onCancel}
-        />
+        <FailedTransaction onEditTransaction={handleBack} onCancel={onCancel} />
       )}
     </>
   );
