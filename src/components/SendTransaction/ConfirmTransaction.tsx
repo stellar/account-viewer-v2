@@ -70,7 +70,7 @@ interface ConfirmTransactionProps {
   maxFee: string;
   onSuccessfulTx: () => void;
   onFailedTx: () => void;
-  onCancel: () => void;
+  onBack: () => void;
 }
 
 export const ConfirmTransaction = ({
@@ -78,7 +78,7 @@ export const ConfirmTransaction = ({
   maxFee,
   onSuccessfulTx,
   onFailedTx,
-  onCancel,
+  onBack,
 }: ConfirmTransactionProps) => {
   const { sendTx, account, settings } = useRedux(
     "sendTx",
@@ -124,11 +124,11 @@ export const ConfirmTransaction = ({
             Submit transaction
           </Button>
           <Button
-            onClick={onCancel}
+            onClick={onBack}
             variant={ButtonVariant.secondary}
             disabled={sendTx.status === ActionStatus.PENDING}
           >
-            Cancel
+            Back
           </Button>
         </>
       }
