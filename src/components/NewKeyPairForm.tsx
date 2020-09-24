@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Keypair } from "stellar-sdk";
-import CopyToClipboard from "react-copy-to-clipboard";
 
 import { ReactComponent as IconCopy } from "assets/svg/icon-copy.svg";
 
@@ -10,6 +9,7 @@ import { TextButton } from "components/basic/TextButton";
 import { Checkbox } from "components/basic/Checkbox";
 import { Heading4 } from "components/basic/Heading";
 import { InfoBlock, InfoBlockVariant } from "components/basic/InfoBlock";
+import { CopyWithTooltip, TooltipPosition } from "components/CopyWithTooltip";
 import { ErrorMessage } from "components/ErrorMessage";
 import { ModalContent } from "components/ModalContent";
 
@@ -50,11 +50,13 @@ const KeyValueEl = styled.div`
 `;
 
 const CopyButtonEl = styled.div`
-  min-width: 130px;
-
   @media (min-width: ${INLINE_LAYOUT_WIDTH}) {
     margin-bottom: -1rem;
   }
+`;
+
+const CopyWrapperEl = styled.div`
+  display: inline-block;
 `;
 
 const ButtonsWrapperEl = styled.div`
@@ -87,7 +89,6 @@ export const NewKeyPairForm = ({ onClose }: ModalPageProps) => {
   const [acceptedWarning, setAcceptedWarning] = useState(false);
   const [newKeyPair, setNewKeyPair] = useState<KeyPairType | undefined>();
   const [keyPairCopyString, setKeyPairCopyString] = useState("");
-  const [isKeyPairCopied, setIsKeyPairCopied] = useState(false);
   const [confirmSavedSecretKey, setConfirmSavedSecretKey] = useState(false);
   const { errorMessage, setErrorMessage } = useErrorMessage({
     initialMessage: "",
@@ -130,10 +131,6 @@ ${keypair.secret()}`);
     }
 
     setErrorMessage("");
-  };
-
-  const handleCopyKeys = () => {
-    setIsKeyPairCopied(true);
   };
 
   const toggleConfirmSavedSecretKey = () => {
@@ -234,13 +231,16 @@ ${keypair.secret()}`);
                 </KeyWrapperEl>
               </KeysEl>
 
-              <CopyToClipboard text={keyPairCopyString} onCopy={handleCopyKeys}>
-                <CopyButtonEl>
-                  <TextButton icon={<IconCopy />}>
-                    {isKeyPairCopied ? "Copied keys" : "Copy keys"}
-                  </TextButton>
-                </CopyButtonEl>
-              </CopyToClipboard>
+              <CopyWrapperEl>
+                <CopyWithTooltip
+                  copyText={keyPairCopyString}
+                  tooltipPosition={TooltipPosition.right}
+                >
+                  <CopyButtonEl>
+                    <TextButton icon={<IconCopy />}>Copy keys</TextButton>
+                  </CopyButtonEl>
+                </CopyWithTooltip>
+              </CopyWrapperEl>
             </KeyPairWrapperEl>
           )}
 

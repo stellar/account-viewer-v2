@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
-import CopyToClipboard from "react-copy-to-clipboard";
 import QRCode from "qrcode.react";
 
 import { ReactComponent as IconCopy } from "assets/svg/icon-copy.svg";
 
 import { Avatar } from "components/Avatar";
+import { CopyWithTooltip, TooltipPosition } from "components/CopyWithTooltip";
 import { TextButton } from "components/basic/TextButton";
 import { ModalContent } from "components/ModalContent";
 import { FONT_WEIGHT, PALETTE } from "constants/styles";
@@ -43,7 +43,6 @@ const AddressEl = styled.div`
 
 export const ReceiveTransaction = () => {
   const { account } = useRedux("account");
-  const [isAccountIdCopied, setAccountIsIdCopied] = useState(false);
   const accountId = account.data?.id;
 
   return (
@@ -63,14 +62,12 @@ export const ReceiveTransaction = () => {
           <AddressEl>{accountId}</AddressEl>
         </AddressWrapperEl>
 
-        <CopyToClipboard
-          text={accountId}
-          onCopy={() => setAccountIsIdCopied(true)}
+        <CopyWithTooltip
+          copyText={accountId}
+          tooltipPosition={TooltipPosition.right}
         >
-          <TextButton icon={<IconCopy />}>
-            {isAccountIdCopied ? "Copied" : "Copy public key"}
-          </TextButton>
-        </CopyToClipboard>
+          <TextButton icon={<IconCopy />}>Copy public key</TextButton>
+        </CopyWithTooltip>
       </ContentWrapperEl>
     </ModalContent>
   );
