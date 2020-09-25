@@ -12,11 +12,19 @@ const TextLinkEl = styled.a<{ variant: TextLinkVariant }>`
   color: ${PALETTE.black};
   text-decoration: underline;
 
+  &:hover {
+    text-decoration: none;
+  }
+
   ${(props) =>
     props.variant === TextLinkVariant.secondary &&
     css`
       color: ${PALETTE.black60};
       text-decoration: none;
+
+      &:hover {
+        opacity: 0.7;
+      }
     `};
 `;
 

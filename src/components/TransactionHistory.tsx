@@ -25,6 +25,7 @@ import { FONT_WEIGHT, pageInsetStyle, PALETTE } from "constants/styles";
 import { ActionStatus } from "types/types.d";
 
 const COLUMN_LAYOUT_WIDTH = "800px";
+const HEADING_INLINE_WIDTH = "780px";
 
 const LABEL_DATE_TIME = "Date/Time";
 const LABEL_ADDRESS = "Address";
@@ -44,7 +45,7 @@ const HeadingRowEl = styled.div`
     margin-bottom: 1rem;
   }
 
-  @media (min-width: 680px) {
+  @media (min-width: ${HEADING_INLINE_WIDTH}) {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -65,19 +66,23 @@ const TxToggleLinkEl = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
 
+  span {
+    line-height: 1.5rem;
+  }
+
   button {
     margin-left: -0.2rem;
     margin-top: 0.2rem;
   }
 
-  @media (min-width: 680px) {
+  @media (min-width: ${HEADING_INLINE_WIDTH}) {
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
 
     button {
       margin-left: 0.5rem;
-      margin-top: -0.25rem;
+      margin-top: 0;
     }
   }
 `;
@@ -357,9 +362,11 @@ export const TransactionHistory = () => {
         <Heading2>Payments History</Heading2>
         {hasHiddenTransactions && (
           <TxToggleLinkEl>
-            {`${
-              showAllTxs ? "Including" : "Hiding"
-            } payments smaller than 0.5 XLM`}{" "}
+            <span>
+              {`${
+                showAllTxs ? "Including" : "Hiding"
+              } payments smaller than 0.5 XLM`}{" "}
+            </span>
             <TextButton
               onClick={() => setShowAllTxs(!showAllTxs)}
               variant={TextButtonVariant.secondary}

@@ -24,17 +24,25 @@ const ButtonEl = styled.button<{ variant: ButtonVariant }>`
   align-items: center;
   justify-content: center;
 
+  &:hover {
+    background-color: ${PALETTE.purpleDark};
+  }
+
   ${(props) =>
     props.variant === ButtonVariant.secondary &&
     css`
       color: ${PALETTE.purple};
       background-color: ${PALETTE.white};
       box-shadow: none;
+
+      &:hover {
+        background-color: ${PALETTE.white60};
+      }
     `};
 
   &:disabled {
     cursor: not-allowed;
-    opacity: 0.7;
+    opacity: 0.6;
   }
 `;
 
