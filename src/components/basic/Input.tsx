@@ -16,18 +16,22 @@ const LabelEl = styled.label`
   display: block;
 `;
 
-const InputWrapperEl = styled.div`
-  border: 1px solid ${PALETTE.grey};
-  border-radius: 0.125rem;
-  background-color: ${PALETTE.white};
+const InputContainerEl = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
 `;
 
-const InputEl = styled.input`
+const InputWrapperEl = styled.div`
+  border: 1px solid ${PALETTE.grey};
+  border-radius: 0.125rem;
+  background-color: ${PALETTE.white};
+  flex: 1;
   height: 100%;
+`;
+
+const InputEl = styled.input`
   padding: 0.55rem 0.75rem;
   font-size: 1rem;
   line-height: 1.5rem;
@@ -35,7 +39,7 @@ const InputEl = styled.input`
   border-radius: 0.125rem;
   border: none;
   background-color: transparent;
-  flex: 1;
+  width: 100%;
   min-width: 0;
 
   &::placeholder {
@@ -44,7 +48,7 @@ const InputEl = styled.input`
 `;
 
 const RightTextEl = styled.div`
-  margin: 0.2rem 0.75rem 0 0.2rem;
+  margin-left: 1rem;
   font-size: 1rem;
   line-height: 1.5rem;
   color: ${PALETTE.black};
@@ -79,10 +83,12 @@ export const Input = ({
 }: InputProps) => (
   <WrapperEl>
     {label && <LabelEl htmlFor={id}>{label}</LabelEl>}
-    <InputWrapperEl>
-      <InputEl id={id} aria-invalid={!!error} {...props} />
+    <InputContainerEl>
+      <InputWrapperEl>
+        <InputEl id={id} aria-invalid={!!error} {...props} />
+      </InputWrapperEl>
       {rightElement && <RightTextEl>{rightElement}</RightTextEl>}
-    </InputWrapperEl>
+    </InputContainerEl>
     {error && <ErrorEl>{error}</ErrorEl>}
     {note && <NoteEl>{note}</NoteEl>}
   </WrapperEl>

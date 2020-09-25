@@ -39,6 +39,12 @@ const Styles = createGlobalStyle`
     font-family: ${FONT_FAMILY.base};
     line-height: 1;
   }
+  /* Remove spinners (up and down arrows) from number inputs */
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
   /* http://tachyons.io/docs/layout/box-sizing/ */
   body * {
     box-sizing: border-box;
