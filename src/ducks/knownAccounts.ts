@@ -5,7 +5,7 @@ import {
   KnownAccountsInitialState,
 } from "types/types.d";
 
-export const fetchAccountsAction = createAsyncThunk<KnownAccount[]>(
+export const fetchMemoRequiredAccountsAction = createAsyncThunk<KnownAccount[]>(
   "knownAccounts/fetchKnownAccountsAction",
   async () => {
     let result;
@@ -27,7 +27,7 @@ export const fetchAccountsAction = createAsyncThunk<KnownAccount[]>(
 );
 
 const initialState: KnownAccountsInitialState = {
-  data: undefined,
+  memoRequired: undefined,
   status: undefined,
 };
 
@@ -36,14 +36,17 @@ const knownAccountsSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchAccountsAction.pending, (state) => {
+    builder.addCase(fetchMemoRequiredAccountsAction.pending, (state) => {
       state.status = ActionStatus.PENDING;
     });
-    builder.addCase(fetchAccountsAction.fulfilled, (state, action) => {
-      state.data = action.payload;
-      state.status = ActionStatus.SUCCESS;
-    });
-    builder.addCase(fetchAccountsAction.rejected, (state) => {
+    builder.addCase(
+      fetchMemoRequiredAccountsAction.fulfilled,
+      (state, action) => {
+        state.memoRequired = action.payload;
+        state.status = ActionStatus.SUCCESS;
+      },
+    );
+    builder.addCase(fetchMemoRequiredAccountsAction.rejected, (state) => {
       state.status = ActionStatus.ERROR;
     });
   },

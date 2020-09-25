@@ -70,7 +70,7 @@ export interface KnownAccount {
 }
 
 export interface KnownAccountsInitialState {
-  data: KnownAccount[] | undefined;
+  memoRequired: KnownAccount[] | undefined;
   status: ActionStatus | undefined;
 }
 

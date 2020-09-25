@@ -16,7 +16,7 @@ import { InfoBlock, InfoBlockVariant } from "components/basic/InfoBlock";
 import { Select } from "components/basic/Select";
 import { ModalContent } from "components/ModalContent";
 
-import { fetchAccountsAction } from "ducks/knownAccounts";
+import { fetchMemoRequiredAccountsAction } from "ducks/knownAccounts";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { lumensFromStroops } from "helpers/stroopConversion";
 import { useRedux } from "hooks/useRedux";
@@ -152,7 +152,7 @@ export const CreateTransaction = ({
       knownAccounts.status !== ActionStatus.SUCCESS &&
       knownAccounts.status !== ActionStatus.PENDING
     ) {
-      dispatch(fetchAccountsAction());
+      dispatch(fetchMemoRequiredAccountsAction());
     }
   }, [knownAccounts.status, dispatch]);
 
@@ -206,7 +206,7 @@ export const CreateTransaction = ({
   };
 
   const checkIfKnownAccount = () => {
-    const found = knownAccounts.data?.find(
+    const found = knownAccounts.memoRequired?.find(
       (acc: KnownAccount) => acc.address === formData.toAccountId,
     );
     const message = found
