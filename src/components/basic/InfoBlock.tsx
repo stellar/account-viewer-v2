@@ -4,6 +4,7 @@ import { PALETTE } from "constants/styles";
 
 export enum InfoBlockVariant {
   info = "info",
+  error = "error",
   warning = "warning",
 }
 
@@ -15,9 +16,15 @@ const InfoEl = styled.div<{ variant: InfoBlockVariant }>`
   width: 100%;
 
   ${(props) =>
-    props.variant === InfoBlockVariant.warning &&
+    props.variant === InfoBlockVariant.error &&
     css`
       background-color: ${PALETTE.lightRed};
+    `};
+
+  ${(props) =>
+    props.variant === InfoBlockVariant.warning &&
+    css`
+      background-color: ${PALETTE.lightYellow};
     `};
 `;
 

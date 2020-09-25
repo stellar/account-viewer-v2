@@ -63,6 +63,17 @@ export interface KeyStoreInitialState {
   errorString?: string;
 }
 
+export interface KnownAccount {
+  address: string;
+  name: string;
+  [key: string]: any;
+}
+
+export interface KnownAccountsInitialState {
+  data: KnownAccount[] | undefined;
+  status: ActionStatus | undefined;
+}
+
 export interface SendTxInitialState {
   data: Horizon.TransactionResponse | null;
   status: ActionStatus | undefined;
@@ -95,6 +106,7 @@ export interface WalletInitialState {
 export interface Store {
   account: AccountInitialState;
   keyStore: KeyStoreInitialState;
+  knownAccounts: KnownAccountsInitialState;
   sendTx: SendTxInitialState;
   settings: SettingsInitialState;
   txHistory: TxHistoryInitialState;
