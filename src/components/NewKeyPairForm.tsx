@@ -153,7 +153,7 @@ ${keypair.secret()}`);
             </>
           }
         >
-          <InfoBlock variant={InfoBlockVariant.warning}>
+          <InfoBlock variant={InfoBlockVariant.error}>
             <Heading4>
               ATTENTION: Copying and pasting your secret key is not recommended
             </Heading4>
@@ -192,7 +192,7 @@ ${keypair.secret()}`);
             </ButtonsWrapperEl>
           }
         >
-          <InfoBlock variant={InfoBlockVariant.warning}>
+          <InfoBlock variant={InfoBlockVariant.error}>
             <Heading4>ATTENTION:</Heading4>
 
             <ul>

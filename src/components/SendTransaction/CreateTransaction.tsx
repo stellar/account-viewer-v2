@@ -7,6 +7,7 @@ import StellarSdk, {
   StrKey,
 } from "stellar-sdk";
 import BigNumber from "bignumber.js";
+import { useDispatch } from "react-redux";
 
 import { Button, ButtonVariant } from "components/basic/Button";
 import { TextButton, TextButtonVariant } from "components/basic/TextButton";
@@ -15,10 +16,11 @@ import { InfoBlock, InfoBlockVariant } from "components/basic/InfoBlock";
 import { Select } from "components/basic/Select";
 import { ModalContent } from "components/ModalContent";
 
+import { fetchMemoRequiredAccountsAction } from "ducks/knownAccounts";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { lumensFromStroops } from "helpers/stroopConversion";
 import { useRedux } from "hooks/useRedux";
-import { ActionStatus, NetworkCongestion } from "types/types.d";
+import { ActionStatus, KnownAccount, NetworkCongestion } from "types/types.d";
 import { FormData } from "./SendTransactionFlow";
 
 const RowEl = styled.div`
@@ -83,7 +85,13 @@ export const CreateTransaction = ({
   onCancel,
   setMaxFee,
 }: CreateTransactionProps) => {
-  const { account, settings } = useRedux("account", "settings");
+  const dispatch = useDispatch();
+
+  const { account, settings, knownAccounts } = useRedux(
+    "account",
+    "settings",
+    "knownAccounts",
+  );
   const [isMemoVisible, setIsMemoVisible] = useState(!!formData.memoContent);
   const [isMemoTypeFromFederation, setIsMemoTypeFromFederation] = useState(
     false,
@@ -139,6 +147,15 @@ export const CreateTransaction = ({
     fetchNetworkBaseFee();
   }, [setMaxFee, settings.isTestnet]);
 
+  useEffect(() => {
+    if (
+      knownAccounts.status !== ActionStatus.SUCCESS &&
+      knownAccounts.status !== ActionStatus.PENDING
+    ) {
+      dispatch(fetchMemoRequiredAccountsAction());
+    }
+  }, [knownAccounts.status, dispatch]);
+
   const memoPlaceholderMap: { [index: string]: string } = {
     [StellarSdk.MemoText]: "Up to 28 characters",
     [StellarSdk.MemoID]: "Unsigned 64-bit integer",
@@ -186,6 +203,18 @@ export const CreateTransaction = ({
     } else {
       resetFederationAddressInput();
     }
+  };
+
+  const checkIfKnownAccount = () => {
+    const found = knownAccounts.memoRequired?.find(
+      (acc: KnownAccount) => acc.address === formData.toAccountId,
+    );
+    const message = found
+      ? `The payment destination (${found.name}) requires you to specify a memo to identify your account.`
+      : "";
+
+    onInput({ ...formData, memoRequiredMessage: message });
+    setIsMemoVisible(!!found);
   };
 
   const resetFederationAddressInput = () => {
@@ -338,6 +367,7 @@ export const CreateTransaction = ({
           onBlur={(e) => {
             validate(e);
             fetchIfFederationAddress();
+            checkIfKnownAccount();
           }}
           error={inputErrors[SendFormIds.SEND_TO]}
           value={formData.toAccountId}
@@ -350,7 +380,7 @@ export const CreateTransaction = ({
           <InfoBlock
             variant={
               federationAddressFetchStatus === ActionStatus.ERROR
-                ? InfoBlockVariant.warning
+                ? InfoBlockVariant.error
                 : InfoBlockVariant.info
             }
           >
@@ -397,6 +427,14 @@ export const CreateTransaction = ({
           />
         </CellEl>
       </RowEl>
+
+      {formData.memoRequiredMessage && (
+        <RowEl>
+          <InfoBlock variant={InfoBlockVariant.warning}>
+            <p>{formData.memoRequiredMessage}</p>
+          </InfoBlock>
+        </RowEl>
+      )}
 
       {!isMemoVisible && (
         <RowEl>

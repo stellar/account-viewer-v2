@@ -132,7 +132,7 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
             </>
           }
         >
-          <InfoBlock variant={InfoBlockVariant.warning}>
+          <InfoBlock variant={InfoBlockVariant.error}>
             <Heading4>
               ATTENTION: Copying and pasting your secret key is not recommended
             </Heading4>

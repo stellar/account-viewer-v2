@@ -12,6 +12,7 @@ import { RESET_STORE_ACTION_TYPE } from "constants/settings";
 
 import { reducer as account } from "ducks/account";
 import { reducer as keyStore } from "ducks/keyStore";
+import { reducer as knownAccounts } from "ducks/knownAccounts";
 import { reducer as sendTx } from "ducks/sendTx";
 import { reducer as settings } from "ducks/settings";
 import { reducer as txHistory } from "ducks/txHistory";
@@ -37,6 +38,7 @@ const isSerializable = (value: any) =>
 const reducers = combineReducers({
   account,
   keyStore,
+  knownAccounts,
   sendTx,
   settings,
   txHistory,
