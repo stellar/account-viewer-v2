@@ -62,6 +62,10 @@ const CloseButtonEl = styled.button`
   right: 0.75rem;
   cursor: pointer;
 
+  &:hover {
+    opacity: 0.8;
+  }
+
   svg {
     width: 1rem;
     height: 1rem;

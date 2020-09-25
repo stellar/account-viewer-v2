@@ -101,6 +101,10 @@ const CopyPublicKeyButtonEl = styled.div`
   font-weight: ${FONT_WEIGHT.medium};
   color: ${PALETTE.black};
 
+  &:hover {
+    opacity: 0.7;
+  }
+
   svg {
     fill: ${PALETTE.purple};
     height: 1.25rem;

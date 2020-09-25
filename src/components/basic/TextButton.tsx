@@ -22,16 +22,28 @@ const TextButtonEl = styled.button<{ variant: TextButtonVariant }>`
   justify-content: center;
 
   ${(props) =>
+    props.variant === TextButtonVariant.primary &&
+    css`
+      &:hover {
+        opacity: 0.7;
+      }
+    `};
+
+  ${(props) =>
     props.variant === TextButtonVariant.secondary &&
     css`
       font-weight: ${FONT_WEIGHT.normal};
       color: ${PALETTE.black};
       text-decoration: underline;
+
+      &:hover {
+        text-decoration: none;
+      }
     `};
 
   &:disabled {
     cursor: not-allowed;
-    opacity: 0.7;
+    opacity: 0.6;
   }
 `;
 
