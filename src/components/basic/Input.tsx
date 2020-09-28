@@ -62,6 +62,8 @@ const NoteEl = styled.div`
 `;
 
 const ErrorEl = styled(NoteEl)`
+  font-size: 1rem;
+  line-height: 1.5rem;
   color: ${PALETTE.red};
 `;
 
