@@ -8,8 +8,7 @@ import logoAlbedo from "assets/svg/logo-albedo.svg";
 import logoLedger from "assets/svg/logo-ledger.svg";
 import logoTrezor from "assets/svg/logo-trezor.svg";
 
-import { Button } from "components/basic/Button";
-import { Heading1, Heading5 } from "components/basic/Heading";
+import { Heading1 } from "components/basic/Heading";
 import { TextButton, TextButtonVariant } from "components/basic/TextButton";
 
 import { Modal } from "components/Modal";
@@ -62,7 +61,7 @@ const ButtonsWrapperEl = styled.div`
   align-items: center;
 
   & > button {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
   }
 `;
 
@@ -163,12 +162,13 @@ export const Landing = () => {
         </WalletButton>
       </WalletButtonsWrapperEl>
 
-      <Heading5>Other authentication methods</Heading5>
-
       <ButtonsWrapperEl>
-        <Button onClick={() => openModal(ModalType.SIGNIN_SECRET_KEY)}>
+        <TextButton
+          onClick={() => openModal(ModalType.SIGNIN_SECRET_KEY)}
+          variant={TextButtonVariant.secondary}
+        >
           Sign in using a secret key
-        </Button>
+        </TextButton>
 
         <TextButton
           onClick={() => openModal(ModalType.NEW_KEY_PAIR)}
