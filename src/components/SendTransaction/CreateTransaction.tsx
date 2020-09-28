@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import StellarSdk, {
   Memo,
   MemoType,
@@ -21,6 +21,7 @@ import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { lumensFromStroops } from "helpers/stroopConversion";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, KnownAccount, NetworkCongestion } from "types/types.d";
+import { PALETTE } from "constants/styles";
 import { FormData } from "./SendTransactionFlow";
 
 const RowEl = styled.div`
@@ -51,6 +52,31 @@ const CellEl = styled.div`
     &:nth-child(2) {
       margin-top: 0;
     }
+  }
+`;
+
+const CongestionEl = styled.span<{ congestion: NetworkCongestion }>`
+  strong {
+    ${(props) =>
+      props.congestion === NetworkCongestion.LOW
+        ? css`
+            color: ${PALETTE.green};
+          `
+        : ""}
+
+    ${(props) =>
+      props.congestion === NetworkCongestion.MEDIUM
+        ? css`
+            color: ${PALETTE.orange};
+          `
+        : ""}
+
+    ${(props) =>
+      props.congestion === NetworkCongestion.HIGH
+        ? css`
+            color: ${PALETTE.red};
+          `
+        : ""}
   }
 `;
 
@@ -543,10 +569,10 @@ export const CreateTransaction = ({
             onBlur={validate}
             error={inputErrors[SendFormIds.SEND_FEE]}
             note={
-              <>
+              <CongestionEl congestion={networkCongestion}>
                 <strong>{networkCongestion} congestion!</strong> Recommended
                 fee: {recommendedFee}.
-              </>
+              </CongestionEl>
             }
           />
         </CellEl>

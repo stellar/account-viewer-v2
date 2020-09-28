@@ -29,6 +29,8 @@ export enum PALETTE {
   red = "#CC0000",
   lightRed = "#FFEDEE",
   lightYellow = "#FAECD8",
+  green = "#20bf6b",
+  orange = "#FA8231",
 }
 
 export const THEME: Theme = {
