@@ -6,6 +6,7 @@ import BigNumber from "bignumber.js";
 import { ReactComponent as IconSend } from "assets/svg/icon-send.svg";
 import { Button, ButtonVariant } from "components/basic/Button";
 import { InfoBlock } from "components/basic/InfoBlock";
+import { Loader } from "components/basic/Loader";
 import { Avatar } from "components/Avatar";
 import { ModalContent } from "components/ModalContent";
 import { FONT_WEIGHT, PALETTE } from "constants/styles";
@@ -13,7 +14,7 @@ import { FONT_WEIGHT, PALETTE } from "constants/styles";
 import { stroopsFromLumens } from "helpers/stroopConversion";
 import { sendTxAction } from "ducks/sendTx";
 import { useRedux } from "hooks/useRedux";
-import { ActionStatus } from "types/types.d";
+import { ActionStatus, AuthType } from "types/types.d";
 import { FormData } from "./SendTransactionFlow";
 
 const TableEl = styled.table`
@@ -63,6 +64,26 @@ const AddressWrapperEl = styled.div`
     padding-left: 0.75rem;
     flex: 1;
   }
+`;
+
+const InlineLoadingEl = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+
+  div:nth-child(1) {
+    flex-shrink: 0;
+  }
+`;
+
+const InlineLoadingTextEl = styled.div`
+  font-size: 1rem;
+  line-height: 1.5rem;
+  color: ${PALETTE.black60};
+  margin-left: 0.5rem;
 `;
 
 interface ConfirmTransactionProps {
@@ -132,6 +153,16 @@ export const ConfirmTransaction = ({
           </Button>
         </>
       }
+      footer={
+        sendTx.status === ActionStatus.PENDING && (
+          <InlineLoadingEl>
+            <Loader size="1.5rem" />
+            <InlineLoadingTextEl>
+              Confirming your transaction. You can close this modal.
+            </InlineLoadingTextEl>
+          </InlineLoadingEl>
+        )
+      }
     >
       <TableEl>
         <tbody>
@@ -164,9 +195,11 @@ export const ConfirmTransaction = ({
         </tbody>
       </TableEl>
 
-      {sendTx.status === ActionStatus.PENDING && (
-        <InfoBlock>{`Submitting transaction. Follow ${settings.authType} instructions.`}</InfoBlock>
-      )}
+      {/* TODO: add instructions for wallets as needed */}
+      {sendTx.status === ActionStatus.PENDING &&
+        settings.authType !== AuthType.PRIVATE_KEY && (
+          <InfoBlock>{`Submitting transaction. Follow ${settings.authType} instructions.`}</InfoBlock>
+        )}
     </ModalContent>
   );
 };
