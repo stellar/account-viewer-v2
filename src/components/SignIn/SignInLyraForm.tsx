@@ -113,7 +113,11 @@ export const SignInLyraForm = ({ onClose }: ModalPageProps) => {
         <InfoBlock>Please follow the instructions in the Lyra popup.</InfoBlock>
       )}
 
-      <ErrorMessage message={errorMessage} textAlign="center" />
+      <ErrorMessage
+        message={errorMessage}
+        textAlign="center"
+        marginTop="1rem"
+      />
     </ModalWalletContent>
   );
 };
