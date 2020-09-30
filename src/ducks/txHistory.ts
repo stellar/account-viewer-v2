@@ -121,7 +121,7 @@ export const txHistorySlice = createSlice({
     },
     stopTxHistoryWatcherAction: () => {
       if (txHistoryWatcherStopper) {
-        txHistoryWatcherStopper();
+        txHistoryWatcherStopper.stop();
         txHistoryWatcherStopper = undefined;
       }
 
