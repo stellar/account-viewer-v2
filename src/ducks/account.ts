@@ -112,7 +112,7 @@ const accountSlice = createSlice({
     },
     stopAccountWatcherAction: () => {
       if (accountWatcherStopper) {
-        accountWatcherStopper();
+        accountWatcherStopper.stop();
         accountWatcherStopper = undefined;
       }
 
