@@ -39,7 +39,7 @@ const LabelEl = styled.span`
 interface WalletButtonProps {
   imageSrc: string;
   imageAlt: string;
-  infoText: string;
+  infoText: string | React.ReactNode;
   onClick: () => void;
   children: string;
 }

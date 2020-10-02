@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Heading2 } from "components/basic/Heading";
-import { InfoButtonWithTooltip } from "components/InfoButtonWithTooltip";
+import { wallets } from "constants/wallets";
 
 const WrapperEl = styled.div`
   display: flex;
@@ -56,32 +56,42 @@ const ButtonsWrapperEl = styled.div`
   }
 `;
 
+const InfoTextEl = styled.p`
+  text-align: center;
+`;
+
 interface ModalWalletContentProps {
-  headlineText: string;
-  imageSrc: string;
-  imageAlt: string;
-  infoText: string;
+  type: string;
   buttonFooter?: React.ReactNode;
   children: React.ReactNode;
 }
 
 export const ModalWalletContent = ({
-  headlineText,
-  imageSrc,
-  imageAlt,
-  infoText,
+  type,
   buttonFooter,
   children,
-}: ModalWalletContentProps) => (
-  <WrapperEl>
-    <HeaderImageEl>
-      <img src={imageSrc} alt={imageAlt} />
-    </HeaderImageEl>
-    <HeaderEl>
-      <HeadlineEl>{headlineText}</HeadlineEl>
-      <InfoButtonWithTooltip>{infoText}</InfoButtonWithTooltip>
-    </HeaderEl>
-    <ContentEl>{children}</ContentEl>
-    {buttonFooter && <ButtonsWrapperEl>{buttonFooter}</ButtonsWrapperEl>}
-  </WrapperEl>
-);
+}: ModalWalletContentProps) => {
+  const walletData = wallets[type];
+
+  if (!walletData) {
+    throw new Error(
+      "There is no Data for this wallet type. Please make sure the type is correct.",
+    );
+  }
+
+  return (
+    <WrapperEl>
+      <HeaderImageEl>
+        <img src={walletData.logoImg} alt={walletData.logoImgAltText} />
+      </HeaderImageEl>
+      <HeaderEl>
+        <HeadlineEl>{walletData.title}</HeadlineEl>
+      </HeaderEl>
+      <ContentEl>
+        <InfoTextEl>{walletData.infoText}</InfoTextEl>
+        {children}
+      </ContentEl>
+      {buttonFooter && <ButtonsWrapperEl>{buttonFooter}</ButtonsWrapperEl>}
+    </WrapperEl>
+  );
+};

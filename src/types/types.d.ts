@@ -117,3 +117,17 @@ export interface Store {
 }
 
 export type StoreKey = keyof Store;
+
+export interface WalletData {
+  title: string;
+  logoImg: string;
+  logoImgAltText: string;
+  modalType: ModalType;
+  infoText: React.ReactNode | string;
+  infoLinkText: string;
+  infoLink: string;
+}
+
+export interface Wallets {
+  [key: string]: WalletData;
+}

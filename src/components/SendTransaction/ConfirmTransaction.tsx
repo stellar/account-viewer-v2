@@ -157,9 +157,7 @@ export const ConfirmTransaction = ({
         sendTx.status === ActionStatus.PENDING && (
           <InlineLoadingEl>
             <Loader size="1.5rem" />
-            <InlineLoadingTextEl>
-              Confirming your transaction. You can close this modal.
-            </InlineLoadingTextEl>
+            <InlineLoadingTextEl>Submitting transaction.</InlineLoadingTextEl>
           </InlineLoadingEl>
         )
       }

@@ -3,7 +3,6 @@ import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { KeyType } from "@stellar/wallet-sdk";
 
-import logoAlbedo from "assets/svg/logo-albedo.svg";
 import { Button, ButtonVariant } from "components/basic/Button";
 import { InfoBlock } from "components/basic/InfoBlock";
 import { ModalWalletContent } from "components/ModalWalletContent";
@@ -79,15 +78,11 @@ export const SignInAlbedoForm = ({ onClose }: ModalPageProps) => {
 
   return (
     <ModalWalletContent
-      headlineText="Sign in with Albedo"
-      imageSrc={logoAlbedo}
-      imageAlt="Albedo logo"
-      // TODO: add text
-      infoText="TODO"
+      type="albedo"
       buttonFooter={
         <>
           {!albedoStatus && (
-            <Button onClick={fetchAlbedoLogin}>Sign in with Albedo</Button>
+            <Button onClick={fetchAlbedoLogin}>Connect with Albedo</Button>
           )}
           <Button onClick={onClose} variant={ButtonVariant.secondary}>
             Cancel

@@ -4,7 +4,6 @@ import { useDispatch } from "react-redux";
 import TrezorConnect from "trezor-connect";
 import { KeyType } from "@stellar/wallet-sdk";
 
-import logoTrezor from "assets/svg/logo-trezor.svg";
 import { Button, ButtonVariant } from "components/basic/Button";
 import { InfoBlock } from "components/basic/InfoBlock";
 import { ErrorMessage } from "components/ErrorMessage";
@@ -89,15 +88,11 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
 
   return (
     <ModalWalletContent
-      headlineText="Sign in with Trezor"
-      imageSrc={logoTrezor}
-      imageAlt="Trezor logo"
-      // TODO: add text
-      infoText="TODO"
+      type="trezor"
       buttonFooter={
         <>
           {!trezorStatus && (
-            <Button onClick={initTrezor}>Sign in with Trezor</Button>
+            <Button onClick={initTrezor}>Connect with Trezor</Button>
           )}
           <Button onClick={onClose} variant={ButtonVariant.secondary}>
             Cancel

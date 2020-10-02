@@ -4,8 +4,6 @@ import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { KeyType } from "@stellar/wallet-sdk";
 
-// TODO: update Lyra logo once we have it.
-import logoLyra from "assets/images/logo-lyra.png";
 import { Button, ButtonVariant } from "components/basic/Button";
 import { InfoBlock } from "components/basic/InfoBlock";
 import { ModalWalletContent } from "components/ModalWalletContent";
@@ -92,14 +90,10 @@ export const SignInLyraForm = ({ onClose }: ModalPageProps) => {
 
   return (
     <ModalWalletContent
-      headlineText="Sign in with Lyra"
-      imageSrc={logoLyra}
-      imageAlt="Lyra logo"
-      // TODO: add text
-      infoText="TODO"
+      type="lyra"
       buttonFooter={
         <>
-          {!lyraStatus && <Button onClick={initLyra}>Sign in with Lyra</Button>}
+          {!lyraStatus && <Button onClick={initLyra}>Connect with Lyra</Button>}
           <Button onClick={onClose} variant={ButtonVariant.secondary}>
             Cancel
           </Button>
