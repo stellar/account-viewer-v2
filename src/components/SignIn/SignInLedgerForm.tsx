@@ -4,7 +4,6 @@ import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { KeyType } from "@stellar/wallet-sdk";
 
-import logoLedger from "assets/svg/logo-ledger.svg";
 import { Button, ButtonVariant } from "components/basic/Button";
 import { Checkbox } from "components/basic/Checkbox";
 import { InfoBlock } from "components/basic/InfoBlock";
@@ -98,14 +97,10 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
 
   return (
     <ModalWalletContent
-      headlineText="Connect with Ledger"
-      imageSrc={logoLedger}
-      imageAlt="Ledger logo"
-      // TODO: add text
-      infoText="TODO"
+      type="ledger"
       buttonFooter={
         <>
-          <Button onClick={handleLedgerSignIn}>Sign in with Ledger</Button>
+          <Button onClick={handleLedgerSignIn}>Connect with Ledger</Button>
           <Button onClick={onClose} variant={ButtonVariant.secondary}>
             Cancel
           </Button>

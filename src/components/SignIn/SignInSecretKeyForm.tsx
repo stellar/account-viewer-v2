@@ -20,6 +20,7 @@ import { updateSettingsAction } from "ducks/settings";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, ModalPageProps } from "types/types.d";
+import { TextLink } from "components/basic/TextLink";
 
 const InputWrapperEl = styled.div`
   margin-top: 1.5rem;
@@ -119,11 +120,11 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
       {/* Show warning message */}
       {!acceptedWarning && (
         <ModalContent
-          headlineText="Sign in with a secret key"
+          headlineText="Connect with a secret key"
           buttonFooter={
             <>
               <Button onClick={() => setAcceptedWarning(true)}>
-                I understand the risks of pasting my secret key
+                I understand and accept the risks of entering my secret key
               </Button>
 
               <Button onClick={onClose} variant={ButtonVariant.secondary}>
@@ -134,21 +135,31 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
         >
           <InfoBlock variant={InfoBlockVariant.error}>
             <Heading4>
-              ATTENTION: Copying and pasting your secret key is not recommended
+              ATTENTION: Entering your secret key on any website is not
+              recommended
             </Heading4>
 
             <ul>
               <li>
-                By copying and pasting your secret key you are vulnerable to
-                different attacks and scams that can result in your secret key
-                being stolen.
+                Copy and pasting your secret key makes you vulnerable to
+                accidents, attacks, and scams that can result in loss of funds.
               </li>
-              <li>Only use this option if you’re aware of the risks...</li>
               <li>
-                Ideally use other authentication methods like a hardware wallet
-                or a browser
+                If this website were compromised or if you visit a phishing
+                replica of this site, your secret key may be stolen if you use
+                this method.
               </li>
-              <li>...</li>
+              <li>
+                It is safer to use connection methods that do not share your
+                secret key with websites, such as hardware wallets or browser
+                extensions.
+              </li>
+              <li>
+                <strong>
+                  Note: Connecting by entering a secret key may be deprecated in
+                  a future version of the Account Viewer.
+                </strong>
+              </li>
             </ul>
           </InfoBlock>
         </ModalContent>
@@ -157,13 +168,13 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
       {/* Show Enter secret key */}
       {acceptedWarning && (
         <ModalContent
-          headlineText="Sign in with a secret key"
+          headlineText="Connect with a secret key"
           buttonFooter={
             <Button
               onClick={handleSignIn}
               disabled={status === ActionStatus.PENDING}
             >
-              Sign in
+              Connect
             </Button>
           }
         >
@@ -172,16 +183,29 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
               <UrlIllustration />
             </IllustrationWrapperEl>
             <p>
-              Always check the domain you’re accessing Account Viewer before
-              pasting your keys. Scammers can replicate this page in a different
-              domain in order to steal your keys.
+              Always make sure the domain you are using to access the Account
+              Viewer is{" "}
+              <TextLink href="https://accountviewer.stellar.org">
+                https://accountviewer.stellar.org
+              </TextLink>{" "}
+              before entering your keys. Scammers can replicate this website on
+              a different domain to steal your keys.
+            </p>
+
+            <Heading4>
+              Did you know it's safer to keep your keys in a password manager?
+            </Heading4>
+            <p>
+              Password managers will autocomplete the secret key field only if
+              they detect you're in the right domain. They also reduce risk by
+              removing the need to copy and paste your secret key.
             </p>
           </InfoBlock>
 
           <InputWrapperEl>
             <Input
               id="enter-secret-key"
-              placeholder="Starts with S, example: SCHK...ZLJ&"
+              placeholder="Starts with S, example: SCHK…ZLJK"
               onChange={() => setErrorMessage("")}
               onBlur={(e) => setSecretKey(e.currentTarget.value)}
               type="password"

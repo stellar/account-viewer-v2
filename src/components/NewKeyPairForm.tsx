@@ -117,7 +117,7 @@ ${keypair.secret()}`);
   const handleDone = () => {
     if (!confirmSavedSecretKey) {
       setErrorMessage(
-        "Please confirm that you have copied and saved your secret key",
+        "Please confirm that you have copied and stored your secret key",
       );
       return;
     }
@@ -143,7 +143,7 @@ ${keypair.secret()}`);
       {/* Show warning */}
       {!acceptedWarning && (
         <ModalContent
-          headlineText="Generate a new key pair"
+          headlineText="Generate a new keypair"
           buttonFooter={
             <>
               <Button onClick={handleContinue}>Continue</Button>
@@ -154,22 +154,18 @@ ${keypair.secret()}`);
           }
         >
           <InfoBlock variant={InfoBlockVariant.error}>
-            <Heading4>
-              ATTENTION: Copying and pasting your secret key is not recommended
-            </Heading4>
+            <Heading4>ATTENTION: Secret key wallets are not safe:</Heading4>
 
             <ul>
               <li>
-                By copying and pasting your secret key you are vulnerable to
-                different attacks and scams that can result in your secret key
-                being stolen.
+                Pasting your secret key makes you vulnerable to accidents,
+                attacks, and scams that can result in loss of funds.
               </li>
-              <li>Only use this option if you’re aware of the risks...</li>
               <li>
-                Ideally use other authentication methods like a hardware wallet
-                or a browser
+                It is safer to create an account using methods that do not share
+                your secret key with websites, such as hardware wallets or
+                browser extensions.
               </li>
-              <li>...</li>
             </ul>
           </InfoBlock>
         </ModalContent>
@@ -178,12 +174,12 @@ ${keypair.secret()}`);
       {/* Show generate new key pair form */}
       {acceptedWarning && (
         <ModalContent
-          headlineText="New key pair"
+          headlineText="Generate a new keypair"
           buttonFooter={
             <ButtonsWrapperEl>
               <Checkbox
                 id="confirmSavedSecretKey"
-                label="I’ve copied my secret key to a safe place"
+                label="I’ve stored my secret key in a safe place"
                 checked={!!confirmSavedSecretKey}
                 onChange={toggleConfirmSavedSecretKey}
               />
@@ -197,21 +193,30 @@ ${keypair.secret()}`);
 
             <ul>
               <li>
-                It’s really important to keep track of your secret key, and to
-                keep it safe.
+                It is very important to save your secret key and store it
+                somewhere safe.
               </li>
               <li>
-                Anyone who knows your secret key has access to your account.
+                If you lose it, you will lose access to your account. No one in
+                the known universe will be able to help you get back in.
               </li>
               <li>
-                If you lose it, you’ll lose access to your account, and no one
-                in the known universe will be able to help you get back in.
+                SDF does not store a copy of your keys and cannot help you
+                recover lost keys.
+              </li>
+              <li>
+                Anyone who knows your secret key has access to your funds.
+              </li>
+              <li>
+                You have several options: Write your key down on a piece of
+                paper. Keep it in a safe. Store it in a password manager. Use a
+                hardware wallet. But don't ever keep it unencrypted on your
+                computer or in your email.
               </li>
               <li>
                 <strong>
-                  So keep it in a safe. Write them down on a piece of paper.
-                  Don’t ever keep it unencrypted on your computer or in your
-                  email.
+                  Note: Connecting by entering a secret key may be deprecated in
+                  a future version of the Account Viewer.
                 </strong>
               </li>
             </ul>

@@ -2,14 +2,9 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 
-// TODO: update Lyra logo once we have it.
-import logoLyra from "assets/images/logo-lyra.png";
-import logoAlbedo from "assets/svg/logo-albedo.svg";
-import logoLedger from "assets/svg/logo-ledger.svg";
-import logoTrezor from "assets/svg/logo-trezor.svg";
-
 import { Heading1 } from "components/basic/Heading";
 import { TextButton, TextButtonVariant } from "components/basic/TextButton";
+import { TextLink } from "components/basic/TextLink";
 
 import { Modal } from "components/Modal";
 import { NewKeyPairForm } from "components/NewKeyPairForm";
@@ -20,6 +15,7 @@ import { SignInSecretKeyForm } from "components/SignIn/SignInSecretKeyForm";
 import { SignInTrezorForm } from "components/SignIn/SignInTrezorForm";
 import { WalletButton } from "components/WalletButton";
 
+import { wallets } from "constants/wallets";
 import { pageInsetStyle } from "constants/styles";
 import { resetAlbedoAction } from "ducks/wallet/albedo";
 import { resetLedgerAction } from "ducks/wallet/ledger";
@@ -118,48 +114,35 @@ export const Landing = () => {
 
   return (
     <WrapperEl>
-      <Heading1>Sign in with a wallet</Heading1>
+      <Heading1>Connect with a wallet</Heading1>
 
       <WalletButtonsWrapperEl>
-        <WalletButton
-          onClick={() => openModal(ModalType.SIGNIN_LEDGER)}
-          imageSrc={logoLedger}
-          imageAlt="Ledger logo"
-          // TODO: add info text
-          infoText="TODO"
-        >
-          Sign in with Ledger
-        </WalletButton>
+        {Object.keys(wallets).map((walletKey) => {
+          const wallet = wallets[walletKey];
 
-        <WalletButton
-          onClick={() => openModal(ModalType.SIGNIN_TREZOR)}
-          imageSrc={logoTrezor}
-          imageAlt="Trezor logo"
-          // TODO: add info text
-          infoText="TODO"
-        >
-          Sign in with Trezor
-        </WalletButton>
-
-        <WalletButton
-          onClick={() => openModal(ModalType.SIGNIN_LYRA)}
-          imageSrc={logoLyra}
-          imageAlt="Lyra logo"
-          // TODO: add info text
-          infoText="TODO"
-        >
-          Sign in with Lyra
-        </WalletButton>
-
-        <WalletButton
-          onClick={() => openModal(ModalType.SIGNIN_ALBEDO)}
-          imageSrc={logoAlbedo}
-          imageAlt="Albedo logo"
-          // TODO: add info text
-          infoText="TODO"
-        >
-          Sign in with Albedo
-        </WalletButton>
+          return (
+            <WalletButton
+              key={walletKey}
+              onClick={() => openModal(wallet.modalType)}
+              imageSrc={wallet.logoImg}
+              imageAlt={wallet.logoImgAltText}
+              infoText={
+                <>
+                  {wallet.infoText}{" "}
+                  <TextLink
+                    href={wallet.infoLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {wallet.infoLinkText}
+                  </TextLink>
+                </>
+              }
+            >
+              {wallet.title}
+            </WalletButton>
+          );
+        })}
       </WalletButtonsWrapperEl>
 
       <ButtonsWrapperEl>
@@ -167,7 +150,7 @@ export const Landing = () => {
           onClick={() => openModal(ModalType.SIGNIN_SECRET_KEY)}
           variant={TextButtonVariant.secondary}
         >
-          Sign in using a secret key
+          Connect with a secret key
         </TextButton>
 
         <TextButton

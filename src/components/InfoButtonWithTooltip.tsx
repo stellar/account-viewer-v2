@@ -19,9 +19,17 @@ const InfoButtonEl = styled.div`
 const InfoEl = styled.div<{ isVisible: boolean }>`
   ${tooltipStyle};
   visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
+
+  a {
+    color: inherit;
+  }
 `;
 
-export const InfoButtonWithTooltip = ({ children }: { children: string }) => {
+export const InfoButtonWithTooltip = ({
+  children,
+}: {
+  children: string | React.ReactNode;
+}) => {
   const toggleEl = useRef<null | HTMLDivElement>(null);
   const infoEl = useRef<null | HTMLDivElement>(null);
   const [isInfoVisible, setIsInfoVisible] = useState(false);
@@ -39,7 +47,11 @@ export const InfoButtonWithTooltip = ({ children }: { children: string }) => {
   }, [isInfoVisible]);
 
   const handleClickOutside = (event: MouseEvent) => {
-    if (event.target === infoEl?.current) {
+    // Do nothing if clicking tooltip itself or link inside the tooltip
+    if (
+      event.target === infoEl?.current ||
+      infoEl?.current?.contains(event.target as Node)
+    ) {
       return;
     }
 

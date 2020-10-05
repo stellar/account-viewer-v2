@@ -23,6 +23,10 @@ const ContentWrapperEl = styled.div`
   align-items: center;
 `;
 
+const DescriptionEl = styled.p`
+  text-align: center;
+`;
+
 const AddressWrapperEl = styled.div`
   display: flex;
   align-items: center;
@@ -47,10 +51,10 @@ export const ReceiveTransaction = () => {
 
   return (
     <ModalContent headlineText="Your account QR code">
-      <p>
+      <DescriptionEl>
         Scan this QR code using a Stellar wallet app to make a payment to your
         account.
-      </p>
+      </DescriptionEl>
 
       <QRCodeWrapperEl>
         <QRCode value={accountId}></QRCode>
