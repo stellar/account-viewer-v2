@@ -11,6 +11,7 @@ import { Avatar } from "components/Avatar";
 import { ModalContent } from "components/ModalContent";
 import { FONT_WEIGHT, PALETTE } from "constants/styles";
 
+import { logEvent } from "helpers/tracking";
 import { stroopsFromLumens } from "helpers/stroopConversion";
 import { sendTxAction } from "ducks/sendTx";
 import { useRedux } from "hooks/useRedux";
@@ -107,19 +108,28 @@ export const ConfirmTransaction = ({
     "account",
     "settings",
   );
+  const { status, errorString } = sendTx;
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (sendTx.status === ActionStatus.SUCCESS) {
+    logEvent("send: saw confirmation screen");
+  }, []);
+
+  useEffect(() => {
+    if (status === ActionStatus.SUCCESS) {
       onSuccessfulTx();
+      logEvent("send: saw send success message");
     }
 
-    if (sendTx.status === ActionStatus.ERROR) {
+    if (status === ActionStatus.ERROR) {
       onFailedTx();
+      logEvent("send: saw send error message", {
+        message: errorString,
+      });
     }
-  }, [sendTx.status, onSuccessfulTx, onFailedTx]);
+  }, [status, onSuccessfulTx, onFailedTx, errorString]);
 
-  const handleSend = () =>
+  const handleSend = () => {
     dispatch(
       sendTxAction({
         publicKey: account.data?.id,
@@ -131,6 +141,8 @@ export const ConfirmTransaction = ({
         memoContent: formData.memoContent,
       }),
     );
+    logEvent("send: confirmed transaction");
+  };
 
   return (
     <ModalContent
@@ -140,21 +152,21 @@ export const ConfirmTransaction = ({
           <Button
             onClick={handleSend}
             icon={<IconSend />}
-            disabled={sendTx.status === ActionStatus.PENDING}
+            disabled={status === ActionStatus.PENDING}
           >
             Submit transaction
           </Button>
           <Button
             onClick={onBack}
             variant={ButtonVariant.secondary}
-            disabled={sendTx.status === ActionStatus.PENDING}
+            disabled={status === ActionStatus.PENDING}
           >
             Back
           </Button>
         </>
       }
       footer={
-        sendTx.status === ActionStatus.PENDING && (
+        status === ActionStatus.PENDING && (
           <InlineLoadingEl>
             <Loader size="1.5rem" />
             <InlineLoadingTextEl>Submitting transaction.</InlineLoadingTextEl>
@@ -194,7 +206,7 @@ export const ConfirmTransaction = ({
       </TableEl>
 
       {/* TODO: add instructions for wallets as needed */}
-      {sendTx.status === ActionStatus.PENDING &&
+      {status === ActionStatus.PENDING &&
         settings.authType !== AuthType.PRIVATE_KEY && (
           <InfoBlock>{`Submitting transaction. Follow ${settings.authType} instructions.`}</InfoBlock>
         )}

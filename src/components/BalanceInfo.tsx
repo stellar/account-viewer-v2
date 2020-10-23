@@ -14,6 +14,7 @@ import { Modal } from "components/Modal";
 import { FONT_WEIGHT, pageInsetStyle, PALETTE } from "constants/styles";
 import { startAccountWatcherAction } from "ducks/account";
 import { resetSendTxAction } from "ducks/sendTx";
+import { logEvent } from "helpers/tracking";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus } from "types/types.d";
 
@@ -140,14 +141,20 @@ export const BalanceInfo = () => {
 
           <ButtonsWrapperEl>
             <Button
-              onClick={() => setIsSendTxModalVisible(true)}
+              onClick={() => {
+                setIsSendTxModalVisible(true);
+                logEvent("send: clicked start send");
+              }}
               icon={<IconSend />}
               disabled={data.isUnfunded}
             >
               Send
             </Button>
             <Button
-              onClick={() => setIsReceiveTxModalVisible(true)}
+              onClick={() => {
+                setIsReceiveTxModalVisible(true);
+                logEvent("receive: clicked receive");
+              }}
               icon={<IconReceive />}
             >
               Receive
