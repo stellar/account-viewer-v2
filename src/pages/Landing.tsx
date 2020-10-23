@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 
@@ -21,6 +21,7 @@ import { resetAlbedoAction } from "ducks/wallet/albedo";
 import { resetLedgerAction } from "ducks/wallet/ledger";
 import { resetLyraAction } from "ducks/wallet/lyra";
 import { resetTrezorAction } from "ducks/wallet/trezor";
+import { logEvent } from "helpers/tracking";
 import { ModalType } from "types/types.d";
 
 const WrapperEl = styled.div`
@@ -64,6 +65,10 @@ const ButtonsWrapperEl = styled.div`
 export const Landing = () => {
   const dispatch = useDispatch();
   const [activeModal, setActiveModal] = useState<ModalType | null>(null);
+
+  useEffect(() => {
+    logEvent("page: saw authentication screen");
+  }, []);
 
   const resetWalletState = (type: ModalType | null) => {
     switch (type) {
