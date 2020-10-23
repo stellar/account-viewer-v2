@@ -141,7 +141,11 @@ export const ConfirmTransaction = ({
         memoContent: formData.memoContent,
       }),
     );
-    logEvent("send: confirmed transaction");
+    logEvent("send: confirmed transaction", {
+      amount: formData.amount.toString(),
+      "used federation address": !!formData.federationAddress,
+      "used memo": !!formData.memoContent,
+    });
   };
 
   return (
