@@ -13,6 +13,7 @@ import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storeKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
 import { fetchLyraStellarAddressAction } from "ducks/wallet/lyra";
+import { logEvent } from "helpers/tracking";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, ModalPageProps } from "types/types.d";
@@ -68,11 +69,15 @@ export const SignInLyraForm = ({ onClose }: ModalPageProps) => {
             keyType: KeyType.lyra,
           }),
         );
+        logEvent("login: connected with lyra");
       } else {
         setErrorMessage("Something went wrong, please try again.");
+        logEvent("login: saw connect with lyra error", {
+          message: lyraErrorMessage,
+        });
       }
     }
-  }, [lyraStatus, dispatch, lyraData, setErrorMessage]);
+  }, [lyraStatus, dispatch, lyraData, setErrorMessage, lyraErrorMessage]);
 
   useEffect(() => {
     if (accountStatus === ActionStatus.SUCCESS) {
@@ -84,9 +89,19 @@ export const SignInLyraForm = ({ onClose }: ModalPageProps) => {
         dispatch(updateSettingsAction({ authType: AuthType.LYRA }));
       } else {
         setErrorMessage("Something went wrong, please try again.");
+        logEvent("login: saw connect with lyra error", {
+          message: accountErrorMessage,
+        });
       }
     }
-  }, [accountStatus, dispatch, history, isAuthenticated, setErrorMessage]);
+  }, [
+    accountStatus,
+    dispatch,
+    history,
+    isAuthenticated,
+    setErrorMessage,
+    accountErrorMessage,
+  ]);
 
   return (
     <ModalWalletContent

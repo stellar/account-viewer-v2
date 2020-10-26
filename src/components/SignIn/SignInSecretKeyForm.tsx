@@ -17,6 +17,7 @@ import { ModalContent } from "components/ModalContent";
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storeKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
+import { logEvent } from "helpers/tracking";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, ModalPageProps } from "types/types.d";
@@ -52,6 +53,10 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
   });
 
   useEffect(() => {
+    logEvent("login: saw connect with secret key warning");
+  }, []);
+
+  useEffect(() => {
     if (status === ActionStatus.SUCCESS) {
       if (isAuthenticated) {
         history.push({
@@ -66,8 +71,12 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
             keyType: KeyType.plaintextKey,
           }),
         );
+        logEvent("login: connected with secret key");
       } else {
         setErrorMessage("Something went wrong, please try again.");
+        logEvent("login: saw connect with secret key error", {
+          message: errorString,
+        });
       }
     }
   }, [
@@ -78,6 +87,7 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
     dispatch,
     accountId,
     secretKey,
+    errorString,
   ]);
 
   let failedAttempts = 0;
@@ -87,6 +97,9 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
 
     if (!secretKey) {
       setErrorMessage("Please enter your secret key");
+      logEvent("login: saw connect with secret key error", {
+        message: "Please enter your secret key",
+      });
       return;
     }
 
@@ -94,6 +107,9 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
       setErrorMessage(
         "Please wait a few seconds before attempting to log in again",
       );
+      logEvent("login: saw connect with secret key error", {
+        message: "Please wait a few seconds before attempting to log in again",
+      });
       return;
     }
 
@@ -112,6 +128,9 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
       setErrorMessage(
         `Invalid secret key. Secret keys are uppercase and begin with the letter "S."`,
       );
+      logEvent("login: saw connect with secret key error", {
+        message: "Invalid secret key",
+      });
     }
   };
 
