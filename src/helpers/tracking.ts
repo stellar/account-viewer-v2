@@ -1,7 +1,7 @@
 import Amplitude from "amplitude-js";
 
 const instance = Amplitude.getInstance();
-instance.init(process.env.REACT_APP_AMPLITUDE_API_KEY!, undefined, {
+instance.init(process.env.REACT_APP_AMPLITUDE_API_KEY || "", undefined, {
   trackingOptions: {
     ip_address: false,
   },
