@@ -47,11 +47,13 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
     dispatch(fetchTrezorStellarAddressAction());
   };
 
+  const trezorManifest = {
+    email: "accounts+trezor@stellar.org",
+    appUrl: "https://accountviewer.stellar.org/",
+  };
+
   const initTrezor = () => {
-    TrezorConnect.manifest({
-      email: "accounts+trezor@stellar.org",
-      appUrl: "https://accountviewer.stellar.org/",
-    });
+    TrezorConnect.manifest(trezorManifest);
 
     fetchTrezorLogin();
   };
@@ -64,13 +66,14 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
           storeKeyAction({
             publicKey: trezorData.publicKey,
             keyType: KeyType.trezor,
+            custom: trezorManifest,
           }),
         );
       } else {
         setErrorMessage("Something went wrong, please try again.");
       }
     }
-  }, [trezorStatus, dispatch, trezorData, setErrorMessage]);
+  }, [trezorStatus, dispatch, trezorData, setErrorMessage, trezorManifest]);
 
   useEffect(() => {
     if (accountStatus === ActionStatus.SUCCESS) {

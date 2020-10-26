@@ -37,7 +37,7 @@
     "stellar-sdk": "^6.0.0",
     "styled-components": "^5.2.0",
     "styled-normalize": "^8.0.7",
-    "trezor-connect": "^8.1.14",
+    "trezor-connect": "^8.1.16",
     "typescript": "~4.0.2"
   },
   "scripts": {

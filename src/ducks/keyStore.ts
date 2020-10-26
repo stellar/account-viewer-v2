@@ -9,6 +9,7 @@ interface WalletKeyActionProps {
   privateKey?: string;
   keyType: KeyType;
   path?: string;
+  custom?: any;
 }
 
 export const storeKeyAction = createAsyncThunk<
@@ -17,10 +18,14 @@ export const storeKeyAction = createAsyncThunk<
   { rejectValue: RejectMessage }
 >(
   "keyStore/storeKeyAction",
-  async ({ publicKey, privateKey, keyType, path }, { rejectWithValue }) => {
+  async (
+    { publicKey, privateKey, keyType, path, custom },
+    { rejectWithValue },
+  ) => {
     let result;
     try {
       result = await storeKey({ publicKey, privateKey, keyType, path });
+      result.custom = custom;
     } catch (error) {
       return rejectWithValue({
         errorString: getErrorString(error),
@@ -34,6 +39,7 @@ const initialState: KeyStoreInitialState = {
   keyStoreId: "",
   password: "",
   errorString: undefined,
+  custom: undefined,
 };
 
 const keyStoreSlice = createSlice({
@@ -45,6 +51,7 @@ const keyStoreSlice = createSlice({
     builder.addCase(storeKeyAction.fulfilled, (state, action) => {
       state.keyStoreId = action.payload.id;
       state.password = action.payload.password;
+      state.custom = action.payload.custom;
     });
     builder.addCase(storeKeyAction.rejected, (state, action) => {
       state.errorString = action?.payload?.errorString;

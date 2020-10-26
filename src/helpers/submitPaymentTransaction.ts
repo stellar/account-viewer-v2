@@ -21,6 +21,7 @@ export const submitPaymentTransaction = async (
       id: keyStore.keyStoreId,
       password: keyStore.password,
       transaction,
+      custom: keyStore.custom,
     });
   } catch (error) {
     throw new Error(

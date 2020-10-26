@@ -8,6 +8,7 @@ export interface CreateKeyManagerResponse {
   id: string;
   password: string;
   errorString?: string;
+  custom?: any;
 }
 
 const createKeyManager = () => {
@@ -87,10 +88,12 @@ export const signTransaction = ({
   id,
   password,
   transaction,
+  custom,
 }: {
   id: string;
   password: string;
   transaction: Transaction;
+  custom?: any;
 }): Promise<Transaction> => {
   const keyManager = createKeyManager();
 
@@ -98,5 +101,6 @@ export const signTransaction = ({
     id,
     password,
     transaction,
+    custom,
   });
 };
