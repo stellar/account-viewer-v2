@@ -148,6 +148,21 @@ export const ConfirmTransaction = ({
     });
   };
 
+  const getInstructionsMessage = (type: AuthType) => {
+    switch (type) {
+      case AuthType.ALBEDO:
+        return "Review the transaction on the Albedo popup.";
+      case AuthType.LEDGER:
+        return "Review the transaction on your Ledger wallet device.";
+      case AuthType.LYRA:
+        return "Review the transaction on the Lyra popup.";
+      case AuthType.TREZOR:
+        return "Follow the instructions on the Trezor popup.";
+      default:
+        return "Follow the instructions in the popup.";
+    }
+  };
+
   return (
     <ModalContent
       headlineText="Confirm transaction"
@@ -209,10 +224,10 @@ export const ConfirmTransaction = ({
         </tbody>
       </TableEl>
 
-      {/* TODO: add instructions for wallets as needed */}
       {status === ActionStatus.PENDING &&
+        settings.authType &&
         settings.authType !== AuthType.PRIVATE_KEY && (
-          <InfoBlock>{`Submitting transaction. Follow ${settings.authType} instructions.`}</InfoBlock>
+          <InfoBlock>{getInstructionsMessage(settings.authType)}</InfoBlock>
         )}
     </ModalContent>
   );

@@ -123,10 +123,7 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
       )}
 
       {trezorStatus === ActionStatus.PENDING && (
-        // TODO: add instructions
-        <InfoBlock>
-          Please follow the instructions in the Trezor popup.
-        </InfoBlock>
+        <InfoBlock>Follow the instructions on the Trezor popup.</InfoBlock>
       )}
 
       <ErrorMessage message={errorMessage} textAlign="center" />
