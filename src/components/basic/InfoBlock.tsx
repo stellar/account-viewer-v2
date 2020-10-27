@@ -14,6 +14,7 @@ const InfoEl = styled.div<{ variant: InfoBlockVariant }>`
   padding: 1.5rem;
   color: ${PALETTE.black};
   width: 100%;
+  line-height: 1.5rem;
 
   ${(props) =>
     props.variant === InfoBlockVariant.error &&

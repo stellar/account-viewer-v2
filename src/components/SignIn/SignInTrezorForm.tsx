@@ -115,7 +115,12 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
         </>
       }
     >
-      {!trezorStatus && <InfoBlock>Some instructions</InfoBlock>}
+      {!trezorStatus && (
+        <InfoBlock>
+          Click on "Connect with Trezor" to be redirected to the external Trezor
+          wallet connection setup.
+        </InfoBlock>
+      )}
 
       {trezorStatus === ActionStatus.PENDING && (
         // TODO: add instructions
