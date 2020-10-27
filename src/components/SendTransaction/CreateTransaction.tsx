@@ -19,6 +19,7 @@ import { ModalContent } from "components/ModalContent";
 import { fetchMemoRequiredAccountsAction } from "ducks/knownAccounts";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { lumensFromStroops } from "helpers/stroopConversion";
+import { logEvent } from "helpers/tracking";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, KnownAccount, NetworkCongestion } from "types/types.d";
 import { PALETTE } from "constants/styles";
@@ -266,6 +267,9 @@ export const CreateTransaction = ({
         }
 
         errors[SendFormIds.SEND_TO] = message;
+        if (message) {
+          logEvent("send: saw invalid destination address error");
+        }
         break;
       case SendFormIds.SEND_AMOUNT:
         if (!formData.amount) {
@@ -277,6 +281,9 @@ export const CreateTransaction = ({
         }
 
         errors[SendFormIds.SEND_AMOUNT] = message;
+        if (message) {
+          logEvent("send: saw invalid amount error");
+        }
         break;
       case SendFormIds.SEND_FEE:
         // recommendedFee is minimum fee
@@ -287,6 +294,9 @@ export const CreateTransaction = ({
         }
 
         errors[SendFormIds.SEND_FEE] = message;
+        if (message) {
+          logEvent("send: saw fee too small error");
+        }
         break;
       case SendFormIds.SEND_MEMO_CONTENT:
         if (isMemoVisible) {

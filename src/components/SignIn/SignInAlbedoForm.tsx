@@ -12,6 +12,7 @@ import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storeKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
 import { fetchAlbedoStellarAddressAction } from "ducks/wallet/albedo";
+import { logEvent } from "helpers/tracking";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, ModalPageProps } from "types/types.d";
@@ -56,11 +57,15 @@ export const SignInAlbedoForm = ({ onClose }: ModalPageProps) => {
             keyType: KeyType.albedo,
           }),
         );
+        logEvent("login: connected albedo");
       } else {
         setErrorMessage("Something went wrong, please try again.");
+        logEvent("login: saw connect with albedo error", {
+          message: albedoErrorMessage,
+        });
       }
     }
-  }, [albedoStatus, dispatch, albedoData, setErrorMessage]);
+  }, [albedoStatus, dispatch, albedoData, setErrorMessage, albedoErrorMessage]);
 
   useEffect(() => {
     if (accountStatus === ActionStatus.SUCCESS) {
@@ -72,9 +77,19 @@ export const SignInAlbedoForm = ({ onClose }: ModalPageProps) => {
         dispatch(updateSettingsAction({ authType: AuthType.ALBEDO }));
       } else {
         setErrorMessage("Something went wrong, please try again.");
+        logEvent("login: saw connect with albedo error", {
+          message: accountErrorMessage,
+        });
       }
     }
-  }, [accountStatus, dispatch, history, isAuthenticated, setErrorMessage]);
+  }, [
+    accountStatus,
+    dispatch,
+    history,
+    isAuthenticated,
+    setErrorMessage,
+    accountErrorMessage,
+  ]);
 
   return (
     <ModalWalletContent
