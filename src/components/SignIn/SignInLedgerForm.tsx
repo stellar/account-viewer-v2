@@ -8,6 +8,7 @@ import { Button, ButtonVariant } from "components/basic/Button";
 import { Checkbox } from "components/basic/Checkbox";
 import { InfoBlock } from "components/basic/InfoBlock";
 import { Input } from "components/basic/Input";
+import { Loader } from "components/basic/Loader";
 import { ErrorMessage } from "components/ErrorMessage";
 import { ModalWalletContent } from "components/ModalWalletContent";
 
@@ -26,6 +27,17 @@ const AccountWrapperEl = styled.div`
 
   & > div:nth-child(2) {
     margin-top: 1.5rem;
+  }
+`;
+
+const InlineLoadingEl = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+
+  div:nth-child(1) {
+    flex-shrink: 0;
+    margin-right: 1rem;
   }
 `;
 
@@ -64,9 +76,11 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
       ledgerStatus === ActionStatus.ERROR ||
       accountStatus === ActionStatus.ERROR
     ) {
-      setErrorMessage("Connection failed");
+      const message =
+        ledgerErrorMessage || accountErrorMessage || "Connection failed";
+      setErrorMessage(message);
       logEvent("login: saw connect ledger error", {
-        message: ledgerErrorMessage || accountErrorMessage,
+        message,
       });
     }
   }, [
@@ -118,15 +132,23 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
         </>
       }
     >
-      {!ledgerStatus && <InfoBlock>Some instructions</InfoBlock>}
+      {!ledgerStatus && (
+        <InfoBlock>
+          Make sure your Ledger Wallet is connected with the Stellar application
+          open on it.
+        </InfoBlock>
+      )}
 
       {(ledgerStatus === ActionStatus.PENDING ||
         ledgerStatus === ActionStatus.SUCCESS) && (
         <InfoBlock>
-          <p>Scanning for Ledger Wallet connection…</p>
-          <p>More instructions about connection to the wallet</p>
+          <InlineLoadingEl>
+            <Loader size="1.5rem" />
+            <p>Scanning for Ledger Wallet connection…</p>
+          </InlineLoadingEl>
         </InfoBlock>
       )}
+
       {ledgerStatus === ActionStatus.SUCCESS &&
         accountStatus === ActionStatus.SUCCESS && (
           <InfoBlock>
@@ -134,7 +156,7 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
           </InfoBlock>
         )}
 
-      <ErrorMessage message={errorMessage} />
+      <ErrorMessage message={errorMessage} textAlign="center" />
 
       <AccountWrapperEl>
         <Checkbox
