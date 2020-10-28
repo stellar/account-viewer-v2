@@ -9,7 +9,9 @@ interface WalletKeyActionProps {
   privateKey?: string;
   keyType: KeyType;
   path?: string;
-  custom?: any;
+  custom?: {
+    [key: string]: any;
+  };
 }
 
 export const storeKeyAction = createAsyncThunk<

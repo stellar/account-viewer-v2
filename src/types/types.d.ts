@@ -61,7 +61,9 @@ export interface KeyStoreInitialState {
   keyStoreId: string;
   password: string;
   errorString?: string;
-  custom?: any;
+  custom?: {
+    [key: string]: any;
+  };
 }
 
 export interface KnownAccount {

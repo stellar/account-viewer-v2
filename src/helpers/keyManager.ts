@@ -8,7 +8,9 @@ export interface CreateKeyManagerResponse {
   id: string;
   password: string;
   errorString?: string;
-  custom?: any;
+  custom?: {
+    [key: string]: any;
+  };
 }
 
 const createKeyManager = () => {
@@ -84,17 +86,21 @@ export const loadPrivateKey = async ({
   return result;
 };
 
+interface SignTransactionProps {
+  id: string;
+  password: string;
+  transaction: Transaction;
+  custom?: {
+    [key: string]: any;
+  };
+}
+
 export const signTransaction = ({
   id,
   password,
   transaction,
   custom,
-}: {
-  id: string;
-  password: string;
-  transaction: Transaction;
-  custom?: any;
-}): Promise<Transaction> => {
+}: SignTransactionProps): Promise<Transaction> => {
   const keyManager = createKeyManager();
 
   return keyManager.signTransaction({
