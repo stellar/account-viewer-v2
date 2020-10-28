@@ -9,6 +9,8 @@ interface WalletKeyActionProps {
   privateKey?: string;
   keyType: KeyType;
   path?: string;
+  // In wallet-sdk, "custom" is a signTransaction() prop for any extra
+  // information a wallet might require.
   custom?: {
     [key: string]: any;
   };
