@@ -11,9 +11,8 @@ export const wallets: Wallets = {
     logoImg: logoAlbedo,
     logoImgAltText: "Albedo logo",
     modalType: ModalType.SIGNIN_ALBEDO,
-    infoText:
-      "Albedo is a browser extension wallet. Available on Chrome and Firefox.",
-    infoLinkText: "Download",
+    infoText: "Albedo is a browser wallet.",
+    infoLinkText: "Learn more",
     infoLink: "https://albedo.link",
   },
   // TODO: update info

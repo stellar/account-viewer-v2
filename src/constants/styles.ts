@@ -82,7 +82,7 @@ export const tooltipStyle = css`
   position: absolute;
   top: 2.7rem;
   right: -1rem;
-  max-width: 300px;
+  max-width: 270px;
   border-radius: 0.25rem;
   background-color: ${PALETTE.purple};
   padding: 1rem 1.5rem;

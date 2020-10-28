@@ -14,7 +14,7 @@
     ]
   },
   "dependencies": {
-    "@albedo-link/intent": "^0.9.3",
+    "@albedo-link/intent": "^0.9.6",
     "@ledgerhq/hw-app-str": "^5.26.0",
     "@ledgerhq/hw-transport-u2f": "^5.26.0",
     "@reduxjs/toolkit": "^1.4.0",

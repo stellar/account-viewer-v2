@@ -22,6 +22,7 @@ const InfoEl = styled.div<{ isVisible: boolean }>`
 
   a {
     color: inherit;
+    white-space: nowrap;
   }
 `;
 
