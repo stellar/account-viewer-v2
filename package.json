@@ -19,7 +19,7 @@
     "@ledgerhq/hw-transport-u2f": "^5.26.0",
     "@reduxjs/toolkit": "^1.4.0",
     "@stellar/lyra-api": "^1.0.0-alpha.2",
-    "@stellar/wallet-sdk": "^0.3.0-rc.1",
+    "@stellar/wallet-sdk": "^0.3.0-rc.2",
     "@types/amplitude-js": "^6.0.0",
     "@types/ledgerhq__hw-transport-u2f": "^4.21.1",
     "@types/qrcode.react": "^1.0.1",
@@ -39,7 +39,7 @@
     "stellar-sdk": "^6.0.0",
     "styled-components": "^5.2.0",
     "styled-normalize": "^8.0.7",
-    "trezor-connect": "^8.1.14",
+    "trezor-connect": "^8.1.16",
     "typescript": "~4.0.2"
   },
   "scripts": {
