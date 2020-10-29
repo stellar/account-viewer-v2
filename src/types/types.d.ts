@@ -1,3 +1,11 @@
+declare global {
+  interface Window {
+    _env_: {
+      AMPLITUDE_API_KEY: string;
+    };
+  }
+}
+
 export enum NetworkType {
   TESTNET = "testnet",
   PUBLIC = "public",
