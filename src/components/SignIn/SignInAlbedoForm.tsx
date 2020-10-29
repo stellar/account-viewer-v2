@@ -105,8 +105,11 @@ export const SignInAlbedoForm = ({ onClose }: ModalPageProps) => {
         </>
       }
     >
-      {/* TODO: add instructions */}
-      {!albedoStatus && <InfoBlock>Some instructions</InfoBlock>}
+      {!albedoStatus && (
+        <InfoBlock>
+          Click on "Connect with Albedo" to launch Albedo browser wallet.
+        </InfoBlock>
+      )}
 
       {albedoStatus === ActionStatus.PENDING && (
         <InfoBlock>

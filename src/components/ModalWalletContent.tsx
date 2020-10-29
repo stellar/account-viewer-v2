@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Heading2 } from "components/basic/Heading";
+import { TextLink } from "components/basic/TextLink";
 import { wallets } from "constants/wallets";
 
 const WrapperEl = styled.div`
@@ -79,6 +80,22 @@ export const ModalWalletContent = ({
     );
   }
 
+  const renderInfoLink = () => {
+    if (walletData.infoLink && walletData.infoLinkText) {
+      return (
+        <TextLink
+          href={walletData.infoLink}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {walletData.infoLinkText}
+        </TextLink>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <WrapperEl>
       <HeaderImageEl>
@@ -88,7 +105,9 @@ export const ModalWalletContent = ({
         <HeadlineEl>{walletData.title}</HeadlineEl>
       </HeaderEl>
       <ContentEl>
-        <InfoTextEl>{walletData.infoText}</InfoTextEl>
+        <InfoTextEl>
+          {walletData.infoText} {renderInfoLink()}
+        </InfoTextEl>
         {children}
       </ContentEl>
       {buttonFooter && <ButtonsWrapperEl>{buttonFooter}</ButtonsWrapperEl>}
