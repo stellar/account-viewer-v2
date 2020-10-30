@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { isConnected } from "@stellar/lyra-api";
+import { isConnected } from "@stellar/freighter-api";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { KeyType } from "@stellar/wallet-sdk";
@@ -12,22 +12,22 @@ import { ErrorMessage } from "components/ErrorMessage";
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storeKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
-import { fetchLyraStellarAddressAction } from "ducks/wallet/lyra";
+import { fetchFreighterStellarAddressAction } from "ducks/wallet/freighter";
 import { logEvent } from "helpers/tracking";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, ModalPageProps } from "types/types.d";
 
-export const SignInLyraForm = ({ onClose }: ModalPageProps) => {
+export const SignInFreighterForm = ({ onClose }: ModalPageProps) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const { walletLyra, account } = useRedux("walletLyra", "account");
+  const { walletFreighter, account } = useRedux("walletFreighter", "account");
   const {
-    data: lyraData,
-    status: lyraStatus,
-    errorString: lyraErrorMessage,
-  } = walletLyra;
+    data: freighterData,
+    status: freighterStatus,
+    errorString: freighterErrorMessage,
+  } = walletFreighter;
   const {
     status: accountStatus,
     isAuthenticated,
@@ -35,49 +35,55 @@ export const SignInLyraForm = ({ onClose }: ModalPageProps) => {
   } = account;
 
   const { errorMessage, setErrorMessage } = useErrorMessage({
-    initialMessage: lyraErrorMessage || accountErrorMessage,
+    initialMessage: freighterErrorMessage || accountErrorMessage,
     onUnmount: () => {
       // Reset account store, if there are errors.
-      // walletLyra store is reset every time modal is closed.
+      // walletFreighter store is reset every time modal is closed.
       dispatch(resetAccountAction());
     },
   });
 
-  const fetchLyraLogin = () => {
+  const fetchFreighterLogin = () => {
     setErrorMessage("");
-    dispatch(fetchLyraStellarAddressAction());
+    dispatch(fetchFreighterStellarAddressAction());
   };
 
-  const initLyra = () => {
+  const initFreighter = () => {
     if (!isConnected()) {
       setErrorMessage(
-        "Please install or activate Lyra extension, and refresh the page to try again.",
+        "Please install or activate Freighter extension, and refresh the page to try again.",
       );
       return;
     }
 
-    fetchLyraLogin();
+    fetchFreighterLogin();
   };
 
   useEffect(() => {
-    if (lyraStatus === ActionStatus.SUCCESS) {
-      if (lyraData) {
-        dispatch(fetchAccountAction(lyraData.publicKey));
+    if (freighterStatus === ActionStatus.SUCCESS) {
+      if (freighterData) {
+        dispatch(fetchAccountAction(freighterData.publicKey));
         dispatch(
           storeKeyAction({
-            publicKey: lyraData.publicKey,
-            keyType: KeyType.lyra,
+            publicKey: freighterData.publicKey,
+            keyType: KeyType.freighter,
           }),
         );
-        logEvent("login: connected with lyra");
+        logEvent("login: connected with freighter");
       } else {
         setErrorMessage("Something went wrong, please try again.");
-        logEvent("login: saw connect with lyra error", {
-          message: lyraErrorMessage,
+        logEvent("login: saw connect with freighter error", {
+          message: freighterErrorMessage,
         });
       }
     }
-  }, [lyraStatus, dispatch, lyraData, setErrorMessage, lyraErrorMessage]);
+  }, [
+    freighterStatus,
+    dispatch,
+    freighterData,
+    setErrorMessage,
+    freighterErrorMessage,
+  ]);
 
   useEffect(() => {
     if (accountStatus === ActionStatus.SUCCESS) {
@@ -86,10 +92,10 @@ export const SignInLyraForm = ({ onClose }: ModalPageProps) => {
           pathname: "/dashboard",
           search: history.location.search,
         });
-        dispatch(updateSettingsAction({ authType: AuthType.LYRA }));
+        dispatch(updateSettingsAction({ authType: AuthType.FREIGHTER }));
       } else {
         setErrorMessage("Something went wrong, please try again.");
-        logEvent("login: saw connect with lyra error", {
+        logEvent("login: saw connect with freighter error", {
           message: accountErrorMessage,
         });
       }
@@ -105,10 +111,12 @@ export const SignInLyraForm = ({ onClose }: ModalPageProps) => {
 
   return (
     <ModalWalletContent
-      type="lyra"
+      type="freighter"
       buttonFooter={
         <>
-          {!lyraStatus && <Button onClick={initLyra}>Connect with Lyra</Button>}
+          {!freighterStatus && (
+            <Button onClick={initFreighter}>Connect with Freighter</Button>
+          )}
           <Button onClick={onClose} variant={ButtonVariant.secondary}>
             Cancel
           </Button>
@@ -116,10 +124,12 @@ export const SignInLyraForm = ({ onClose }: ModalPageProps) => {
       }
     >
       {/* TODO: add instructions */}
-      {!lyraStatus && <InfoBlock>Some instructions</InfoBlock>}
+      {!freighterStatus && <InfoBlock>Some instructions</InfoBlock>}
 
-      {lyraStatus === ActionStatus.PENDING && (
-        <InfoBlock>Please follow the instructions in the Lyra popup.</InfoBlock>
+      {freighterStatus === ActionStatus.PENDING && (
+        <InfoBlock>
+          Please follow the instructions in the Freighter popup.
+        </InfoBlock>
       )}
 
       <ErrorMessage

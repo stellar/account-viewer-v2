@@ -18,7 +18,7 @@ import { reducer as settings } from "ducks/settings";
 import { reducer as txHistory } from "ducks/txHistory";
 import { reducer as walletAlbedo } from "ducks/wallet/albedo";
 import { reducer as walletLedger } from "ducks/wallet/ledger";
-import { reducer as walletLyra } from "ducks/wallet/lyra";
+import { reducer as walletFreighter } from "ducks/wallet/freighter";
 import { reducer as walletTrezor } from "ducks/wallet/trezor";
 
 export type RootState = ReturnType<typeof store.getState>;
@@ -44,7 +44,7 @@ const reducers = combineReducers({
   txHistory,
   walletAlbedo,
   walletLedger,
-  walletLyra,
+  walletFreighter,
   walletTrezor,
 });
 

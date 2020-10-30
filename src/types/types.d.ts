@@ -30,7 +30,7 @@ export enum NetworkCongestion {
 export enum AuthType {
   ALBEDO = "ALBEDO",
   LEDGER = "LEDGER",
-  LYRA = "LYRA",
+  FREIGHTER = "FREIGHTER",
   PRIVATE_KEY = "PRIVATE_KEY",
   TREZOR = "TREZOR",
 }
@@ -51,7 +51,7 @@ export enum ModalType {
   SIGNIN_SECRET_KEY = "SIGNIN_SECRET_KEY",
   SIGNIN_TREZOR = "SIGNIN_TREZOR",
   SIGNIN_LEDGER = "SIGNIN_LEDGER",
-  SIGNIN_LYRA = "SIGNIN_LYRA",
+  SIGNIN_FREIGHTER = "SIGNIN_FREIGHTER",
   SIGNIN_ALBEDO = "SIGNIN_ALBEDO",
   NEW_KEY_PAIR = "NEW_KEY_PAIR",
 }
@@ -123,7 +123,7 @@ export interface Store {
   txHistory: TxHistoryInitialState;
   walletAlbedo: WalletInitialState;
   walletLedger: WalletInitialState;
-  walletLyra: WalletInitialState;
+  walletFreighter: WalletInitialState;
   walletTrezor: WalletInitialState;
 }
 

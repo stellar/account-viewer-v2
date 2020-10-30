@@ -1,6 +1,6 @@
 import logoAlbedo from "assets/svg/logo-albedo.svg";
-// TODO: update Lyra logo once we have it.
-import logoLyra from "assets/images/logo-lyra.png";
+// TODO: update Freighter logo once we have it.
+import logoFreighter from "assets/images/logo-freighter.png";
 import logoLedger from "assets/svg/logo-ledger.svg";
 import logoTrezor from "assets/svg/logo-trezor.svg";
 import { ModalType, Wallets } from "types/types.d";
@@ -16,13 +16,13 @@ export const wallets: Wallets = {
     infoLink: "https://albedo.link",
   },
   // TODO: update info
-  lyra: {
-    title: "Connect with Lyra",
-    logoImg: logoLyra,
-    logoImgAltText: "Lyra logo",
-    modalType: ModalType.SIGNIN_LYRA,
+  freighter: {
+    title: "Connect with Freighter",
+    logoImg: logoFreighter,
+    logoImgAltText: "Freighter logo",
+    modalType: ModalType.SIGNIN_FREIGHTER,
     infoText:
-      "Lyra is a browser extension wallet. Available on Chrome and Firefox.",
+      "Freighter is a browser extension wallet. Available on Chrome and Firefox.",
     infoLinkText: "Download",
     infoLink: "#",
   },
