@@ -33,6 +33,7 @@ export const SignInFreighterForm = ({ onClose }: ModalPageProps) => {
     isAuthenticated,
     errorString: accountErrorMessage,
   } = account;
+  const isAvailable = isConnected();
 
   const { errorMessage, setErrorMessage } = useErrorMessage({
     initialMessage: freighterErrorMessage || accountErrorMessage,
@@ -46,17 +47,6 @@ export const SignInFreighterForm = ({ onClose }: ModalPageProps) => {
   const fetchFreighterLogin = () => {
     setErrorMessage("");
     dispatch(fetchFreighterStellarAddressAction());
-  };
-
-  const initFreighter = () => {
-    if (!isConnected()) {
-      setErrorMessage(
-        "Please install or activate Freighter extension, and refresh the page to try again.",
-      );
-      return;
-    }
-
-    fetchFreighterLogin();
   };
 
   useEffect(() => {
@@ -109,13 +99,19 @@ export const SignInFreighterForm = ({ onClose }: ModalPageProps) => {
     accountErrorMessage,
   ]);
 
+  const message = isAvailable
+    ? `Click on "Connect with Freighter" to launch Freighter browser extension wallet.`
+    : "Please enable or download Freighter browser extension wallet.";
+
   return (
     <ModalWalletContent
       type="freighter"
       buttonFooter={
         <>
           {!freighterStatus && (
-            <Button onClick={initFreighter}>Connect with Freighter</Button>
+            <Button onClick={fetchFreighterLogin} disabled={!isAvailable}>
+              Connect with Freighter
+            </Button>
           )}
           <Button onClick={onClose} variant={ButtonVariant.secondary}>
             Cancel
@@ -123,8 +119,7 @@ export const SignInFreighterForm = ({ onClose }: ModalPageProps) => {
         </>
       }
     >
-      {/* TODO: add instructions */}
-      {!freighterStatus && <InfoBlock>Some instructions</InfoBlock>}
+      {!freighterStatus && <InfoBlock>{message}</InfoBlock>}
 
       {freighterStatus === ActionStatus.PENDING && (
         <InfoBlock>
