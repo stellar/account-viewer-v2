@@ -2,10 +2,15 @@
 # yarn lockfile v1
 
 
-"@albedo-link/intent@^0.9.2", "@albedo-link/intent@^0.9.3":
+"@albedo-link/intent@^0.9.2":
   version "0.9.3"
   resolved "https://registry.yarnpkg.com/@albedo-link/intent/-/intent-0.9.3.tgz#e75ea7bf2d2b15a3312e00d548af0e4fc0a98211"
   integrity sha512-2s3VRbxHxLdYTIPTB0ttCvedJi5f0Zw+1YaQB4An8oHk8s7bfvNunAIQibKMqI81m+LkCaYgta2ZmxsBYaYhbw==
+
+"@albedo-link/intent@^0.9.6":
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/@albedo-link/intent/-/intent-0.9.6.tgz#fbc3ec4c63f6360ae37dd68482649a83443b46f5"
+  integrity sha512-gjVl1/7aE3XDfRVdxWq7XS4fuEVaKhCYGFzDhnFPeH34QKwnEKLMv/vnRiOC8TntTdzs2ZJYhaTwRv4fRAk6dg==
 
 "@amplitude/ua-parser-js@0.7.24":
   version "0.7.24"
@@ -2909,10 +2914,10 @@ bignumber.js@^4.0.0:
   resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-4.1.0.tgz#db6f14067c140bd46624815a7916c92d9b6c24b1"
   integrity sha512-eJzYkFYy9L4JzXsbymsFn3p54D+llV27oTQ+ziJG7WFRheJcNZilgVXMG0LoZtlQSKBsJdWtLFqOD0u+U0jZKA==
 
-bignumber.js@^9.0.0:
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-9.0.0.tgz#805880f84a329b5eac6e7cb6f8274b6d82bdf075"
-  integrity sha512-t/OYhhJ2SD+YGBQcjY8GzzDHEk9f3nerxjtfa6tlMXfe7frs/WozhvCNoGvpM0P3bNf3Gq5ZRMlGr5f3r4/N8A==
+bignumber.js@^9.0.1:
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-9.0.1.tgz#8d7ba124c882bfd8e43260c67475518d0689e4e5"
+  integrity sha512-IdZR9mh6ahOBv/hYGiXyVuyCetmGJhtYkqLBpTStdhEGjegpPlUawydyaF3pbIOFynJTpllEs+NP+CS9jKFLjA==
 
 binary-extensions@^1.0.0:
   version "1.13.1"
