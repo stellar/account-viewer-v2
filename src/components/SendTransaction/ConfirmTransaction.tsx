@@ -154,8 +154,8 @@ export const ConfirmTransaction = ({
         return "Review the transaction on the Albedo popup.";
       case AuthType.LEDGER:
         return "Review the transaction on your Ledger wallet device.";
-      case AuthType.LYRA:
-        return "Review the transaction on the Lyra popup.";
+      case AuthType.FREIGHTER:
+        return "Review the transaction on the Freighter popup.";
       case AuthType.TREZOR:
         return "Follow the instructions on the Trezor popup.";
       default:
