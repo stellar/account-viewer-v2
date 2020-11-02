@@ -1,6 +1,6 @@
 import logoAlbedo from "assets/svg/logo-albedo.svg";
 // TODO: update Freighter logo once we have it.
-import logoFreighter from "assets/images/logo-freighter.png";
+import logoFreighter from "assets/svg/logo-freighter.svg";
 import logoLedger from "assets/svg/logo-ledger.svg";
 import logoTrezor from "assets/svg/logo-trezor.svg";
 import { ModalType, Wallets } from "types/types.d";
