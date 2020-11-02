@@ -101,7 +101,7 @@ export const SignInFreighterForm = ({ onClose }: ModalPageProps) => {
 
   const message = isAvailable
     ? `Click on "Connect with Freighter" to launch Freighter browser extension wallet.`
-    : "Please enable or download Freighter browser extension wallet.";
+    : "To use Freighter, please download or enable Freighter browser extension wallet.";
 
   return (
     <ModalWalletContent
