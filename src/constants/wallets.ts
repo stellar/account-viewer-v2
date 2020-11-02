@@ -1,5 +1,4 @@
 import logoAlbedo from "assets/svg/logo-albedo.svg";
-// TODO: update Freighter logo once we have it.
 import logoFreighter from "assets/svg/logo-freighter.svg";
 import logoLedger from "assets/svg/logo-ledger.svg";
 import logoTrezor from "assets/svg/logo-trezor.svg";
@@ -15,7 +14,6 @@ export const wallets: Wallets = {
     infoLinkText: "Learn more",
     infoLink: "https://albedo.link",
   },
-  // TODO: update info
   freighter: {
     title: "Connect with Freighter",
     logoImg: logoFreighter,
@@ -24,7 +22,7 @@ export const wallets: Wallets = {
     infoText:
       "Freighter is a browser extension wallet. Available on Chrome and Firefox.",
     infoLinkText: "Download",
-    infoLink: "#",
+    infoLink: "https://freighter.app",
   },
   ledger: {
     title: "Connect with Ledger",
