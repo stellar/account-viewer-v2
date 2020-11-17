@@ -303,10 +303,6 @@ export const TransactionHistory = () => {
         return true;
       }
 
-      if (tx.isRecipient) {
-        return true;
-      }
-
       return new BigNumber(tx.amount).gt(TX_HISTORY_MIN_AMOUNT);
     });
 
