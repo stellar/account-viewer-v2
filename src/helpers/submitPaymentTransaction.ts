@@ -61,6 +61,7 @@ export const buildPaymentTransaction = async (
       toAccountId,
       memoContent,
       memoType,
+      isAccountFunded,
     } = params;
     const { settings } = store.getState();
     const server = new StellarSdk.Server(
@@ -68,18 +69,26 @@ export const buildPaymentTransaction = async (
     );
     const sequence = (await server.loadAccount(publicKey)).sequence;
     const source = await new StellarSdk.Account(publicKey, sequence);
+    let operation;
+
+    if (isAccountFunded) {
+      operation = StellarSdk.Operation.payment({
+        destination: toAccountId,
+        asset: StellarSdk.Asset.native(),
+        amount: amount.toString(),
+      });
+    } else {
+      operation = StellarSdk.Operation.createAccount({
+        destination: toAccountId,
+        startingBalance: amount.toString(),
+      });
+    }
 
     transaction = new StellarSdk.TransactionBuilder(source, {
       fee,
       networkPassphrase: getNetworkConfig(settings.isTestnet).network,
       timebounds: await server.fetchTimebounds(100),
-    }).addOperation(
-      StellarSdk.Operation.payment({
-        destination: toAccountId,
-        asset: StellarSdk.Asset.native(),
-        amount: amount.toString(),
-      }),
-    );
+    }).addOperation(operation);
 
     if (memoType !== StellarSdk.MemoNone) {
       transaction = transaction.addMemo(createMemo(memoType, memoContent));

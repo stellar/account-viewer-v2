@@ -24,6 +24,7 @@ export interface FormData {
   memoType: MemoType;
   memoContent: MemoValue;
   memoRequiredMessage?: string;
+  isAccountFunded: boolean;
 }
 
 const initialFormData: FormData = {
@@ -33,6 +34,7 @@ const initialFormData: FormData = {
   memoType: StellarSdk.MemoNone,
   memoContent: "",
   memoRequiredMessage: "",
+  isAccountFunded: true,
 };
 
 export const SendTransactionFlow = ({ onCancel }: { onCancel: () => void }) => {
