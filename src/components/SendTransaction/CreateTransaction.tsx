@@ -510,6 +510,7 @@ export const CreateTransaction = ({
             variant={TextButtonVariant.secondary}
             onClick={() => {
               onInput({ ...formData, memoType: StellarSdk.MemoText });
+
               setIsMemoVisible(true);
             }}
           >
