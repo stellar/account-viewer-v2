@@ -307,8 +307,7 @@ export const CreateTransaction = ({
           !formData.isAccountFunded &&
           new BigNumber(formData.amount).lt(1)
         ) {
-          message =
-            "The destination account doesn’t exist. You need to send at least 1 lumen to this account.";
+          message = "Send at least 1 lumen to create this account";
         }
 
         errors[SendFormIds.SEND_AMOUNT] = message;
@@ -622,9 +621,9 @@ export const CreateTransaction = ({
 
       {!formData.isAccountFunded && (
         <RowEl>
-          <InfoBlock variant={InfoBlockVariant.error}>
-            The destination account doesn’t exist. You need to send at least 1
-            lumen to this account.{" "}
+          <InfoBlock>
+            The destination account doesn’t exist. A create account operation
+            will be used to create this account.{" "}
             <TextLink
               href="https://developers.stellar.org/docs/tutorials/create-account/"
               target="_blank"
