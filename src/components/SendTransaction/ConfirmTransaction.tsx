@@ -5,6 +5,7 @@ import BigNumber from "bignumber.js";
 
 import { ReactComponent as IconSend } from "assets/svg/icon-send.svg";
 import { Button, ButtonVariant } from "components/basic/Button";
+import { TextLink } from "components/basic/TextLink";
 import { InfoBlock } from "components/basic/InfoBlock";
 import { Loader } from "components/basic/Loader";
 import { Avatar } from "components/Avatar";
@@ -139,6 +140,7 @@ export const ConfirmTransaction = ({
         fee: stroopsFromLumens(maxFee).toNumber(),
         memoType: formData.memoType,
         memoContent: formData.memoContent,
+        isAccountFunded: formData.isAccountFunded,
       }),
     );
     logEvent("send: confirmed transaction", {
@@ -223,6 +225,19 @@ export const ConfirmTransaction = ({
           </tr>
         </tbody>
       </TableEl>
+
+      {!formData.isAccountFunded && (
+        <InfoBlock>
+          The destination account doesn’t exist. A create account operation will
+          be used to create this account.{" "}
+          <TextLink
+            href="https://developers.stellar.org/docs/tutorials/create-account/"
+            target="_blank"
+          >
+            Learn more about account creation
+          </TextLink>
+        </InfoBlock>
+      )}
 
       {status === ActionStatus.PENDING &&
         settings.authType &&

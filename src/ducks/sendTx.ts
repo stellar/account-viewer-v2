@@ -12,6 +12,7 @@ export interface PaymentTransactionParams {
   fee: number;
   memoType: MemoType;
   memoContent: MemoValue;
+  isAccountFunded: boolean;
 }
 
 export const sendTxAction = createAsyncThunk<

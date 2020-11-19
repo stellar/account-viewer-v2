@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
+import { DataProvider } from "@stellar/wallet-sdk";
 import StellarSdk, {
   Memo,
   MemoType,
@@ -11,6 +12,7 @@ import { useDispatch } from "react-redux";
 
 import { Button, ButtonVariant } from "components/basic/Button";
 import { TextButton, TextButtonVariant } from "components/basic/TextButton";
+import { TextLink } from "components/basic/TextLink";
 import { Input } from "components/basic/Input";
 import { InfoBlock, InfoBlockVariant } from "components/basic/InfoBlock";
 import { Select } from "components/basic/Select";
@@ -244,6 +246,29 @@ export const CreateTransaction = ({
     setIsMemoVisible(!!found);
   };
 
+  const checkIfAccountIsFunded = async () => {
+    const { toAccountId } = formData;
+
+    if (!toAccountId || !StrKey.isValidEd25519PublicKey(toAccountId)) {
+      onInput({
+        ...formData,
+        isAccountFunded: true,
+      });
+      return;
+    }
+
+    const dataProvider = new DataProvider({
+      serverUrl: getNetworkConfig(settings.isTestnet).url,
+      accountOrKey: toAccountId,
+      networkPassphrase: getNetworkConfig(settings.isTestnet).network,
+    });
+
+    onInput({
+      ...formData,
+      isAccountFunded: await dataProvider.isAccountFunded(),
+    });
+  };
+
   const resetFederationAddressInput = () => {
     setFederationAddressFetchStatus(null);
     onInput({ ...formData, federationAddress: undefined });
@@ -278,6 +303,12 @@ export const CreateTransaction = ({
           message = "Amount must be larger than 0";
         } else if (new BigNumber(formData.amount).gt(availableBalance)) {
           message = "This amount is larger than your balance";
+        } else if (
+          !formData.isAccountFunded &&
+          new BigNumber(formData.amount).lt(1)
+        ) {
+          message =
+            "The destination account doesn’t exist. You need to send at least 1 lumen to this account.";
         }
 
         errors[SendFormIds.SEND_AMOUNT] = message;
@@ -404,6 +435,7 @@ export const CreateTransaction = ({
             validate(e);
             fetchIfFederationAddress();
             checkIfKnownAccount();
+            checkIfAccountIsFunded();
           }}
           error={inputErrors[SendFormIds.SEND_TO]}
           value={formData.toAccountId}
@@ -587,6 +619,21 @@ export const CreateTransaction = ({
           />
         </CellEl>
       </RowEl>
+
+      {!formData.isAccountFunded && (
+        <RowEl>
+          <InfoBlock variant={InfoBlockVariant.error}>
+            The destination account doesn’t exist. You need to send at least 1
+            lumen to this account.{" "}
+            <TextLink
+              href="https://developers.stellar.org/docs/tutorials/create-account/"
+              target="_blank"
+            >
+              Learn more about account creation
+            </TextLink>
+          </InfoBlock>
+        </RowEl>
+      )}
     </ModalContent>
   );
 };
