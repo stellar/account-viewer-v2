@@ -628,6 +628,7 @@ export const CreateTransaction = ({
             <TextLink
               href="https://developers.stellar.org/docs/tutorials/create-account/"
               target="_blank"
+              rel="noreferrer"
             >
               Learn more about account creation
             </TextLink>
