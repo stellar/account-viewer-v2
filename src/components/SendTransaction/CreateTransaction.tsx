@@ -8,7 +8,6 @@ import StellarSdk, {
   StrKey,
 } from "stellar-sdk";
 import BigNumber from "bignumber.js";
-import { useDispatch } from "react-redux";
 
 import { Button, ButtonVariant } from "components/basic/Button";
 import { TextButton, TextButtonVariant } from "components/basic/TextButton";
@@ -18,13 +17,13 @@ import { InfoBlock, InfoBlockVariant } from "components/basic/InfoBlock";
 import { Select } from "components/basic/Select";
 import { ModalContent } from "components/ModalContent";
 
-import { fetchMemoRequiredAccountsAction } from "ducks/knownAccounts";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { lumensFromStroops } from "helpers/stroopConversion";
 import { logEvent } from "helpers/tracking";
 import { useRedux } from "hooks/useRedux";
-import { ActionStatus, KnownAccount, NetworkCongestion } from "types/types.d";
+import { ActionStatus, NetworkCongestion } from "types/types.d";
 import { PALETTE } from "constants/styles";
+import { knownAccounts } from "constants/knownAccounts";
 import { FormData } from "./SendTransactionFlow";
 
 const RowEl = styled.div`
@@ -114,13 +113,10 @@ export const CreateTransaction = ({
   onCancel,
   setMaxFee,
 }: CreateTransactionProps) => {
-  const dispatch = useDispatch();
-
-  const { account, settings, knownAccounts } = useRedux(
-    "account",
-    "settings",
-    "knownAccounts",
-  );
+  const knownAccount =
+    knownAccounts[formData.toAccountId] ||
+    knownAccounts[formData.federationAddress || ""];
+  const { account, settings } = useRedux("account", "settings");
   const [isMemoVisible, setIsMemoVisible] = useState(!!formData.memoContent);
   const [isMemoTypeFromFederation, setIsMemoTypeFromFederation] = useState(
     false,
@@ -176,15 +172,6 @@ export const CreateTransaction = ({
     fetchNetworkBaseFee();
   }, [setMaxFee, settings.isTestnet]);
 
-  useEffect(() => {
-    if (
-      knownAccounts.status !== ActionStatus.SUCCESS &&
-      knownAccounts.status !== ActionStatus.PENDING
-    ) {
-      dispatch(fetchMemoRequiredAccountsAction());
-    }
-  }, [knownAccounts.status, dispatch]);
-
   const memoPlaceholderMap: { [index: string]: string } = {
     [StellarSdk.MemoText]: "Up to 28 characters",
     [StellarSdk.MemoID]: "Unsigned 64-bit integer",
@@ -232,18 +219,6 @@ export const CreateTransaction = ({
     } else {
       resetFederationAddressInput();
     }
-  };
-
-  const checkIfKnownAccount = () => {
-    const found = knownAccounts.memoRequired?.find(
-      (acc: KnownAccount) => acc.address === formData.toAccountId,
-    );
-    const message = found
-      ? `The payment destination (${found.name}) requires you to specify a memo to identify your account.`
-      : "";
-
-    onInput({ ...formData, memoRequiredMessage: message });
-    setIsMemoVisible(!!found);
   };
 
   const checkIfAccountIsFunded = async () => {
@@ -433,11 +408,10 @@ export const CreateTransaction = ({
           onBlur={(e) => {
             validate(e);
             fetchIfFederationAddress();
-            checkIfKnownAccount();
             checkIfAccountIsFunded();
           }}
           error={inputErrors[SendFormIds.SEND_TO]}
-          value={formData.toAccountId}
+          defaultValue={formData.toAccountId}
           placeholder="Recipient's public key or federation address"
         />
       </RowEl>
@@ -489,21 +463,24 @@ export const CreateTransaction = ({
             }}
             onBlur={validate}
             error={inputErrors[SendFormIds.SEND_AMOUNT]}
-            value={formData.amount.toString()}
+            defaultValue={formData.amount.toString()}
             placeholder="Amount to send"
           />
         </CellEl>
       </RowEl>
 
-      {formData.memoRequiredMessage && (
+      {Boolean(knownAccount) && (
         <RowEl>
           <InfoBlock variant={InfoBlockVariant.warning}>
-            <p>{formData.memoRequiredMessage}</p>
+            <p>
+              The payment destination ({knownAccount.name}) requires you to
+              specify a memo to identify your account.
+            </p>
           </InfoBlock>
         </RowEl>
       )}
 
-      {!isMemoVisible && (
+      {!isMemoVisible && !knownAccount && (
         <RowEl>
           <TextButton
             variant={TextButtonVariant.secondary}
@@ -517,7 +494,7 @@ export const CreateTransaction = ({
         </RowEl>
       )}
 
-      {isMemoVisible && (
+      {Boolean(isMemoVisible || knownAccount) && (
         <>
           <RowEl>
             <CellEl>
@@ -532,7 +509,7 @@ export const CreateTransaction = ({
                     memoType: e.target.value as MemoType,
                   });
                 }}
-                value={formData.memoType}
+                defaultValue={formData.memoType}
                 disabled={isMemoTypeFromFederation}
               >
                 <option value={StellarSdk.MemoText}>MEMO_TEXT</option>
@@ -559,7 +536,7 @@ export const CreateTransaction = ({
                   });
                 }}
                 onBlur={validate}
-                value={formData.memoContent as string}
+                defaultValue={formData.memoContent as string}
                 disabled={isMemoContentFromFederation}
                 error={inputErrors[SendFormIds.SEND_MEMO_CONTENT]}
               />
@@ -602,7 +579,7 @@ export const CreateTransaction = ({
             label="Fee"
             rightElement="lumens"
             type="number"
-            value={maxFee}
+            defaultValue={maxFee}
             onChange={(e) => {
               clearInputError(e.target.id);
               setMaxFee(e.target.value);
