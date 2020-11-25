@@ -144,14 +144,6 @@ export const CreateTransaction = ({
 
   const availableBalance = new BigNumber(account.data.balances.native.total);
 
-  const knownMemoType = knownAccount?.memoType;
-
-  useEffect(() => {
-    if (knownMemoType !== formData.memoType) {
-      onInput({ ...formData, memoType: knownMemoType as MemoType });
-    }
-  }, [knownMemoType, onInput, formData]);
-
   useEffect(() => {
     const fetchNetworkBaseFee = async () => {
       const server = new StellarSdk.Server(
@@ -517,7 +509,7 @@ export const CreateTransaction = ({
                     memoType: e.target.value as MemoType,
                   });
                 }}
-                value={formData.memoType}
+                defaultValue={formData.memoType}
                 disabled={isMemoTypeFromFederation}
               >
                 <option value={StellarSdk.MemoText}>MEMO_TEXT</option>
