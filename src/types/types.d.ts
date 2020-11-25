@@ -74,17 +74,6 @@ export interface KeyStoreInitialState {
   };
 }
 
-export interface KnownAccount {
-  address: string;
-  name: string;
-  [key: string]: any;
-}
-
-export interface KnownAccountsInitialState {
-  memoRequired: KnownAccount[] | undefined;
-  status: ActionStatus | undefined;
-}
-
 export interface SendTxInitialState {
   data: Horizon.TransactionResponse | null;
   status: ActionStatus | undefined;
