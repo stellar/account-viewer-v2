@@ -49,7 +49,6 @@ export const SendTransactionFlow = ({ onCancel }: { onCancel: () => void }) => {
             setFormData(newFormData);
             setCurrentStage(currentStage + 1);
           }}
-          onInput={setFormData}
           onCancel={onCancel}
           initialFormData={formData}
           setMaxFee={setMaxFee}

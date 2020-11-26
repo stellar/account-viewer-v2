@@ -103,7 +103,6 @@ interface CreateTransactionProps {
   initialFormData: PaymentFormData;
   maxFee: string;
   onContinue: (formData: PaymentFormData) => void;
-  onInput: (formData: PaymentFormData) => void;
   onCancel: () => void;
   setMaxFee: (maxFee: string) => void;
 }
