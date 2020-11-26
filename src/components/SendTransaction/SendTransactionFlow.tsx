@@ -45,7 +45,6 @@ export const SendTransactionFlow = ({ onCancel }: { onCancel: () => void }) => {
       {currentStage === SendState.CREATE && (
         <CreateTransaction
           onContinue={(newFormData) => {
-            console.log("🔎 continuing with this data:", newFormData);
             setFormData(newFormData);
             setCurrentStage(currentStage + 1);
           }}
