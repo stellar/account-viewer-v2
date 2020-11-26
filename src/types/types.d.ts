@@ -1,3 +1,5 @@
+import { MemoType, MemoValue } from "stellar-sdk";
+
 declare global {
   interface Window {
     _env_: {
@@ -74,17 +76,6 @@ export interface KeyStoreInitialState {
   };
 }
 
-export interface KnownAccount {
-  address: string;
-  name: string;
-  [key: string]: any;
-}
-
-export interface KnownAccountsInitialState {
-  memoRequired: KnownAccount[] | undefined;
-  status: ActionStatus | undefined;
-}
-
 export interface SendTxInitialState {
   data: Horizon.TransactionResponse | null;
   status: ActionStatus | undefined;
@@ -141,4 +132,14 @@ export interface WalletData {
 
 export interface Wallets {
   [key: string]: WalletData;
+}
+
+export interface PaymentFormData {
+  toAccountId: string;
+  federationAddress?: string;
+  amount: string;
+  memoType: MemoType;
+  memoContent: MemoValue;
+  memoRequiredMessage?: string;
+  isAccountFunded: boolean;
 }

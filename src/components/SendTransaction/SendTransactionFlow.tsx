@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import StellarSdk, { MemoType, MemoValue } from "stellar-sdk";
+import { MemoNone, BASE_FEE } from "stellar-sdk";
 import { useDispatch } from "react-redux";
 
+import { PaymentFormData } from "types/types.d";
 import { resetSendTxAction } from "ducks/sendTx";
 import { lumensFromStroops } from "helpers/stroopConversion";
 import { CreateTransaction } from "./CreateTransaction";
@@ -17,21 +18,11 @@ enum SendState {
   ERROR,
 }
 
-export interface FormData {
-  toAccountId: string;
-  federationAddress?: string;
-  amount: string;
-  memoType: MemoType;
-  memoContent: MemoValue;
-  memoRequiredMessage?: string;
-  isAccountFunded: boolean;
-}
-
-const initialFormData: FormData = {
+const initialFormData: PaymentFormData = {
   toAccountId: "",
   federationAddress: undefined,
   amount: "",
-  memoType: StellarSdk.MemoNone,
+  memoType: MemoNone,
   memoContent: "",
   memoRequiredMessage: "",
   isAccountFunded: true,
@@ -42,9 +33,7 @@ export const SendTransactionFlow = ({ onCancel }: { onCancel: () => void }) => {
 
   const [currentStage, setCurrentStage] = useState(SendState.CREATE);
   const [formData, setFormData] = useState(initialFormData);
-  const [maxFee, setMaxFee] = useState(
-    lumensFromStroops(StellarSdk.BASE_FEE).toString(),
-  );
+  const [maxFee, setMaxFee] = useState(lumensFromStroops(BASE_FEE).toString());
 
   const handleBack = () => {
     setCurrentStage(SendState.CREATE);
@@ -55,12 +44,12 @@ export const SendTransactionFlow = ({ onCancel }: { onCancel: () => void }) => {
     <>
       {currentStage === SendState.CREATE && (
         <CreateTransaction
-          onContinue={() => {
+          onContinue={(newFormData) => {
+            setFormData(newFormData);
             setCurrentStage(currentStage + 1);
           }}
-          onInput={setFormData}
           onCancel={onCancel}
-          formData={formData}
+          initialFormData={formData}
           setMaxFee={setMaxFee}
           maxFee={maxFee}
         />
