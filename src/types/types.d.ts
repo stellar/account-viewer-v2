@@ -1,3 +1,5 @@
+import { MemoType, MemoValue } from "stellar-sdk";
+
 declare global {
   interface Window {
     _env_: {
@@ -130,4 +132,14 @@ export interface WalletData {
 
 export interface Wallets {
   [key: string]: WalletData;
+}
+
+export interface PaymentFormData {
+  toAccountId: string;
+  federationAddress?: string;
+  amount: string;
+  memoType: MemoType;
+  memoContent: MemoValue;
+  memoRequiredMessage?: string;
+  isAccountFunded: boolean;
 }

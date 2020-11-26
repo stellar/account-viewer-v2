@@ -21,10 +21,13 @@ import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { lumensFromStroops } from "helpers/stroopConversion";
 import { logEvent } from "helpers/tracking";
 import { useRedux } from "hooks/useRedux";
-import { ActionStatus, NetworkCongestion } from "types/types.d";
+import {
+  ActionStatus,
+  NetworkCongestion,
+  PaymentFormData,
+} from "types/types.d";
 import { PALETTE } from "constants/styles";
 import { knownAccounts } from "constants/knownAccounts";
-import { FormData } from "./SendTransactionFlow";
 
 const RowEl = styled.div`
   display: flex;
@@ -97,22 +100,23 @@ type ValidatedInput = {
 };
 
 interface CreateTransactionProps {
-  formData: FormData;
+  initialFormData: PaymentFormData;
   maxFee: string;
-  onContinue: () => void;
-  onInput: (formData: FormData) => void;
+  onContinue: (formData: PaymentFormData) => void;
+  onInput: (formData: PaymentFormData) => void;
   onCancel: () => void;
   setMaxFee: (maxFee: string) => void;
 }
 
 export const CreateTransaction = ({
-  formData,
   maxFee,
+  initialFormData,
   onContinue,
-  onInput,
   onCancel,
   setMaxFee,
 }: CreateTransactionProps) => {
+  const [formData, onInput] = useState<PaymentFormData>(initialFormData);
+
   const knownAccount =
     knownAccounts[formData.toAccountId] ||
     knownAccounts[formData.federationAddress || ""];
@@ -375,7 +379,7 @@ export const CreateTransaction = ({
     if (hasErrors) {
       setInputErrors(errors);
     } else {
-      onContinue();
+      onContinue(formData);
     }
   };
 
@@ -397,13 +401,30 @@ export const CreateTransaction = ({
           label="Sending To"
           type="text"
           onChange={(e) => {
+            let newFormData = { ...formData, toAccountId: e.target.value };
+
             clearInputError(e.target.id);
 
             if (federationAddressFetchStatus) {
               setFederationAddressFetchStatus(null);
             }
 
-            onInput({ ...formData, toAccountId: e.target.value });
+            // Reset memo whenever a new known account is found.
+            if (knownAccounts[e.target.value]) {
+              newFormData = {
+                ...newFormData,
+                memoType: StellarSdk.MemoText,
+                memoContent: null,
+              };
+            }
+
+            // Reset federation fields whenver the address change.
+            if (isMemoTypeFromFederation || isMemoContentFromFederation) {
+              setIsMemoTypeFromFederation(false);
+              setIsMemoContentFromFederation(false);
+            }
+
+            onInput(newFormData);
           }}
           onBlur={(e) => {
             validate(e);

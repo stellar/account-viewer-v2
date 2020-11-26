@@ -16,8 +16,7 @@ import { logEvent } from "helpers/tracking";
 import { stroopsFromLumens } from "helpers/stroopConversion";
 import { sendTxAction } from "ducks/sendTx";
 import { useRedux } from "hooks/useRedux";
-import { ActionStatus, AuthType } from "types/types.d";
-import { FormData } from "./SendTransactionFlow";
+import { ActionStatus, AuthType, PaymentFormData } from "types/types.d";
 
 const TableEl = styled.table`
   width: 100%;
@@ -89,7 +88,7 @@ const InlineLoadingTextEl = styled.div`
 `;
 
 interface ConfirmTransactionProps {
-  formData: FormData;
+  formData: PaymentFormData;
   maxFee: string;
   onSuccessfulTx: () => void;
   onFailedTx: () => void;
