@@ -418,7 +418,7 @@ export const CreateTransaction = ({
               };
             }
 
-            // Reset federation fields whenver the address change.
+            // Reset federation fields whenever the address change.
             if (isMemoTypeFromFederation || isMemoContentFromFederation) {
               setIsMemoTypeFromFederation(false);
               setIsMemoContentFromFederation(false);
