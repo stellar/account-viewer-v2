@@ -114,6 +114,13 @@ export const CreateTransaction = ({
   onCancel,
   setMaxFee,
 }: CreateTransactionProps) => {
+  const initialInputErrors = {
+    [SendFormIds.SEND_TO]: "",
+    [SendFormIds.SEND_AMOUNT]: "",
+    [SendFormIds.SEND_FEE]: "",
+    [SendFormIds.SEND_MEMO_CONTENT]: "",
+  };
+
   const [formData, onInput] = useState<PaymentFormData>(initialFormData);
 
   const knownAccount =
@@ -138,12 +145,9 @@ export const CreateTransaction = ({
   const [networkCongestion, setNetworkCongestion] = useState(
     NetworkCongestion.LOW,
   );
-  const [inputErrors, setInputErrors] = useState<ValidatedInput>({
-    [SendFormIds.SEND_TO]: "",
-    [SendFormIds.SEND_AMOUNT]: "",
-    [SendFormIds.SEND_FEE]: "",
-    [SendFormIds.SEND_MEMO_CONTENT]: "",
-  });
+  const [inputErrors, setInputErrors] = useState<ValidatedInput>(
+    initialInputErrors,
+  );
 
   const availableBalance = new BigNumber(account.data.balances.native.total);
 
@@ -174,6 +178,10 @@ export const CreateTransaction = ({
 
     fetchNetworkBaseFee();
   }, [setMaxFee, settings.isTestnet]);
+
+  useEffect(() => {
+    setIsMemoVisible(Boolean(formData.memoContent || knownAccount));
+  }, [knownAccount, formData.memoContent]);
 
   const memoPlaceholderMap: { [index: string]: string } = {
     [StellarSdk.MemoText]: "Up to 28 characters",
@@ -400,7 +408,13 @@ export const CreateTransaction = ({
           label="Sending To"
           type="text"
           onChange={(e) => {
-            let newFormData = { ...formData, toAccountId: e.target.value };
+            let newFormData = {
+              ...formData,
+              // isAccountFunded will be updated on blur, this will make sure
+              // we don't have outdated unfunded error still showing.
+              isAccountFunded: true,
+              toAccountId: e.target.value,
+            };
 
             clearInputError(e.target.id);
 
@@ -413,7 +427,7 @@ export const CreateTransaction = ({
               newFormData = {
                 ...newFormData,
                 memoType: StellarSdk.MemoText,
-                memoContent: null,
+                memoContent: "",
               };
             }
 
@@ -424,6 +438,7 @@ export const CreateTransaction = ({
             }
 
             onInput(newFormData);
+            setInputErrors(initialInputErrors);
           }}
           onBlur={(e) => {
             validate(e);
@@ -431,7 +446,7 @@ export const CreateTransaction = ({
             checkIfAccountIsFunded();
           }}
           error={inputErrors[SendFormIds.SEND_TO]}
-          defaultValue={formData.toAccountId}
+          value={formData.toAccountId}
           placeholder="Recipient's public key or federation address"
         />
       </RowEl>
@@ -483,7 +498,7 @@ export const CreateTransaction = ({
             }}
             onBlur={validate}
             error={inputErrors[SendFormIds.SEND_AMOUNT]}
-            defaultValue={formData.amount.toString()}
+            value={formData.amount.toString()}
             placeholder="Amount to send"
           />
         </CellEl>
@@ -500,7 +515,7 @@ export const CreateTransaction = ({
         </RowEl>
       )}
 
-      {!isMemoVisible && !knownAccount && (
+      {!isMemoVisible && (
         <RowEl>
           <TextButton
             variant={TextButtonVariant.secondary}
@@ -514,7 +529,7 @@ export const CreateTransaction = ({
         </RowEl>
       )}
 
-      {Boolean(isMemoVisible || knownAccount) && (
+      {isMemoVisible && (
         <>
           <RowEl>
             <CellEl>
@@ -529,7 +544,7 @@ export const CreateTransaction = ({
                     memoType: e.target.value as MemoType,
                   });
                 }}
-                defaultValue={formData.memoType}
+                value={formData.memoType}
                 disabled={isMemoTypeFromFederation}
               >
                 <option value={StellarSdk.MemoText}>MEMO_TEXT</option>
@@ -556,7 +571,7 @@ export const CreateTransaction = ({
                   });
                 }}
                 onBlur={validate}
-                defaultValue={formData.memoContent as string}
+                value={formData.memoContent as string}
                 disabled={isMemoContentFromFederation}
                 error={inputErrors[SendFormIds.SEND_MEMO_CONTENT]}
               />
@@ -571,7 +586,7 @@ export const CreateTransaction = ({
             </RowEl>
           )}
 
-          {!isMemoContentFromFederation && (
+          {!isMemoContentFromFederation && !knownAccount && (
             <RowEl>
               <TextButton
                 variant={TextButtonVariant.secondary}
@@ -599,7 +614,7 @@ export const CreateTransaction = ({
             label="Fee"
             rightElement="lumens"
             type="number"
-            defaultValue={maxFee}
+            value={maxFee}
             onChange={(e) => {
               clearInputError(e.target.id);
               setMaxFee(e.target.value);
