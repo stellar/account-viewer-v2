@@ -126,6 +126,9 @@ export const CreateTransaction = ({
   const knownAccount =
     knownAccounts[formData.toAccountId] ||
     knownAccounts[formData.federationAddress || ""];
+  const [prevKnownAccount, setPrevKnownAccount] = useState(
+    Boolean(knownAccount),
+  );
   const { account, settings } = useRedux("account", "settings");
   const [isMemoVisible, setIsMemoVisible] = useState(!!formData.memoContent);
   const [isMemoTypeFromFederation, setIsMemoTypeFromFederation] = useState(
@@ -422,8 +425,9 @@ export const CreateTransaction = ({
               setFederationAddressFetchStatus(null);
             }
 
-            // Reset memo whenever a new known account is found.
-            if (knownAccounts[e.target.value]) {
+            // Reset memo whenever a new known account is found or previous
+            // address was of known account.
+            if (knownAccounts[e.target.value] || prevKnownAccount) {
               newFormData = {
                 ...newFormData,
                 memoType: StellarSdk.MemoText,
@@ -444,10 +448,12 @@ export const CreateTransaction = ({
             validate(e);
             fetchIfFederationAddress();
             checkIfAccountIsFunded();
+            setPrevKnownAccount(Boolean(knownAccount));
           }}
           error={inputErrors[SendFormIds.SEND_TO]}
           value={formData.toAccountId}
           placeholder="Recipient's public key or federation address"
+          spellCheck={false}
         />
       </RowEl>
 
