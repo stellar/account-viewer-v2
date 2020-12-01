@@ -17,7 +17,7 @@ const LabelEl = styled.label`
   display: block;
 `;
 
-const SelectWrapperEl = styled.div`
+const SelectWrapperEl = styled.div<{ disabled?: boolean }>`
   border: 1px solid ${PALETTE.grey};
   border-radius: 0.125rem;
   background-color: ${PALETTE.white};
@@ -26,6 +26,7 @@ const SelectWrapperEl = styled.div`
   justify-content: space-between;
   align-items: center;
   position: relative;
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 `;
 
 const SelectEl = styled.select`
@@ -70,7 +71,7 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
 export const Select = ({ id, label, children, ...props }: SelectProps) => (
   <WrapperEl>
     {label && <LabelEl htmlFor={id}>{label}</LabelEl>}
-    <SelectWrapperEl>
+    <SelectWrapperEl disabled={props.disabled}>
       <SelectEl id={id} {...props}>
         {children}
       </SelectEl>

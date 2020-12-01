@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import styled, { css } from "styled-components";
-import StellarSdk, { Horizon } from "stellar-sdk";
+import { Horizon } from "stellar-sdk";
 import { useDispatch } from "react-redux";
 import { BigNumber } from "bignumber.js";
 import { Types } from "@stellar/wallet-sdk";
@@ -14,6 +14,7 @@ import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { getFormattedPublicKey } from "helpers/getFormattedPublicKey";
+import { getMemoTypeText } from "helpers/getMemoTypeText";
 import { Avatar } from "components/Avatar";
 import { Heading2 } from "components/basic/Heading";
 import { TextButton, TextButtonVariant } from "components/basic/TextButton";
@@ -325,24 +326,7 @@ export const TransactionHistory = () => {
   };
 
   const getFormattedMemo = (pt: Types.Payment) => {
-    let memoType;
-    switch (pt.memoType) {
-      case StellarSdk.MemoText:
-        memoType = "MEMO_TEXT";
-        break;
-      case StellarSdk.MemoHash:
-        memoType = "MEMO_HASH";
-        break;
-      case StellarSdk.MemoID:
-        memoType = "MEMO_ID";
-        break;
-      case StellarSdk.MemoReturn:
-        memoType = "MEMO_RETURN";
-        break;
-      default:
-        memoType = "";
-        break;
-    }
+    const memoType = getMemoTypeText(pt.memoType);
 
     return (
       <MemoEl aria-hidden={!memoType && !pt.memo}>

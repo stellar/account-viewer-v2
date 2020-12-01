@@ -12,6 +12,7 @@ import { Avatar } from "components/Avatar";
 import { ModalContent } from "components/ModalContent";
 import { FONT_WEIGHT, PALETTE } from "constants/styles";
 
+import { getMemoTypeText } from "helpers/getMemoTypeText";
 import { logEvent } from "helpers/tracking";
 import { stroopsFromLumens } from "helpers/stroopConversion";
 import { sendTxAction } from "ducks/sendTx";
@@ -215,7 +216,9 @@ export const ConfirmTransaction = ({
           {formData.memoContent ? (
             <tr>
               <th>Memo</th>
-              <td>{formData.memoContent}</td>
+              <td>
+                {formData.memoContent} ({getMemoTypeText(formData.memoType)})
+              </td>
             </tr>
           ) : null}
           <tr>
