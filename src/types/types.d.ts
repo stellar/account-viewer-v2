@@ -140,6 +140,5 @@ export interface PaymentFormData {
   amount: string;
   memoType: MemoType;
   memoContent: MemoValue;
-  memoRequiredMessage?: string;
   isAccountFunded: boolean;
 }
