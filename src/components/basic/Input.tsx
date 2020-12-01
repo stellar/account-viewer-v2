@@ -23,12 +23,13 @@ const InputContainerEl = styled.div`
   align-items: center;
 `;
 
-const InputWrapperEl = styled.div`
+const InputWrapperEl = styled.div<{ disabled?: boolean }>`
   border: 1px solid ${PALETTE.grey};
   border-radius: 0.125rem;
   background-color: ${PALETTE.white};
   flex: 1;
   height: 100%;
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 `;
 
 const InputEl = styled.input`
@@ -86,7 +87,7 @@ export const Input = ({
   <WrapperEl>
     {label && <LabelEl htmlFor={id}>{label}</LabelEl>}
     <InputContainerEl>
-      <InputWrapperEl>
+      <InputWrapperEl disabled={props.disabled}>
         <InputEl id={id} aria-invalid={!!error} {...props} />
       </InputWrapperEl>
       {rightElement && <RightTextEl>{rightElement}</RightTextEl>}

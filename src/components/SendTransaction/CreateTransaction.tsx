@@ -114,6 +114,8 @@ export const CreateTransaction = ({
   onCancel,
   setMaxFee,
 }: CreateTransactionProps) => {
+  const { account, settings } = useRedux("account", "settings");
+
   const initialInputErrors = {
     [SendFormIds.SEND_TO]: "",
     [SendFormIds.SEND_AMOUNT]: "",
@@ -121,15 +123,26 @@ export const CreateTransaction = ({
     [SendFormIds.SEND_MEMO_CONTENT]: "",
   };
 
+  const memoPlaceholderMap: { [index: string]: string } = {
+    [StellarSdk.MemoText]: "Up to 28 characters",
+    [StellarSdk.MemoID]: "Unsigned 64-bit integer",
+    [StellarSdk.MemoHash]:
+      "32-byte hash in hexadecimal format (64 [0-9a-f] characters)",
+    [StellarSdk.MemoReturn]:
+      "32-byte hash in hexadecimal format (64 [0-9a-f] characters)",
+    [StellarSdk.MemoNone]: "",
+  };
+
   const [formData, onInput] = useState<PaymentFormData>(initialFormData);
 
   const knownAccount =
     knownAccounts[formData.toAccountId] ||
     knownAccounts[formData.federationAddress || ""];
-  const [prevKnownAccount, setPrevKnownAccount] = useState(
-    Boolean(knownAccount),
+  const [prevAddress, setPrevAddress] = useState(
+    formData.federationAddress || formData.toAccountId || "",
   );
-  const { account, settings } = useRedux("account", "settings");
+  const [isCheckingAddress, setIsCheckingAddress] = useState(false);
+
   const [isMemoVisible, setIsMemoVisible] = useState(!!formData.memoContent);
   const [isMemoTypeFromFederation, setIsMemoTypeFromFederation] = useState(
     false,
@@ -186,16 +199,6 @@ export const CreateTransaction = ({
     setIsMemoVisible(Boolean(formData.memoContent || knownAccount));
   }, [knownAccount, formData.memoContent]);
 
-  const memoPlaceholderMap: { [index: string]: string } = {
-    [StellarSdk.MemoText]: "Up to 28 characters",
-    [StellarSdk.MemoID]: "Unsigned 64-bit integer",
-    [StellarSdk.MemoHash]:
-      "32-byte hash in hexadecimal format (64 [0-9a-f] characters)",
-    [StellarSdk.MemoReturn]:
-      "32-byte hash in hexadecimal format (64 [0-9a-f] characters)",
-    [StellarSdk.MemoNone]: "",
-  };
-
   const fetchIfFederationAddress = async () => {
     const { toAccountId } = formData;
 
@@ -236,6 +239,7 @@ export const CreateTransaction = ({
   };
 
   const checkIfAccountIsFunded = async () => {
+    setIsCheckingAddress(true);
     const { toAccountId } = formData;
 
     if (!toAccountId || !StrKey.isValidEd25519PublicKey(toAccountId)) {
@@ -243,6 +247,7 @@ export const CreateTransaction = ({
         ...formData,
         isAccountFunded: true,
       });
+      setIsCheckingAddress(false);
       return;
     }
 
@@ -256,6 +261,7 @@ export const CreateTransaction = ({
       ...formData,
       isAccountFunded: await dataProvider.isAccountFunded(),
     });
+    setIsCheckingAddress(false);
   };
 
   const resetFederationAddressInput = () => {
@@ -369,6 +375,10 @@ export const CreateTransaction = ({
   };
 
   const clearInputError = (inputId: string) => {
+    if (!inputErrors[inputId]) {
+      return;
+    }
+
     setInputErrors({ ...inputErrors, [inputId]: "" });
   };
 
@@ -419,15 +429,13 @@ export const CreateTransaction = ({
               toAccountId: e.target.value,
             };
 
-            clearInputError(e.target.id);
-
             if (federationAddressFetchStatus) {
               setFederationAddressFetchStatus(null);
             }
 
             // Reset memo whenever a new known account is found or previous
             // address was of known account.
-            if (knownAccounts[e.target.value] || prevKnownAccount) {
+            if (knownAccounts[e.target.value] || knownAccounts[prevAddress]) {
               newFormData = {
                 ...newFormData,
                 memoType: StellarSdk.MemoText,
@@ -441,14 +449,22 @@ export const CreateTransaction = ({
               setIsMemoContentFromFederation(false);
             }
 
-            onInput(newFormData);
+            // Reset all errors (to make sure unfunded account error is cleared)
             setInputErrors(initialInputErrors);
+            onInput(newFormData);
           }}
           onBlur={(e) => {
             validate(e);
+
+            // If the address hasn't changed, nothing to fetch or update.
+            if (prevAddress === e.target.value) {
+              return;
+            }
+
             fetchIfFederationAddress();
             checkIfAccountIsFunded();
-            setPrevKnownAccount(Boolean(knownAccount));
+
+            setPrevAddress(e.target.value);
           }}
           error={inputErrors[SendFormIds.SEND_TO]}
           value={formData.toAccountId}
@@ -456,6 +472,14 @@ export const CreateTransaction = ({
           spellCheck={false}
         />
       </RowEl>
+
+      {isCheckingAddress && (
+        <RowEl>
+          <InfoBlock>
+            <p>Checking address…</p>
+          </InfoBlock>
+        </RowEl>
+      )}
 
       {federationAddressFetchStatus && (
         <RowEl>
@@ -506,6 +530,10 @@ export const CreateTransaction = ({
             error={inputErrors[SendFormIds.SEND_AMOUNT]}
             value={formData.amount.toString()}
             placeholder="Amount to send"
+            disabled={
+              isCheckingAddress ||
+              federationAddressFetchStatus === ActionStatus.PENDING
+            }
           />
         </CellEl>
       </RowEl>
@@ -551,7 +579,11 @@ export const CreateTransaction = ({
                   });
                 }}
                 value={formData.memoType}
-                disabled={isMemoTypeFromFederation}
+                disabled={
+                  isCheckingAddress ||
+                  federationAddressFetchStatus === ActionStatus.PENDING ||
+                  isMemoTypeFromFederation
+                }
               >
                 <option value={StellarSdk.MemoText}>MEMO_TEXT</option>
                 <option value={StellarSdk.MemoID}>MEMO_ID</option>
@@ -578,7 +610,11 @@ export const CreateTransaction = ({
                 }}
                 onBlur={validate}
                 value={formData.memoContent as string}
-                disabled={isMemoContentFromFederation}
+                disabled={
+                  isCheckingAddress ||
+                  federationAddressFetchStatus === ActionStatus.PENDING ||
+                  isMemoContentFromFederation
+                }
                 error={inputErrors[SendFormIds.SEND_MEMO_CONTENT]}
               />
             </CellEl>
@@ -632,6 +668,10 @@ export const CreateTransaction = ({
                 <strong>{networkCongestion} congestion!</strong> Recommended
                 fee: {recommendedFee}.
               </CongestionEl>
+            }
+            disabled={
+              isCheckingAddress ||
+              federationAddressFetchStatus === ActionStatus.PENDING
             }
           />
         </CellEl>
