@@ -24,7 +24,6 @@ const initialFormData: PaymentFormData = {
   amount: "",
   memoType: MemoNone,
   memoContent: "",
-  memoRequiredMessage: "",
   isAccountFunded: true,
 };
 
