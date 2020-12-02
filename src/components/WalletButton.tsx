@@ -11,7 +11,7 @@ const WrapperEl = styled.div`
   min-width: 250px;
 `;
 
-const ButtonEl = styled.div`
+const ButtonEl = styled.button`
   flex: 1;
   border: 1px solid ${PALETTE.white40};
   border-radius: 0.25rem;
@@ -53,7 +53,7 @@ export const WalletButton: React.FC<WalletButtonProps> = ({
   ...props
 }) => (
   <WrapperEl>
-    <ButtonEl onClick={onClick} role="button" {...props}>
+    <ButtonEl onClick={onClick} {...props}>
       <img src={imageSrc} alt={imageAlt} />
       <LabelEl>{children}</LabelEl>
     </ButtonEl>
