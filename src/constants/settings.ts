@@ -1,7 +1,6 @@
 import StellarSdk from "stellar-sdk";
 
-// TODO: set to 100 before launch
-export const TX_HISTORY_LIMIT = 20;
+export const TX_HISTORY_LIMIT = 100;
 export const TX_HISTORY_MIN_AMOUNT = 0.5;
 export const RESET_STORE_ACTION_TYPE = "RESET";
 

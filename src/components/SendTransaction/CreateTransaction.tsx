@@ -170,6 +170,7 @@ export const CreateTransaction = ({
   const [recommendedFee, setRecommendedFee] = useState(
     lumensFromStroops(StellarSdk.BASE_FEE).toString(),
   );
+  const [federationAddressError, setFederationAddressError] = useState("");
   const [networkCongestion, setNetworkCongestion] = useState(
     NetworkCongestion.LOW,
   );
@@ -212,50 +213,55 @@ export const CreateTransaction = ({
   }, [knownAccount, memoContent]);
 
   const fetchIfFederationAddress = async () => {
+    setFederationAddressError("");
+
     if (isFederationAddress(toAccountId)) {
       setFederationAddressFetchStatus(ActionStatus.PENDING);
 
       try {
         const response = await FederationServer.resolve(toAccountId);
+
         setFederationAddressFetchStatus(ActionStatus.SUCCESS);
+        setFederationAddress(response.account_id);
+        checkIfAccountIsFunded(response.account_id);
+
+        if (!StrKey.isValidEd25519PublicKey(response.account_id)) {
+          setFederationAddressError(
+            "Stellar address or public key resolved from federation address is invalid",
+          );
+        }
 
         if (response.memo || response.memo_type) {
           setIsMemoVisible(true);
-
-          if (response.memo_type) {
-            setIsMemoTypeFromFederation(true);
-          }
-
-          if (response.memo) {
-            setIsMemoContentFromFederation(true);
-          }
-
-          setFederationAddress(response.account_id);
           setMemoType(response.memo_type || StellarSdk.MemoText);
           setMemoContent(response.memo || "");
-        } else {
-          setFederationAddress(response.account_id);
+          setIsMemoTypeFromFederation(Boolean(response.memo_type));
+          setIsMemoContentFromFederation(Boolean(response.memo));
+        } else if (knownAccounts[response.account_id]) {
+          setIsMemoVisible(true);
+          setMemoType(StellarSdk.MemoText);
+          setMemoContent(response.memo || "");
         }
       } catch (err) {
-        setFederationAddressFetchStatus(ActionStatus.ERROR);
+        setFederationAddressError("Federation Address not found");
+        setFederationAddressFetchStatus(null);
       }
     } else {
       resetFederationAddressInput();
     }
   };
 
-  const checkIfAccountIsFunded = async () => {
-    setIsCheckingAddress(true);
-
-    if (!toAccountId || !StrKey.isValidEd25519PublicKey(toAccountId)) {
+  const checkIfAccountIsFunded = async (accountId: string) => {
+    if (!accountId || !StrKey.isValidEd25519PublicKey(accountId)) {
       setIsAccountFunded(true);
-      setIsCheckingAddress(false);
       return;
     }
 
+    setIsCheckingAddress(true);
+
     const dataProvider = new DataProvider({
       serverUrl: getNetworkConfig(settings.isTestnet).url,
-      accountOrKey: toAccountId,
+      accountOrKey: accountId,
       networkPassphrase: getNetworkConfig(settings.isTestnet).network,
     });
 
@@ -381,6 +387,10 @@ export const CreateTransaction = ({
     let errors = {};
     let hasErrors = false;
 
+    if (federationAddressError) {
+      return;
+    }
+
     // Loop through inputs we need to validate
     Object.keys(inputErrors).forEach((inputId) => {
       errors = { ...errors, ...validateInput(inputId) };
@@ -427,7 +437,12 @@ export const CreateTransaction = ({
             // back to the initial value, we still want to make all checks
             // again.
             setIsAccountIdTouched(true);
+
+            // Clear previous messages
             setIsAccountFunded(true);
+            setFederationAddress(undefined);
+            setFederationAddressError("");
+
             setToAccountId(e.target.value);
 
             if (federationAddressFetchStatus) {
@@ -459,7 +474,7 @@ export const CreateTransaction = ({
             }
 
             fetchIfFederationAddress();
-            checkIfAccountIsFunded();
+            checkIfAccountIsFunded(e.target.value);
 
             setPrevAddress(e.target.value);
             setIsAccountIdTouched(false);
@@ -471,7 +486,8 @@ export const CreateTransaction = ({
         />
       </RowEl>
 
-      {isCheckingAddress && (
+      {(isCheckingAddress ||
+        federationAddressFetchStatus === ActionStatus.PENDING) && (
         <RowEl>
           <InfoBlock>
             <p>Checking address…</p>
@@ -479,32 +495,22 @@ export const CreateTransaction = ({
         </RowEl>
       )}
 
-      {federationAddressFetchStatus && (
+      {federationAddress && (
         <RowEl>
-          <InfoBlock
-            variant={
-              federationAddressFetchStatus === ActionStatus.ERROR
-                ? InfoBlockVariant.error
-                : InfoBlockVariant.info
-            }
-          >
-            {federationAddressFetchStatus === ActionStatus.PENDING && (
-              <p>Loading federation address…</p>
-            )}
+          <InfoBlock variant={InfoBlockVariant.info}>
+            <p>
+              Federation Address: {toAccountId}
+              <br />
+              Resolves to: {federationAddress}
+            </p>
+          </InfoBlock>
+        </RowEl>
+      )}
 
-            {federationAddressFetchStatus === ActionStatus.SUCCESS && (
-              <>
-                <p>
-                  Federation Address: {toAccountId}
-                  <br />
-                  Resolves to: {federationAddress}
-                </p>
-              </>
-            )}
-
-            {federationAddressFetchStatus === ActionStatus.ERROR && (
-              <p>Federation Address not found</p>
-            )}
+      {federationAddressError && (
+        <RowEl>
+          <InfoBlock variant={InfoBlockVariant.error}>
+            <p>{federationAddressError}</p>
           </InfoBlock>
         </RowEl>
       )}
