@@ -212,7 +212,8 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
             </p>
 
             <Heading4>
-              Did you know it's safer to keep your keys in a password manager?
+              Did you know that password managers are a safer alternative to
+              copying and pasting your secret keys?
             </Heading4>
             <p>
               Password managers will autocomplete the secret key field only if
