@@ -223,7 +223,7 @@ export const CreateTransaction = ({
 
         setFederationAddressFetchStatus(ActionStatus.SUCCESS);
         setFederationAddress(response.account_id);
-        checkIfAccountIsFunded(response.account_id);
+        checkAndSetIsAccountFunded(response.account_id);
 
         if (!StrKey.isValidEd25519PublicKey(response.account_id)) {
           setFederationAddressError(
@@ -251,7 +251,7 @@ export const CreateTransaction = ({
     }
   };
 
-  const checkIfAccountIsFunded = async (accountId: string) => {
+  const checkAndSetIsAccountFunded = async (accountId: string) => {
     if (!accountId || !StrKey.isValidEd25519PublicKey(accountId)) {
       setIsAccountFunded(true);
       return;
@@ -474,7 +474,7 @@ export const CreateTransaction = ({
             }
 
             fetchIfFederationAddress();
-            checkIfAccountIsFunded(e.target.value);
+            checkAndSetIsAccountFunded(e.target.value);
 
             setPrevAddress(e.target.value);
             setIsAccountIdTouched(false);
