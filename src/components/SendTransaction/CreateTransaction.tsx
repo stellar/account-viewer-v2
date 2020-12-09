@@ -543,7 +543,14 @@ export const CreateTransaction = ({
           <InfoBlock variant={InfoBlockVariant.warning}>
             <p>
               The payment destination ({knownAccount.name}) requires you to
-              specify a memo to identify your account.
+              specify a memo to identify your account.{" "}
+              <TextLink
+                href="https://developers.stellar.org/docs/glossary/transactions/#memo"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Learn more about the memo field
+              </TextLink>
             </p>
           </InfoBlock>
         </RowEl>
