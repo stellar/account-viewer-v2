@@ -420,6 +420,7 @@ export const CreateTransaction = ({
         hasErrors = true;
       }
     });
+
     if (hasErrors) {
       setInputErrors(errors);
     } else {
