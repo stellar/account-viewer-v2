@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useEffect, useState } from "react";
 import { FLAGGED_ACCOUNT_STORAGE_ID } from "constants/settings";
 
@@ -13,7 +12,7 @@ interface FlaggedAccounts extends Array<FlaggedAccount> {}
 
 export const useFlaggedAccounts = () => {
   const [flaggedAccounts, setFlaggedAccounts] = useState<FlaggedAccounts>([
-    { address: "", tags: [] },
+    { address: "", tags: [""] },
   ]);
 
   useEffect(() => {
@@ -23,8 +22,9 @@ export const useFlaggedAccounts = () => {
       try {
         accounts = await getFlaggedAccounts();
       } catch (e) {
-        accounts =
-          JSON.parse(localStorage.getItem(FLAGGED_ACCOUNT_STORAGE_ID)) || [];
+        accounts = JSON.parse(
+          localStorage.getItem(FLAGGED_ACCOUNT_STORAGE_ID) || "[]",
+        );
       }
       setFlaggedAccounts(accounts);
       localStorage.setItem(
