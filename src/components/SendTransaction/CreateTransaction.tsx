@@ -21,6 +21,7 @@ import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { lumensFromStroops } from "helpers/stroopConversion";
 import { logEvent } from "helpers/tracking";
 import { useRedux } from "hooks/useRedux";
+import { useFlaggedAccounts } from "hooks/useUnsafeAccounts";
 import {
   ActionStatus,
   NetworkCongestion,
@@ -147,6 +148,9 @@ export const CreateTransaction = ({
     initialFormData.isAccountFunded,
   );
 
+  const [isAccountUnsafe, setIsAccountUnsafe] = useState(false);
+  const [isAccountMalicious, setIsisAccountMalicious] = useState(false);
+
   const knownAccount =
     knownAccounts[toAccountId] || knownAccounts[federationAddress || ""];
   const [prevAddress, setPrevAddress] = useState(
@@ -251,6 +255,19 @@ export const CreateTransaction = ({
     }
   };
 
+  const { flaggedAccounts } = useFlaggedAccounts();
+
+  const checkIfAccountIsFlagged = (accountId: string) => {
+    const flaggedAccountData = flaggedAccounts.find(
+      ({ address }: { address: string }) => address === accountId,
+    );
+    if (flaggedAccountData?.tags) {
+      const { tags } = flaggedAccountData;
+      setIsAccountUnsafe(tags.includes("unsafe"));
+      setIsisAccountMalicious(tags.includes("malicious"));
+    }
+  };
+
   const checkAndSetIsAccountFunded = async (accountId: string) => {
     if (!accountId || !StrKey.isValidEd25519PublicKey(accountId)) {
       setIsAccountFunded(true);
@@ -288,6 +305,9 @@ export const CreateTransaction = ({
         ) {
           message =
             'Stellar address or public key is invalid. Public keys are uppercase and begin with letter "G."';
+        } else if (isAccountMalicious) {
+          message =
+            "This account has been flagged as being potentially malicious.";
         }
 
         errors[SendFormIds.SEND_TO] = message;
@@ -400,7 +420,7 @@ export const CreateTransaction = ({
         hasErrors = true;
       }
     });
-
+    debugger;
     if (hasErrors) {
       setInputErrors(errors);
     } else {
@@ -444,6 +464,8 @@ export const CreateTransaction = ({
             setFederationAddressError("");
 
             setToAccountId(e.target.value);
+
+            checkIfAccountIsFlagged(e.target.value);
 
             if (federationAddressFetchStatus) {
               setFederationAddressFetchStatus(null);
@@ -511,6 +533,14 @@ export const CreateTransaction = ({
         <RowEl>
           <InfoBlock variant={InfoBlockVariant.error}>
             <p>{federationAddressError}</p>
+          </InfoBlock>
+        </RowEl>
+      )}
+
+      {isAccountUnsafe && (
+        <RowEl>
+          <InfoBlock variant={InfoBlockVariant.error}>
+            <p>This account has been flagged as being potentially unsafe.</p>
           </InfoBlock>
         </RowEl>
       )}

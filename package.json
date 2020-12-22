@@ -42,6 +42,10 @@
     "trezor-connect": "^8.1.16",
     "typescript": "~4.0.5"
   },
+  "resolutions": {
+    "**/@typescript-eslint/eslint-plugin": "^4.1.1",
+    "**/@typescript-eslint/parser": "^4.1.1"
+  },
   "scripts": {
     "install-if-package-changed": "git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD | grep --quiet yarn.lock && yarn install || exit 0",
     "start": "react-scripts start",
