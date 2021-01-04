@@ -271,6 +271,11 @@ export const CreateTransaction = ({
     setIsAccountMalicious(flaggedTags.includes("malicious"));
   };
 
+  const resetAccountIsFlagged = () => {
+    setIsAccountUnsafe(false);
+    setIsAccountMalicious(false);
+  };
+
   const checkAndSetIsAccountFunded = async (accountId: string) => {
     if (!accountId || !StrKey.isValidEd25519PublicKey(accountId)) {
       setIsAccountFunded(true);
@@ -487,6 +492,8 @@ export const CreateTransaction = ({
 
             // Reset all errors (to make sure unfunded account error is cleared)
             setInputErrors(initialInputErrors);
+
+            resetAccountIsFlagged();
           }}
           onBlur={(e) => {
             validate(e);
@@ -539,7 +546,7 @@ export const CreateTransaction = ({
         </RowEl>
       )}
 
-      {isAccountUnsafe && (
+      {isAccountUnsafe && !isAccountMalicious && (
         <RowEl>
           <AccountFlagged flagType="unsafe" />
         </RowEl>
