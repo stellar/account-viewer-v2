@@ -23,6 +23,10 @@ export const fetchFlaggedAccountsAction = createAsyncThunk(
       localStorage.getItem(FLAGGED_ACCOUNT_DATE_STORAGE_ID),
     );
 
+    accounts = JSON.parse(
+      localStorage.getItem(FLAGGED_ACCOUNT_STORAGE_ID) || "[]",
+    );
+
     // if flaggedAccounts were last cached over seven days ago, make the request
     // flaggedAccountsCacheDate is coerced to 0 if not found in storage
     if (flaggedAccountsCacheDate < sevenDaysAgo) {
@@ -35,16 +39,8 @@ export const fetchFlaggedAccountsAction = createAsyncThunk(
         );
         localStorage.setItem(FLAGGED_ACCOUNT_DATE_STORAGE_ID, time.toString());
       } catch (e) {
-        // in case of error, try to use what's in localStorage, even if it's old
-        accounts = JSON.parse(
-          localStorage.getItem(FLAGGED_ACCOUNT_STORAGE_ID) || "[]",
-        );
+        console.error("Flagged account API did not respond");
       }
-    } else {
-      // otherwise, simply use what we have in localStorage to prevent an unnecessary request
-      accounts = JSON.parse(
-        localStorage.getItem(FLAGGED_ACCOUNT_STORAGE_ID) || "[]",
-      );
     }
 
     return accounts;
