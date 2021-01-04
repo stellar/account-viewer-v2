@@ -29,7 +29,7 @@ import {
 import { PALETTE } from "constants/styles";
 import { knownAccounts } from "constants/knownAccounts";
 
-import { IsAccountFlagged } from "./WarningMessages/IsAccountFlagged";
+import { AccountFlagged } from "./WarningMessages/AccountFlagged";
 
 const RowEl = styled.div`
   display: flex;
@@ -541,12 +541,12 @@ export const CreateTransaction = ({
 
       {isAccountUnsafe && (
         <RowEl>
-          <IsAccountFlagged flagType="unsafe" />
+          <AccountFlagged flagType="unsafe" />
         </RowEl>
       )}
       {isAccountMalicious && (
         <RowEl>
-          <IsAccountFlagged flagType="malicious" />
+          <AccountFlagged flagType="malicious" />
         </RowEl>
       )}
 

@@ -2,8 +2,10 @@ import React from "react";
 
 import { InfoBlock, InfoBlockVariant } from "components/basic/InfoBlock";
 
-export const IsAccountFlagged = ({ flagType = "" }) => (
+export const AccountFlagged = ({ flagType = "" }) => (
   <InfoBlock variant={InfoBlockVariant.error}>
-    <p>This account has been flagged as being potentially {flagType}.</p>
+    <p>
+      This destination account has been flagged as being potentially {flagType}.
+    </p>
   </InfoBlock>
 );
