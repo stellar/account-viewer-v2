@@ -19,6 +19,8 @@ import { sendTxAction } from "ducks/sendTx";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, PaymentFormData } from "types/types.d";
 
+import { IsAccountFlagged } from "./WarningMessages/IsAccountFlagged";
+
 const TableEl = styled.table`
   width: 100%;
 
@@ -241,6 +243,8 @@ export const ConfirmTransaction = ({
           </TextLink>
         </InfoBlock>
       )}
+
+      {formData.isAccountUnsafe && <IsAccountFlagged flagType="unsafe" />}
 
       {status === ActionStatus.PENDING &&
         settings.authType &&

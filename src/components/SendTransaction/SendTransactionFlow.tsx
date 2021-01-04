@@ -25,6 +25,7 @@ const initialFormData: PaymentFormData = {
   memoType: MemoNone,
   memoContent: "",
   isAccountFunded: true,
+  isAccountUnsafe: false,
 };
 
 export const SendTransactionFlow = ({ onCancel }: { onCancel: () => void }) => {

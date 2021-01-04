@@ -105,16 +105,18 @@ const WarningEl = styled.p`
 export const BalanceInfo = () => {
   const dispatch = useDispatch();
   const { account } = useRedux("account");
-  const { status, data, isAccountWatcherStarted } = account;
+  const { flaggedAccounts } = useRedux("flaggedAccounts");
+  const { status: accountStatus, data, isAccountWatcherStarted } = account;
+  const { status: flaggedAccountsStatus } = flaggedAccounts;
   const [isSendTxModalVisible, setIsSendTxModalVisible] = useState(false);
   const [isReceiveTxModalVisible, setIsReceiveTxModalVisible] = useState(false);
   const publicAddress = data.id;
 
   useEffect(() => {
-    if (status === ActionStatus.SUCCESS && !isAccountWatcherStarted) {
+    if (accountStatus === ActionStatus.SUCCESS && !isAccountWatcherStarted) {
       dispatch(startAccountWatcherAction(publicAddress));
     }
-  }, [dispatch, publicAddress, status, isAccountWatcherStarted]);
+  }, [dispatch, publicAddress, accountStatus, isAccountWatcherStarted]);
 
   let nativeBalance = 0;
 
@@ -146,7 +148,10 @@ export const BalanceInfo = () => {
                 logEvent("send: clicked start send");
               }}
               icon={<IconSend />}
-              disabled={data.isUnfunded}
+              disabled={
+                data.isUnfunded ||
+                flaggedAccountsStatus !== ActionStatus.SUCCESS
+              }
             >
               Send
             </Button>

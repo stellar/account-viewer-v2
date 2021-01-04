@@ -21,7 +21,6 @@ import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { lumensFromStroops } from "helpers/stroopConversion";
 import { logEvent } from "helpers/tracking";
 import { useRedux } from "hooks/useRedux";
-import { useFlaggedAccounts } from "hooks/useUnsafeAccounts";
 import {
   ActionStatus,
   NetworkCongestion,
@@ -29,6 +28,8 @@ import {
 } from "types/types.d";
 import { PALETTE } from "constants/styles";
 import { knownAccounts } from "constants/knownAccounts";
+
+import { IsAccountFlagged } from "./WarningMessages/IsAccountFlagged";
 
 const RowEl = styled.div`
   display: flex;
@@ -148,8 +149,10 @@ export const CreateTransaction = ({
     initialFormData.isAccountFunded,
   );
 
-  const [isAccountUnsafe, setIsAccountUnsafe] = useState(false);
-  const [isAccountMalicious, setIsisAccountMalicious] = useState(false);
+  const [isAccountUnsafe, setIsAccountUnsafe] = useState(
+    initialFormData.isAccountUnsafe,
+  );
+  const [isAccountMalicious, setIsAccountMalicious] = useState(false);
 
   const knownAccount =
     knownAccounts[toAccountId] || knownAccounts[federationAddress || ""];
@@ -255,17 +258,17 @@ export const CreateTransaction = ({
     }
   };
 
-  const { flaggedAccounts } = useFlaggedAccounts();
+  const { flaggedAccounts } = useRedux("flaggedAccounts");
 
   const checkIfAccountIsFlagged = (accountId: string) => {
-    const flaggedAccountData = flaggedAccounts.find(
-      ({ address }: { address: string }) => address === accountId,
+    const flaggedTags = flaggedAccounts.data.reduce(
+      (prev: string[], { address, tags }) => {
+        return address === accountId ? [...prev, ...tags] : prev;
+      },
+      [],
     );
-    if (flaggedAccountData?.tags) {
-      const { tags } = flaggedAccountData;
-      setIsAccountUnsafe(tags.includes("unsafe"));
-      setIsisAccountMalicious(tags.includes("malicious"));
-    }
+    setIsAccountUnsafe(flaggedTags.includes("unsafe"));
+    setIsAccountMalicious(flaggedTags.includes("malicious"));
   };
 
   const checkAndSetIsAccountFunded = async (accountId: string) => {
@@ -305,9 +308,6 @@ export const CreateTransaction = ({
         ) {
           message =
             'Stellar address or public key is invalid. Public keys are uppercase and begin with letter "G."';
-        } else if (isAccountMalicious) {
-          message =
-            "This account has been flagged as being potentially malicious.";
         }
 
         errors[SendFormIds.SEND_TO] = message;
@@ -431,6 +431,7 @@ export const CreateTransaction = ({
         memoType,
         memoContent,
         isAccountFunded,
+        isAccountUnsafe,
       });
     }
   };
@@ -440,7 +441,9 @@ export const CreateTransaction = ({
       headlineText="Send Lumens"
       buttonFooter={
         <>
-          <Button onClick={onSubmit}>Continue</Button>
+          <Button disabled={isAccountMalicious} onClick={onSubmit}>
+            Continue
+          </Button>
           <Button onClick={onCancel} variant={ButtonVariant.secondary}>
             Cancel
           </Button>
@@ -464,8 +467,6 @@ export const CreateTransaction = ({
             setFederationAddressError("");
 
             setToAccountId(e.target.value);
-
-            checkIfAccountIsFlagged(e.target.value);
 
             if (federationAddressFetchStatus) {
               setFederationAddressFetchStatus(null);
@@ -500,6 +501,7 @@ export const CreateTransaction = ({
 
             setPrevAddress(e.target.value);
             setIsAccountIdTouched(false);
+            checkIfAccountIsFlagged(e.target.value);
           }}
           error={inputErrors[SendFormIds.SEND_TO]}
           value={toAccountId}
@@ -539,9 +541,12 @@ export const CreateTransaction = ({
 
       {isAccountUnsafe && (
         <RowEl>
-          <InfoBlock variant={InfoBlockVariant.error}>
-            <p>This account has been flagged as being potentially unsafe.</p>
-          </InfoBlock>
+          <IsAccountFlagged flagType="unsafe" />
+        </RowEl>
+      )}
+      {isAccountMalicious && (
+        <RowEl>
+          <IsAccountFlagged flagType="malicious" />
         </RowEl>
       )}
 
