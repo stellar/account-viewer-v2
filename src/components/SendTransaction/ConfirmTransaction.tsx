@@ -90,6 +90,10 @@ const InlineLoadingTextEl = styled.div`
   margin-left: 0.5rem;
 `;
 
+const WarningMessageEl = styled.div`
+  margin: 1.5rem 0 0.5rem;
+`;
+
 interface ConfirmTransactionProps {
   formData: PaymentFormData;
   maxFee: string;
@@ -207,7 +211,12 @@ export const ConfirmTransaction = ({
                 <span>{formData.toAccountId}</span>
               </AddressWrapperEl>
             </td>
-            {formData.isAccountUnsafe && <AccountFlagged flagType="unsafe" />}
+
+            {formData.isAccountUnsafe && (
+              <WarningMessageEl>
+                <AccountFlagged flagType="unsafe" />
+              </WarningMessageEl>
+            )}
           </tr>
           <tr>
             <th>Amount</th>
