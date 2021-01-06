@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, ButtonVariant } from "components/basic/Button";
+import { Button, ButtonVariant } from "@stellar/design-system";
 import { ModalContent } from "components/ModalContent";
 import { ErrorMessage } from "components/ErrorMessage";
 import { useRedux } from "hooks/useRedux";

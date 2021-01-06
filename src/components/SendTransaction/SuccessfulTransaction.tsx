@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Button, ButtonVariant } from "components/basic/Button";
-import { TextLink } from "components/basic/TextLink";
+import { Button, ButtonVariant, TextLink } from "@stellar/design-system";
 import { ModalContent } from "components/ModalContent";
 import { useRedux } from "hooks/useRedux";
 import { getNetworkConfig } from "helpers/getNetworkConfig";

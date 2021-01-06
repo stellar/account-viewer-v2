@@ -3,13 +3,17 @@ import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { Keypair } from "stellar-sdk";
+import {
+  Button,
+  ButtonVariant,
+  Heading4,
+  Input,
+  TextLink,
+} from "@stellar/design-system";
 import { KeyType } from "@stellar/wallet-sdk";
 
 import { ReactComponent as UrlIllustration } from "assets/svg/url-illustration.svg";
 
-import { Button, ButtonVariant } from "components/basic/Button";
-import { Heading4 } from "components/basic/Heading";
-import { Input } from "components/basic/Input";
 import { InfoBlock, InfoBlockVariant } from "components/basic/InfoBlock";
 import { ErrorMessage } from "components/ErrorMessage";
 import { ModalContent } from "components/ModalContent";
@@ -21,7 +25,6 @@ import { logEvent } from "helpers/tracking";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, ModalPageProps } from "types/types.d";
-import { TextLink } from "components/basic/TextLink";
 
 const InputWrapperEl = styled.div`
   margin-top: 1.5rem;

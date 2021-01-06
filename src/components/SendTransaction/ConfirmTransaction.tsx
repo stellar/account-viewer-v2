@@ -2,12 +2,15 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import BigNumber from "bignumber.js";
+import {
+  Button,
+  ButtonVariant,
+  TextLink,
+  Loader,
+} from "@stellar/design-system";
 
 import { ReactComponent as IconSend } from "assets/svg/icon-send.svg";
-import { Button, ButtonVariant } from "components/basic/Button";
-import { TextLink } from "components/basic/TextLink";
 import { InfoBlock } from "components/basic/InfoBlock";
-import { Loader } from "components/basic/Loader";
 import { Avatar } from "components/Avatar";
 import { ModalContent } from "components/ModalContent";
 import { FONT_WEIGHT, PALETTE } from "constants/styles";
@@ -195,7 +198,7 @@ export const ConfirmTransaction = ({
       footer={
         status === ActionStatus.PENDING && (
           <InlineLoadingEl>
-            <Loader size="1.5rem" />
+            <Loader />
             <InlineLoadingTextEl>Submitting transaction.</InlineLoadingTextEl>
           </InlineLoadingEl>
         )

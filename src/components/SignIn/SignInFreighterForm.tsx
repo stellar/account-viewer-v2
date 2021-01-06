@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import { isConnected } from "@stellar/freighter-api";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { Button, ButtonVariant } from "@stellar/design-system";
 import { KeyType } from "@stellar/wallet-sdk";
 
-import { Button, ButtonVariant } from "components/basic/Button";
 import { InfoBlock } from "components/basic/InfoBlock";
 import { ModalWalletContent } from "components/ModalWalletContent";
 import { ErrorMessage } from "components/ErrorMessage";

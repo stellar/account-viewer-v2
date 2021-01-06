@@ -1,9 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
-
-import { Button } from "components/basic/Button";
-import { Heading1 } from "components/basic/Heading";
+import { Button, Heading1 } from "@stellar/design-system";
 import { pageInsetStyle, PALETTE } from "constants/styles";
 
 const WrapperEl = styled.div`

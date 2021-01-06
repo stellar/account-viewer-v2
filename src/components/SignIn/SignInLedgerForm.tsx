@@ -2,13 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
+import { Button, ButtonVariant, Input, Loader } from "@stellar/design-system";
 import { KeyType } from "@stellar/wallet-sdk";
 
-import { Button, ButtonVariant } from "components/basic/Button";
 import { Checkbox } from "components/basic/Checkbox";
 import { InfoBlock } from "components/basic/InfoBlock";
-import { Input } from "components/basic/Input";
-import { Loader } from "components/basic/Loader";
 import { ErrorMessage } from "components/ErrorMessage";
 import { ModalWalletContent } from "components/ModalWalletContent";
 
@@ -143,7 +141,7 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
         ledgerStatus === ActionStatus.SUCCESS) && (
         <InfoBlock>
           <InlineLoadingEl>
-            <Loader size="1.5rem" />
+            <Loader />
             <p>Scanning for Ledger Wallet connection…</p>
           </InlineLoadingEl>
         </InfoBlock>
