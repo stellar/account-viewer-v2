@@ -7,6 +7,8 @@ import {
   Button,
   ButtonVariant,
   Heading4,
+  InfoBlock,
+  InfoBlockVariant,
   Input,
   TextLink,
 } from "@stellar/design-system";
@@ -14,7 +16,6 @@ import { KeyType } from "@stellar/wallet-sdk";
 
 import { ReactComponent as UrlIllustration } from "assets/svg/url-illustration.svg";
 
-import { InfoBlock, InfoBlockVariant } from "components/basic/InfoBlock";
 import { ErrorMessage } from "components/ErrorMessage";
 import { ModalContent } from "components/ModalContent";
 

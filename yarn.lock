@@ -1730,10 +1730,10 @@
     redux-thunk "^2.3.0"
     reselect "^4.0.0"
 
-"@stellar/design-system@^0.1.0-alpha.2":
-  version "0.1.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@stellar/design-system/-/design-system-0.1.0-alpha.2.tgz#7d164536ff38faac733d40c4fbadc20f537fa18f"
-  integrity sha512-BqW9q/w4ioVYBLLZzOox/2Z9KOPMZqlqrBK+oaxhqqu5gBHUbpDxFLv8PAIOHbWqzUqcavoOVEndjI7IGpLMGA==
+"@stellar/design-system@^0.1.0-alpha.3":
+  version "0.1.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@stellar/design-system/-/design-system-0.1.0-alpha.3.tgz#02a9b0bb9cb31b8d2b10228d44be6d9d4b464569"
+  integrity sha512-5ckr+Xo9x+zaQaJOJrM57dsbLgR91nKaIRv4RPNPF/RjCFsU4CpWfXnD7YGMX0awaFNC6qZ4WyFDoabBco6NMg==
   dependencies:
     configurable-date-input-polyfill "^2.7.2"
     normalize.css "^8.0.1"

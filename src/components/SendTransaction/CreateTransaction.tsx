@@ -11,16 +11,16 @@ import BigNumber from "bignumber.js";
 import {
   Button,
   ButtonVariant,
+  InfoBlock,
+  InfoBlockVariant,
+  Input,
+  Select,
   TextButton,
   TextButtonVariant,
   TextLink,
-  Input,
-  Select,
 } from "@stellar/design-system";
 
-import { InfoBlock, InfoBlockVariant } from "components/basic/InfoBlock";
 import { ModalContent } from "components/ModalContent";
-
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { lumensFromStroops } from "helpers/stroopConversion";
 import { logEvent } from "helpers/tracking";
@@ -266,7 +266,8 @@ export const CreateTransaction = ({
 
   const checkIfAccountIsFlagged = (accountId: string) => {
     const flaggedTags = flaggedAccounts.data.reduce(
-      (prev: string[], { address, tags }) => address === accountId ? [...prev, ...tags] : prev,
+      (prev: string[], { address, tags }) =>
+        address === accountId ? [...prev, ...tags] : prev,
       [],
     );
     setIsAccountUnsafe(flaggedTags.includes("unsafe"));

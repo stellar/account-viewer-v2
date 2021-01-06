@@ -1,6 +1,5 @@
 import React from "react";
-
-import { InfoBlock, InfoBlockVariant } from "components/basic/InfoBlock";
+import { InfoBlock, InfoBlockVariant } from "@stellar/design-system";
 
 export const AccountFlagged = ({ flagType = "" }) => (
   <InfoBlock variant={InfoBlockVariant.error}>

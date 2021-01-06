@@ -4,14 +4,14 @@ import { Keypair } from "stellar-sdk";
 import {
   Button,
   ButtonVariant,
-  TextButton,
+  Checkbox,
   Heading4,
+  InfoBlock,
+  InfoBlockVariant,
+  TextButton,
 } from "@stellar/design-system";
 
 import { ReactComponent as IconCopy } from "assets/svg/icon-copy.svg";
-
-import { Checkbox } from "components/basic/Checkbox";
-import { InfoBlock, InfoBlockVariant } from "components/basic/InfoBlock";
 import { CopyWithTooltip, TooltipPosition } from "components/CopyWithTooltip";
 import { ErrorMessage } from "components/ErrorMessage";
 import { ModalContent } from "components/ModalContent";

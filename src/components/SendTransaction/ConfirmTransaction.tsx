@@ -5,12 +5,12 @@ import BigNumber from "bignumber.js";
 import {
   Button,
   ButtonVariant,
-  TextLink,
+  InfoBlock,
   Loader,
+  TextLink,
 } from "@stellar/design-system";
 
 import { ReactComponent as IconSend } from "assets/svg/icon-send.svg";
-import { InfoBlock } from "components/basic/InfoBlock";
 import { Avatar } from "components/Avatar";
 import { ModalContent } from "components/ModalContent";
 import { FONT_WEIGHT, PALETTE } from "constants/styles";

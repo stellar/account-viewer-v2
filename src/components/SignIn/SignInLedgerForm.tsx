@@ -2,11 +2,16 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
-import { Button, ButtonVariant, Input, Loader } from "@stellar/design-system";
+import {
+  Button,
+  ButtonVariant,
+  Checkbox,
+  InfoBlock,
+  Input,
+  Loader,
+} from "@stellar/design-system";
 import { KeyType } from "@stellar/wallet-sdk";
 
-import { Checkbox } from "components/basic/Checkbox";
-import { InfoBlock } from "components/basic/InfoBlock";
 import { ErrorMessage } from "components/ErrorMessage";
 import { ModalWalletContent } from "components/ModalWalletContent";
 
