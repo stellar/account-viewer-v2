@@ -19,7 +19,7 @@ import { sendTxAction } from "ducks/sendTx";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, PaymentFormData } from "types/types.d";
 
-import { AccountFlagged } from "./WarningMessages/AccountFlagged";
+import { AccountIsUnsafe } from "./WarningMessages/AccountIsUnsafe";
 
 const TableEl = styled.table`
   width: 100%;
@@ -214,7 +214,7 @@ export const ConfirmTransaction = ({
 
             {formData.isAccountUnsafe && (
               <WarningMessageEl>
-                <AccountFlagged flagType="unsafe" />
+                <AccountIsUnsafe />
               </WarningMessageEl>
             )}
           </tr>
