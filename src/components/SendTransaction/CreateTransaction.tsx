@@ -558,7 +558,7 @@ export const CreateTransaction = ({
               The account you’re sending to is tagged as{" "}
               <strong>#malicious</strong> on{" "}
               <a
-                href="https://stellar.expert/"
+                href="https://stellar.expert/directory"
                 target="_blank"
                 rel="noopener noreferrer"
               >
