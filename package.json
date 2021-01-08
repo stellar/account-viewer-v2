@@ -1,5 +1,5 @@
 {
-  "name": "stellar-react-starter",
+  "name": "stellar-account-viewer-v2",
   "prettier": "@stellar/prettier-config",
   "version": "0.1.0",
   "husky": {
