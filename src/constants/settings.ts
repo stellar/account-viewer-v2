@@ -3,6 +3,8 @@ import StellarSdk from "stellar-sdk";
 export const TX_HISTORY_LIMIT = 100;
 export const TX_HISTORY_MIN_AMOUNT = 0.5;
 export const RESET_STORE_ACTION_TYPE = "RESET";
+export const FLAGGED_ACCOUNT_STORAGE_ID = "flaggedAcounts";
+export const FLAGGED_ACCOUNT_DATE_STORAGE_ID = "flaggedAcountDate";
 
 interface NetworkItemConfig {
   url: string;

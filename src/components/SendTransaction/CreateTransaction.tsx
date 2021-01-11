@@ -29,6 +29,8 @@ import {
 import { PALETTE } from "constants/styles";
 import { knownAccounts } from "constants/knownAccounts";
 
+import { AccountIsUnsafe } from "./WarningMessages/AccountIsUnsafe";
+
 const RowEl = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -147,6 +149,11 @@ export const CreateTransaction = ({
     initialFormData.isAccountFunded,
   );
 
+  const [isAccountUnsafe, setIsAccountUnsafe] = useState(
+    initialFormData.isAccountUnsafe,
+  );
+  const [isAccountMalicious, setIsAccountMalicious] = useState(false);
+
   const knownAccount =
     knownAccounts[toAccountId] || knownAccounts[federationAddress || ""];
   const [prevAddress, setPrevAddress] = useState(
@@ -249,6 +256,24 @@ export const CreateTransaction = ({
     } else {
       resetFederationAddressInput();
     }
+  };
+
+  const { flaggedAccounts } = useRedux("flaggedAccounts");
+
+  const checkIfAccountIsFlagged = (accountId: string) => {
+    const flaggedTags = flaggedAccounts.data.reduce(
+      (prev: string[], { address, tags }) => {
+        return address === accountId ? [...prev, ...tags] : prev;
+      },
+      [],
+    );
+    setIsAccountUnsafe(flaggedTags.includes("unsafe"));
+    setIsAccountMalicious(flaggedTags.includes("malicious"));
+  };
+
+  const resetAccountIsFlagged = () => {
+    setIsAccountUnsafe(false);
+    setIsAccountMalicious(false);
   };
 
   const checkAndSetIsAccountFunded = async (accountId: string) => {
@@ -411,6 +436,7 @@ export const CreateTransaction = ({
         memoType,
         memoContent,
         isAccountFunded,
+        isAccountUnsafe,
       });
     }
   };
@@ -420,7 +446,9 @@ export const CreateTransaction = ({
       headlineText="Send Lumens"
       buttonFooter={
         <>
-          <Button onClick={onSubmit}>Continue</Button>
+          <Button disabled={isAccountMalicious} onClick={onSubmit}>
+            Continue
+          </Button>
           <Button onClick={onCancel} variant={ButtonVariant.secondary}>
             Cancel
           </Button>
@@ -464,6 +492,8 @@ export const CreateTransaction = ({
 
             // Reset all errors (to make sure unfunded account error is cleared)
             setInputErrors(initialInputErrors);
+
+            resetAccountIsFlagged();
           }}
           onBlur={(e) => {
             validate(e);
@@ -478,6 +508,7 @@ export const CreateTransaction = ({
 
             setPrevAddress(e.target.value);
             setIsAccountIdTouched(false);
+            checkIfAccountIsFlagged(e.target.value);
           }}
           error={inputErrors[SendFormIds.SEND_TO]}
           value={toAccountId}
@@ -511,6 +542,30 @@ export const CreateTransaction = ({
         <RowEl>
           <InfoBlock variant={InfoBlockVariant.error}>
             <p>{federationAddressError}</p>
+          </InfoBlock>
+        </RowEl>
+      )}
+
+      {isAccountUnsafe && !isAccountMalicious && (
+        <RowEl>
+          <AccountIsUnsafe />
+        </RowEl>
+      )}
+      {isAccountMalicious && (
+        <RowEl>
+          <InfoBlock variant={InfoBlockVariant.error}>
+            <p>
+              The account you’re sending to is tagged as{" "}
+              <strong>#malicious</strong> on{" "}
+              <a
+                href="https://stellar.expert/directory"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                stellar.expert’s directory
+              </a>
+              . For your safety, sending to this account is disabled.
+            </p>
           </InfoBlock>
         </RowEl>
       )}

@@ -19,6 +19,8 @@ import { sendTxAction } from "ducks/sendTx";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, PaymentFormData } from "types/types.d";
 
+import { AccountIsUnsafe } from "./WarningMessages/AccountIsUnsafe";
+
 const TableEl = styled.table`
   width: 100%;
 
@@ -86,6 +88,10 @@ const InlineLoadingTextEl = styled.div`
   line-height: 1.5rem;
   color: ${PALETTE.black60};
   margin-left: 0.5rem;
+`;
+
+const WarningMessageEl = styled.div`
+  margin: 1.5rem 0 0.5rem;
 `;
 
 interface ConfirmTransactionProps {
@@ -205,6 +211,12 @@ export const ConfirmTransaction = ({
                 <span>{formData.toAccountId}</span>
               </AddressWrapperEl>
             </td>
+
+            {formData.isAccountUnsafe && (
+              <WarningMessageEl>
+                <AccountIsUnsafe />
+              </WarningMessageEl>
+            )}
           </tr>
           <tr>
             <th>Amount</th>

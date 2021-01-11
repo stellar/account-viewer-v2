@@ -67,6 +67,16 @@ export interface AccountInitialState {
   errorString?: string;
 }
 
+interface FlaggedAccount {
+  address: string;
+  tags: string[];
+}
+
+export interface FlaggedAccounts {
+  data: [FlaggedAccount];
+  status: ActionStatus | undefined;
+}
+
 export interface KeyStoreInitialState {
   keyStoreId: string;
   password: string;
@@ -107,6 +117,7 @@ export interface WalletInitialState {
 
 export interface Store {
   account: AccountInitialState;
+  flaggedAccounts: FlaggedAccounts;
   keyStore: KeyStoreInitialState;
   knownAccounts: KnownAccountsInitialState;
   sendTx: SendTxInitialState;
@@ -141,4 +152,5 @@ export interface PaymentFormData {
   memoType: MemoType;
   memoContent: MemoValue;
   isAccountFunded: boolean;
+  isAccountUnsafe: boolean;
 }
