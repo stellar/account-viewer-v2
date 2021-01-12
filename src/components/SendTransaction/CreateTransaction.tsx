@@ -33,7 +33,7 @@ import {
 import { PALETTE } from "constants/styles";
 import { knownAccounts } from "constants/knownAccounts";
 
-import { AccountFlagged } from "./WarningMessages/AccountFlagged";
+import { AccountIsUnsafe } from "./WarningMessages/AccountIsUnsafe";
 
 const RowEl = styled.div`
   display: flex;
@@ -266,8 +266,7 @@ export const CreateTransaction = ({
 
   const checkIfAccountIsFlagged = (accountId: string) => {
     const flaggedTags = flaggedAccounts.data.reduce(
-      (prev: string[], { address, tags }) =>
-        address === accountId ? [...prev, ...tags] : prev,
+      (prev: string[], { address, tags }) => address === accountId ? [...prev, ...tags] : prev,
       [],
     );
     setIsAccountUnsafe(flaggedTags.includes("unsafe"));
@@ -551,12 +550,25 @@ export const CreateTransaction = ({
 
       {isAccountUnsafe && !isAccountMalicious && (
         <RowEl>
-          <AccountFlagged flagType="unsafe" />
+          <AccountIsUnsafe />
         </RowEl>
       )}
       {isAccountMalicious && (
         <RowEl>
-          <AccountFlagged flagType="malicious" />
+          <InfoBlock variant={InfoBlockVariant.error}>
+            <p>
+              The account you’re sending to is tagged as{" "}
+              <strong>#malicious</strong> on{" "}
+              <a
+                href="https://stellar.expert/directory"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                stellar.expert’s directory
+              </a>
+              . For your safety, sending to this account is disabled.
+            </p>
+          </InfoBlock>
         </RowEl>
       )}
 
