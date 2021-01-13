@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
-
-import { Heading1 } from "components/basic/Heading";
-import { TextButton, TextButtonVariant } from "components/basic/TextButton";
-import { TextLink } from "components/basic/TextLink";
+import {
+  Heading1,
+  TextButton,
+  TextButtonVariant,
+  TextLink,
+} from "@stellar/design-system";
 
 import { Modal } from "components/Modal";
 import { NewKeyPairForm } from "components/NewKeyPairForm";

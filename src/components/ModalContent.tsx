@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Heading2 } from "components/basic/Heading";
+import { Heading2 } from "@stellar/design-system";
 
 const WrapperEl = styled.div`
   display: flex;

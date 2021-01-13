@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
+import { Button, Heading3, TextLink } from "@stellar/design-system";
 
 import { ReactComponent as IconReceive } from "assets/svg/icon-receive.svg";
 import { ReactComponent as IconSend } from "assets/svg/icon-send.svg";
 
-import { Button } from "components/basic/Button";
-import { Heading3 } from "components/basic/Heading";
-import { TextLink } from "components/basic/TextLink";
 import { SendTransactionFlow } from "components/SendTransaction/SendTransactionFlow";
 import { ReceiveTransaction } from "components/ReceiveTransaction";
 import { Modal } from "components/Modal";

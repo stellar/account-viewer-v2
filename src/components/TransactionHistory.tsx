@@ -4,6 +4,12 @@ import styled, { css } from "styled-components";
 import { Horizon } from "stellar-sdk";
 import { useDispatch } from "react-redux";
 import { BigNumber } from "bignumber.js";
+import {
+  Heading2,
+  TextButton,
+  TextButtonVariant,
+  TextLink,
+} from "@stellar/design-system";
 import { Types } from "@stellar/wallet-sdk";
 
 import {
@@ -16,10 +22,7 @@ import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { getFormattedPublicKey } from "helpers/getFormattedPublicKey";
 import { getMemoTypeText } from "helpers/getMemoTypeText";
 import { Avatar } from "components/Avatar";
-import { Heading2 } from "components/basic/Heading";
-import { TextButton, TextButtonVariant } from "components/basic/TextButton";
 import { ErrorMessage } from "components/ErrorMessage";
-import { TextLink } from "components/basic/TextLink";
 
 import { TX_HISTORY_MIN_AMOUNT } from "constants/settings";
 import { FONT_WEIGHT, pageInsetStyle, PALETTE } from "constants/styles";

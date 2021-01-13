@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 import QRCode from "qrcode.react";
+import { TextButton } from "@stellar/design-system";
 
 import { ReactComponent as IconCopy } from "assets/svg/icon-copy.svg";
 
 import { Avatar } from "components/Avatar";
 import { CopyWithTooltip, TooltipPosition } from "components/CopyWithTooltip";
-import { TextButton } from "components/basic/TextButton";
 import { ModalContent } from "components/ModalContent";
 import { FONT_WEIGHT, PALETTE } from "constants/styles";
 import { useRedux } from "hooks/useRedux";

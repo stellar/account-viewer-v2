@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Heading2 } from "components/basic/Heading";
-import { TextLink } from "components/basic/TextLink";
+import { Heading2, TextLink } from "@stellar/design-system";
 import { wallets } from "constants/wallets";
 
 const WrapperEl = styled.div`

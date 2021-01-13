@@ -8,15 +8,19 @@ import StellarSdk, {
   StrKey,
 } from "stellar-sdk";
 import BigNumber from "bignumber.js";
+import {
+  Button,
+  ButtonVariant,
+  InfoBlock,
+  InfoBlockVariant,
+  Input,
+  Select,
+  TextButton,
+  TextButtonVariant,
+  TextLink,
+} from "@stellar/design-system";
 
-import { Button, ButtonVariant } from "components/basic/Button";
-import { TextButton, TextButtonVariant } from "components/basic/TextButton";
-import { TextLink } from "components/basic/TextLink";
-import { Input } from "components/basic/Input";
-import { InfoBlock, InfoBlockVariant } from "components/basic/InfoBlock";
-import { Select } from "components/basic/Select";
 import { ModalContent } from "components/ModalContent";
-
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { lumensFromStroops } from "helpers/stroopConversion";
 import { logEvent } from "helpers/tracking";
@@ -262,9 +266,7 @@ export const CreateTransaction = ({
 
   const checkIfAccountIsFlagged = (accountId: string) => {
     const flaggedTags = flaggedAccounts.data.reduce(
-      (prev: string[], { address, tags }) => {
-        return address === accountId ? [...prev, ...tags] : prev;
-      },
+      (prev: string[], { address, tags }) => address === accountId ? [...prev, ...tags] : prev,
       [],
     );
     setIsAccountUnsafe(flaggedTags.includes("unsafe"));

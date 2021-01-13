@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
+import { TextLink, TextLinkVariant } from "@stellar/design-system";
 import {
   FOOTER_HEIGHT_REM,
   FOOTER_VERTICAL_PADDING_REM,
   MEDIA_QUERIES,
   pageInsetStyle,
 } from "constants/styles";
-import { TextLink, TextLinkVariant } from "components/basic/TextLink";
 
 const WrapperEl = styled.div`
   @media (${MEDIA_QUERIES.headerFooterHeight}) {

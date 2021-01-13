@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Keypair } from "stellar-sdk";
+import {
+  Button,
+  ButtonVariant,
+  Checkbox,
+  Heading4,
+  InfoBlock,
+  InfoBlockVariant,
+  TextButton,
+} from "@stellar/design-system";
 
 import { ReactComponent as IconCopy } from "assets/svg/icon-copy.svg";
-
-import { Button, ButtonVariant } from "components/basic/Button";
-import { TextButton } from "components/basic/TextButton";
-import { Checkbox } from "components/basic/Checkbox";
-import { Heading4 } from "components/basic/Heading";
-import { InfoBlock, InfoBlockVariant } from "components/basic/InfoBlock";
 import { CopyWithTooltip, TooltipPosition } from "components/CopyWithTooltip";
 import { ErrorMessage } from "components/ErrorMessage";
 import { ModalContent } from "components/ModalContent";
