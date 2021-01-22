@@ -19,7 +19,7 @@ export const wallets: Wallets = {
     logoImg: logoFreighter,
     logoImgAltText: "Freighter logo",
     modalType: ModalType.SIGNIN_FREIGHTER,
-    infoText: "Freighter is a browser extension wallet. Available on Chrome and Firefox",
+    infoText: "Freighter is a browser extension wallet. Available on Chrome and Firefox.",
     infoLinkText: "Download",
     infoLink: "https://freighter.app",
   },
