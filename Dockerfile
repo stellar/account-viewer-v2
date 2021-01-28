@@ -1,6 +1,6 @@
 FROM ubuntu:16.04 as build
 
-LABEL maintainer="SDF Ops Team <ops@stellar.org>"
+MAINTAINER SDF Ops Team <ops@stellar.org>
 
 RUN mkdir -p /app
 WORKDIR /app
