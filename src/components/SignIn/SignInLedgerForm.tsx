@@ -11,6 +11,7 @@ import {
   Loader,
 } from "@stellar/design-system";
 import { KeyType } from "@stellar/wallet-sdk";
+import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 
 import { ErrorMessage } from "components/ErrorMessage";
 import { ModalWalletContent } from "components/ModalWalletContent";
@@ -118,20 +119,42 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
     }
   }, [isAuthenticated, ledgerData, ledgerBipPath, dispatch, history]);
 
-  const handleLedgerSignIn = () => {
-    setErrorMessage("");
-    dispatch(fetchLedgerStellarAddressAction(ledgerBipPath));
-  };
-
   return (
     <ModalWalletContent
       type="ledger"
       buttonFooter={
         <>
-          <Button onClick={handleLedgerSignIn}>Connect with Ledger</Button>
+          <Button
+            onClick={async () => {
+              try {
+                const transport = await TransportWebUSB.create();
+                dispatch(
+                  fetchLedgerStellarAddressAction({ ledgerBipPath, transport }),
+                );
+              } catch (e) {
+                setErrorMessage(e.toString());
+              }
+            }}
+          >
+            Connect with Ledger
+          </Button>
           <Button onClick={onClose} variant={ButtonVariant.secondary}>
             Cancel
           </Button>
+          <button
+            onClick={async () => {
+              try {
+                const transport = await TransportWebUSB.create();
+                dispatch(
+                  fetchLedgerStellarAddressAction({ ledgerBipPath, transport }),
+                );
+              } catch (e) {
+                setErrorMessage(e.toString());
+              }
+            }}
+          >
+            Native button
+          </button>
         </>
       }
     >
