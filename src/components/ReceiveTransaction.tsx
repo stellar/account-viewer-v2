@@ -47,7 +47,12 @@ const AddressEl = styled.div`
 
 export const ReceiveTransaction = () => {
   const { account } = useRedux("account");
-  const accountId = account.data?.id;
+
+  if (!account.data) {
+    return null;
+  }
+
+  const accountId = account.data.id;
 
   return (
     <ModalContent headlineText="Your account QR code">

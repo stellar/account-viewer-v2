@@ -140,23 +140,25 @@ export const ConfirmTransaction = ({
   }, [status, onSuccessfulTx, onFailedTx, errorString]);
 
   const handleSend = () => {
-    dispatch(
-      sendTxAction({
-        publicKey: account.data?.id,
-        // formData.federationAddress exists only if valid fed address given
-        toAccountId: formData.federationAddress || formData.toAccountId,
-        amount: formData.amount,
-        fee: stroopsFromLumens(maxFee).toNumber(),
-        memoType: formData.memoType,
-        memoContent: formData.memoContent,
-        isAccountFunded: formData.isAccountFunded,
-      }),
-    );
-    logEvent("send: confirmed transaction", {
-      amount: formData.amount.toString(),
-      "used federation address": !!formData.federationAddress,
-      "used memo": !!formData.memoContent,
-    });
+    if (account.data) {
+      dispatch(
+        sendTxAction({
+          publicKey: account.data.id,
+          // formData.federationAddress exists only if valid fed address given
+          toAccountId: formData.federationAddress || formData.toAccountId,
+          amount: formData.amount,
+          fee: stroopsFromLumens(maxFee).toNumber(),
+          memoType: formData.memoType,
+          memoContent: formData.memoContent,
+          isAccountFunded: formData.isAccountFunded,
+        }),
+      );
+      logEvent("send: confirmed transaction", {
+        amount: formData.amount.toString(),
+        "used federation address": !!formData.federationAddress,
+        "used memo": !!formData.memoContent,
+      });
+    }
   };
 
   const getInstructionsMessage = (type: AuthType) => {

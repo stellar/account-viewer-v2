@@ -20,6 +20,10 @@ export const SuccessfulTransaction = ({
 }) => {
   const { sendTx, settings } = useRedux("sendTx", "settings");
 
+  if (!sendTx.data) {
+    return null;
+  }
+
   return (
     <ModalContent
       headlineText="Transaction successfully completed"

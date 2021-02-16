@@ -189,7 +189,9 @@ export const CreateTransaction = ({
     initialInputErrors,
   );
 
-  const availableBalance = new BigNumber(account.data.balances.native.total);
+  const availableBalance = account.data
+    ? new BigNumber(account.data.balances.native.total)
+    : "0";
 
   useEffect(() => {
     const fetchNetworkBaseFee = async () => {
@@ -266,7 +268,8 @@ export const CreateTransaction = ({
 
   const checkIfAccountIsFlagged = (accountId: string) => {
     const flaggedTags = flaggedAccounts.data.reduce(
-      (prev: string[], { address, tags }) => address === accountId ? [...prev, ...tags] : prev,
+      (prev: string[], { address, tags }) =>
+        address === accountId ? [...prev, ...tags] : prev,
       [],
     );
     setIsAccountUnsafe(flaggedTags.includes("unsafe"));

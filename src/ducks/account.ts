@@ -11,14 +11,19 @@ import {
   AccountInitialState,
 } from "types/types.d";
 
+let accountWatcherStopper: any;
+
 interface UnfundedAccount extends Types.AccountDetails {
+  id: string;
+}
+
+interface FetchAccountActionResponse {
+  data: Types.AccountDetails | UnfundedAccount;
   isUnfunded: boolean;
 }
 
-let accountWatcherStopper: any;
-
 export const fetchAccountAction = createAsyncThunk<
-  Types.AccountDetails | UnfundedAccount,
+  FetchAccountActionResponse,
   string,
   { rejectValue: RejectMessage; state: RootState }
 >(
@@ -33,6 +38,7 @@ export const fetchAccountAction = createAsyncThunk<
     });
 
     let stellarAccount: Types.AccountDetails | null = null;
+    let isUnfunded = false;
 
     try {
       const accountIsFunded = await dataProvider.isAccountFunded();
@@ -42,8 +48,8 @@ export const fetchAccountAction = createAsyncThunk<
       } else {
         stellarAccount = {
           id: publicKey,
-          isUnfunded: true,
         } as UnfundedAccount;
+        isUnfunded = true;
       }
     } catch (error) {
       return rejectWithValue({
@@ -51,7 +57,7 @@ export const fetchAccountAction = createAsyncThunk<
       });
     }
 
-    return stellarAccount;
+    return { data: stellarAccount, isUnfunded };
   },
 );
 
@@ -94,6 +100,7 @@ const initialState: AccountInitialState = {
   data: null,
   isAuthenticated: false,
   isAccountWatcherStarted: false,
+  isUnfunded: false,
   status: undefined,
   errorString: undefined,
 };
@@ -124,8 +131,9 @@ const accountSlice = createSlice({
       state.status = ActionStatus.PENDING;
     });
     builder.addCase(fetchAccountAction.fulfilled, (state, action) => {
-      state.data = action.payload;
+      state.data = action.payload.data;
       state.isAuthenticated = !!action.payload;
+      state.isUnfunded = action.payload.isUnfunded;
       state.status = ActionStatus.SUCCESS;
     });
     builder.addCase(fetchAccountAction.rejected, (state, action) => {
