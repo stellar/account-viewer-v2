@@ -1,4 +1,6 @@
-import { MemoType, MemoValue } from "stellar-sdk";
+import React from "react";
+import { MemoType, MemoValue, Horizon } from "stellar-sdk";
+import { Types } from "@stellar/wallet-sdk";
 
 declare global {
   interface Window {
@@ -63,6 +65,7 @@ export interface AccountInitialState {
   data: Types.AccountDetails | null;
   isAuthenticated: boolean;
   isAccountWatcherStarted: boolean;
+  isUnfunded: boolean;
   status: ActionStatus | undefined;
   errorString?: string;
 }
@@ -119,7 +122,6 @@ export interface Store {
   account: AccountInitialState;
   flaggedAccounts: FlaggedAccounts;
   keyStore: KeyStoreInitialState;
-  knownAccounts: KnownAccountsInitialState;
   sendTx: SendTxInitialState;
   settings: SettingsInitialState;
   txHistory: TxHistoryInitialState;
