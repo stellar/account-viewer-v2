@@ -121,13 +121,13 @@ export const Header = () => {
           <ProjectLogo title="Account Viewer" />
         </LogoWrapperEl>
 
-        {isAuthenticated && (
+        {isAuthenticated && account.data && (
           <>
             <AccountWrapperEl>
-              <Avatar publicAddress={account.data?.id} />
-              <CopyWithTooltip copyText={account.data?.id}>
+              <Avatar publicAddress={account.data.id} />
+              <CopyWithTooltip copyText={account.data.id}>
                 <CopyPublicKeyButtonEl>
-                  {getFormattedPublicKey(account.data?.id)}
+                  {getFormattedPublicKey(account.data.id)}
                   <IconCopy />
                 </CopyPublicKeyButtonEl>
               </CopyWithTooltip>

@@ -104,24 +104,33 @@ export const BalanceInfo = () => {
   const dispatch = useDispatch();
   const { account } = useRedux("account");
   const { flaggedAccounts } = useRedux("flaggedAccounts");
-  const { status: accountStatus, data, isAccountWatcherStarted } = account;
+  const {
+    status: accountStatus,
+    data,
+    isAccountWatcherStarted,
+    isUnfunded,
+  } = account;
   const { status: flaggedAccountsStatus } = flaggedAccounts;
   const [isSendTxModalVisible, setIsSendTxModalVisible] = useState(false);
   const [isReceiveTxModalVisible, setIsReceiveTxModalVisible] = useState(false);
-  const publicAddress = data.id;
+  const publicAddress = data?.id;
 
   useEffect(() => {
-    if (accountStatus === ActionStatus.SUCCESS && !isAccountWatcherStarted) {
+    if (
+      publicAddress &&
+      accountStatus === ActionStatus.SUCCESS &&
+      !isAccountWatcherStarted
+    ) {
       dispatch(startAccountWatcherAction(publicAddress));
     }
   }, [dispatch, publicAddress, accountStatus, isAccountWatcherStarted]);
 
-  let nativeBalance = 0;
+  let nativeBalance = "0";
 
   if (account.data) {
     nativeBalance = account.data.balances
       ? account.data.balances.native.total.toString()
-      : 0;
+      : "0";
   }
 
   const resetModalStates = () => {
@@ -129,6 +138,10 @@ export const BalanceInfo = () => {
     setIsSendTxModalVisible(false);
     setIsReceiveTxModalVisible(false);
   };
+
+  if (!data) {
+    return null;
+  }
 
   return (
     <WrapperEl>
@@ -147,8 +160,7 @@ export const BalanceInfo = () => {
               }}
               icon={<IconSend />}
               disabled={
-                data.isUnfunded ||
-                flaggedAccountsStatus !== ActionStatus.SUCCESS
+                isUnfunded || flaggedAccountsStatus !== ActionStatus.SUCCESS
               }
             >
               Send
@@ -165,7 +177,7 @@ export const BalanceInfo = () => {
           </ButtonsWrapperEl>
         </BalanceInfoEl>
 
-        {data.isUnfunded && (
+        {isUnfunded && (
           <UnfundedAccountEl>
             <Heading3>Your Stellar Public Key</Heading3>
             <PublicKeyEl>{publicAddress}</PublicKeyEl>

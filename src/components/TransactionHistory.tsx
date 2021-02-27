@@ -273,7 +273,7 @@ export const TransactionHistory = () => {
     "settings",
   );
   const accountId = account.data?.id;
-  const isUnfunded = account.data?.isUnfunded;
+  const isUnfunded = account.isUnfunded;
   const dispatch = useDispatch();
   const [showAllTxs, setShowAllTxs] = useState(false);
   const {
@@ -293,7 +293,7 @@ export const TransactionHistory = () => {
   }, [accountId, isUnfunded, dispatch]);
 
   useEffect(() => {
-    if (status === ActionStatus.SUCCESS && !isTxWatcherStarted) {
+    if (status === ActionStatus.SUCCESS && accountId && !isTxWatcherStarted) {
       dispatch(startTxHistoryWatcherAction(accountId));
     }
   }, [status, isTxWatcherStarted, accountId, dispatch]);
