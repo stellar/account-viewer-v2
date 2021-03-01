@@ -91,7 +91,7 @@
     "@types/trezor-connect": "^7.0.0",
     "concurrently": "^5.3.0",
     "eslint": "^7.19.0",
-    "eslint-config-prettier": "^7.2.0",
+    "eslint-config-prettier": "^8.1.0",
     "eslint-config-react": "^1.1.7",
     "husky": "^4.3.8",
     "lint-staged": "^10.4.0",
