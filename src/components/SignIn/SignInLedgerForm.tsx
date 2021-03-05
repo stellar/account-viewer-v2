@@ -120,7 +120,7 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
   }, [isAuthenticated, ledgerData, ledgerBipPath, dispatch, history]);
 
   const handleConnect = async () => {
-    // TODO: check re-connect after closing device popup
+    setErrorMessage("");
     try {
       const transport = await TransportWebUSB.request();
       dispatch(fetchLedgerStellarAddressAction({ ledgerBipPath, transport }));
