@@ -20,9 +20,11 @@ import {
   TextLink,
 } from "@stellar/design-system";
 
+import { ErrorMessage } from "components/ErrorMessage";
 import { ModalContent } from "components/ModalContent";
+import { buildPaymentTransaction } from "helpers/buildPaymentTransaction";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
-import { lumensFromStroops } from "helpers/stroopConversion";
+import { lumensFromStroops, stroopsFromLumens } from "helpers/stroopConversion";
 import { logEvent } from "helpers/tracking";
 import { useRedux } from "hooks/useRedux";
 import {
@@ -33,6 +35,7 @@ import {
 import { PALETTE } from "constants/styles";
 import { knownAccounts } from "constants/knownAccounts";
 
+import { getErrorString } from "helpers/getErrorString";
 import { AccountIsUnsafe } from "./WarningMessages/AccountIsUnsafe";
 
 const RowEl = styled.div`
@@ -99,6 +102,7 @@ enum SendFormIds {
   SEND_MEMO_TYPE = "send-memo-type",
   SEND_MEMO_CONTENT = "send-memo-content",
   SEND_FEE = "send-fee",
+  SEND_TX = "send-tx",
 }
 
 type ValidatedInput = {
@@ -413,7 +417,7 @@ export const CreateTransaction = ({
     setInputErrors({ ...inputErrors, [inputId]: "" });
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     let errors = {};
     let hasErrors = false;
 
@@ -434,15 +438,45 @@ export const CreateTransaction = ({
     if (hasErrors) {
       setInputErrors(errors);
     } else {
-      onContinue({
-        toAccountId,
-        federationAddress,
-        amount,
-        memoType,
-        memoContent,
-        isAccountFunded,
-        isAccountUnsafe,
-      });
+      if (!account.data?.id) {
+        setInputErrors({
+          ...inputErrors,
+          [SendFormIds.SEND_TX]:
+            "Something went wrong, account address is missing.",
+        });
+        return;
+      }
+
+      try {
+        const tx = await buildPaymentTransaction({
+          publicKey: account.data.id,
+          // federationAddress exists only if valid fed address given
+          toAccountId: federationAddress || toAccountId,
+          amount,
+          fee: stroopsFromLumens(maxFee).toNumber(),
+          memoType,
+          memoContent,
+          isAccountFunded,
+        });
+
+        onContinue({
+          toAccountId,
+          federationAddress,
+          amount,
+          memoType,
+          memoContent,
+          isAccountFunded,
+          isAccountUnsafe,
+          tx,
+        });
+      } catch (e) {
+        setInputErrors({
+          ...inputErrors,
+          [SendFormIds.SEND_TX]: `Building transaction failed. ${getErrorString(
+            e,
+          )}`,
+        });
+      }
     }
   };
 
@@ -747,6 +781,10 @@ export const CreateTransaction = ({
             </TextLink>
           </InfoBlock>
         </RowEl>
+      )}
+
+      {inputErrors[SendFormIds.SEND_TX] && (
+        <ErrorMessage message={inputErrors[SendFormIds.SEND_TX]} />
       )}
     </ModalContent>
   );

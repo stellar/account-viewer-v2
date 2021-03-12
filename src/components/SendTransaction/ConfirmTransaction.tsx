@@ -17,7 +17,6 @@ import { FONT_WEIGHT, PALETTE } from "constants/styles";
 
 import { getMemoTypeText } from "helpers/getMemoTypeText";
 import { logEvent } from "helpers/tracking";
-import { stroopsFromLumens } from "helpers/stroopConversion";
 import { sendTxAction } from "ducks/sendTx";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, PaymentFormData } from "types/types.d";
@@ -112,12 +111,7 @@ export const ConfirmTransaction = ({
   onFailedTx,
   onBack,
 }: ConfirmTransactionProps) => {
-  const { sendTx, account, settings } = useRedux(
-    "sendTx",
-    "keyStore",
-    "account",
-    "settings",
-  );
+  const { sendTx, settings } = useRedux("sendTx", "keyStore", "settings");
   const { status, errorString } = sendTx;
   const dispatch = useDispatch();
 
@@ -140,25 +134,12 @@ export const ConfirmTransaction = ({
   }, [status, onSuccessfulTx, onFailedTx, errorString]);
 
   const handleSend = () => {
-    if (account.data) {
-      dispatch(
-        sendTxAction({
-          publicKey: account.data.id,
-          // formData.federationAddress exists only if valid fed address given
-          toAccountId: formData.federationAddress || formData.toAccountId,
-          amount: formData.amount,
-          fee: stroopsFromLumens(maxFee).toNumber(),
-          memoType: formData.memoType,
-          memoContent: formData.memoContent,
-          isAccountFunded: formData.isAccountFunded,
-        }),
-      );
-      logEvent("send: confirmed transaction", {
-        amount: formData.amount.toString(),
-        "used federation address": !!formData.federationAddress,
-        "used memo": !!formData.memoContent,
-      });
-    }
+    dispatch(sendTxAction(formData.tx));
+    logEvent("send: confirmed transaction", {
+      amount: formData.amount.toString(),
+      "used federation address": !!formData.federationAddress,
+      "used memo": !!formData.memoContent,
+    });
   };
 
   const getInstructionsMessage = (type: AuthType) => {

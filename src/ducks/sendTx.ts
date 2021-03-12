@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { MemoType, MemoValue, Horizon } from "stellar-sdk";
+import { MemoType, MemoValue, Horizon, Transaction } from "stellar-sdk";
 import { getErrorString } from "helpers/getErrorString";
 import { submitPaymentTransaction } from "helpers/submitPaymentTransaction";
 import { ActionStatus, SendTxInitialState, RejectMessage } from "types/types.d";
@@ -17,12 +17,12 @@ export interface PaymentTransactionParams {
 
 export const sendTxAction = createAsyncThunk<
   Horizon.TransactionResponse,
-  PaymentTransactionParams,
+  Transaction | any,
   { rejectValue: RejectMessage; state: RootState }
->("sendTx/sendTxAction", async (params, { rejectWithValue }) => {
+>("sendTx/sendTxAction", async (tx, { rejectWithValue }) => {
   let result;
   try {
-    result = await submitPaymentTransaction(params);
+    result = await submitPaymentTransaction(tx);
   } catch (error) {
     return rejectWithValue({
       errorString: getErrorString(error),
