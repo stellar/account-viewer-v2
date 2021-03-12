@@ -21,6 +21,7 @@ import {
 } from "@stellar/design-system";
 
 import { ErrorMessage } from "components/ErrorMessage";
+import { InlineLoaderWithText } from "components/InlineLoaderWithText";
 import { ModalContent } from "components/ModalContent";
 import { buildPaymentTransaction } from "helpers/buildPaymentTransaction";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
@@ -192,6 +193,7 @@ export const CreateTransaction = ({
   const [inputErrors, setInputErrors] = useState<ValidatedInput>(
     initialInputErrors,
   );
+  const [txInProgress, setTxInProgress] = useState(false);
 
   const availableBalance = account.data
     ? new BigNumber(account.data.balances.native.total)
@@ -448,6 +450,8 @@ export const CreateTransaction = ({
       }
 
       try {
+        setTxInProgress(true);
+
         const tx = await buildPaymentTransaction({
           publicKey: account.data.id,
           // federationAddress exists only if valid fed address given
@@ -458,6 +462,8 @@ export const CreateTransaction = ({
           memoContent,
           isAccountFunded,
         });
+
+        setTxInProgress(false);
 
         onContinue({
           toAccountId,
@@ -470,6 +476,7 @@ export const CreateTransaction = ({
           tx,
         });
       } catch (e) {
+        setTxInProgress(false);
         setInputErrors({
           ...inputErrors,
           [SendFormIds.SEND_TX]: `Building transaction failed. ${getErrorString(
@@ -485,13 +492,25 @@ export const CreateTransaction = ({
       headlineText="Send Lumens"
       buttonFooter={
         <>
-          <Button disabled={isAccountMalicious} onClick={onSubmit}>
+          <Button
+            disabled={txInProgress || isAccountMalicious}
+            onClick={onSubmit}
+          >
             Continue
           </Button>
-          <Button onClick={onCancel} variant={ButtonVariant.secondary}>
+          <Button
+            disabled={txInProgress}
+            onClick={onCancel}
+            variant={ButtonVariant.secondary}
+          >
             Cancel
           </Button>
         </>
+      }
+      footer={
+        <InlineLoaderWithText visible={txInProgress}>
+          Validating transaction.
+        </InlineLoaderWithText>
       }
     >
       <RowEl>

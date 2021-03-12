@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import BigNumber from "bignumber.js";
@@ -6,12 +6,12 @@ import {
   Button,
   ButtonVariant,
   InfoBlock,
-  Loader,
   TextLink,
 } from "@stellar/design-system";
 
 import { ReactComponent as IconSend } from "assets/svg/icon-send.svg";
 import { Avatar } from "components/Avatar";
+import { InlineLoaderWithText } from "components/InlineLoaderWithText";
 import { ModalContent } from "components/ModalContent";
 import { FONT_WEIGHT, PALETTE } from "constants/styles";
 
@@ -70,26 +70,6 @@ const AddressWrapperEl = styled.div`
     padding-left: 0.75rem;
     flex: 1;
   }
-`;
-
-const InlineLoadingEl = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
-
-  div:nth-child(1) {
-    flex-shrink: 0;
-  }
-`;
-
-const InlineLoadingTextEl = styled.div`
-  font-size: 1rem;
-  line-height: 1.5rem;
-  color: ${PALETTE.black60};
-  margin-left: 0.5rem;
 `;
 
 const WarningMessageEl = styled.div`
@@ -179,12 +159,9 @@ export const ConfirmTransaction = ({
         </>
       }
       footer={
-        status === ActionStatus.PENDING && (
-          <InlineLoadingEl>
-            <Loader />
-            <InlineLoadingTextEl>Submitting transaction.</InlineLoadingTextEl>
-          </InlineLoadingEl>
-        )
+        <InlineLoaderWithText visible={status === ActionStatus.PENDING}>
+          Submitting transaction.
+        </InlineLoaderWithText>
       }
     >
       <TableEl>
