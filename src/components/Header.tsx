@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { ProjectLogo, TextButton } from "@stellar/design-system";
 
 import { ReactComponent as IconCopy } from "assets/svg/icon-copy.svg";
@@ -105,6 +106,7 @@ const CopyPublicKeyButtonEl = styled.div`
 
 export const Header = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const { account } = useRedux("account");
   const { isAuthenticated } = account;
 
@@ -112,6 +114,9 @@ export const Header = () => {
     dispatch(stopAccountWatcherAction());
     dispatch(stopTxHistoryWatcherAction());
     dispatch(resetStoreAction());
+    history.push({
+      pathname: "/",
+    });
   };
 
   return (

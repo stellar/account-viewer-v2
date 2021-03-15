@@ -138,6 +138,7 @@ const TableEl = styled.table`
     td {
       padding-top: 1.5rem;
       padding-bottom: 1.5rem;
+      word-break: break-word;
     }
 
     th:nth-of-type(3),

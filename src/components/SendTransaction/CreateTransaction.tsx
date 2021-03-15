@@ -20,9 +20,12 @@ import {
   TextLink,
 } from "@stellar/design-system";
 
+import { ErrorMessage } from "components/ErrorMessage";
+import { InlineLoaderWithText } from "components/InlineLoaderWithText";
 import { ModalContent } from "components/ModalContent";
+import { buildPaymentTransaction } from "helpers/buildPaymentTransaction";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
-import { lumensFromStroops } from "helpers/stroopConversion";
+import { lumensFromStroops, stroopsFromLumens } from "helpers/stroopConversion";
 import { logEvent } from "helpers/tracking";
 import { useRedux } from "hooks/useRedux";
 import {
@@ -33,6 +36,7 @@ import {
 import { PALETTE } from "constants/styles";
 import { knownAccounts } from "constants/knownAccounts";
 
+import { getErrorString } from "helpers/getErrorString";
 import { AccountIsUnsafe } from "./WarningMessages/AccountIsUnsafe";
 
 const RowEl = styled.div`
@@ -99,6 +103,7 @@ enum SendFormIds {
   SEND_MEMO_TYPE = "send-memo-type",
   SEND_MEMO_CONTENT = "send-memo-content",
   SEND_FEE = "send-fee",
+  SEND_TX = "send-tx",
 }
 
 type ValidatedInput = {
@@ -188,6 +193,7 @@ export const CreateTransaction = ({
   const [inputErrors, setInputErrors] = useState<ValidatedInput>(
     initialInputErrors,
   );
+  const [txInProgress, setTxInProgress] = useState(false);
 
   const availableBalance = account.data
     ? new BigNumber(account.data.balances.native.total)
@@ -413,7 +419,7 @@ export const CreateTransaction = ({
     setInputErrors({ ...inputErrors, [inputId]: "" });
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     let errors = {};
     let hasErrors = false;
 
@@ -434,15 +440,50 @@ export const CreateTransaction = ({
     if (hasErrors) {
       setInputErrors(errors);
     } else {
-      onContinue({
-        toAccountId,
-        federationAddress,
-        amount,
-        memoType,
-        memoContent,
-        isAccountFunded,
-        isAccountUnsafe,
-      });
+      if (!account.data?.id) {
+        setInputErrors({
+          ...inputErrors,
+          [SendFormIds.SEND_TX]:
+            "Something went wrong, account address is missing.",
+        });
+        return;
+      }
+
+      try {
+        setTxInProgress(true);
+
+        const tx = await buildPaymentTransaction({
+          publicKey: account.data.id,
+          // federationAddress exists only if valid fed address given
+          toAccountId: federationAddress || toAccountId,
+          amount,
+          fee: stroopsFromLumens(maxFee).toNumber(),
+          memoType,
+          memoContent,
+          isAccountFunded,
+        });
+
+        setTxInProgress(false);
+
+        onContinue({
+          toAccountId,
+          federationAddress,
+          amount,
+          memoType,
+          memoContent,
+          isAccountFunded,
+          isAccountUnsafe,
+          tx,
+        });
+      } catch (e) {
+        setTxInProgress(false);
+        setInputErrors({
+          ...inputErrors,
+          [SendFormIds.SEND_TX]: `Building transaction failed. ${getErrorString(
+            e,
+          )}`,
+        });
+      }
     }
   };
 
@@ -451,13 +492,25 @@ export const CreateTransaction = ({
       headlineText="Send Lumens"
       buttonFooter={
         <>
-          <Button disabled={isAccountMalicious} onClick={onSubmit}>
+          <Button
+            disabled={txInProgress || isAccountMalicious}
+            onClick={onSubmit}
+          >
             Continue
           </Button>
-          <Button onClick={onCancel} variant={ButtonVariant.secondary}>
+          <Button
+            disabled={txInProgress}
+            onClick={onCancel}
+            variant={ButtonVariant.secondary}
+          >
             Cancel
           </Button>
         </>
+      }
+      footer={
+        <InlineLoaderWithText visible={txInProgress}>
+          Validating transaction.
+        </InlineLoaderWithText>
       }
     >
       <RowEl>
@@ -747,6 +800,10 @@ export const CreateTransaction = ({
             </TextLink>
           </InfoBlock>
         </RowEl>
+      )}
+
+      {inputErrors[SendFormIds.SEND_TX] && (
+        <ErrorMessage message={inputErrors[SendFormIds.SEND_TX]} />
       )}
     </ModalContent>
   );
