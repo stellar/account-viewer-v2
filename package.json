@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "@albedo-link/intent": "^0.9.6",
-    "@ledgerhq/hw-app-str": "^5.43.0",
-    "@ledgerhq/hw-transport-webusb": "^5.43.0",
+    "@ledgerhq/hw-app-str": "^5.49.0",
+    "@ledgerhq/hw-transport-webusb": "^5.49.0",
     "@reduxjs/toolkit": "^1.4.0",
     "@stellar/design-system": "^0.1.0-alpha.3",
     "@stellar/freighter-api": "^1.0.0-beta.0",

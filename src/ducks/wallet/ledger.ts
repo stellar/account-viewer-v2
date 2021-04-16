@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import LedgerApi from "@ledgerhq/hw-app-str";
+import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import { ActionStatus, RejectMessage, WalletInitialState } from "types/types.d";
 
 export const fetchLedgerStellarAddressAction = createAsyncThunk<
   { publicKey: string },
-  { ledgerBipPath: string; transport: any },
+  { ledgerBipPath: string; transport: TransportWebUSB },
   { rejectValue: RejectMessage }
 >(
   "walletLedger/fetchLedgerStellarAddressAction",
