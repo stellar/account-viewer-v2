@@ -1,5 +1,5 @@
 import React from "react";
-import { MemoType, MemoValue, Horizon } from "stellar-sdk";
+import { MemoType, MemoValue, Horizon, Transaction } from "stellar-sdk";
 import { Types } from "@stellar/wallet-sdk";
 
 declare global {
@@ -155,4 +155,5 @@ export interface PaymentFormData {
   memoContent: MemoValue;
   isAccountFunded: boolean;
   isAccountUnsafe: boolean;
+  tx: Transaction | undefined;
 }

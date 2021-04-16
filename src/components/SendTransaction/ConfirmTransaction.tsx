@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import BigNumber from "bignumber.js";
@@ -6,18 +6,17 @@ import {
   Button,
   ButtonVariant,
   InfoBlock,
-  Loader,
   TextLink,
 } from "@stellar/design-system";
 
 import { ReactComponent as IconSend } from "assets/svg/icon-send.svg";
 import { Avatar } from "components/Avatar";
+import { InlineLoaderWithText } from "components/InlineLoaderWithText";
 import { ModalContent } from "components/ModalContent";
 import { FONT_WEIGHT, PALETTE } from "constants/styles";
 
 import { getMemoTypeText } from "helpers/getMemoTypeText";
 import { logEvent } from "helpers/tracking";
-import { stroopsFromLumens } from "helpers/stroopConversion";
 import { sendTxAction } from "ducks/sendTx";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, PaymentFormData } from "types/types.d";
@@ -73,26 +72,6 @@ const AddressWrapperEl = styled.div`
   }
 `;
 
-const InlineLoadingEl = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
-
-  div:nth-child(1) {
-    flex-shrink: 0;
-  }
-`;
-
-const InlineLoadingTextEl = styled.div`
-  font-size: 1rem;
-  line-height: 1.5rem;
-  color: ${PALETTE.black60};
-  margin-left: 0.5rem;
-`;
-
 const WarningMessageEl = styled.div`
   margin: 1.5rem 0 0.5rem;
 `;
@@ -112,12 +91,7 @@ export const ConfirmTransaction = ({
   onFailedTx,
   onBack,
 }: ConfirmTransactionProps) => {
-  const { sendTx, account, settings } = useRedux(
-    "sendTx",
-    "keyStore",
-    "account",
-    "settings",
-  );
+  const { sendTx, settings } = useRedux("sendTx", "keyStore", "settings");
   const { status, errorString } = sendTx;
   const dispatch = useDispatch();
 
@@ -140,25 +114,12 @@ export const ConfirmTransaction = ({
   }, [status, onSuccessfulTx, onFailedTx, errorString]);
 
   const handleSend = () => {
-    if (account.data) {
-      dispatch(
-        sendTxAction({
-          publicKey: account.data.id,
-          // formData.federationAddress exists only if valid fed address given
-          toAccountId: formData.federationAddress || formData.toAccountId,
-          amount: formData.amount,
-          fee: stroopsFromLumens(maxFee).toNumber(),
-          memoType: formData.memoType,
-          memoContent: formData.memoContent,
-          isAccountFunded: formData.isAccountFunded,
-        }),
-      );
-      logEvent("send: confirmed transaction", {
-        amount: formData.amount.toString(),
-        "used federation address": !!formData.federationAddress,
-        "used memo": !!formData.memoContent,
-      });
-    }
+    dispatch(sendTxAction(formData.tx));
+    logEvent("send: confirmed transaction", {
+      amount: formData.amount.toString(),
+      "used federation address": !!formData.federationAddress,
+      "used memo": !!formData.memoContent,
+    });
   };
 
   const getInstructionsMessage = (type: AuthType) => {
@@ -198,12 +159,9 @@ export const ConfirmTransaction = ({
         </>
       }
       footer={
-        status === ActionStatus.PENDING && (
-          <InlineLoadingEl>
-            <Loader />
-            <InlineLoadingTextEl>Submitting transaction.</InlineLoadingTextEl>
-          </InlineLoadingEl>
-        )
+        <InlineLoaderWithText visible={status === ActionStatus.PENDING}>
+          Submitting transaction.
+        </InlineLoaderWithText>
       }
     >
       <TableEl>
