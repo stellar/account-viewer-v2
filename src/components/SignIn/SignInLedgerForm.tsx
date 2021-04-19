@@ -9,6 +9,7 @@ import {
   InfoBlock,
   Input,
   Loader,
+  TextLink,
 } from "@stellar/design-system";
 import { KeyType } from "@stellar/wallet-sdk";
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
@@ -125,7 +126,12 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
       const transport = await TransportWebUSB.request();
       dispatch(fetchLedgerStellarAddressAction({ ledgerBipPath, transport }));
     } catch (e) {
-      setErrorMessage(e.toString());
+      const message =
+        e.message === "navigator.usb is undefined"
+          ? "Your browser does not support WebUSB"
+          : e.toString();
+
+      setErrorMessage(message);
     }
   };
 
@@ -143,8 +149,22 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
     >
       {!ledgerStatus && (
         <InfoBlock>
-          Make sure your Ledger Wallet is connected with the Stellar application
-          open on it.
+          <p>
+            Make sure your Ledger Wallet is connected with the Stellar
+            application open on it.
+          </p>
+          <p>
+            Ledger Wallet is using WebUSB to communicate with hardware wallets,
+            check if your browser supports it{" "}
+            <TextLink
+              href="https://caniuse.com/webusb"
+              target="_blank"
+              rel="noreferrer"
+            >
+              here
+            </TextLink>
+            .
+          </p>
         </InfoBlock>
       )}
 
@@ -165,7 +185,11 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
           </InfoBlock>
         )}
 
-      <ErrorMessage message={errorMessage} textAlign="center" />
+      <ErrorMessage
+        message={errorMessage}
+        textAlign="center"
+        marginTop="1rem"
+      />
 
       <AccountWrapperEl>
         <Checkbox
