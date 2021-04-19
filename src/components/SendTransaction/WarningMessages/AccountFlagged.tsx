@@ -1,4 +1,3 @@
-import React from "react";
 import { InfoBlock, InfoBlockVariant } from "@stellar/design-system";
 
 export const AccountFlagged = ({ flagType = "" }) => (

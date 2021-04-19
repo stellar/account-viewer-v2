@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { isConnected } from "@stellar/freighter-api";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";

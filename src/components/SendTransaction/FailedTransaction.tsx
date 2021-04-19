@@ -1,4 +1,3 @@
-import React from "react";
 import { Button, ButtonVariant } from "@stellar/design-system";
 import { ModalContent } from "components/ModalContent";
 import { ErrorMessage } from "components/ErrorMessage";

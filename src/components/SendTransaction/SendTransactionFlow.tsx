@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { MemoNone, BASE_FEE } from "stellar-sdk";
 import { useDispatch } from "react-redux";
 
