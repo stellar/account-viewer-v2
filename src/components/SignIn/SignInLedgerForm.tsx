@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
@@ -9,8 +9,10 @@ import {
   InfoBlock,
   Input,
   Loader,
+  TextLink,
 } from "@stellar/design-system";
 import { KeyType } from "@stellar/wallet-sdk";
+import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 
 import { ErrorMessage } from "components/ErrorMessage";
 import { ModalWalletContent } from "components/ModalWalletContent";
@@ -118,9 +120,19 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
     }
   }, [isAuthenticated, ledgerData, ledgerBipPath, dispatch, history]);
 
-  const handleLedgerSignIn = () => {
+  const handleConnect = async () => {
     setErrorMessage("");
-    dispatch(fetchLedgerStellarAddressAction(ledgerBipPath));
+    try {
+      const transport = await TransportWebUSB.request();
+      dispatch(fetchLedgerStellarAddressAction({ ledgerBipPath, transport }));
+    } catch (e) {
+      const message =
+        e.message === "navigator.usb is undefined"
+          ? "Your browser does not support WebUSB"
+          : e.toString();
+
+      setErrorMessage(message);
+    }
   };
 
   return (
@@ -128,7 +140,7 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
       type="ledger"
       buttonFooter={
         <>
-          <Button onClick={handleLedgerSignIn}>Connect with Ledger</Button>
+          <Button onClick={handleConnect}>Connect with Ledger</Button>
           <Button onClick={onClose} variant={ButtonVariant.secondary}>
             Cancel
           </Button>
@@ -137,8 +149,22 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
     >
       {!ledgerStatus && (
         <InfoBlock>
-          Make sure your Ledger Wallet is connected with the Stellar application
-          open on it.
+          <p>
+            Make sure your Ledger Wallet is connected with the Stellar
+            application open on it.
+          </p>
+          <p>
+            Ledger Wallet is using WebUSB to communicate with hardware wallets,
+            check if your browser supports it{" "}
+            <TextLink
+              href="https://caniuse.com/webusb"
+              target="_blank"
+              rel="noreferrer"
+            >
+              here
+            </TextLink>
+            .
+          </p>
         </InfoBlock>
       )}
 
@@ -159,7 +185,11 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
           </InfoBlock>
         )}
 
-      <ErrorMessage message={errorMessage} textAlign="center" />
+      <ErrorMessage
+        message={errorMessage}
+        textAlign="center"
+        marginTop="1rem"
+      />
 
       <AccountWrapperEl>
         <Checkbox

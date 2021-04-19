@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "@albedo-link/intent": "^0.9.6",
-    "@ledgerhq/hw-app-str": "^5.28.0",
-    "@ledgerhq/hw-transport-u2f": "^5.26.0",
+    "@ledgerhq/hw-app-str": "^5.49.0",
+    "@ledgerhq/hw-transport-webusb": "^5.49.0",
     "@reduxjs/toolkit": "^1.4.0",
     "@stellar/design-system": "^0.1.0-alpha.3",
     "@stellar/freighter-api": "^1.0.0-beta.0",
@@ -79,6 +79,7 @@
     "@testing-library/react": "^11.0.4",
     "@testing-library/user-event": "^12.1.6",
     "@types/jest": "^26.0.13",
+    "@types/ledgerhq__hw-transport-webusb": "^4.70.1",
     "@types/lodash": "^4.14.164",
     "@types/node": "^14.14.0",
     "@types/react": "^17.0.2 ",
