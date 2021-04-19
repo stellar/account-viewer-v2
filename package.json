@@ -2,12 +2,6 @@
   "name": "stellar-account-viewer-v2",
   "prettier": "@stellar/prettier-config",
   "version": "0.1.0",
-  "husky": {
-    "hooks": {
-      "pre-commit": "concurrently 'pretty-quick --staged' 'lint-staged' 'tsc --noEmit'",
-      "post-merge": "yarn install-if-package-changed"
-    }
-  },
   "lint-staged": {
     "src/**/*.ts?(x)": [
       "eslint --fix --max-warnings 0"
@@ -50,11 +44,13 @@
     "install-if-package-changed": "git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD | grep --quiet yarn.lock && yarn install || exit 0",
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "test": "react-scripts test",
     "eject": "react-scripts eject",
     "prod:build": "docker image build --build-arg AMPLITUDE_KEY=$AMPLITUDE_KEY -t account-viewer-next:localbuild .",
     "prod:serve": "docker run -p 8000:80 account-viewer-next:localbuild",
     "production": "yarn prod:build && yarn prod:serve",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "pre-commit": "concurrently 'pretty-quick --staged' 'lint-staged' 'tsc --noEmit'"
   },
   "eslintConfig": {
     "extends": "react-app"
