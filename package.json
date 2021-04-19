@@ -89,7 +89,7 @@
     "@types/trezor-connect": "^7.0.0",
     "concurrently": "^6.0.2",
     "eslint": "^7.24.0",
-    "eslint-config-prettier": "^7.2.0",
+    "eslint-config-prettier": "^8.2.0",
     "eslint-config-react": "^1.1.7",
     "eslint-config-react-app": "^6.0.0",
     "eslint-plugin-flowtype": "^5.7.1",
