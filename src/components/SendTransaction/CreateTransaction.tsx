@@ -34,7 +34,6 @@ import {
   PaymentFormData,
 } from "types/types.d";
 import { PALETTE } from "constants/styles";
-import { knownAccounts } from "constants/knownAccounts";
 
 import { getErrorString } from "helpers/getErrorString";
 import { AccountIsUnsafe } from "./WarningMessages/AccountIsUnsafe";
@@ -125,7 +124,12 @@ export const CreateTransaction = ({
   onCancel,
   setMaxFee,
 }: CreateTransactionProps) => {
-  const { account, settings } = useRedux("account", "settings");
+  const { account, memoRequiredAccounts, settings } = useRedux(
+    "account",
+    "memoRequiredAccounts",
+    "settings",
+  );
+  const knownMemoAccounts = memoRequiredAccounts.data;
 
   const initialInputErrors = {
     [SendFormIds.SEND_TO]: "",
@@ -164,7 +168,8 @@ export const CreateTransaction = ({
   const [isAccountMalicious, setIsAccountMalicious] = useState(false);
 
   const knownAccount =
-    knownAccounts[toAccountId] || knownAccounts[federationAddress || ""];
+    knownMemoAccounts[toAccountId] ||
+    knownMemoAccounts[federationAddress || ""];
   const [prevAddress, setPrevAddress] = useState(
     toAccountId || federationAddress || "",
   );
@@ -256,7 +261,7 @@ export const CreateTransaction = ({
           setMemoContent(response.memo || "");
           setIsMemoTypeFromFederation(Boolean(response.memo_type));
           setIsMemoContentFromFederation(Boolean(response.memo));
-        } else if (knownAccounts[response.account_id]) {
+        } else if (knownMemoAccounts[response.account_id]) {
           setIsMemoVisible(true);
           setMemoType(StellarSdk.MemoText);
           setMemoContent(response.memo || "");
@@ -537,7 +542,10 @@ export const CreateTransaction = ({
 
             // Reset memo whenever a new known account is found or previous
             // address was a known account.
-            if (knownAccounts[e.target.value] || knownAccounts[prevAddress]) {
+            if (
+              knownMemoAccounts[e.target.value] ||
+              knownMemoAccounts[prevAddress]
+            ) {
               setMemoType(StellarSdk.MemoText);
               setMemoContent("");
             }
