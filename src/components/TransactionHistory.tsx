@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import moment from "moment";
 import styled, { css } from "styled-components";
 import { Horizon } from "stellar-sdk";

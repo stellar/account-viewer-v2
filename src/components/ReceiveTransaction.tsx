@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import QRCode from "qrcode.react";
 import { TextButton } from "@stellar/design-system";

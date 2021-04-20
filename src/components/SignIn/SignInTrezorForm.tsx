@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import TrezorConnect from "trezor-connect";
@@ -47,10 +47,13 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
     dispatch(fetchTrezorStellarAddressAction());
   };
 
-  const trezorManifest = {
-    email: "accounts+trezor@stellar.org",
-    appUrl: "https://accountviewer.stellar.org/",
-  };
+  const trezorManifest = useMemo(
+    () => ({
+      email: "accounts+trezor@stellar.org",
+      appUrl: "https://accountviewer.stellar.org/",
+    }),
+    [],
+  );
 
   const initTrezor = () => {
     TrezorConnect.manifest(trezorManifest);

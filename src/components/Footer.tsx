@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import { TextLink, TextLinkVariant } from "@stellar/design-system";
 import {
