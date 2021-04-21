@@ -13,6 +13,7 @@ import { RESET_STORE_ACTION_TYPE } from "constants/settings";
 import { reducer as account } from "ducks/account";
 import { reducer as flaggedAccounts } from "ducks/flaggedAccounts";
 import { reducer as keyStore } from "ducks/keyStore";
+import { reducer as memoRequiredAccounts } from "ducks/memoRequiredAccounts";
 import { reducer as sendTx } from "ducks/sendTx";
 import { reducer as settings } from "ducks/settings";
 import { reducer as txHistory } from "ducks/txHistory";
@@ -39,6 +40,7 @@ const reducers = combineReducers({
   account,
   flaggedAccounts,
   keyStore,
+  memoRequiredAccounts,
   sendTx,
   settings,
   txHistory,

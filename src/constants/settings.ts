@@ -5,6 +5,8 @@ export const TX_HISTORY_MIN_AMOUNT = 0.5;
 export const RESET_STORE_ACTION_TYPE = "RESET";
 export const FLAGGED_ACCOUNT_STORAGE_ID = "flaggedAcounts";
 export const FLAGGED_ACCOUNT_DATE_STORAGE_ID = "flaggedAcountDate";
+export const MEMO_REQ_ACCOUNT_STORAGE_ID = "memoRequiredAccounts";
+export const MEMO_REQ_ACCOUNT_DATE_STORAGE_ID = "memoRequiredAccountsDate";
 
 interface NetworkItemConfig {
   url: string;

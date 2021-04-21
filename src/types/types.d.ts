@@ -80,6 +80,21 @@ export interface FlaggedAccounts {
   status: ActionStatus | undefined;
 }
 
+export interface MemoRequiredAccount {
+  address: string;
+  name: string;
+  domain?: string;
+}
+
+export interface MemoRequiredAccountsResponse {
+  [key: string]: MemoRequiredAccount;
+}
+
+export interface MemoRequiredAccountsInitialState {
+  data: MemoRequiredAccountsResponse;
+  status: ActionStatus | undefined;
+}
+
 export interface KeyStoreInitialState {
   keyStoreId: string;
   password: string;
@@ -122,6 +137,7 @@ export interface Store {
   account: AccountInitialState;
   flaggedAccounts: FlaggedAccounts;
   keyStore: KeyStoreInitialState;
+  memoRequiredAccounts: MemoRequiredAccountsInitialState;
   sendTx: SendTxInitialState;
   settings: SettingsInitialState;
   txHistory: TxHistoryInitialState;
