@@ -9,7 +9,7 @@ TAG ?= stellar/account-viewer-v2:$(LABEL)
 BUILD_DATE := $(shell date --utc --rfc-3339=seconds)
 
 docker-build:
-	$(SUDO) docker build --label org.opencontainers.image.created="$(BUILD_DATE)" -t $(TAG) .
+	$(SUDO) docker build --pull --label org.opencontainers.image.created="$(BUILD_DATE)" -t $(TAG) .
 
 docker-push:
 	$(SUDO) docker push $(TAG)
