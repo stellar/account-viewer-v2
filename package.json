@@ -74,7 +74,7 @@
     "@stellar/tsconfig": "^1.0.2",
     "@testing-library/jest-dom": "^5.11.10",
     "@testing-library/react": "^11.2.6",
-    "@testing-library/user-event": "^13.1.5",
+    "@testing-library/user-event": "^13.1.8",
     "@types/jest": "^26.0.22",
     "@types/ledgerhq__hw-transport-webusb": "^4.70.1",
     "@types/lodash": "^4.14.164",
