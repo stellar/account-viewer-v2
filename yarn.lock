@@ -2,7 +2,12 @@
 # yarn lockfile v1
 
 
-"@albedo-link/intent@^0.9.2", "@albedo-link/intent@^0.9.6":
+"@albedo-link/intent@^0.11.1":
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/@albedo-link/intent/-/intent-0.11.1.tgz#6d13eb78fdd691eec1f8c3de46e5c1145a992ed1"
+  integrity sha512-rUsttNGThMbbOYRoEuQ4pMo0NjGq4v9SONTm0RSx9rK+TenidxWP1hghAIMsFeq26h3Q2HcGz4Nqos76od00qw==
+
+"@albedo-link/intent@^0.9.2":
   version "0.9.6"
   resolved "https://registry.yarnpkg.com/@albedo-link/intent/-/intent-0.9.6.tgz#fbc3ec4c63f6360ae37dd68482649a83443b46f5"
   integrity sha512-gjVl1/7aE3XDfRVdxWq7XS4fuEVaKhCYGFzDhnFPeH34QKwnEKLMv/vnRiOC8TntTdzs2ZJYhaTwRv4fRAk6dg==

@@ -8,7 +8,7 @@
     ]
   },
   "dependencies": {
-    "@albedo-link/intent": "^0.9.6",
+    "@albedo-link/intent": "^0.11.1",
     "@ledgerhq/hw-app-str": "^5.49.0",
     "@ledgerhq/hw-transport-webusb": "^5.49.0",
     "@reduxjs/toolkit": "^1.5.1",
