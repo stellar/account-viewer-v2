@@ -1,13 +1,15 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import TrezorConnect from "trezor-connect";
 import { Button, ButtonVariant, InfoBlock } from "@stellar/design-system";
 import { KeyType } from "@stellar/wallet-sdk";
 
+import { BipPathInput } from "components/BipPathInput";
 import { ErrorMessage } from "components/ErrorMessage";
 import { ModalWalletContent } from "components/ModalWalletContent";
 
+import { defaultStellarBipPath } from "constants/settings";
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storeKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
@@ -18,6 +20,7 @@ import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, ModalPageProps } from "types/types.d";
 
 export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
+  const [bipPath, setBipPath] = useState<string>(defaultStellarBipPath);
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -44,7 +47,7 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
 
   const fetchTrezorLogin = () => {
     setErrorMessage("");
-    dispatch(fetchTrezorStellarAddressAction());
+    dispatch(fetchTrezorStellarAddressAction(bipPath || defaultStellarBipPath));
   };
 
   const trezorManifest = useMemo(
@@ -138,6 +141,12 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
       )}
 
       <ErrorMessage message={errorMessage} textAlign="center" />
+
+      <BipPathInput
+        id="trezor"
+        value={bipPath}
+        onValueChange={(val) => setBipPath(val)}
+      />
     </ModalWalletContent>
   );
 };

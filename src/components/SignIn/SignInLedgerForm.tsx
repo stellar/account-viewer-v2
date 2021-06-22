@@ -5,15 +5,14 @@ import styled from "styled-components";
 import {
   Button,
   ButtonVariant,
-  Checkbox,
   InfoBlock,
-  Input,
   Loader,
   TextLink,
 } from "@stellar/design-system";
 import { KeyType } from "@stellar/wallet-sdk";
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 
+import { BipPathInput } from "components/BipPathInput";
 import { ErrorMessage } from "components/ErrorMessage";
 import { ModalWalletContent } from "components/ModalWalletContent";
 
@@ -26,14 +25,6 @@ import { logEvent } from "helpers/tracking";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, ModalPageProps } from "types/types.d";
-
-const AccountWrapperEl = styled.div`
-  margin-top: 1.5rem;
-
-  & > div:nth-child(2) {
-    margin-top: 1.5rem;
-  }
-`;
 
 const InlineLoadingEl = styled.div`
   width: 100%;
@@ -64,7 +55,6 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
     errorString: accountErrorMessage,
   } = account;
 
-  const [isUsingDefaultAccount, setIsUsingDefaultAccount] = useState(true);
   const [ledgerBipPath, setLedgerBipPath] = useState(defaultStellarBipPath);
 
   const { errorMessage, setErrorMessage } = useErrorMessage({
@@ -191,23 +181,11 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
         marginTop="1rem"
       />
 
-      <AccountWrapperEl>
-        <Checkbox
-          id="ledger-default-account"
-          label="Use default account"
-          checked={isUsingDefaultAccount}
-          onChange={() => setIsUsingDefaultAccount(!isUsingDefaultAccount)}
-        />
-
-        {!isUsingDefaultAccount && (
-          <Input
-            id="ledger-account"
-            label="Enter BIP path"
-            value={ledgerBipPath}
-            onChange={(e) => setLedgerBipPath(e.target.value)}
-          />
-        )}
-      </AccountWrapperEl>
+      <BipPathInput
+        id="trezor"
+        value={ledgerBipPath}
+        onValueChange={(val) => setLedgerBipPath(val)}
+      />
     </ModalWalletContent>
   );
 };

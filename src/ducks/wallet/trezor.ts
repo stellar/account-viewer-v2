@@ -5,15 +5,14 @@ import { ActionStatus, RejectMessage, WalletInitialState } from "types/types.d";
 
 export const fetchTrezorStellarAddressAction = createAsyncThunk<
   { publicKey: string },
-  undefined,
+  string,
   { rejectValue: RejectMessage }
 >(
   "walletTrezor/fetchTrezorStellarAddressAction",
-  async (_, { rejectWithValue }) => {
+  async (bipPath, { rejectWithValue }) => {
     try {
-      // @ts-ignore @types/trezor-connect doesn't have stellarGetAddress()
       const trezorResponse = await TrezorConnect.stellarGetAddress({
-        path: "m/44'/148'/0'",
+        path: `m/${bipPath}`,
       });
 
       if (!trezorResponse.success) {

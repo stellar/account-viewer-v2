@@ -33,9 +33,9 @@
     "stellar-identicon-js": "^1.0.0",
     "stellar-sdk": "^6.0.0",
     "styled-components": "^5.2.3",
-    "trezor-connect": "^8.1.26",
+    "trezor-connect": "^8.1.27",
     "tslib": "^2.2.0",
-    "typescript": "~4.2.4"
+    "typescript": "~4.3.4"
   },
   "resolutions": {
     "**/@typescript-eslint/eslint-plugin": "^4.22.0",
@@ -86,7 +86,7 @@
     "@types/react-router-dom": "^5.1.5",
     "@types/redux": "^3.6.0",
     "@types/styled-components": "^5.1.9",
-    "@types/trezor-connect": "^7.0.0",
+    "@types/trezor-connect": "^8.1.18",
     "concurrently": "^6.0.2",
     "eslint": "^7.24.0",
     "eslint-config-prettier": "^8.2.0",
