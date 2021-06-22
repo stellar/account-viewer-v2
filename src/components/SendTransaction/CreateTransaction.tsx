@@ -177,17 +177,12 @@ export const CreateTransaction = ({
   const [isAccountIdTouched, setIsAccountIdTouched] = useState(false);
 
   const [isMemoVisible, setIsMemoVisible] = useState(!!memoContent);
-  const [isMemoTypeFromFederation, setIsMemoTypeFromFederation] = useState(
-    false,
-  );
-  const [
-    isMemoContentFromFederation,
-    setIsMemoContentFromFederation,
-  ] = useState(false);
-  const [
-    federationAddressFetchStatus,
-    setFederationAddressFetchStatus,
-  ] = useState<string | null>(null);
+  const [isMemoTypeFromFederation, setIsMemoTypeFromFederation] =
+    useState(false);
+  const [isMemoContentFromFederation, setIsMemoContentFromFederation] =
+    useState(false);
+  const [federationAddressFetchStatus, setFederationAddressFetchStatus] =
+    useState<string | null>(null);
   const [recommendedFee, setRecommendedFee] = useState(
     lumensFromStroops(StellarSdk.BASE_FEE).toString(),
   );
@@ -195,9 +190,8 @@ export const CreateTransaction = ({
   const [networkCongestion, setNetworkCongestion] = useState(
     NetworkCongestion.LOW,
   );
-  const [inputErrors, setInputErrors] = useState<ValidatedInput>(
-    initialInputErrors,
-  );
+  const [inputErrors, setInputErrors] =
+    useState<ValidatedInput>(initialInputErrors);
   const [txInProgress, setTxInProgress] = useState(false);
 
   const availableBalance = account.data
@@ -729,7 +723,7 @@ export const CreateTransaction = ({
                   setMemoContent(e.target.value);
                 }}
                 onBlur={validate}
-                value={memoContent as string}
+                value={memoContent}
                 disabled={
                   isCheckingAddress ||
                   federationAddressFetchStatus === ActionStatus.PENDING ||

@@ -25,8 +25,7 @@ export const BipPathInput = ({
   const [isUsingDefault, setIsUsingDefault] = useState(true);
 
   const handleDefaultToggle = () => {
-    const _isUsingDefault = !isUsingDefault;
-    setIsUsingDefault(_isUsingDefault);
+    setIsUsingDefault(!isUsingDefault);
     onValueChange(defaultStellarBipPath);
   };
 

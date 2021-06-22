@@ -120,7 +120,7 @@ export interface Setting {
 }
 
 export interface TxHistoryInitialState {
-  data: Array<Types.Payment>;
+  data: Types.Payment[];
   hasMoreTxs?: boolean;
   isTxWatcherStarted: boolean;
   errorString?: string;
@@ -172,4 +172,8 @@ export interface PaymentFormData {
   isAccountFunded: boolean;
   isAccountUnsafe: boolean;
   tx: Transaction | undefined;
+}
+
+export interface AnyObject {
+  [key: string]: any;
 }

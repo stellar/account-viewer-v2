@@ -9,10 +9,11 @@ import {
   ActionStatus,
   MemoRequiredAccountsInitialState,
   MemoRequiredAccountsResponse,
+  AnyObject,
 } from "types/types.d";
 
 export const fetchMemoRequiredAccountsAction = createAsyncThunk<
-  MemoRequiredAccountsResponse | {}
+  MemoRequiredAccountsResponse | AnyObject
 >("memoRequiredAccounts/fetchMemoRequiredAccountsAction", async () => {
   let result;
   try {
