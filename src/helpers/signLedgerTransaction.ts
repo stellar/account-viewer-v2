@@ -26,5 +26,5 @@ export const signLedgerTransaction = async (
   });
   transaction.signatures.push(decoratedSignature);
 
-  return Promise.resolve(transaction);
+  return transaction;
 };
