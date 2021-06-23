@@ -2,13 +2,14 @@
   "name": "stellar-account-viewer-v2",
   "prettier": "@stellar/prettier-config",
   "version": "0.1.0",
+  "license": "Apache-2.0",
   "lint-staged": {
     "src/**/*.ts?(x)": [
       "eslint --fix --max-warnings 0"
     ]
   },
   "dependencies": {
-    "@albedo-link/intent": "^0.9.6",
+    "@albedo-link/intent": "^0.11.2",
     "@ledgerhq/hw-app-str": "^5.49.0",
     "@ledgerhq/hw-transport-webusb": "^5.49.0",
     "@reduxjs/toolkit": "^1.6.0",
