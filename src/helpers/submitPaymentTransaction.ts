@@ -1,10 +1,10 @@
 import StellarSdk, { Transaction } from "stellar-sdk";
-import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
-import LedgerApi from "@ledgerhq/hw-app-str";
 import { getErrorString } from "helpers/getErrorString";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { store } from "config/store";
-import { loadPrivateKey, signTransaction } from "helpers/keyManager";
+import { signTransaction } from "helpers/keyManager";
+import { signLedgerTransaction } from "helpers/signLedgerTransaction";
+import { signTrezorTransaction } from "helpers/signTrezorTransaction";
 import { AuthType } from "types/types.d";
 
 export const submitPaymentTransaction = async (transaction: Transaction) => {
@@ -26,6 +26,8 @@ export const submitPaymentTransaction = async (transaction: Transaction) => {
     // to the `wallet-sdk` fails because it's going through different layers.
     if (settings.authType === AuthType.LEDGER) {
       signedTransaction = await signLedgerTransaction(transaction, keyStore);
+    } else if (settings.authType === AuthType.TREZOR) {
+      signedTransaction = await signTrezorTransaction(transaction, keyStore);
     } else {
       signedTransaction = await signTransaction({
         id: keyStore.keyStoreId,
@@ -41,30 +43,4 @@ export const submitPaymentTransaction = async (transaction: Transaction) => {
       `Failed to sign transaction, error: ${getErrorString(error)}`,
     );
   }
-};
-
-const signLedgerTransaction = async (
-  transaction: Transaction,
-  keyStore: any,
-) => {
-  const key = await loadPrivateKey({
-    id: keyStore.keyStoreId,
-    password: keyStore.password,
-  });
-
-  const transport = await TransportWebUSB.create();
-  const ledgerApi = new LedgerApi(transport);
-  const result = await ledgerApi.signTransaction(
-    key.path,
-    transaction.signatureBase(),
-  );
-
-  const keyPair = StellarSdk.Keypair.fromPublicKey(key.publicKey);
-  const decoratedSignature = new StellarSdk.xdr.DecoratedSignature({
-    hint: keyPair.signatureHint(),
-    signature: result.signature,
-  });
-  transaction.signatures.push(decoratedSignature);
-
-  return Promise.resolve(transaction);
 };
