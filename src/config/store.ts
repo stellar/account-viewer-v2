@@ -24,14 +24,13 @@ import { reducer as walletTrezor } from "ducks/wallet/trezor";
 
 export type RootState = ReturnType<typeof store.getState>;
 
-const loggerMiddleware = (store: any) => (next: any) => (
-  action: Action<any>,
-) => {
-  console.log("Dispatching: ", action.type);
-  const dispatchedAction = next(action);
-  console.log("NEW STATE: ", store.getState());
-  return dispatchedAction;
-};
+const loggerMiddleware =
+  (storeVal: any) => (next: any) => (action: Action<any>) => {
+    console.log("Dispatching: ", action.type);
+    const dispatchedAction = next(action);
+    console.log("NEW STATE: ", storeVal.getState());
+    return dispatchedAction;
+  };
 
 const isSerializable = (value: any) =>
   BigNumber.isBigNumber(value) || isPlain(value);

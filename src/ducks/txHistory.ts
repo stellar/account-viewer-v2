@@ -15,7 +15,7 @@ let txHistoryWatcherStopper: any;
 
 export const fetchTxHistoryAction = createAsyncThunk<
   {
-    data: Array<Types.Payment>;
+    data: Types.Payment[];
     hasMoreTxs: boolean;
   },
   string,
@@ -30,7 +30,7 @@ export const fetchTxHistoryAction = createAsyncThunk<
       accountOrKey: publicKey,
       networkPassphrase: getNetworkConfig(isTestnet).network,
     });
-    let data: Array<Types.Payment> | null = null;
+    let data: Types.Payment[] | null = null;
     let hasMoreTxs = false;
 
     try {
