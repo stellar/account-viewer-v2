@@ -87,7 +87,6 @@
     "@types/react-router-dom": "^5.1.5",
     "@types/redux": "^3.6.0",
     "@types/styled-components": "^5.1.10",
-    "@types/trezor-connect": "^8.1.18",
     "concurrently": "^6.2.0",
     "eslint": "^7.29.0",
     "eslint-config-prettier": "^8.3.0",

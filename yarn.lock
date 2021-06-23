@@ -2186,13 +2186,6 @@
   dependencies:
     "@types/jest" "*"
 
-"@types/trezor-connect@^8.1.18":
-  version "8.1.18"
-  resolved "https://registry.yarnpkg.com/@types/trezor-connect/-/trezor-connect-8.1.18.tgz#f9758bc38c6867e1be2775de67503b5191f97823"
-  integrity sha512-S9xOlvUXc3rfLI4hwm5lVWHX0C1ts3VNHT3N7oemKH7XeQ14sOiXPn9sWAb1P3sIIEybhCFl+trLO8izGaMatw==
-  dependencies:
-    trezor-connect "*"
-
 "@types/uglify-js@*":
   version "3.12.0"
   resolved "https://registry.yarnpkg.com/@types/uglify-js/-/uglify-js-3.12.0.tgz#2bb061c269441620d46b946350c8f16d52ef37c5"
@@ -12380,19 +12373,19 @@ tree-kill@^1.2.2:
   resolved "https://registry.yarnpkg.com/tree-kill/-/tree-kill-1.2.2.tgz#4ca09a9092c88b73a7cdc5e8a01b507b0790a0cc"
   integrity sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==
 
-trezor-connect@*, trezor-connect@^8.1.27:
-  version "8.1.27"
-  resolved "https://registry.yarnpkg.com/trezor-connect/-/trezor-connect-8.1.27.tgz#7e45839d26e4c859a3ddd69213e8c7f00ba5525e"
-  integrity sha512-U6vP8kehQ5enCTY0k01R6jR3EORC+GIzTl4pM80lu9gJB5e988sM5YwK1hED6KZx7LJvFjWuOxB2J3W0pwv7lw==
+trezor-connect@^8.1.16:
+  version "8.1.22"
+  resolved "https://registry.yarnpkg.com/trezor-connect/-/trezor-connect-8.1.22.tgz#a6b713c621fb9a108827a2b51253dd6baf05a7a1"
+  integrity sha512-majbYoNlUqNG6AncdXiOdyF02SS73rWkel1of4qHK1T1bNp92cIq8yZMoWXxil3p2b45qs5PA8pK1TBexZCQ9g==
   dependencies:
     "@babel/runtime" "^7.12.5"
     events "^3.2.0"
     whatwg-fetch "^3.5.0"
 
-trezor-connect@^8.1.16:
-  version "8.1.22"
-  resolved "https://registry.yarnpkg.com/trezor-connect/-/trezor-connect-8.1.22.tgz#a6b713c621fb9a108827a2b51253dd6baf05a7a1"
-  integrity sha512-majbYoNlUqNG6AncdXiOdyF02SS73rWkel1of4qHK1T1bNp92cIq8yZMoWXxil3p2b45qs5PA8pK1TBexZCQ9g==
+trezor-connect@^8.1.27:
+  version "8.1.27"
+  resolved "https://registry.yarnpkg.com/trezor-connect/-/trezor-connect-8.1.27.tgz#7e45839d26e4c859a3ddd69213e8c7f00ba5525e"
+  integrity sha512-U6vP8kehQ5enCTY0k01R6jR3EORC+GIzTl4pM80lu9gJB5e988sM5YwK1hED6KZx7LJvFjWuOxB2J3W0pwv7lw==
   dependencies:
     "@babel/runtime" "^7.12.5"
     events "^3.2.0"

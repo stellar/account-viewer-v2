@@ -71,7 +71,7 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
           storeKeyAction({
             publicKey: trezorData.publicKey,
             keyType: KeyType.trezor,
-            custom: trezorManifest,
+            custom: { ...trezorManifest, bipPath },
           }),
         );
         logEvent("login: connected with trezor");
@@ -89,6 +89,7 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
     setErrorMessage,
     trezorErrorMessage,
     trezorManifest,
+    bipPath,
   ]);
 
   useEffect(() => {
