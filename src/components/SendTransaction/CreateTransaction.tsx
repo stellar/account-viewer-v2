@@ -96,6 +96,9 @@ const CongestionEl = styled.span<{ congestion: NetworkCongestion }>`
 
 const isFederationAddress = (value: string) => value.includes("*");
 
+const isValidMAccount = (value: string) =>
+  value.startsWith("M") && value.length === 69;
+
 enum SendFormIds {
   SEND_TO = "send-to",
   SEND_AMOUNT = "send-amount",
@@ -319,10 +322,11 @@ export const CreateTransaction = ({
           message = "Please enter a valid Stellar or Federated address";
         } else if (
           !isFederationAddress(toAccountId) &&
+          !isValidMAccount(toAccountId) &&
           !StrKey.isValidEd25519PublicKey(toAccountId)
         ) {
           message =
-            'Stellar address or public key is invalid. Public keys are uppercase and begin with letter "G."';
+            'Stellar address or public key is invalid. Public keys are uppercase and begin with letter "G" or "M."';
         }
 
         errors[SendFormIds.SEND_TO] = message;
