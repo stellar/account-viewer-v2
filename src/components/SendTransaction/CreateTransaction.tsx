@@ -25,6 +25,7 @@ import { InlineLoaderWithText } from "components/InlineLoaderWithText";
 import { ModalContent } from "components/ModalContent";
 import { buildPaymentTransaction } from "helpers/buildPaymentTransaction";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
+import { isValidMAccount } from "helpers/isValidMAccount";
 import { lumensFromStroops, stroopsFromLumens } from "helpers/stroopConversion";
 import { logEvent } from "helpers/tracking";
 import { useRedux } from "hooks/useRedux";
@@ -95,9 +96,6 @@ const CongestionEl = styled.span<{ congestion: NetworkCongestion }>`
 `;
 
 const isFederationAddress = (value: string) => value.includes("*");
-
-const isValidMAccount = (value: string) =>
-  value.startsWith("M") && value.length === 69;
 
 enum SendFormIds {
   SEND_TO = "send-to",
