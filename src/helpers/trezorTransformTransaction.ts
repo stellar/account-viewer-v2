@@ -104,7 +104,9 @@ const transformTimebounds = (
       }
     | undefined,
 ) => {
-  if (!timebounds) return undefined;
+  if (!timebounds) {
+    return undefined;
+  }
   // those values are defined in Trezor firmware messages as numbers
   return {
     minTime: Number.parseInt(timebounds.minTime, 10),
