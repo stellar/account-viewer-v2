@@ -28,6 +28,8 @@ export const signTrezorTransaction = async (
 
   const bipPath = custom.bipPath || "44'/148'/0'";
   const trezorParams = transformTransaction(`m/${bipPath}`, transaction);
+  // @ts-ignore
+  // Trezor memo returns number for type
   const response = await TrezorConnect.stellarSignTransaction(trezorParams);
 
   if (response.success) {
