@@ -25,6 +25,7 @@ import { InlineLoaderWithText } from "components/InlineLoaderWithText";
 import { ModalContent } from "components/ModalContent";
 import { buildPaymentTransaction } from "helpers/buildPaymentTransaction";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
+import { isValidMAccount } from "helpers/isValidMAccount";
 import { lumensFromStroops, stroopsFromLumens } from "helpers/stroopConversion";
 import { logEvent } from "helpers/tracking";
 import { useRedux } from "hooks/useRedux";
@@ -319,10 +320,11 @@ export const CreateTransaction = ({
           message = "Please enter a valid Stellar or Federated address";
         } else if (
           !isFederationAddress(toAccountId) &&
+          !isValidMAccount(toAccountId) &&
           !StrKey.isValidEd25519PublicKey(toAccountId)
         ) {
           message =
-            'Stellar address or public key is invalid. Public keys are uppercase and begin with letter "G."';
+            'Stellar address or public key is invalid. Public keys are uppercase and begin with letter "G" or "M."';
         }
 
         errors[SendFormIds.SEND_TO] = message;
