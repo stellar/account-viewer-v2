@@ -10,13 +10,9 @@ import StellarSdk, {
 import BigNumber from "bignumber.js";
 import {
   Button,
-  ButtonVariant,
   InfoBlock,
-  InfoBlockVariant,
   Input,
   Select,
-  TextButton,
-  TextButtonVariant,
   TextLink,
 } from "@stellar/design-system";
 
@@ -500,7 +496,7 @@ export const CreateTransaction = ({
           <Button
             disabled={txInProgress}
             onClick={onCancel}
-            variant={ButtonVariant.secondary}
+            variant={Button.variant.secondary}
           >
             Cancel
           </Button>
@@ -588,7 +584,7 @@ export const CreateTransaction = ({
 
       {federationAddress && (
         <RowEl>
-          <InfoBlock variant={InfoBlockVariant.info}>
+          <InfoBlock variant={InfoBlock.variant.info}>
             <p>
               Federation Address: {toAccountId}
               <br />
@@ -600,7 +596,7 @@ export const CreateTransaction = ({
 
       {federationAddressError && (
         <RowEl>
-          <InfoBlock variant={InfoBlockVariant.error}>
+          <InfoBlock variant={InfoBlock.variant.error}>
             <p>{federationAddressError}</p>
           </InfoBlock>
         </RowEl>
@@ -613,7 +609,7 @@ export const CreateTransaction = ({
       )}
       {isAccountMalicious && (
         <RowEl>
-          <InfoBlock variant={InfoBlockVariant.error}>
+          <InfoBlock variant={InfoBlock.variant.error}>
             <p>
               The account you’re sending to is tagged as{" "}
               <strong>#malicious</strong> on{" "}
@@ -655,7 +651,7 @@ export const CreateTransaction = ({
 
       {Boolean(knownAccount) && (
         <RowEl>
-          <InfoBlock variant={InfoBlockVariant.warning}>
+          <InfoBlock variant={InfoBlock.variant.warning}>
             <p>
               The payment destination ({knownAccount.name}) requires you to
               specify a memo to identify your account.{" "}
@@ -673,15 +669,17 @@ export const CreateTransaction = ({
 
       {!isMemoVisible && (
         <RowEl>
-          <TextButton
-            variant={TextButtonVariant.secondary}
+          <TextLink
+            role="button"
+            variant={TextLink.variant.secondary}
+            underline
             onClick={() => {
               setMemoType(StellarSdk.MemoText);
               setIsMemoVisible(true);
             }}
           >
             Add memo
-          </TextButton>
+          </TextLink>
         </RowEl>
       )}
 
@@ -744,8 +742,10 @@ export const CreateTransaction = ({
 
           {!isMemoContentFromFederation && !knownAccount && (
             <RowEl>
-              <TextButton
-                variant={TextButtonVariant.secondary}
+              <TextLink
+                role="button"
+                variant={TextLink.variant.secondary}
+                underline
                 onClick={() => {
                   clearInputError(SendFormIds.SEND_MEMO_CONTENT);
                   setMemoType(StellarSdk.MemoNone);
@@ -754,7 +754,7 @@ export const CreateTransaction = ({
                 }}
               >
                 Remove memo
-              </TextButton>
+              </TextLink>
             </RowEl>
           )}
         </>

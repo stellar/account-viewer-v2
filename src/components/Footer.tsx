@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { TextLink, TextLinkVariant } from "@stellar/design-system";
+import { TextLink } from "@stellar/design-system";
 import {
   FOOTER_HEIGHT_REM,
   FOOTER_VERTICAL_PADDING_REM,
@@ -31,7 +31,7 @@ export const Footer = () => (
         href="https://www.stellar.org/terms-of-service"
         rel="noreferrer"
         target="_blank"
-        variant={TextLinkVariant.secondary}
+        variant={TextLink.variant.secondary}
       >
         Terms of Service
       </TextLink>
@@ -40,7 +40,7 @@ export const Footer = () => (
         href="https://www.stellar.org/privacy-policy"
         rel="noreferrer"
         target="_blank"
-        variant={TextLinkVariant.secondary}
+        variant={TextLink.variant.secondary}
       >
         Privacy Policy
       </TextLink>

@@ -5,10 +5,8 @@ import styled from "styled-components";
 import { Keypair } from "stellar-sdk";
 import {
   Button,
-  ButtonVariant,
   Heading4,
   InfoBlock,
-  InfoBlockVariant,
   Input,
   TextLink,
 } from "@stellar/design-system";
@@ -150,13 +148,13 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
                 I understand and accept the risks of entering my secret key
               </Button>
 
-              <Button onClick={onClose} variant={ButtonVariant.secondary}>
+              <Button onClick={onClose} variant={Button.variant.secondary}>
                 Cancel
               </Button>
             </>
           }
         >
-          <InfoBlock variant={InfoBlockVariant.error}>
+          <InfoBlock variant={InfoBlock.variant.error}>
             <Heading4>
               ATTENTION: Entering your secret key on any website is not
               recommended

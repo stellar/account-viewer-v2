@@ -3,12 +3,10 @@ import styled from "styled-components";
 import { Keypair } from "stellar-sdk";
 import {
   Button,
-  ButtonVariant,
   Checkbox,
   Heading4,
   InfoBlock,
-  InfoBlockVariant,
-  TextButton,
+  TextLink,
 } from "@stellar/design-system";
 
 import { ReactComponent as IconCopy } from "assets/svg/icon-copy.svg";
@@ -158,13 +156,13 @@ ${keypair.secret()}`);
           buttonFooter={
             <>
               <Button onClick={handleContinue}>Continue</Button>
-              <Button onClick={handleClose} variant={ButtonVariant.secondary}>
+              <Button onClick={handleClose} variant={Button.variant.secondary}>
                 Cancel
               </Button>
             </>
           }
         >
-          <InfoBlock variant={InfoBlockVariant.error}>
+          <InfoBlock variant={InfoBlock.variant.error}>
             <Heading4>ATTENTION: Secret key wallets are not safe:</Heading4>
 
             <ul>
@@ -199,7 +197,7 @@ ${keypair.secret()}`);
             </ButtonsWrapperEl>
           }
         >
-          <InfoBlock variant={InfoBlockVariant.error}>
+          <InfoBlock variant={InfoBlock.variant.error}>
             <Heading4>ATTENTION:</Heading4>
 
             <ul>
@@ -253,7 +251,7 @@ ${keypair.secret()}`);
                   tooltipPosition={TooltipPosition.right}
                 >
                   <CopyButtonEl>
-                    <TextButton icon={<IconCopy />}>Copy keys</TextButton>
+                    <TextLink iconLeft={<IconCopy />}>Copy keys</TextLink>
                   </CopyButtonEl>
                 </CopyWithTooltip>
               </CopyWrapperEl>

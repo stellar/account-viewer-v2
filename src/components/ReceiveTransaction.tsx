@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import QRCode from "qrcode.react";
-import { TextButton } from "@stellar/design-system";
+import { TextLink } from "@stellar/design-system";
 
 import { ReactComponent as IconCopy } from "assets/svg/icon-copy.svg";
 
@@ -74,7 +74,7 @@ export const ReceiveTransaction = () => {
           copyText={accountId}
           tooltipPosition={TooltipPosition.right}
         >
-          <TextButton icon={<IconCopy />}>Copy public key</TextButton>
+          <TextLink iconLeft={<IconCopy />}>Copy public key</TextLink>
         </CopyWithTooltip>
       </ContentWrapperEl>
     </ModalContent>

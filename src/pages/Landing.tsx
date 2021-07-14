@@ -1,12 +1,7 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
-import {
-  Heading1,
-  TextButton,
-  TextButtonVariant,
-  TextLink,
-} from "@stellar/design-system";
+import { Heading1, TextLink } from "@stellar/design-system";
 
 import { Modal } from "components/Modal";
 import { NewKeyPairForm } from "components/NewKeyPairForm";
@@ -153,19 +148,21 @@ export const Landing = () => {
       </WalletButtonsWrapperEl>
 
       <ButtonsWrapperEl>
-        <TextButton
+        <TextLink
+          role="button"
           onClick={() => openModal(ModalType.SIGNIN_SECRET_KEY)}
-          variant={TextButtonVariant.secondary}
+          variant={TextLink.variant.secondary}
         >
           Connect with a secret key
-        </TextButton>
+        </TextLink>
 
-        <TextButton
+        <TextLink
+          role="button"
           onClick={() => openModal(ModalType.NEW_KEY_PAIR)}
-          variant={TextButtonVariant.secondary}
+          variant={TextLink.variant.secondary}
         >
           Generate key pair for a new account
-        </TextButton>
+        </TextLink>
       </ButtonsWrapperEl>
 
       <Modal visible={activeModal !== null} onClose={closeModal}>

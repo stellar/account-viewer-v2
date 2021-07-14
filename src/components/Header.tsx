@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { ProjectLogo, TextButton } from "@stellar/design-system";
+import { ProjectLogo, TextLink } from "@stellar/design-system";
 
 import { ReactComponent as IconCopy } from "assets/svg/icon-copy.svg";
 import { resetStoreAction } from "config/store";
@@ -137,7 +137,9 @@ export const Header = () => {
               </CopyWithTooltip>
             </AccountWrapperEl>
             <SignOutWrapperEl>
-              <TextButton onClick={handleSignOut}>Sign out</TextButton>
+              <TextLink role="button" onClick={handleSignOut}>
+                Sign out
+              </TextLink>
             </SignOutWrapperEl>
           </>
         )}
