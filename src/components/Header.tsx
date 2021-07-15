@@ -102,7 +102,11 @@ export const Header = () => {
   };
 
   return (
-    <Layout.Header projectTitle="Account Viewer" hasDarkModeToggle>
+    <Layout.Header
+      projectTitle="Account Viewer"
+      projectLink="https://stellar.org"
+      hasDarkModeToggle
+    >
       {isAuthenticated && account.data && (
         <>
           <AccountWrapperEl>
