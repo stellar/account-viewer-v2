@@ -80,15 +80,17 @@ const transformType = (type: string) => {
 const transformMemo = (memo: { type: MemoType; value: MemoValue }) => {
   switch (memo.type) {
     case StellarSdk.MemoText:
-      return StellarSdk.Memo.text(memo.value);
+      return { type: 1, text: memo.value };
     case StellarSdk.MemoID:
-      return StellarSdk.Memo.id(memo.value);
+      return { type: 2, id: memo.value };
     case StellarSdk.MemoHash:
-      return StellarSdk.Memo.hash(memo.value);
+      // stringify is not necessary, Buffer is also accepted
+      return { type: 3, hash: memo.value?.toString("hex") };
     case StellarSdk.MemoReturn:
-      return StellarSdk.Memo.return(memo.value);
+      // stringify is not necessary, Buffer is also accepted
+      return { type: 4, hash: memo.value?.toString("hex") };
     default:
-      return StellarSdk.Memo.none();
+      return { type: 0 };
   }
 };
 
@@ -104,7 +106,9 @@ const transformTimebounds = (
       }
     | undefined,
 ) => {
-  if (!timebounds) return undefined;
+  if (!timebounds) {
+    return undefined;
+  }
   // those values are defined in Trezor firmware messages as numbers
   return {
     minTime: Number.parseInt(timebounds.minTime, 10),
