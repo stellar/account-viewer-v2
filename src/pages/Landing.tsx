@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { Heading1, TextLink } from "@stellar/design-system";
+import { Heading1, TextLink, Modal } from "@stellar/design-system";
 
-import { Modal } from "components/Modal";
 import { NewKeyPairForm } from "components/NewKeyPairForm";
 import { SignInAlbedoForm } from "components/SignIn/SignInAlbedoForm";
 import { SignInLedgerForm } from "components/SignIn/SignInLedgerForm";
@@ -86,7 +85,7 @@ export const Landing = () => {
             <WalletButton
               key={walletKey}
               onClick={() => openModal(wallet.modalType)}
-              imageSrc={wallet.logoImg}
+              imageSvg={wallet.logoSvg}
               imageAlt={wallet.logoImgAltText}
               infoText={
                 <>
