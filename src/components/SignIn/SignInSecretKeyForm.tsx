@@ -10,6 +10,7 @@ import {
   Input,
   TextLink,
   Modal,
+  Checkbox,
 } from "@stellar/design-system";
 import { KeyType } from "@stellar/wallet-sdk";
 
@@ -45,6 +46,7 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
   const { account } = useRedux("account");
   const { status, isAuthenticated, errorString, data } = account;
   const accountId = data?.id;
+  const [showSecretKeyView, setShowSecretKeyView] = useState(false);
   const [acceptedWarning, setAcceptedWarning] = useState(false);
   const [secretKey, setSecretKey] = useState("");
   const { errorMessage, setErrorMessage } = useErrorMessage({
@@ -139,7 +141,7 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
   return (
     <>
       {/* Show warning message */}
-      {!acceptedWarning && (
+      {!showSecretKeyView && (
         <>
           <Modal.Heading>Connect with a secret key</Modal.Heading>
 
@@ -174,11 +176,20 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
                 </li>
               </ul>
             </InfoBlock>
+
+            <Checkbox
+              id="secret-key-accept"
+              label="I understand and accept the risks of entering my secret key."
+              onChange={() => setAcceptedWarning(!acceptedWarning)}
+            />
           </Modal.Body>
 
           <Modal.Footer>
-            <Button onClick={() => setAcceptedWarning(true)}>
-              I understand and accept the risks of entering my secret key
+            <Button
+              disabled={!acceptedWarning}
+              onClick={() => setShowSecretKeyView(true)}
+            >
+              Continue
             </Button>
 
             <Button onClick={onClose} variant={Button.variant.secondary}>
@@ -189,7 +200,7 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
       )}
 
       {/* Show Enter secret key */}
-      {acceptedWarning && (
+      {showSecretKeyView && (
         <>
           <Modal.Heading>Connect with a secret key</Modal.Heading>
 
