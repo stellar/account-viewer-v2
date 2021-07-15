@@ -5,7 +5,7 @@ import { TextLink } from "@stellar/design-system";
 import { ReactComponent as IconCopy } from "assets/svg/icon-copy.svg";
 
 import { Avatar } from "components/Avatar";
-import { CopyWithTooltip, TooltipPosition } from "components/CopyWithTooltip";
+import { CopyWithTooltip } from "components/CopyWithTooltip";
 import { ModalContent } from "components/ModalContent";
 import { FONT_WEIGHT, PALETTE } from "constants/styles";
 import { useRedux } from "hooks/useRedux";
@@ -72,7 +72,7 @@ export const ReceiveTransaction = () => {
 
         <CopyWithTooltip
           copyText={accountId}
-          tooltipPosition={TooltipPosition.right}
+          tooltipPosition={CopyWithTooltip.tooltipPosition.right}
         >
           <TextLink iconLeft={<IconCopy />}>Copy public key</TextLink>
         </CopyWithTooltip>

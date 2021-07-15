@@ -13,12 +13,12 @@ export const KeyPairWithLabels: React.FC<KeyPairWithLabelsProps> = ({
   <div className="KeyPairWithLabels">
     <div className="KeyPairWithLabels-wrapper">
       <label>Public key</label>
-      <code>{publicKey}</code>
+      <code data-break>{publicKey}</code>
     </div>
 
     <div className="KeyPairWithLabels-wrapper">
       <label>Secret key</label>
-      <code>{secretKey}</code>
+      <code data-break>{secretKey}</code>
     </div>
   </div>
 );

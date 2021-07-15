@@ -10,7 +10,7 @@ import {
   Icon,
 } from "@stellar/design-system";
 
-import { CopyWithTooltip, TooltipPosition } from "components/CopyWithTooltip";
+import { CopyWithTooltip } from "components/CopyWithTooltip";
 import { ErrorMessage } from "components/ErrorMessage";
 import { KeyPairWithLabels } from "components/KeyPairWithLabels";
 
@@ -164,10 +164,10 @@ ${keypair.secret()}`);
                   secretKey={newKeyPair.secretKey}
                 />
 
-                <div>
+                <div className="CopyKey-container">
                   <CopyWithTooltip
                     copyText={keyPairCopyString}
-                    tooltipPosition={TooltipPosition.right}
+                    tooltipPosition={CopyWithTooltip.tooltipPosition.right}
                   >
                     <TextLink iconLeft={<Icon.Copy />}>Copy keys</TextLink>
                   </CopyWithTooltip>
@@ -175,7 +175,7 @@ ${keypair.secret()}`);
               </>
             )}
 
-            <ErrorMessage message={errorMessage} marginTop="1.5rem" />
+            <ErrorMessage message={errorMessage} marginBottom="1.5rem" />
 
             <Checkbox
               id="confirmSavedSecretKey"
