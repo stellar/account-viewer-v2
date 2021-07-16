@@ -1,0 +1,11 @@
+.InfoButtonWithTooltip {
+  &__tooltip {
+    --InfoButtonWithTooltip-visibility: "hidden";
+
+    visibility: var(--InfoButtonWithTooltip-visibility);
+    top: 2.7rem;
+    right: -0.5rem;
+    // TODO: handle specificity from main styles.scss
+    padding: 1rem 1.5rem !important;
+  }
+}

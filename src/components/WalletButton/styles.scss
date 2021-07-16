@@ -5,17 +5,25 @@
   position: relative;
   min-width: 250px;
 
-  button {
+  &__button {
     flex: 1;
     border: 1px solid var(--pal-border-primary);
     border-radius: 0.25rem;
     background-color: var(--pal-background-primary);
     padding: 0.75rem;
+    margin-right: 0.875rem;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    transition: border-color var(--anim-transition-default);
+
+    @media (hover: hover) {
+      &:hover {
+        border-color: var(--pal-border-secondary);
+      }
+    }
 
     svg {
       height: 1.5rem;
@@ -25,7 +33,7 @@
     }
   }
 
-  span {
+  &__label {
     font-size: 1rem;
     line-height: 1.5rem;
     color: var(--pal-text-primary);
