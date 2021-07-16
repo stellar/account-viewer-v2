@@ -7,7 +7,7 @@ import { KeyType } from "@stellar/wallet-sdk";
 
 import { BipPathInput } from "components/BipPathInput";
 import { ErrorMessage } from "components/ErrorMessage";
-import { ModalWalletContent } from "components/ModalWalletContent";
+import { WalletModalContent } from "components/WalletModalContent";
 
 import { defaultStellarBipPath } from "constants/settings";
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
@@ -117,7 +117,7 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
   ]);
 
   return (
-    <ModalWalletContent
+    <WalletModalContent
       type="trezor"
       buttonFooter={
         <>
@@ -148,6 +148,6 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
         value={bipPath}
         onValueChange={(val) => setBipPath(val)}
       />
-    </ModalWalletContent>
+    </WalletModalContent>
   );
 };

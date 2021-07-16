@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { Button, InfoBlock } from "@stellar/design-system";
 import { KeyType } from "@stellar/wallet-sdk";
 
-import { ModalWalletContent } from "components/ModalWalletContent";
+import { WalletModalContent } from "components/WalletModalContent";
 import { ErrorMessage } from "components/ErrorMessage";
 
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
@@ -103,7 +103,7 @@ export const SignInFreighterForm = ({ onClose }: ModalPageProps) => {
     : "To use Freighter, please download or enable Freighter browser extension wallet.";
 
   return (
-    <ModalWalletContent
+    <WalletModalContent
       type="freighter"
       buttonFooter={
         <>
@@ -131,6 +131,6 @@ export const SignInFreighterForm = ({ onClose }: ModalPageProps) => {
         textAlign="center"
         marginTop="1rem"
       />
-    </ModalWalletContent>
+    </WalletModalContent>
   );
 };

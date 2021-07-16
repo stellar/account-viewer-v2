@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { Button, InfoBlock } from "@stellar/design-system";
 import { KeyType } from "@stellar/wallet-sdk";
 
-import { ModalWalletContent } from "components/ModalWalletContent";
+import { WalletModalContent } from "components/WalletModalContent";
 import { ErrorMessage } from "components/ErrorMessage";
 
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
@@ -91,7 +91,7 @@ export const SignInAlbedoForm = ({ onClose }: ModalPageProps) => {
   ]);
 
   return (
-    <ModalWalletContent
+    <WalletModalContent
       type="albedo"
       buttonFooter={
         <>
@@ -117,6 +117,6 @@ export const SignInAlbedoForm = ({ onClose }: ModalPageProps) => {
       )}
 
       <ErrorMessage message={errorMessage} textAlign="center" />
-    </ModalWalletContent>
+    </WalletModalContent>
   );
 };

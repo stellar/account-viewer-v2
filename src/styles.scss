@@ -1,3 +1,8 @@
+// Generic styles
+.align--center {
+  text-align: center;
+}
+
 .Landing-container {
   padding-top: 4rem;
   display: flex;
@@ -50,4 +55,22 @@
 .CopyKey-container {
   margin-top: 2.5rem !important;
   margin-bottom: 2rem !important;
+}
+
+.Tooltip {
+  padding: 0.5rem 1rem;
+  background-color: var(--pal-brand-primary);
+  position: absolute;
+  max-width: 16.875rem;
+  border-radius: 0.125rem;
+  color: var(--pal-brand-primary-on);
+  font-size: var(--font-size-secondary);
+  line-height: 1.5em;
+  z-index: var(--z-index-tooltip);
+  cursor: default;
+
+  a {
+    color: inherit;
+    white-space: nowrap;
+  }
 }

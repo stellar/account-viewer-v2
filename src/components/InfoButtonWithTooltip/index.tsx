@@ -1,37 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
-import styled from "styled-components";
-import { PALETTE, tooltipStyle } from "constants/styles";
-import { ReactComponent as InfoIcon } from "assets/svg/icon-info.svg";
+import React, { useRef, useEffect, useState } from "react";
+import { IconButton, Icon } from "@stellar/design-system";
+import "./styles.scss";
 
-const InfoButtonEl = styled.div`
-  cursor: pointer;
-  width: 1.25rem;
-  height: 1.25rem;
-  margin-left: 0.875rem;
-
-  svg {
-    width: 100%;
-    height: 100%;
-    fill: ${PALETTE.grey};
-  }
-`;
-
-const InfoEl = styled.div<{ isVisible: boolean }>`
-  ${tooltipStyle};
-  visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
-
-  a {
-    color: inherit;
-    white-space: nowrap;
-  }
-`;
-
-export const InfoButtonWithTooltip = ({
-  children,
-}: {
+interface InfoButtonWithTooltipProps {
   children: string | React.ReactNode;
+}
+
+export const InfoButtonWithTooltip: React.FC<InfoButtonWithTooltipProps> = ({
+  children,
 }) => {
-  const toggleEl = useRef<null | HTMLDivElement>(null);
   const infoEl = useRef<null | HTMLDivElement>(null);
   const [isInfoVisible, setIsInfoVisible] = useState(false);
 
@@ -56,27 +33,33 @@ export const InfoButtonWithTooltip = ({
       return;
     }
 
-    if (!toggleEl?.current?.contains(event.target as Node)) {
+    const parent = infoEl?.current?.closest(".WalletButton");
+
+    if (!parent?.contains(event.target as Node)) {
       setIsInfoVisible(false);
     }
   };
 
+  const customStyle = {
+    "--InfoButtonWithTooltip-visibility": isInfoVisible ? "visible" : "hidden",
+  } as React.CSSProperties;
+
   return (
     <>
-      <InfoButtonEl
-        ref={toggleEl}
+      <IconButton
+        icon={<Icon.Info />}
+        altText="View more information"
         onClick={() => setIsInfoVisible((currentState) => !currentState)}
-      >
-        <InfoIcon />
-      </InfoButtonEl>
+      />
 
-      <InfoEl
+      <div
+        className="Tooltip InfoButtonWithTooltip__tooltip"
+        style={customStyle}
         ref={infoEl}
         data-hidden={!isInfoVisible}
-        isVisible={isInfoVisible}
       >
         {children}
-      </InfoEl>
+      </div>
     </>
   );
 };
