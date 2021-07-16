@@ -19,9 +19,9 @@ export const WalletButton: React.FC<WalletButtonProps> = ({
   ...props
 }) => (
   <div className="WalletButton">
-    <button onClick={onClick} {...props}>
+    <button className="WalletButton__button" onClick={onClick} {...props}>
       {renderSvg({ Component: imageSvg, alt: imageAlt })}
-      <span>{children}</span>
+      <span className="WalletButton__label">{children}</span>
     </button>
 
     <InfoButtonWithTooltip>{infoText}</InfoButtonWithTooltip>
