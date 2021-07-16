@@ -8,7 +8,7 @@ import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 
 import { BipPathInput } from "components/BipPathInput";
 import { ErrorMessage } from "components/ErrorMessage";
-import { ModalWalletContent } from "components/ModalWalletContent";
+import { WalletModalContent } from "components/WalletModalContent";
 
 import { defaultStellarBipPath } from "constants/settings";
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
@@ -120,7 +120,7 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
   };
 
   return (
-    <ModalWalletContent
+    <WalletModalContent
       type="ledger"
       buttonFooter={
         <>
@@ -180,6 +180,6 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
         value={ledgerBipPath}
         onValueChange={(val) => setLedgerBipPath(val)}
       />
-    </ModalWalletContent>
+    </WalletModalContent>
   );
 };
