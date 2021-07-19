@@ -22,19 +22,17 @@ export const App = () => (
           <Header />
 
           <Layout.Content>
-            <Layout.Inset>
-              <Switch>
-                <Route exact path="/">
-                  <Landing />
-                </Route>
+            <Switch>
+              <Route exact path="/">
+                <Landing />
+              </Route>
 
-                <PrivateRoute exact path="/dashboard">
-                  <Dashboard />
-                </PrivateRoute>
+              <PrivateRoute exact path="/dashboard">
+                <Dashboard />
+              </PrivateRoute>
 
-                <Route component={NotFound} />
-              </Switch>
-            </Layout.Inset>
+              <Route component={NotFound} />
+            </Switch>
           </Layout.Content>
 
           <Layout.Footer gitHubLink="https://github.com/stellar/account-viewer-v2" />
