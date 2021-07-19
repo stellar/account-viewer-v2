@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import styled, { css } from "styled-components";
 import { DataProvider } from "@stellar/wallet-sdk";
 import StellarSdk, {
   Memo,
@@ -14,11 +13,11 @@ import {
   Input,
   Select,
   TextLink,
+  Modal,
 } from "@stellar/design-system";
 
 import { ErrorMessage } from "components/ErrorMessage";
-import { InlineLoaderWithText } from "components/InlineLoaderWithText";
-import { ModalContent } from "components/ModalContent";
+import { LayoutRow } from "components/LayoutRow";
 import { buildPaymentTransaction } from "helpers/buildPaymentTransaction";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { isValidMAccount } from "helpers/isValidMAccount";
@@ -30,66 +29,9 @@ import {
   NetworkCongestion,
   PaymentFormData,
 } from "types/types.d";
-import { PALETTE } from "constants/styles";
 
 import { getErrorString } from "helpers/getErrorString";
 import { AccountIsUnsafe } from "./WarningMessages/AccountIsUnsafe";
-
-const RowEl = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-
-  &:not(:last-child) {
-    margin-bottom: 1.5rem;
-  }
-
-  button {
-    margin-top: -0.5rem;
-    margin-bottom: -0.5rem;
-  }
-`;
-
-const CellEl = styled.div`
-  width: 100%;
-
-  &:nth-child(2) {
-    margin-top: 1.5rem;
-  }
-
-  @media (min-width: 600px) {
-    width: calc(50% - 0.75rem);
-
-    &:nth-child(2) {
-      margin-top: 0;
-    }
-  }
-`;
-
-const CongestionEl = styled.span<{ congestion: NetworkCongestion }>`
-  strong {
-    ${(props) =>
-      props.congestion === NetworkCongestion.LOW
-        ? css`
-            color: ${PALETTE.green};
-          `
-        : ""}
-
-    ${(props) =>
-      props.congestion === NetworkCongestion.MEDIUM
-        ? css`
-            color: ${PALETTE.orange};
-          `
-        : ""}
-
-    ${(props) =>
-      props.congestion === NetworkCongestion.HIGH
-        ? css`
-            color: ${PALETTE.red};
-          `
-        : ""}
-  }
-`;
 
 const isFederationAddress = (value: string) => value.includes("*");
 
@@ -485,107 +427,84 @@ export const CreateTransaction = ({
   };
 
   return (
-    <ModalContent
-      headlineText="Send Lumens"
-      buttonFooter={
-        <>
-          <Button
-            disabled={txInProgress || isAccountMalicious}
-            onClick={onSubmit}
-          >
-            Continue
-          </Button>
-          <Button
-            disabled={txInProgress}
-            onClick={onCancel}
-            variant={Button.variant.secondary}
-          >
-            Cancel
-          </Button>
-        </>
-      }
-      footer={
-        <InlineLoaderWithText visible={txInProgress}>
-          Validating transaction.
-        </InlineLoaderWithText>
-      }
-    >
-      <RowEl>
-        <Input
-          id={SendFormIds.SEND_TO}
-          label="Sending To"
-          type="text"
-          onChange={(e) => {
-            // Touched means that the address was modified. If it was changed
-            // back to the initial value, we still want to make all checks
-            // again.
-            setIsAccountIdTouched(true);
+    <>
+      <Modal.Heading>Send Lumens</Modal.Heading>
 
-            // Clear previous messages
-            setIsAccountFunded(true);
-            setFederationAddress(undefined);
-            setFederationAddressError("");
+      <Modal.Body>
+        <LayoutRow isFullWidth>
+          <Input
+            id={SendFormIds.SEND_TO}
+            label="Sending To"
+            type="text"
+            onChange={(e) => {
+              // Touched means that the address was modified. If it was changed
+              // back to the initial value, we still want to make all checks
+              // again.
+              setIsAccountIdTouched(true);
 
-            setToAccountId(e.target.value);
+              // Clear previous messages
+              setIsAccountFunded(true);
+              setFederationAddress(undefined);
+              setFederationAddressError("");
 
-            if (federationAddressFetchStatus) {
-              setFederationAddressFetchStatus(null);
-            }
+              setToAccountId(e.target.value);
 
-            // Reset memo whenever a new known account is found or previous
-            // address was a known account.
-            if (
-              knownMemoAccounts[e.target.value] ||
-              knownMemoAccounts[prevAddress]
-            ) {
-              setMemoType(StellarSdk.MemoText);
-              setMemoContent("");
-            }
+              if (federationAddressFetchStatus) {
+                setFederationAddressFetchStatus(null);
+              }
 
-            // Reset federation fields whenever the address change.
-            if (isMemoTypeFromFederation || isMemoContentFromFederation) {
-              setIsMemoTypeFromFederation(false);
-              setIsMemoContentFromFederation(false);
-            }
+              // Reset memo whenever a new known account is found or previous
+              // address was a known account.
+              if (
+                knownMemoAccounts[e.target.value] ||
+                knownMemoAccounts[prevAddress]
+              ) {
+                setMemoType(StellarSdk.MemoText);
+                setMemoContent("");
+              }
 
-            // Reset all errors (to make sure unfunded account error is cleared)
-            setInputErrors(initialInputErrors);
+              // Reset federation fields whenever the address change.
+              if (isMemoTypeFromFederation || isMemoContentFromFederation) {
+                setIsMemoTypeFromFederation(false);
+                setIsMemoContentFromFederation(false);
+              }
 
-            resetAccountIsFlagged();
-          }}
-          onBlur={(e) => {
-            validate(e);
+              // Reset all errors (to make sure unfunded account error is
+              // cleared)
+              setInputErrors(initialInputErrors);
 
-            // If the address wasn't touched, nothing to fetch or update.
-            if (!isAccountIdTouched) {
-              return;
-            }
+              resetAccountIsFlagged();
+            }}
+            onBlur={(e) => {
+              validate(e);
 
-            fetchIfFederationAddress();
-            checkAndSetIsAccountFunded(e.target.value);
+              // If the address wasn't touched, nothing to fetch or update.
+              if (!isAccountIdTouched) {
+                return;
+              }
 
-            setPrevAddress(e.target.value);
-            setIsAccountIdTouched(false);
-            checkIfAccountIsFlagged(e.target.value);
-          }}
-          error={inputErrors[SendFormIds.SEND_TO]}
-          value={toAccountId}
-          placeholder="Recipient's public key or federation address"
-          spellCheck={false}
-        />
-      </RowEl>
+              fetchIfFederationAddress();
+              checkAndSetIsAccountFunded(e.target.value);
 
-      {(isCheckingAddress ||
-        federationAddressFetchStatus === ActionStatus.PENDING) && (
-        <RowEl>
+              setPrevAddress(e.target.value);
+              setIsAccountIdTouched(false);
+              checkIfAccountIsFlagged(e.target.value);
+            }}
+            error={inputErrors[SendFormIds.SEND_TO]}
+            value={toAccountId}
+            placeholder="Recipient’s public key or federation address"
+            spellCheck={false}
+          />
+        </LayoutRow>
+
+        {(isCheckingAddress ||
+          federationAddressFetchStatus === ActionStatus.PENDING) && (
           <InfoBlock>
             <p>Checking address…</p>
           </InfoBlock>
-        </RowEl>
-      )}
+        )}
 
-      {federationAddress && (
-        <RowEl>
+        {federationAddress && (
           <InfoBlock variant={InfoBlock.variant.info}>
             <p>
               Federation Address: {toAccountId}
@@ -593,43 +512,30 @@ export const CreateTransaction = ({
               Resolves to: {federationAddress}
             </p>
           </InfoBlock>
-        </RowEl>
-      )}
+        )}
 
-      {federationAddressError && (
-        <RowEl>
+        {federationAddressError && (
           <InfoBlock variant={InfoBlock.variant.error}>
             <p>{federationAddressError}</p>
           </InfoBlock>
-        </RowEl>
-      )}
+        )}
 
-      {isAccountUnsafe && !isAccountMalicious && (
-        <RowEl>
-          <AccountIsUnsafe />
-        </RowEl>
-      )}
-      {isAccountMalicious && (
-        <RowEl>
+        {isAccountUnsafe && !isAccountMalicious && <AccountIsUnsafe />}
+
+        {isAccountMalicious && (
           <InfoBlock variant={InfoBlock.variant.error}>
             <p>
-              The account you’re sending to is tagged as{" "}
-              <strong>#malicious</strong> on{" "}
-              <a
-                href="https://stellar.expert/directory"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              The account you’re sending to is tagged as <code>#malicious</code>{" "}
+              on{" "}
+              <TextLink href="https://stellar.expert/directory">
                 stellar.expert’s directory
-              </a>
+              </TextLink>
               . For your safety, sending to this account is disabled.
             </p>
           </InfoBlock>
-        </RowEl>
-      )}
+        )}
 
-      <RowEl>
-        <CellEl>
+        <LayoutRow>
           <Input
             id={SendFormIds.SEND_AMOUNT}
             label="Amount"
@@ -648,47 +554,39 @@ export const CreateTransaction = ({
               federationAddressFetchStatus === ActionStatus.PENDING
             }
           />
-        </CellEl>
-      </RowEl>
+        </LayoutRow>
 
-      {Boolean(knownAccount) && (
-        <RowEl>
+        {Boolean(knownAccount) && (
           <InfoBlock variant={InfoBlock.variant.warning}>
             <p>
               The payment destination ({knownAccount.name}) requires you to
               specify a memo to identify your account.{" "}
-              <TextLink
-                href="https://developers.stellar.org/docs/glossary/transactions/#memo"
-                target="_blank"
-                rel="noreferrer"
-              >
+              <TextLink href="https://developers.stellar.org/docs/glossary/transactions/#memo">
                 Learn more about the memo field
               </TextLink>
             </p>
           </InfoBlock>
-        </RowEl>
-      )}
+        )}
 
-      {!isMemoVisible && (
-        <RowEl>
-          <TextLink
-            role="button"
-            variant={TextLink.variant.secondary}
-            underline
-            onClick={() => {
-              setMemoType(StellarSdk.MemoText);
-              setIsMemoVisible(true);
-            }}
-          >
-            Add memo
-          </TextLink>
-        </RowEl>
-      )}
+        {!isMemoVisible && (
+          <div className="SendTransaction__memo-link">
+            <TextLink
+              role="button"
+              variant={TextLink.variant.secondary}
+              underline
+              onClick={() => {
+                setMemoType(StellarSdk.MemoText);
+                setIsMemoVisible(true);
+              }}
+            >
+              Add memo
+            </TextLink>
+          </div>
+        )}
 
-      {isMemoVisible && (
-        <>
-          <RowEl>
-            <CellEl>
+        {isMemoVisible && (
+          <>
+            <LayoutRow>
               <Select
                 id={SendFormIds.SEND_MEMO_TYPE}
                 label="Memo Type"
@@ -708,9 +606,7 @@ export const CreateTransaction = ({
                 <option value={StellarSdk.MemoHash}>MEMO_HASH</option>
                 <option value={StellarSdk.MemoReturn}>MEMO_RETURN</option>
               </Select>
-            </CellEl>
 
-            <CellEl>
               <Input
                 id={SendFormIds.SEND_MEMO_CONTENT}
                 label="Memo content"
@@ -731,39 +627,35 @@ export const CreateTransaction = ({
                 }
                 error={inputErrors[SendFormIds.SEND_MEMO_CONTENT]}
               />
-            </CellEl>
-          </RowEl>
+            </LayoutRow>
 
-          {(isMemoContentFromFederation || isMemoTypeFromFederation) && (
-            <RowEl>
+            {(isMemoContentFromFederation || isMemoTypeFromFederation) && (
               <InfoBlock>
-                Memo information is provided by the federation address
+                <p>Memo information is provided by the federation address</p>
               </InfoBlock>
-            </RowEl>
-          )}
+            )}
 
-          {!isMemoContentFromFederation && !knownAccount && (
-            <RowEl>
-              <TextLink
-                role="button"
-                variant={TextLink.variant.secondary}
-                underline
-                onClick={() => {
-                  clearInputError(SendFormIds.SEND_MEMO_CONTENT);
-                  setMemoType(StellarSdk.MemoNone);
-                  setMemoContent("");
-                  setIsMemoVisible(false);
-                }}
-              >
-                Remove memo
-              </TextLink>
-            </RowEl>
-          )}
-        </>
-      )}
+            {!isMemoContentFromFederation && !knownAccount && (
+              <div className="SendTransaction__memo-link">
+                <TextLink
+                  role="button"
+                  variant={TextLink.variant.secondary}
+                  underline
+                  onClick={() => {
+                    clearInputError(SendFormIds.SEND_MEMO_CONTENT);
+                    setMemoType(StellarSdk.MemoNone);
+                    setMemoContent("");
+                    setIsMemoVisible(false);
+                  }}
+                >
+                  Remove memo
+                </TextLink>
+              </div>
+            )}
+          </>
+        )}
 
-      <RowEl>
-        <CellEl>
+        <LayoutRow>
           <Input
             id={SendFormIds.SEND_FEE}
             label="Fee"
@@ -777,21 +669,22 @@ export const CreateTransaction = ({
             onBlur={validate}
             error={inputErrors[SendFormIds.SEND_FEE]}
             note={
-              <CongestionEl congestion={networkCongestion}>
-                <strong>{networkCongestion} congestion!</strong> Recommended
-                fee: {recommendedFee}.
-              </CongestionEl>
+              <>
+                <span className={`Congestion Congestion--${networkCongestion}`}>
+                  {networkCongestion.toUpperCase()} congestion!
+                </span>
+                <br />
+                Recommended fee: {recommendedFee}.
+              </>
             }
             disabled={
               isCheckingAddress ||
               federationAddressFetchStatus === ActionStatus.PENDING
             }
           />
-        </CellEl>
-      </RowEl>
+        </LayoutRow>
 
-      {!isAccountFunded && (
-        <RowEl>
+        {!isAccountFunded && (
           <InfoBlock>
             The destination account doesn’t exist. A create account operation
             will be used to create this account.{" "}
@@ -803,12 +696,35 @@ export const CreateTransaction = ({
               Learn more about account creation
             </TextLink>
           </InfoBlock>
-        </RowEl>
-      )}
+        )}
 
-      {inputErrors[SendFormIds.SEND_TX] && (
-        <ErrorMessage message={inputErrors[SendFormIds.SEND_TX]} />
+        {inputErrors[SendFormIds.SEND_TX] && (
+          <ErrorMessage message={inputErrors[SendFormIds.SEND_TX]} />
+        )}
+      </Modal.Body>
+
+      <Modal.Footer>
+        <Button
+          disabled={isAccountMalicious}
+          onClick={onSubmit}
+          isLoading={txInProgress}
+        >
+          Continue
+        </Button>
+        <Button
+          disabled={txInProgress}
+          onClick={onCancel}
+          variant={Button.variant.secondary}
+        >
+          Cancel
+        </Button>
+      </Modal.Footer>
+
+      {txInProgress && (
+        <p className="Paragraph--secondary align--right">
+          Validating transaction
+        </p>
       )}
-    </ModalContent>
+    </>
   );
 };

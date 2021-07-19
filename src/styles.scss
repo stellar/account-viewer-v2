@@ -1,6 +1,12 @@
 // Generic styles
-.align--center {
-  text-align: center;
+.align {
+  &--center {
+    text-align: center;
+  }
+
+  &--right {
+    text-align: right;
+  }
 }
 
 .Landing-container {
@@ -91,5 +97,27 @@
 
   .CopyKey-container {
     margin-top: 1.5rem;
+  }
+}
+
+// TODO: look into specificity in Modal.Body
+.SendTransaction__memo-link {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem !important;
+}
+
+.Congestion {
+  font-weight: var(--font-weight-medium);
+
+  &--low {
+    color: var(--pal-success);
+  }
+
+  &--medium {
+    color: var(--pal-warning);
+  }
+
+  &--high {
+    color: var(--pal-error);
   }
 }

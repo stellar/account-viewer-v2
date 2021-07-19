@@ -26,9 +26,9 @@ export interface RejectMessage {
 }
 
 export enum NetworkCongestion {
-  LOW = "LOW",
-  MEDIUM = "MEDIUM",
-  HIGH = "HIGH",
+  LOW = "low",
+  MEDIUM = "medium",
+  HIGH = "high",
 }
 
 export enum AuthType {
