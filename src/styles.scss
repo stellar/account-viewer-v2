@@ -53,7 +53,7 @@
 
 // TODO: look into specificity in Modal.Body
 .CopyKey-container {
-  margin-top: 2.5rem !important;
+  margin-top: 2.5rem;
   margin-bottom: 2rem !important;
 }
 
@@ -72,5 +72,24 @@
   a {
     color: inherit;
     white-space: nowrap;
+  }
+}
+
+.ReceiveModal__share {
+  display: flex;
+  margin: 0 auto;
+  flex-direction: column;
+  align-items: center;
+  max-width: 19rem;
+
+  &__qrcode {
+    margin-bottom: 2rem;
+    background-color: var(--pal-background-secondary);
+    padding: 1rem;
+    border-radius: 0.125rem;
+  }
+
+  .CopyKey-container {
+    margin-top: 1.5rem;
   }
 }
