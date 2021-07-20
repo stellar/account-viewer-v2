@@ -1,0 +1,58 @@
+.BalanceInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @media (min-width: 900px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__balance {
+    margin-bottom: 2rem;
+    text-align: center;
+
+    @media (min-width: 900px) {
+      margin-bottom: 0;
+      text-align: left;
+    }
+
+    &__amount {
+      font-size: 1.5rem;
+      line-height: 2rem;
+      font-weight: var(--font-weight-medium);
+      color: var(--pal-text-primary);
+      margin-top: 0.5rem;
+
+      @media (min-width: 500px) {
+        font-size: 2rem;
+        line-height: 2.5rem;
+      }
+
+      @media (min-width: 900px) {
+        margin-top: 1rem;
+      }
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    align-items: center;
+
+    button:first-child {
+      margin-right: 1.5rem;
+    }
+  }
+
+  &__unfunded {
+    margin-top: 3rem;
+
+    code {
+      font-size: 2rem;
+      line-height: 2.5rem;
+      margin-bottom: 1.5rem;
+      display: inline-block;
+    }
+  }
+}

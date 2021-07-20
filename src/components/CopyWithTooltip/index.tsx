@@ -46,9 +46,11 @@ export const CopyWithTooltip: React.FC<CopyWithTooltipProps> &
 
   return (
     <div className="CopyWithTooltip">
-      <CopyToClipboard text={copyText} onCopy={handleCopyDone}>
-        {children}
-      </CopyToClipboard>
+      <div className="CopyWithTooltip__content">
+        <CopyToClipboard text={copyText} onCopy={handleCopyDone}>
+          {children}
+        </CopyToClipboard>
+      </div>
       <div
         className={`Tooltip CopyWithTooltip__tooltip CopyWithTooltip__tooltip--${tooltipPosition}`}
         style={customStyle}
