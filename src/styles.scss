@@ -46,6 +46,36 @@
   }
 }
 
+.Header {
+  &__account {
+    display: flex;
+    order: 1;
+    justify-content: center;
+    margin-top: 1.2rem;
+    min-width: 100%;
+    position: relative;
+
+    @media (min-width: 700px) {
+      min-width: auto;
+      align-items: center;
+      order: 0;
+      flex: 1;
+      justify-content: flex-end;
+      margin-top: 0;
+      margin-right: 1rem;
+
+      &::after {
+        content: "";
+        display: block;
+        width: 1px;
+        height: 2rem;
+        background-color: var(--pal-border-primary);
+        margin-left: 1rem;
+      }
+    }
+  }
+}
+
 .FooterButtons-stacked {
   display: flex;
   align-items: center;
