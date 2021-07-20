@@ -1,21 +1,10 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import styled from "styled-components";
 
-import { PALETTE } from "constants/styles";
+import { Banner } from "components/Banner";
 import { updateSettingsAction } from "ducks/settings";
 import { useRedux } from "hooks/useRedux";
-
-const BannerEl = styled.div`
-  width: 100%;
-  padding: 1rem 0;
-  text-align: center;
-  background-color: ${PALETTE.red};
-  color: ${PALETTE.white};
-  font-size: 1rem;
-  line-height: 1.5rem;
-`;
 
 export const Network = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useDispatch();
@@ -39,9 +28,9 @@ export const Network = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       {showNetworkMessage && (
-        <BannerEl>{`You are using ${isTestnet ? "TEST" : "PUBLIC"} network in ${
+        <Banner>{`You are using ${isTestnet ? "TEST" : "PUBLIC"} network in ${
           isDevelopment ? "DEVELOPMENT" : "PRODUCTION"
-        }`}</BannerEl>
+        }`}</Banner>
       )}
       {children}
     </>

@@ -1,5 +1,4 @@
-import { Button } from "@stellar/design-system";
-import { ModalContent } from "components/ModalContent";
+import { Button, Modal } from "@stellar/design-system";
 import { ErrorMessage } from "components/ErrorMessage";
 import { useRedux } from "hooks/useRedux";
 
@@ -13,19 +12,20 @@ export const FailedTransaction = ({
   const { sendTx } = useRedux("sendTx");
 
   return (
-    <ModalContent
-      headlineText="Transaction failed"
-      buttonFooter={
-        <>
-          <Button onClick={onEditTransaction}>Edit Transaction</Button>
-          <Button onClick={onCancel} variant={Button.variant.secondary}>
-            Close
-          </Button>
-        </>
-      }
-    >
-      <p>See details below for more information.</p>
-      <ErrorMessage message={`Error: ${sendTx.errorString}`} />
-    </ModalContent>
+    <>
+      <Modal.Heading>Transaction failed</Modal.Heading>
+
+      <Modal.Body>
+        <p>See details below for more information.</p>
+        <ErrorMessage message={`Error: ${sendTx.errorString}`} />
+      </Modal.Body>
+
+      <Modal.Footer>
+        <Button onClick={onEditTransaction}>Edit Transaction</Button>
+        <Button onClick={onCancel} variant={Button.variant.secondary}>
+          Close
+        </Button>
+      </Modal.Footer>
+    </>
   );
 };
