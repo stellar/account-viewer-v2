@@ -1,16 +1,12 @@
-import { InfoBlock } from "@stellar/design-system";
+import { InfoBlock, TextLink } from "@stellar/design-system";
 
 export const AccountIsUnsafe = () => (
   <InfoBlock variant={InfoBlock.variant.warning}>
     <p>
-      The account you’re sending to is tagged as <strong>#unsafe</strong> on{" "}
-      <a
-        href="https://stellar.expert/directory"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
+      The account you’re sending to is tagged as <code>#unsafe</code> on{" "}
+      <TextLink href="https://stellar.expert/directory">
         stellar.expert’s directory
-      </a>
+      </TextLink>
       . Proceed with caution.
     </p>
   </InfoBlock>

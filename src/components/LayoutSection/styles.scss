@@ -1,0 +1,12 @@
+.LayoutSection {
+  background-color: var(--pal-background-secondary);
+  padding-top: 2rem;
+  padding-bottom: 2.4rem;
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+
+  @media (min-width: 900px) {
+    padding-top: 4.5rem;
+    padding-bottom: 4.5rem;
+  }
+}

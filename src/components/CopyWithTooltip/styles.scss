@@ -4,6 +4,18 @@
   position: relative;
   display: inline-block;
 
+  &__content {
+    cursor: pointer;
+    opacity: 1;
+    transition: opacity var(--anim-transition-default);
+
+    @media (hover: hover) {
+      &:hover {
+        opacity: var(--opacity-disabled-button);
+      }
+    }
+  }
+
   &__tooltip {
     visibility: var(--CopyWithTooltip-visibility);
     // TODO: hard coded color

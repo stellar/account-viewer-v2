@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { Heading1, TextLink, Modal } from "@stellar/design-system";
+import { Heading1, TextLink, Modal, Layout } from "@stellar/design-system";
 
 import { NewKeyPairForm } from "components/NewKeyPairForm";
 import { SignInAlbedoForm } from "components/SignIn/SignInAlbedoForm";
@@ -74,61 +74,63 @@ export const Landing = () => {
   };
 
   return (
-    <div className="Landing-container">
-      <Heading1>Connect with a wallet</Heading1>
+    <Layout.Inset>
+      <div className="Landing-container">
+        <Heading1>Connect with a wallet</Heading1>
 
-      <div className="WalletButtons-container">
-        {Object.keys(wallets).map((walletKey) => {
-          const wallet = wallets[walletKey];
+        <div className="WalletButtons-container">
+          {Object.keys(wallets).map((walletKey) => {
+            const wallet = wallets[walletKey];
 
-          return (
-            <WalletButton
-              key={walletKey}
-              onClick={() => openModal(wallet.modalType)}
-              imageSvg={wallet.logoSvg}
-              imageAlt={wallet.logoImgAltText}
-              infoText={
-                <>
-                  {wallet.infoText}{" "}
-                  <TextLink
-                    href={wallet.infoLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {wallet.infoLinkText}
-                  </TextLink>
-                </>
-              }
-            >
-              {wallet.title}
-            </WalletButton>
-          );
-        })}
+            return (
+              <WalletButton
+                key={walletKey}
+                onClick={() => openModal(wallet.modalType)}
+                imageSvg={wallet.logoSvg}
+                imageAlt={wallet.logoImgAltText}
+                infoText={
+                  <>
+                    {wallet.infoText}{" "}
+                    <TextLink
+                      href={wallet.infoLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {wallet.infoLinkText}
+                    </TextLink>
+                  </>
+                }
+              >
+                {wallet.title}
+              </WalletButton>
+            );
+          })}
+        </div>
+
+        <div className="Landing-buttons-wrapper">
+          <TextLink
+            role="button"
+            onClick={() => openModal(ModalType.SIGNIN_SECRET_KEY)}
+            variant={TextLink.variant.secondary}
+            underline
+          >
+            Connect with a secret key
+          </TextLink>
+
+          <TextLink
+            role="button"
+            onClick={() => openModal(ModalType.NEW_KEY_PAIR)}
+            variant={TextLink.variant.secondary}
+            underline
+          >
+            Generate key pair for a new account
+          </TextLink>
+        </div>
+
+        <Modal visible={activeModal !== null} onClose={closeModal}>
+          {renderModalContent()}
+        </Modal>
       </div>
-
-      <div className="Landing-buttons-wrapper">
-        <TextLink
-          role="button"
-          onClick={() => openModal(ModalType.SIGNIN_SECRET_KEY)}
-          variant={TextLink.variant.secondary}
-          underline
-        >
-          Connect with a secret key
-        </TextLink>
-
-        <TextLink
-          role="button"
-          onClick={() => openModal(ModalType.NEW_KEY_PAIR)}
-          variant={TextLink.variant.secondary}
-          underline
-        >
-          Generate key pair for a new account
-        </TextLink>
-      </div>
-
-      <Modal visible={activeModal !== null} onClose={closeModal}>
-        {renderModalContent()}
-      </Modal>
-    </div>
+    </Layout.Inset>
   );
 };
