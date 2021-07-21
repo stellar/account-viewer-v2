@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { Layout, TextLink, Identicon } from "@stellar/design-system";
+import { Layout, Identicon } from "@stellar/design-system";
 
 import { resetStoreAction } from "config/store";
 import { CopyWithTooltip } from "components/CopyWithTooltip";
@@ -23,24 +23,22 @@ export const Header = () => {
     });
   };
 
+  const isSignedIn = isAuthenticated && account.data;
+
   return (
     <Layout.Header
       projectTitle="Account Viewer"
       projectLink="https://stellar.org"
       hasDarkModeToggle
+      onSignOut={isSignedIn ? handleSignOut : undefined}
+      showButtonBorder
     >
-      {isAuthenticated && account.data && (
-        <>
-          <div className="Header__account">
-            <CopyWithTooltip copyText={account.data.id} showCopyIcon>
-              <Identicon publicAddress={account.data.id} shortenAddress />
-            </CopyWithTooltip>
-          </div>
-
-          <TextLink role="button" onClick={handleSignOut}>
-            Sign out
-          </TextLink>
-        </>
+      {isSignedIn && (
+        <div className="Header__account">
+          <CopyWithTooltip copyText={account.data!.id} showCopyIcon>
+            <Identicon publicAddress={account.data!.id} shortenAddress />
+          </CopyWithTooltip>
+        </div>
       )}
     </Layout.Header>
   );
