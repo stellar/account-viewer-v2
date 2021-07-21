@@ -87,7 +87,6 @@ export const Landing = () => {
                 key={walletKey}
                 onClick={() => openModal(wallet.modalType)}
                 imageSvg={wallet.logoSvg}
-                imageAlt={wallet.logoImgAltText}
                 infoText={
                   <>
                     {wallet.infoText}{" "}

@@ -6,7 +6,6 @@ import { store } from "config/store";
 import { Network } from "components/Network";
 import { PrivateRoute } from "components/PrivateRoute";
 import { Header } from "components/Header";
-import { Theme } from "components/Theme";
 
 import { Dashboard } from "pages/Dashboard";
 import { Landing } from "pages/Landing";
@@ -17,27 +16,25 @@ import "styles.scss";
 export const App = () => (
   <Provider store={store}>
     <Router>
-      <Theme>
-        <Network>
-          <Header />
+      <Network>
+        <Header />
 
-          <Layout.Content>
-            <Switch>
-              <Route exact path="/">
-                <Landing />
-              </Route>
+        <Layout.Content>
+          <Switch>
+            <Route exact path="/">
+              <Landing />
+            </Route>
 
-              <PrivateRoute exact path="/dashboard">
-                <Dashboard />
-              </PrivateRoute>
+            <PrivateRoute exact path="/dashboard">
+              <Dashboard />
+            </PrivateRoute>
 
-              <Route component={NotFound} />
-            </Switch>
-          </Layout.Content>
+            <Route component={NotFound} />
+          </Switch>
+        </Layout.Content>
 
-          <Layout.Footer gitHubLink="https://github.com/stellar/account-viewer-v2" />
-        </Network>
-      </Theme>
+        <Layout.Footer gitHubLink="https://github.com/stellar/account-viewer-v2" />
+      </Network>
     </Router>
   </Provider>
 );

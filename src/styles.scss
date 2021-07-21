@@ -204,9 +204,8 @@
         align-items: center;
         justify-content: space-between;
 
-        // TODO: look into specificity
         h2 {
-          margin-bottom: 0 !important;
+          margin-bottom: 0;
         }
 
         span {
@@ -221,6 +220,19 @@
       span {
         max-width: 12rem;
       }
+    }
+  }
+
+  .NotFoundPage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+
+    .Eyebrow {
+      color: var(--pal-brand-primary);
     }
   }
 }
