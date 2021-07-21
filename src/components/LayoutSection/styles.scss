@@ -2,8 +2,14 @@
   background-color: var(--pal-background-secondary);
   padding-top: 2rem;
   padding-bottom: 2.4rem;
-  margin-top: 2rem;
-  margin-bottom: 3rem;
+
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+
+  @media (min-width: 700px) {
+    margin-top: 2rem;
+    margin-bottom: 3rem;
+  }
 
   @media (min-width: 900px) {
     padding-top: 4.5rem;

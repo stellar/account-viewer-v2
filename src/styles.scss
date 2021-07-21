@@ -46,6 +46,22 @@
   }
 }
 
+.Layout {
+  &__header {
+    @media (min-width: 600px) {
+      --Layout-header-padding-vertical: 1rem;
+    }
+
+    @media (min-width: 700px) {
+      --Layout-header-padding-vertical: 3rem;
+    }
+  }
+
+  &__inset {
+    flex-wrap: wrap;
+  }
+}
+
 .Header {
   &__account {
     display: flex;
@@ -87,10 +103,9 @@
   }
 }
 
-// TODO: look into specificity in Modal.Body
 .CopyKey-container {
   margin-top: 2.5rem;
-  margin-bottom: 2rem !important;
+  margin-bottom: 2rem;
 }
 
 .Tooltip {
@@ -130,10 +145,9 @@
   }
 }
 
-// TODO: look into specificity in Modal.Body
 .SendTransaction__memo-link {
   margin-top: 1.5rem;
-  margin-bottom: 1.5rem !important;
+  margin-bottom: 1.5rem;
 }
 
 .Congestion {
