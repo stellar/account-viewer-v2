@@ -121,3 +121,56 @@
     color: var(--pal-error);
   }
 }
+
+.TransactionHistory {
+  .TableContainer {
+    position: relative;
+    overflow: auto;
+
+    .Table {
+      td:first-child {
+        z-index: 1;
+      }
+
+      span {
+        display: block;
+      }
+    }
+  }
+
+  .TableNoteContainer {
+    margin-top: 1rem;
+  }
+
+  &__header {
+    margin-bottom: 2rem;
+
+    span {
+      display: block;
+      margin-bottom: 1rem;
+    }
+
+    @media (min-width: 900px) {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      // TODO: look into specificity
+      h2 {
+        margin-bottom: 0 !important;
+      }
+
+      span {
+        display: inline-block;
+        margin-right: 0.5rem;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &__memo {
+    span {
+      max-width: 12rem;
+    }
+  }
+}
