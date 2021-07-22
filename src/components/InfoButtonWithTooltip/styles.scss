@@ -1,11 +1,9 @@
-#root {
-  .Tooltip.InfoButtonWithTooltip {
-    &__tooltip {
-      --InfoButtonWithTooltip-visibility: "hidden";
+.InfoButtonWithTooltip {
+  &__tooltip {
+    top: 2.7rem;
+    right: -0.5rem;
 
-      visibility: var(--InfoButtonWithTooltip-visibility);
-      top: 2.7rem;
-      right: -0.5rem;
+    .Tooltip__content {
       padding: 1rem 1.5rem;
     }
   }

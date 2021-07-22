@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { Icon } from "@stellar/design-system";
+import { Tooltip } from "components/Tooltip";
 import "./styles.scss";
 
 enum TooltipPosition {
@@ -43,10 +44,6 @@ export const CopyWithTooltip: React.FC<CopyWithTooltipProps> &
     }, 1000);
   };
 
-  const customStyle = {
-    "--CopyWithTooltip-visibility": isTooltipVisible ? "visible" : "hidden",
-  } as React.CSSProperties;
-
   return (
     <div className="CopyWithTooltip">
       <CopyToClipboard text={copyText} onCopy={handleCopyDone}>
@@ -61,12 +58,12 @@ export const CopyWithTooltip: React.FC<CopyWithTooltipProps> &
         </div>
       </CopyToClipboard>
 
-      <div
-        className={`Tooltip CopyWithTooltip__tooltip CopyWithTooltip__tooltip--${tooltipPosition}`}
-        style={customStyle}
+      <Tooltip
+        className={`CopyWithTooltip__tooltip CopyWithTooltip__tooltip--${tooltipPosition}`}
+        isVisible={isTooltipVisible}
       >
         {tooltipLabel}
-      </div>
+      </Tooltip>
     </div>
   );
 };

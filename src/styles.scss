@@ -1,5 +1,30 @@
 // Add root id to have higher CSS specificity for local overrides
 #root {
+  // TODO: Move these to SDS
+  --anim-transition-default: cubic-bezier(0.65, 0.05, 0.36, 1) 200ms;
+
+  .TextLink {
+    &--primary {
+      &.TextLink--underline {
+        @media (hover: hover) {
+          &:hover {
+            --TextLink-color-text: var(--pal-text-link);
+          }
+        }
+      }
+    }
+
+    &--secondary {
+      &.TextLink--underline {
+        @media (hover: hover) {
+          &:hover {
+            --TextLink-color-text: var(--pal-text-primary);
+          }
+        }
+      }
+    }
+  }
+
   min-width: 365px;
   overflow-x: auto !important;
 
@@ -111,24 +136,6 @@
   .CopyKey-container {
     margin-top: 2.5rem;
     margin-bottom: 2rem;
-  }
-
-  .Tooltip {
-    padding: 0.5rem 1rem;
-    background-color: var(--pal-brand-primary);
-    position: absolute;
-    max-width: 16.875rem;
-    border-radius: 0.125rem;
-    color: var(--pal-brand-primary-on);
-    font-size: var(--font-size-secondary);
-    line-height: 1.5em;
-    z-index: var(--z-index-tooltip);
-    cursor: default;
-
-    a {
-      color: inherit;
-      white-space: nowrap;
-    }
   }
 
   .ReceiveModal__share {

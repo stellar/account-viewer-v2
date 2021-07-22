@@ -1,6 +1,4 @@
 .CopyWithTooltip {
-  --CopyWithTooltip-visibility: "hidden";
-
   position: relative;
   display: inline-block;
 
@@ -33,7 +31,6 @@
   }
 
   &__tooltip {
-    visibility: var(--CopyWithTooltip-visibility);
     top: 2.7rem;
     right: -1rem;
 
