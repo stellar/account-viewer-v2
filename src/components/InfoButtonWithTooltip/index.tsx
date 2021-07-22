@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { IconButton, Icon } from "@stellar/design-system";
+import { Tooltip } from "components/Tooltip";
 import "./styles.scss";
 
 interface InfoButtonWithTooltipProps {
@@ -40,10 +41,6 @@ export const InfoButtonWithTooltip: React.FC<InfoButtonWithTooltipProps> = ({
     }
   };
 
-  const customStyle = {
-    "--InfoButtonWithTooltip-visibility": isInfoVisible ? "visible" : "hidden",
-  } as React.CSSProperties;
-
   return (
     <>
       <IconButton
@@ -52,14 +49,13 @@ export const InfoButtonWithTooltip: React.FC<InfoButtonWithTooltipProps> = ({
         onClick={() => setIsInfoVisible((currentState) => !currentState)}
       />
 
-      <div
-        className="Tooltip InfoButtonWithTooltip__tooltip"
-        style={customStyle}
+      <Tooltip
+        className="InfoButtonWithTooltip__tooltip"
+        isVisible={isInfoVisible}
         ref={infoEl}
-        data-hidden={!isInfoVisible}
       >
         {children}
-      </div>
+      </Tooltip>
     </>
   );
 };

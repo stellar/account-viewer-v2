@@ -1,176 +1,245 @@
-// Generic styles
-.align {
-  &--center {
-    text-align: center;
-  }
+// Add root id to have higher CSS specificity for local overrides
+#root {
+  // TODO: Move these to SDS
+  --anim-transition-default: cubic-bezier(0.65, 0.05, 0.36, 1) 200ms;
 
-  &--right {
-    text-align: right;
-  }
-}
+  .TextLink {
+    &--primary {
+      &.TextLink--underline {
+        @media (hover: hover) {
+          &:hover {
+            --TextLink-color-text: var(--pal-text-link);
+          }
+        }
+      }
+    }
 
-.Landing-container {
-  padding-top: 4rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.Landing-buttons-wrapper {
-  padding: 1.5rem 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  & > a {
-    margin-bottom: 2rem;
-  }
-}
-
-.WalletButtons-container {
-  width: 100%;
-  max-width: 590px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  padding: 3rem 0;
-
-  & > div {
-    margin-bottom: 1.5rem;
-    width: 100%;
-
-    @media (min-width: 700px) {
-      width: calc(50% - 1.75rem);
+    &--secondary {
+      &.TextLink--underline {
+        @media (hover: hover) {
+          &:hover {
+            --TextLink-color-text: var(--pal-text-primary);
+          }
+        }
+      }
     }
   }
-}
 
-.FooterButtons-stacked {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  flex-wrap: wrap;
+  min-width: 365px;
+  overflow-x: auto !important;
 
-  & > *:not(:last-child) {
-    margin-bottom: 1rem;
+  // Generic styles
+  .align {
+    &--center {
+      text-align: center;
+    }
+
+    &--right {
+      text-align: right;
+    }
   }
-}
 
-// TODO: look into specificity in Modal.Body
-.CopyKey-container {
-  margin-top: 2.5rem;
-  margin-bottom: 2rem !important;
-}
-
-.Tooltip {
-  padding: 0.5rem 1rem;
-  background-color: var(--pal-brand-primary);
-  position: absolute;
-  max-width: 16.875rem;
-  border-radius: 0.125rem;
-  color: var(--pal-brand-primary-on);
-  font-size: var(--font-size-secondary);
-  line-height: 1.5em;
-  z-index: var(--z-index-tooltip);
-  cursor: default;
-
-  a {
-    color: inherit;
-    white-space: nowrap;
+  .Landing-container {
+    padding-top: 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-}
 
-.ReceiveModal__share {
-  display: flex;
-  margin: 0 auto;
-  flex-direction: column;
-  align-items: center;
-  max-width: 19rem;
+  .Landing-buttons-wrapper {
+    padding: 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-  &__qrcode {
-    margin-bottom: 2rem;
-    background-color: var(--pal-background-secondary);
-    padding: 1rem;
-    border-radius: 0.125rem;
+    & > a {
+      margin-bottom: 2rem;
+    }
+  }
+
+  .WalletButtons-container {
+    width: 100%;
+    max-width: 590px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 3rem 0;
+
+    & > div {
+      margin-bottom: 1.5rem;
+      width: 100%;
+
+      @media (min-width: 700px) {
+        width: calc(50% - 1.75rem);
+      }
+    }
+  }
+
+  .Layout {
+    &__header {
+      @media (min-width: 600px) {
+        --Layout-header-padding-vertical: 1rem;
+      }
+
+      @media (min-width: 700px) {
+        --Layout-header-padding-vertical: 3rem;
+      }
+    }
+
+    &__inset {
+      flex-wrap: wrap;
+    }
+  }
+
+  .Header {
+    &__account {
+      display: flex;
+      order: 1;
+      justify-content: center;
+      margin-top: 1.2rem;
+      min-width: 100%;
+      position: relative;
+
+      @media (min-width: 700px) {
+        min-width: auto;
+        align-items: center;
+        order: 0;
+        flex: 1;
+        justify-content: flex-end;
+        margin-top: 0;
+        margin-right: 0.5rem;
+
+        &::after {
+          content: "";
+          display: block;
+          width: 1px;
+          height: 2rem;
+          background-color: var(--pal-border-primary);
+          margin-left: 1rem;
+        }
+      }
+    }
+  }
+
+  .FooterButtons-stacked {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+
+    & > *:not(:last-child) {
+      margin-bottom: 1rem;
+    }
   }
 
   .CopyKey-container {
+    margin-top: 2.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .ReceiveModal__share {
+    display: flex;
+    margin: 0 auto;
+    flex-direction: column;
+    align-items: center;
+    max-width: 19rem;
+
+    &__qrcode {
+      margin-bottom: 2rem;
+      background-color: var(--pal-background-secondary);
+      padding: 1rem;
+      border-radius: 0.125rem;
+    }
+
+    .CopyKey-container {
+      margin-top: 1.5rem;
+    }
+  }
+
+  .SendTransaction__memo-link {
     margin-top: 1.5rem;
-  }
-}
-
-// TODO: look into specificity in Modal.Body
-.SendTransaction__memo-link {
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem !important;
-}
-
-.Congestion {
-  font-weight: var(--font-weight-medium);
-
-  &--low {
-    color: var(--pal-success);
+    margin-bottom: 1.5rem;
   }
 
-  &--medium {
-    color: var(--pal-warning);
+  .Congestion {
+    font-weight: var(--font-weight-medium);
+
+    &--low {
+      color: var(--pal-success);
+    }
+
+    &--medium {
+      color: var(--pal-warning);
+    }
+
+    &--high {
+      color: var(--pal-error);
+    }
   }
 
-  &--high {
-    color: var(--pal-error);
-  }
-}
+  .TransactionHistory {
+    .TableContainer {
+      position: relative;
+      overflow: auto;
 
-.TransactionHistory {
-  .TableContainer {
-    position: relative;
-    overflow: auto;
+      .Table {
+        td:first-child {
+          z-index: 1;
+        }
 
-    .Table {
-      td:first-child {
-        z-index: 1;
+        span {
+          display: block;
+        }
       }
+    }
+
+    .TableNoteContainer {
+      margin-top: 1rem;
+    }
+
+    &__header {
+      margin-bottom: 2rem;
 
       span {
         display: block;
-      }
-    }
-  }
-
-  .TableNoteContainer {
-    margin-top: 1rem;
-  }
-
-  &__header {
-    margin-bottom: 2rem;
-
-    span {
-      display: block;
-      margin-bottom: 1rem;
-    }
-
-    @media (min-width: 900px) {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      // TODO: look into specificity
-      h2 {
-        margin-bottom: 0 !important;
+        margin-bottom: 1rem;
       }
 
+      @media (min-width: 900px) {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        h2 {
+          margin-bottom: 0;
+        }
+
+        span {
+          display: inline-block;
+          margin-right: 0.5rem;
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    &__memo {
       span {
-        display: inline-block;
-        margin-right: 0.5rem;
-        margin-bottom: 0;
+        max-width: 12rem;
       }
     }
   }
 
-  &__memo {
-    span {
-      max-width: 12rem;
+  .NotFoundPage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+
+    .Eyebrow {
+      color: var(--pal-brand-primary);
     }
   }
 }

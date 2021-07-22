@@ -43,14 +43,6 @@ export interface ModalPageProps {
   onClose?: () => void;
 }
 
-export interface ThemeProps {
-  bodyBackground: string;
-}
-
-export interface Theme {
-  [themeName: string]: ThemeProps;
-}
-
 export enum ModalType {
   SIGNIN_SECRET_KEY = "SIGNIN_SECRET_KEY",
   SIGNIN_TREZOR = "SIGNIN_TREZOR",
@@ -152,7 +144,6 @@ export type StoreKey = keyof Store;
 export interface WalletData {
   title: string;
   logoSvg: React.ReactNode;
-  logoImgAltText: string;
   modalType: ModalType;
   infoText: React.ReactNode | string;
   infoLinkText: string;
