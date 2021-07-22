@@ -1849,10 +1849,10 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@stellar/design-system@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@stellar/design-system/-/design-system-0.2.1.tgz#0efffa978eb37f6dd232360ca7a24e0aae416586"
-  integrity sha512-9KfwboLHTcboXoCZg5gOYYsGUuHif/+P+Dey1+YR4SfHoDV2MJiKr/CXyvq1/EAH/WRT99S1XtgIdOEcGXdn1A==
+"@stellar/design-system@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@stellar/design-system/-/design-system-0.2.2.tgz#2e6a224b9a18b01498bffb16d07c8b97cf1fe837"
+  integrity sha512-D5BTumN44x/lFNZY6+Q92KroLmmRDlkgPxq+de63/x498ZkVSCh8OTsWHA+yFAj1wSMauQqPOhsTxvmvy8UQRw==
   dependencies:
     configurable-date-input-polyfill "^2.8.2"
     stellar-identicon-js "^1.0.0"

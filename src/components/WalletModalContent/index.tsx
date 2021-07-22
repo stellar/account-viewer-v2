@@ -1,7 +1,6 @@
 import React from "react";
 import { Modal, TextLink } from "@stellar/design-system";
 import { wallets } from "constants/wallets";
-import { renderSvg } from "helpers/renderSvg";
 
 import "./styles.scss";
 
@@ -44,10 +43,7 @@ export const WalletModalContent: React.FC<WalletModalContentProps> = ({
     <>
       <div className="WalletModalContent__heading">
         <div className="WalletModalContent__heading__logo">
-          {renderSvg({
-            Component: walletData.logoSvg,
-            alt: walletData.logoImgAltText,
-          })}
+          {walletData.logoSvg}
         </div>
       </div>
       <Modal.Heading>{walletData.title}</Modal.Heading>
