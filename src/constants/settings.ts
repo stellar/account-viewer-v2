@@ -7,6 +7,7 @@ export const FLAGGED_ACCOUNT_STORAGE_ID = "flaggedAcounts";
 export const FLAGGED_ACCOUNT_DATE_STORAGE_ID = "flaggedAcountDate";
 export const MEMO_REQ_ACCOUNT_STORAGE_ID = "memoRequiredAccounts";
 export const MEMO_REQ_ACCOUNT_DATE_STORAGE_ID = "memoRequiredAccountsDate";
+export const LOCAL_STORAGE_STELLAR_THEME = "stellarTheme:accountViewer";
 
 interface NetworkItemConfig {
   url: string;
