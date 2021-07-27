@@ -168,3 +168,8 @@ export interface PaymentFormData {
 export interface AnyObject {
   [key: string]: any;
 }
+
+export enum StellarThemeValue {
+  LIGHT = "light-mode",
+  DARK = "dark-mode",
+}
