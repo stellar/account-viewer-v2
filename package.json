@@ -16,7 +16,7 @@
     "@stellar/design-system": "^0.2.3",
     "@stellar/freighter-api": "^1.0.1",
     "@stellar/wallet-sdk": "^0.4.0-rc.0",
-    "amplitude-js": "^8.3.1",
+    "amplitude-js": "^8.4.0",
     "bignumber.js": "^9.0.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.0",
