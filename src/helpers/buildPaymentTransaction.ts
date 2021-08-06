@@ -2,7 +2,6 @@ import StellarSdk, { MemoType, MemoValue } from "stellar-sdk";
 import { PaymentTransactionParams } from "ducks/sendTx";
 import { getErrorString } from "helpers/getErrorString";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
-import { isValidMAccount } from "helpers/isValidMAccount";
 import { store } from "config/store";
 
 const createMemo = (memoType: MemoType, memoContent: MemoValue) => {
@@ -48,7 +47,7 @@ export const buildPaymentTransaction = async (
         destination: toAccountId,
         asset: StellarSdk.Asset.native(),
         amount: amount.toString(),
-        withMuxing: isValidMAccount(toAccountId),
+        withMuxing: true,
       });
     } else {
       operation = StellarSdk.Operation.createAccount({

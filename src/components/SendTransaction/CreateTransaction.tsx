@@ -20,7 +20,6 @@ import { ErrorMessage } from "components/ErrorMessage";
 import { LayoutRow } from "components/LayoutRow";
 import { buildPaymentTransaction } from "helpers/buildPaymentTransaction";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
-import { isValidMAccount } from "helpers/isValidMAccount";
 import { lumensFromStroops, stroopsFromLumens } from "helpers/stroopConversion";
 import { logEvent } from "helpers/tracking";
 import { useRedux } from "hooks/useRedux";
@@ -258,7 +257,9 @@ export const CreateTransaction = ({
           message = "Please enter a valid Stellar or Federated address";
         } else if (
           !isFederationAddress(toAccountId) &&
-          !isValidMAccount(toAccountId) &&
+          // TODO: type should be updated
+          // @ts-ignore
+          !StrKey.isValidMed25519PublicKey(toAccountId) &&
           !StrKey.isValidEd25519PublicKey(toAccountId)
         ) {
           message =
