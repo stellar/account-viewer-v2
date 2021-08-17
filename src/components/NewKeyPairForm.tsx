@@ -7,10 +7,9 @@ import {
   InfoBlock,
   TextLink,
   Modal,
-  Icon,
+  CopyText,
 } from "@stellar/design-system";
 
-import { CopyWithTooltip } from "components/CopyWithTooltip";
 import { ErrorMessage } from "components/ErrorMessage";
 import { KeyPairWithLabels } from "components/KeyPairWithLabels";
 
@@ -165,12 +164,14 @@ ${keypair.secret()}`);
                 />
 
                 <div className="CopyKey-container">
-                  <CopyWithTooltip
-                    copyText={keyPairCopyString}
-                    tooltipPosition={CopyWithTooltip.tooltipPosition.right}
+                  <CopyText
+                    textToCopy={keyPairCopyString}
+                    showCopyIcon
+                    showTooltip
+                    tooltipPosition={CopyText.tooltipPosition.right}
                   >
-                    <TextLink iconLeft={<Icon.Copy />}>Copy keys</TextLink>
-                  </CopyWithTooltip>
+                    <TextLink>Copy keys</TextLink>
+                  </CopyText>
                 </div>
               </>
             )}

@@ -1,4 +1,4 @@
-import { InfoButtonWithTooltip } from "components/InfoButtonWithTooltip";
+import { DetailsTooltip } from "@stellar/design-system";
 import "./styles.scss";
 
 interface WalletButtonProps {
@@ -16,11 +16,11 @@ export const WalletButton: React.FC<WalletButtonProps> = ({
   ...props
 }) => (
   <div className="WalletButton">
-    <button className="WalletButton__button" onClick={onClick} {...props}>
-      {imageSvg}
-      <span className="WalletButton__label">{children}</span>
-    </button>
-
-    <InfoButtonWithTooltip>{infoText}</InfoButtonWithTooltip>
+    <DetailsTooltip details={infoText}>
+      <button className="WalletButton__button" onClick={onClick} {...props}>
+        {imageSvg}
+        <span className="WalletButton__label">{children}</span>
+      </button>
+    </DetailsTooltip>
   </div>
 );
