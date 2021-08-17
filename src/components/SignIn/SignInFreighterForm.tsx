@@ -21,7 +21,11 @@ export const SignInFreighterForm = ({ onClose }: ModalPageProps) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const { walletFreighter, account } = useRedux("walletFreighter", "account");
+  const { walletFreighter, account, settings } = useRedux(
+    "walletFreighter",
+    "account",
+    "settings",
+  );
   const {
     data: freighterData,
     status: freighterStatus,
@@ -33,6 +37,7 @@ export const SignInFreighterForm = ({ onClose }: ModalPageProps) => {
     errorString: accountErrorMessage,
   } = account;
   const isAvailable = isConnected();
+  const { isTestnet } = settings;
 
   const { errorMessage, setErrorMessage } = useErrorMessage({
     initialMessage: freighterErrorMessage || accountErrorMessage,
@@ -56,6 +61,7 @@ export const SignInFreighterForm = ({ onClose }: ModalPageProps) => {
           storeKeyAction({
             publicKey: freighterData.publicKey,
             keyType: KeyType.freighter,
+            custom: { network: isTestnet ? "TESTNET" : "PUBLIC" },
           }),
         );
         logEvent("login: connected with freighter");
@@ -72,6 +78,7 @@ export const SignInFreighterForm = ({ onClose }: ModalPageProps) => {
     freighterData,
     setErrorMessage,
     freighterErrorMessage,
+    isTestnet,
   ]);
 
   useEffect(() => {
