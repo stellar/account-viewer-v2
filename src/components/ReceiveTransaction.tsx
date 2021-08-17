@@ -1,7 +1,5 @@
 import QRCode from "qrcode.react";
-import { TextLink, Modal, Icon, Identicon } from "@stellar/design-system";
-
-import { CopyWithTooltip } from "components/CopyWithTooltip";
+import { TextLink, Modal, Identicon, CopyText } from "@stellar/design-system";
 import { useRedux } from "hooks/useRedux";
 
 export const ReceiveTransaction = () => {
@@ -31,12 +29,14 @@ export const ReceiveTransaction = () => {
           <Identicon publicAddress={accountId} />
 
           <div className="CopyKey-container">
-            <CopyWithTooltip
-              copyText={accountId}
-              tooltipPosition={CopyWithTooltip.tooltipPosition.right}
+            <CopyText
+              textToCopy={accountId}
+              showCopyIcon
+              showTooltip
+              tooltipPosition={CopyText.tooltipPosition.right}
             >
-              <TextLink iconLeft={<Icon.Copy />}>Copy public key</TextLink>
-            </CopyWithTooltip>
+              <TextLink>Copy public key</TextLink>
+            </CopyText>
           </div>
         </div>
       </Modal.Body>

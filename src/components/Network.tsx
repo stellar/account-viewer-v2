@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { StatusBar } from "@stellar/design-system";
 
-import { Banner } from "components/Banner";
 import { updateSettingsAction } from "ducks/settings";
 import { useRedux } from "hooks/useRedux";
 
@@ -28,9 +28,11 @@ export const Network = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       {showNetworkMessage && (
-        <Banner>{`You are using ${isTestnet ? "TEST" : "PUBLIC"} network in ${
+        <StatusBar variant={StatusBar.variant.error}>{`You are using ${
+          isTestnet ? "TEST" : "PUBLIC"
+        } network in ${
           isDevelopment ? "DEVELOPMENT" : "PRODUCTION"
-        }`}</Banner>
+        }`}</StatusBar>
       )}
       {children}
     </>

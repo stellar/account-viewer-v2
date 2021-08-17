@@ -1,10 +1,9 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { Layout, Identicon } from "@stellar/design-system";
+import { Layout, Identicon, CopyText } from "@stellar/design-system";
 
 import { resetStoreAction } from "config/store";
-import { CopyWithTooltip } from "components/CopyWithTooltip";
 import { stopAccountWatcherAction } from "ducks/account";
 import { stopTxHistoryWatcherAction } from "ducks/txHistory";
 import { useRedux } from "hooks/useRedux";
@@ -56,9 +55,9 @@ export const Header = () => {
     >
       {isSignedIn && (
         <div className="Header__account">
-          <CopyWithTooltip copyText={account.data!.id} showCopyIcon>
+          <CopyText textToCopy={account.data!.id} showCopyIcon showTooltip>
             <Identicon publicAddress={account.data!.id} shortenAddress />
-          </CopyWithTooltip>
+          </CopyText>
         </div>
       )}
     </Layout.Header>
