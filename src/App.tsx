@@ -1,6 +1,10 @@
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Router, Switch, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import { Layout } from "@stellar/design-system";
+import * as Sentry from "@sentry/browser";
+import { Integrations } from "@sentry/tracing";
+import { reactRouterV5Instrumentation, withProfiler } from "@sentry/react";
+import { createBrowserHistory } from "history";
 
 import { store } from "config/store";
 import { Network } from "components/Network";
@@ -13,9 +17,24 @@ import { NotFound } from "pages/NotFound";
 
 import "styles.scss";
 
-export const App = () => (
+const history = createBrowserHistory();
+
+if (process.env.REACT_APP_SENTRY_KEY) {
+  Sentry.init({
+    dsn: process.env.REACT_APP_SENTRY_KEY,
+    release: `account-viewer@${process.env.npm_package_version}`,
+    integrations: [
+      new Integrations.BrowserTracing({
+        routingInstrumentation: reactRouterV5Instrumentation(history),
+      }),
+    ],
+    tracesSampleRate: 1.0,
+  });
+}
+
+const AppComponent = () => (
   <Provider store={store}>
-    <Router>
+    <Router history={history}>
       <Network>
         <Header />
 
@@ -38,3 +57,5 @@ export const App = () => (
     </Router>
   </Provider>
 );
+
+export const App = withProfiler(AppComponent);

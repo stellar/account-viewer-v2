@@ -5,6 +5,10 @@ LABEL maintainer="SDF Ops Team <ops@stellar.org>"
 RUN mkdir -p /app
 WORKDIR /app
 
+ARG REACT_APP_SENTRY_KEY
+
+ENV REACT_APP_SENTRY_KEY $REACT_APP_SENTRY_KEY
+
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install --no-install-recommends -y gpg curl git make ca-certificates apt-transport-https && \
     curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key|gpg --dearmor >/etc/apt/trusted.gpg.d/nodesource.gpg && \
