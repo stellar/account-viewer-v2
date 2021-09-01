@@ -1,7 +1,7 @@
 import { Router, Switch, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import { Layout } from "@stellar/design-system";
-import * as Sentry from "@sentry/browser";
+import { init as SentryInit } from "@sentry/browser";
 import { Integrations } from "@sentry/tracing";
 import { reactRouterV5Instrumentation, withProfiler } from "@sentry/react";
 import { createBrowserHistory } from "history";
@@ -20,7 +20,7 @@ import "styles.scss";
 const history = createBrowserHistory();
 
 if (process.env.REACT_APP_SENTRY_KEY) {
-  Sentry.init({
+  SentryInit({
     dsn: process.env.REACT_APP_SENTRY_KEY,
     release: `account-viewer@${process.env.npm_package_version}`,
     integrations: [
