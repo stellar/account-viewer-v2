@@ -1257,14 +1257,7 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.1.2", "@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.1", "@babel/runtime@^7.12.5", "@babel/runtime@^7.9.2":
-  version "7.12.13"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.12.13.tgz#0a21452352b02542db0ffb928ac2d3ca7cb6d66d"
-  integrity sha512-8+3UMPBrjFa/6TtKi/7sehPKqfAm4g6K+YQjyyFOLUTxzOngcRZTlAVY8sc2CORJYqdHQY8gRPHmn+qo15rCBw==
-  dependencies:
-    regenerator-runtime "^0.13.4"
-
-"@babel/runtime@^7.5.5", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4":
+"@babel/runtime@^7.1.2", "@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.1", "@babel/runtime@^7.12.5", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
   version "7.14.6"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.14.6.tgz#535203bc0892efc7dec60bdc27b2ecf6e409062d"
   integrity sha512-/PCB2uJ7oM44tz8YhC4Z/6PeOKXp4K588f+5M3clr1M4zbqztlo0XEfJ2LEzj/FgwfgGcIdl8n7YYjTCI0BYwg==
@@ -5923,15 +5916,10 @@ eventemitter3@^4.0.0:
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
   integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
 
-events@^3.0.0, events@^3.3.0:
+events@^3.0.0, events@^3.2.0, events@^3.3.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/events/-/events-3.3.0.tgz#31a95ad0a924e2d2c419a813aeb2c4e878ea7400"
   integrity sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==
-
-events@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/events/-/events-3.2.0.tgz#93b87c18f8efcd4202a461aec4dfc0556b639379"
-  integrity sha512-/46HWwbfCX2xTawVfkKLGxMifJYQBWMwY1mjywRtb4c9x8l5NP3KoJtnIOiL1hfdRkIuYhETxQlo62IF8tcnlg==
 
 eventsource@^1.0.7:
   version "1.0.7"
@@ -12872,19 +12860,10 @@ tree-kill@^1.2.2:
   resolved "https://registry.yarnpkg.com/tree-kill/-/tree-kill-1.2.2.tgz#4ca09a9092c88b73a7cdc5e8a01b507b0790a0cc"
   integrity sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==
 
-trezor-connect@^8.1.16:
-  version "8.1.22"
-  resolved "https://registry.yarnpkg.com/trezor-connect/-/trezor-connect-8.1.22.tgz#a6b713c621fb9a108827a2b51253dd6baf05a7a1"
-  integrity sha512-majbYoNlUqNG6AncdXiOdyF02SS73rWkel1of4qHK1T1bNp92cIq8yZMoWXxil3p2b45qs5PA8pK1TBexZCQ9g==
-  dependencies:
-    "@babel/runtime" "^7.12.5"
-    events "^3.2.0"
-    whatwg-fetch "^3.5.0"
-
-trezor-connect@^8.1.27:
-  version "8.1.27"
-  resolved "https://registry.yarnpkg.com/trezor-connect/-/trezor-connect-8.1.27.tgz#7e45839d26e4c859a3ddd69213e8c7f00ba5525e"
-  integrity sha512-U6vP8kehQ5enCTY0k01R6jR3EORC+GIzTl4pM80lu9gJB5e988sM5YwK1hED6KZx7LJvFjWuOxB2J3W0pwv7lw==
+trezor-connect@^8.1.16, trezor-connect@^8.1.29:
+  version "8.1.29"
+  resolved "https://registry.yarnpkg.com/trezor-connect/-/trezor-connect-8.1.29.tgz#8cccf0e4d4101d2331d3e56d60eb39d08d557f44"
+  integrity sha512-SYIT2C3mqNxTsDTglqgz6FyhgXbBFBo0q5WH9ABkyLUarjPNNt2PrmmgF5nT78RE5GwX5QvHoGl9Efis6+4e5Q==
   dependencies:
     "@babel/runtime" "^7.12.5"
     events "^3.2.0"
@@ -13537,15 +13516,10 @@ whatwg-encoding@^1.0.5:
   dependencies:
     iconv-lite "0.4.24"
 
-whatwg-fetch@^3.4.1:
+whatwg-fetch@^3.4.1, whatwg-fetch@^3.5.0:
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.6.2.tgz#dced24f37f2624ed0281725d51d0e2e3fe677f8c"
   integrity sha512-bJlen0FcuU/0EMLrdbJ7zOnW6ITZLrZMIarMUVmdKtsGvZna8vxKYaexICWPfZ8qwf9fzNq+UEIZrnSaApt6RA==
-
-whatwg-fetch@^3.5.0:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.5.0.tgz#605a2cd0a7146e5db141e29d1c62ab84c0c4c868"
-  integrity sha512-jXkLtsR42xhXg7akoDKvKWE40eJeI+2KZqcp2h3NsOrRnDvtWX36KcKl30dy+hxECivdk2BVUHVNrPtoMBUx6A==
 
 whatwg-mimetype@^2.3.0:
   version "2.3.0"
