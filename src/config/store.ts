@@ -11,6 +11,7 @@ import { BigNumber } from "bignumber.js";
 import { RESET_STORE_ACTION_TYPE } from "constants/settings";
 
 import { reducer as account } from "ducks/account";
+import { reducer as claimableBalances } from "ducks/claimableBalances";
 import { reducer as flaggedAccounts } from "ducks/flaggedAccounts";
 import { reducer as keyStore } from "ducks/keyStore";
 import { reducer as liquidityPoolTx } from "ducks/liquidityPoolTx";
@@ -38,6 +39,7 @@ const isSerializable = (value: any) =>
 
 const reducers = combineReducers({
   account,
+  claimableBalances,
   flaggedAccounts,
   keyStore,
   liquidityPoolTx,

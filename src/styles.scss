@@ -231,9 +231,21 @@
     }
   }
 
+  .Table__cell--align--right {
+    display: flex;
+    justify-content: flex-end;
+  }
+
   .DataSection {
     &:not(:last-child) {
       margin-bottom: 2rem;
+    }
+  }
+
+  .ClaimableBalances {
+    .Table {
+      --table-min-width: 500px;
+      width: auto;
     }
   }
 

@@ -102,6 +102,12 @@ export interface LiquidityPoolInitialState {
   errorString?: string;
 }
 
+export interface ClaimableBalancesInitialState {
+  data: ClaimableBalance[];
+  status: ActionStatus | undefined;
+  errorString?: string;
+}
+
 export interface SendTxInitialState {
   data: Horizon.TransactionResponse | null;
   status: ActionStatus | undefined;
@@ -133,6 +139,7 @@ export interface WalletInitialState {
 
 export interface Store {
   account: AccountInitialState;
+  claimableBalances: ClaimableBalancesInitialState;
   flaggedAccounts: FlaggedAccounts;
   keyStore: KeyStoreInitialState;
   liquidityPoolTx: LiquidityPoolInitialState;
@@ -205,4 +212,19 @@ export interface LiquidityPoolAccountTransaction {
   shares: string;
   transactionHash: string;
   type: string;
+}
+
+export interface ClaimableBalance {
+  id: string;
+  asset: {
+    code: string;
+    issuer: string;
+  };
+  amount: string;
+  sponsor: string;
+}
+
+export interface ClaimableBalanceRecord extends ClaimableBalance {
+  [key: string]: any;
+  asset: string;
 }

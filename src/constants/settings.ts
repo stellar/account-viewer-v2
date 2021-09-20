@@ -14,6 +14,7 @@ interface NetworkItemConfig {
   network: string;
   stellarExpertTxUrl: string;
   stellarExpertAccountUrl: string;
+  stellarExpertAssetUrl: string;
 }
 
 interface NetworkConfig {
@@ -27,12 +28,14 @@ export const networkConfig: NetworkConfig = {
     network: StellarSdk.Networks.TESTNET,
     stellarExpertTxUrl: "https://stellar.expert/explorer/testnet/tx/",
     stellarExpertAccountUrl: "https://stellar.expert/explorer/testnet/account/",
+    stellarExpertAssetUrl: "https://stellar.expert/explorer/testnet/asset/",
   },
   public: {
     url: "https://horizon.stellar.org",
     network: StellarSdk.Networks.PUBLIC,
     stellarExpertTxUrl: "https://stellar.expert/explorer/public/tx/",
     stellarExpertAccountUrl: "https://stellar.expert/explorer/public/account/",
+    stellarExpertAssetUrl: "https://stellar.expert/explorer/public/asset/",
   },
 };
 

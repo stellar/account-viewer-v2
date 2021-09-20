@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { BalanceInfo } from "components/BalanceInfo";
+import { ClaimableBalances } from "components/ClaimableBalances";
 import { TransactionHistory } from "components/TransactionHistory";
 import { LiquidityPoolTransactions } from "components/LiquidityPoolTransactions";
 import { logEvent } from "helpers/tracking";
@@ -18,6 +19,7 @@ export const Dashboard = () => {
   return (
     <>
       <BalanceInfo />
+      <ClaimableBalances />
       <TransactionHistory />
       <LiquidityPoolTransactions />
     </>

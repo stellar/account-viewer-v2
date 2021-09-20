@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import moment from "moment";
-import { BigNumber } from "bignumber.js";
 import { Layout, Heading2, TextLink } from "@stellar/design-system";
 import { fetchLiquidityPoolTxAction } from "ducks/liquidityPoolTx";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
+import { formatAmount } from "helpers/formatAmount";
 import { useRedux } from "hooks/useRedux";
 import { LiquidityPoolToken } from "types/types.d";
 
@@ -24,8 +24,6 @@ export const LiquidityPoolTransactions = () => {
       dispatch(fetchLiquidityPoolTxAction(accountId));
     }
   }, [accountId, dispatch]);
-
-  const formatAmount = (amount: string) => new BigNumber(amount).toString();
 
   const getSharesString = (shares: string, type: string) => {
     const sign = type === "liquidity_pool_withdraw" ? "-" : "+";
