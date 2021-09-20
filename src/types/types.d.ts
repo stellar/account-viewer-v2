@@ -98,6 +98,7 @@ export interface KeyStoreInitialState {
 
 export interface LiquidityPoolInitialState {
   data: LiquidityPoolAccountTransaction[];
+  hasMoreTxs?: boolean;
   status: ActionStatus | undefined;
   errorString?: string;
 }

@@ -58,44 +58,59 @@ export const LiquidityPoolTransactions = () => {
         )}
 
         {lpTransactions.length && (
-          <div className="TableContainer">
-            <table className="Table">
-              <thead>
-                <tr>
-                  <th>Date/Time</th>
-                  <th>Liquidity Pool</th>
-                  <th>Token Amount</th>
-                  <th>Token Amount</th>
-                  <th>Shares</th>
-                  <th>Operation ID</th>
-                </tr>
-              </thead>
-              <tbody>
-                {lpTransactions.map((tx) => (
-                  <tr key={tx.id}>
-                    <td>{moment(tx.createdAt).format("l HH:mm")}</td>
-                    {/* TODO: add LP link once available on stellar.expert */}
-                    <td>{getPoolTitle(tx.tokens)}</td>
-                    <td>{getTokenAmountString(tx.tokens[0])}</td>
-                    <td>{getTokenAmountString(tx.tokens[1])}</td>
-                    <td>{getSharesString(tx.shares, tx.type)}</td>
-                    <td>
-                      <TextLink
-                        href={`${
-                          getNetworkConfig(settings.isTestnet)
-                            .stellarExpertTxUrl
-                        }${tx.transactionHash}`}
-                        variant={TextLink.variant.secondary}
-                        underline
-                      >
-                        {tx.id}
-                      </TextLink>
-                    </td>
+          <>
+            <div className="TableContainer">
+              <table className="Table">
+                <thead>
+                  <tr>
+                    <th>Date/Time</th>
+                    <th>Liquidity Pool</th>
+                    <th>Token Amount</th>
+                    <th>Token Amount</th>
+                    <th>Shares</th>
+                    <th>Operation ID</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {lpTransactions.map((tx) => (
+                    <tr key={tx.id}>
+                      <td>{moment(tx.createdAt).format("l HH:mm")}</td>
+                      {/* TODO: add LP link once available on stellar.expert */}
+                      <td>{getPoolTitle(tx.tokens)}</td>
+                      <td>{getTokenAmountString(tx.tokens[0])}</td>
+                      <td>{getTokenAmountString(tx.tokens[1])}</td>
+                      <td>{getSharesString(tx.shares, tx.type)}</td>
+                      <td>
+                        <TextLink
+                          href={`${
+                            getNetworkConfig(settings.isTestnet)
+                              .stellarExpertTxUrl
+                          }${tx.transactionHash}`}
+                          variant={TextLink.variant.secondary}
+                          underline
+                        >
+                          {tx.id}
+                        </TextLink>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* TODO: use LP link once available */}
+            {liquidityPoolTx.hasMoreTxs && (
+              <div className="TableNoteContainer">
+                <TextLink
+                  href={`${
+                    getNetworkConfig(settings.isTestnet).stellarExpertAccountUrl
+                  }${accountId}`}
+                >
+                  View full list of transactions
+                </TextLink>
+              </div>
+            )}
+          </>
         )}
       </Layout.Inset>
     </div>

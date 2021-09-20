@@ -179,10 +179,6 @@
   }
 
   .TransactionHistory {
-    .TableNoteContainer {
-      margin-top: 1rem;
-    }
-
     &__header {
       margin-bottom: 2rem;
 
@@ -229,6 +225,10 @@
         display: block;
       }
     }
+  }
+
+  .TableNoteContainer {
+    margin-top: 1rem;
   }
 
   .Table__cell--align--right {

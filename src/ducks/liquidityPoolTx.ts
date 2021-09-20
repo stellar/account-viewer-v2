@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import StellarSdk from "stellar-sdk";
 import { RootState } from "config/store";
+import { TX_HISTORY_LIMIT } from "constants/settings";
 import { settingsSelector } from "ducks/settings";
 import { getAccountLPTransactions } from "helpers/getAccountLPTransactions";
 import { getErrorString } from "helpers/getErrorString";
@@ -15,6 +16,7 @@ import {
 export const fetchLiquidityPoolTxAction = createAsyncThunk<
   {
     data: LiquidityPoolAccountTransaction[];
+    hasMoreTxs: boolean;
   },
   string,
   { rejectValue: RejectMessage; state: RootState }
@@ -26,9 +28,15 @@ export const fetchLiquidityPoolTxAction = createAsyncThunk<
     const server = new StellarSdk.Server(networkConfig.url);
 
     let data: LiquidityPoolAccountTransaction[] = [];
+    let hasMoreTxs = false;
 
     try {
       data = await getAccountLPTransactions({ server, publicKey });
+
+      if (data.length > TX_HISTORY_LIMIT) {
+        hasMoreTxs = true;
+        data = data.slice(0, TX_HISTORY_LIMIT);
+      }
     } catch (error) {
       return rejectWithValue({
         errorString: getErrorString(error),
@@ -37,12 +45,14 @@ export const fetchLiquidityPoolTxAction = createAsyncThunk<
 
     return {
       data,
+      hasMoreTxs,
     };
   },
 );
 
 const initialLiquidityPoolTxState: LiquidityPoolInitialState = {
   data: [],
+  hasMoreTxs: false,
   errorString: undefined,
   status: undefined,
 };
@@ -58,6 +68,7 @@ export const txHistorySlice = createSlice({
     });
     builder.addCase(fetchLiquidityPoolTxAction.fulfilled, (state, action) => {
       state.data = action.payload.data;
+      state.hasMoreTxs = action.payload.hasMoreTxs;
       state.status = ActionStatus.SUCCESS;
     });
     builder.addCase(fetchLiquidityPoolTxAction.rejected, (state, action) => {
