@@ -179,21 +179,6 @@
   }
 
   .TransactionHistory {
-    .TableContainer {
-      position: relative;
-      overflow: auto;
-
-      .Table {
-        td:first-child {
-          z-index: 1;
-        }
-
-        span {
-          display: block;
-        }
-      }
-    }
-
     .TableNoteContainer {
       margin-top: 1rem;
     }
@@ -227,6 +212,28 @@
       span {
         max-width: 12rem;
       }
+    }
+  }
+
+  .TableContainer {
+    margin-top: 2rem;
+    position: relative;
+    overflow: auto;
+
+    .Table {
+      td:first-child {
+        z-index: 1;
+      }
+
+      span {
+        display: block;
+      }
+    }
+  }
+
+  .DataSection {
+    &:not(:last-child) {
+      margin-bottom: 2rem;
     }
   }
 

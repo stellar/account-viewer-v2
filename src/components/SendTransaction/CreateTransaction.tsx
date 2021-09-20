@@ -6,7 +6,7 @@ import StellarSdk, {
   FederationServer,
   StrKey,
 } from "stellar-sdk";
-import BigNumber from "bignumber.js";
+import { BigNumber } from "bignumber.js";
 import {
   Button,
   InfoBlock,

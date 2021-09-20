@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import BigNumber from "bignumber.js";
+import { BigNumber } from "bignumber.js";
 import {
   Button,
   InfoBlock,

@@ -1,6 +1,6 @@
 // https://github.com/trezor/connect/blob/develop/src/js/plugins/stellar/plugin.js
 import StellarSdk, { MemoType, MemoValue, Asset } from "stellar-sdk";
-import BigNumber from "bignumber.js";
+import { BigNumber } from "bignumber.js";
 
 /**
  * Transforms StellarSdk.Signer to TrezorConnect.StellarTransaction.Signer

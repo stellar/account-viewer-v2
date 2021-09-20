@@ -96,6 +96,12 @@ export interface KeyStoreInitialState {
   };
 }
 
+export interface LiquidityPoolInitialState {
+  data: LiquidityPoolAccountTransaction[];
+  status: ActionStatus | undefined;
+  errorString?: string;
+}
+
 export interface SendTxInitialState {
   data: Horizon.TransactionResponse | null;
   status: ActionStatus | undefined;
@@ -129,6 +135,7 @@ export interface Store {
   account: AccountInitialState;
   flaggedAccounts: FlaggedAccounts;
   keyStore: KeyStoreInitialState;
+  liquidityPoolTx: LiquidityPoolInitialState;
   memoRequiredAccounts: MemoRequiredAccountsInitialState;
   sendTx: SendTxInitialState;
   settings: SettingsInitialState;
@@ -172,4 +179,30 @@ export interface AnyObject {
 export enum StellarThemeValue {
   LIGHT = "light-mode",
   DARK = "dark-mode",
+}
+
+export interface LiquidityPoolToken {
+  asset: string;
+  amount: string;
+}
+
+export interface LiquidityPoolOperation {
+  [key: string]: any;
+  id: string;
+  type: string;
+  created_at: string;
+  transaction_hash: string;
+  liquidity_pool_id: string;
+  reserves_deposited: LiquidityPoolToken[];
+  shares_received: string;
+}
+
+export interface LiquidityPoolAccountTransaction {
+  tokens: LiquidityPoolToken[];
+  createdAt: string;
+  id: string;
+  liquidityPoolId: string;
+  shares: string;
+  transactionHash: string;
+  type: string;
 }
