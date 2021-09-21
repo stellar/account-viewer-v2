@@ -8,6 +8,7 @@ export const FLAGGED_ACCOUNT_DATE_STORAGE_ID = "flaggedAcountDate";
 export const MEMO_REQ_ACCOUNT_STORAGE_ID = "memoRequiredAccounts";
 export const MEMO_REQ_ACCOUNT_DATE_STORAGE_ID = "memoRequiredAccountsDate";
 export const LOCAL_STORAGE_STELLAR_THEME = "stellarTheme:accountViewer";
+const STELLAR_EXPERT_URL = "https://stellar.expert/explorer";
 
 interface NetworkItemConfig {
   url: string;
@@ -26,16 +27,16 @@ export const networkConfig: NetworkConfig = {
   testnet: {
     url: "https://horizon-testnet.stellar.org",
     network: StellarSdk.Networks.TESTNET,
-    stellarExpertTxUrl: "https://stellar.expert/explorer/testnet/tx/",
-    stellarExpertAccountUrl: "https://stellar.expert/explorer/testnet/account/",
-    stellarExpertAssetUrl: "https://stellar.expert/explorer/testnet/asset/",
+    stellarExpertTxUrl: `${STELLAR_EXPERT_URL}/testnet/tx/`,
+    stellarExpertAccountUrl: `${STELLAR_EXPERT_URL}/testnet/account/`,
+    stellarExpertAssetUrl: `${STELLAR_EXPERT_URL}/testnet/asset/`,
   },
   public: {
     url: "https://horizon.stellar.org",
     network: StellarSdk.Networks.PUBLIC,
-    stellarExpertTxUrl: "https://stellar.expert/explorer/public/tx/",
-    stellarExpertAccountUrl: "https://stellar.expert/explorer/public/account/",
-    stellarExpertAssetUrl: "https://stellar.expert/explorer/public/asset/",
+    stellarExpertTxUrl: `${STELLAR_EXPERT_URL}/public/tx/`,
+    stellarExpertAccountUrl: `${STELLAR_EXPERT_URL}/public/account/`,
+    stellarExpertAssetUrl: `${STELLAR_EXPERT_URL}/public/asset/`,
   },
 };
 
