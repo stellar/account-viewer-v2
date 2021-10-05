@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getCatchError } from "@stellar/frontend-helpers";
 import {
   MEMO_REQ_ACCOUNT_STORAGE_ID,
   MEMO_REQ_ACCOUNT_DATE_STORAGE_ID,
@@ -22,7 +23,8 @@ export const fetchMemoRequiredAccountsAction = createAsyncThunk<
       storageDateId: MEMO_REQ_ACCOUNT_DATE_STORAGE_ID,
       getAccountsFunc: getMemoRequiredAccounts,
     });
-  } catch (error) {
+  } catch (e) {
+    const error = getCatchError(e);
     console.error(error.message);
   }
 

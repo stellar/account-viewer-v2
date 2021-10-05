@@ -77,12 +77,7 @@ export const loadPrivateKey = async ({
   password: string;
 }) => {
   const keyManager = createKeyManager();
-  let result;
-  try {
-    result = await keyManager.loadKey(id, password);
-  } catch (error) {
-    return error;
-  }
+  const result = await keyManager.loadKey(id, password);
   return result;
 };
 

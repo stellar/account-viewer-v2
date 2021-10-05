@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getCatchError } from "@stellar/frontend-helpers";
 
 import {
   FLAGGED_ACCOUNT_STORAGE_ID,
@@ -24,7 +25,8 @@ export const fetchFlaggedAccountsAction = createAsyncThunk(
         storageDateId: FLAGGED_ACCOUNT_DATE_STORAGE_ID,
         getAccountsFunc: getFlaggedAccounts,
       });
-    } catch (error) {
+    } catch (e) {
+      const error = getCatchError(e);
       console.error(error.message);
     }
 
