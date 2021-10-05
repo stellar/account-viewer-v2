@@ -27,6 +27,7 @@ export const getAccountLPTransactions = async ({
         r.type === "liquidity_pool_withdraw",
     )
     .map((lptx: LiquidityPoolOperation) => {
+      /* eslint-disable camelcase */
       const {
         created_at: createdAt,
         id,
@@ -48,5 +49,6 @@ export const getAccountLPTransactions = async ({
         transactionHash,
         type,
       };
+      /* eslint-enable camelcase */
     });
 };

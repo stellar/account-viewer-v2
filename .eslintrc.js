@@ -6,7 +6,6 @@ module.exports = {
     "react/jsx-filename-extension": ["error", { extensions: [".tsx", ".jsx"] }],
     "no-plusplus": "off",
     "jsdoc/check-indentation": "off",
-    camelcase: "off",
     "@typescript-eslint/naming-convention": [
       "error",
       {

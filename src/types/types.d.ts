@@ -198,11 +198,13 @@ export interface LiquidityPoolOperation {
   [key: string]: any;
   id: string;
   type: string;
+  /* eslint-disable camelcase */
   created_at: string;
   transaction_hash: string;
   liquidity_pool_id: string;
   reserves_deposited: LiquidityPoolToken[];
   shares_received: string;
+  /* eslint-enable camelcase */
 }
 
 export interface LiquidityPoolAccountTransaction {
