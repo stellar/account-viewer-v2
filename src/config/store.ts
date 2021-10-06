@@ -6,13 +6,15 @@ import {
   CombinedState,
 } from "@reduxjs/toolkit";
 import { combineReducers, Action } from "redux";
-import BigNumber from "bignumber.js";
+import { BigNumber } from "bignumber.js";
 
 import { RESET_STORE_ACTION_TYPE } from "constants/settings";
 
 import { reducer as account } from "ducks/account";
+import { reducer as claimableBalances } from "ducks/claimableBalances";
 import { reducer as flaggedAccounts } from "ducks/flaggedAccounts";
 import { reducer as keyStore } from "ducks/keyStore";
+import { reducer as liquidityPoolTx } from "ducks/liquidityPoolTx";
 import { reducer as memoRequiredAccounts } from "ducks/memoRequiredAccounts";
 import { reducer as sendTx } from "ducks/sendTx";
 import { reducer as settings } from "ducks/settings";
@@ -37,8 +39,10 @@ const isSerializable = (value: any) =>
 
 const reducers = combineReducers({
   account,
+  claimableBalances,
   flaggedAccounts,
   keyStore,
+  liquidityPoolTx,
   memoRequiredAccounts,
   sendTx,
   settings,

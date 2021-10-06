@@ -97,8 +97,8 @@ export const TransactionHistory = () => {
   };
 
   return (
-    <Layout.Inset>
-      <div className="TransactionHistory">
+    <div className="TransactionHistory DataSection">
+      <Layout.Inset>
         <div className="TransactionHistory__header">
           <Heading2>Payments History</Heading2>
 
@@ -185,7 +185,7 @@ export const TransactionHistory = () => {
             )}
           </>
         )}
-      </div>
-    </Layout.Inset>
+      </Layout.Inset>
+    </div>
   );
 };

@@ -96,6 +96,19 @@ export interface KeyStoreInitialState {
   };
 }
 
+export interface LiquidityPoolInitialState {
+  data: LiquidityPoolAccountTransaction[];
+  hasMoreTxs?: boolean;
+  status: ActionStatus | undefined;
+  errorString?: string;
+}
+
+export interface ClaimableBalancesInitialState {
+  data: ClaimableBalance[];
+  status: ActionStatus | undefined;
+  errorString?: string;
+}
+
 export interface SendTxInitialState {
   data: Horizon.TransactionResponse | null;
   status: ActionStatus | undefined;
@@ -127,8 +140,10 @@ export interface WalletInitialState {
 
 export interface Store {
   account: AccountInitialState;
+  claimableBalances: ClaimableBalancesInitialState;
   flaggedAccounts: FlaggedAccounts;
   keyStore: KeyStoreInitialState;
+  liquidityPoolTx: LiquidityPoolInitialState;
   memoRequiredAccounts: MemoRequiredAccountsInitialState;
   sendTx: SendTxInitialState;
   settings: SettingsInitialState;
@@ -172,4 +187,47 @@ export interface AnyObject {
 export enum StellarThemeValue {
   LIGHT = "light-mode",
   DARK = "dark-mode",
+}
+
+export interface LiquidityPoolToken {
+  asset: string;
+  amount: string;
+}
+
+export interface LiquidityPoolOperation {
+  [key: string]: any;
+  id: string;
+  type: string;
+  /* eslint-disable camelcase */
+  created_at: string;
+  transaction_hash: string;
+  liquidity_pool_id: string;
+  reserves_deposited: LiquidityPoolToken[];
+  shares_received: string;
+  /* eslint-enable camelcase */
+}
+
+export interface LiquidityPoolAccountTransaction {
+  tokens: LiquidityPoolToken[];
+  createdAt: string;
+  id: string;
+  liquidityPoolId: string;
+  shares: string;
+  transactionHash: string;
+  type: string;
+}
+
+export interface ClaimableBalance {
+  id: string;
+  asset: {
+    code: string;
+    issuer: string;
+  };
+  amount: string;
+  sponsor: string;
+}
+
+export interface ClaimableBalanceRecord extends ClaimableBalance {
+  [key: string]: any;
+  asset: string;
 }

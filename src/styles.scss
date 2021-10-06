@@ -179,25 +179,6 @@
   }
 
   .TransactionHistory {
-    .TableContainer {
-      position: relative;
-      overflow: auto;
-
-      .Table {
-        td:first-child {
-          z-index: 1;
-        }
-
-        span {
-          display: block;
-        }
-      }
-    }
-
-    .TableNoteContainer {
-      margin-top: 1rem;
-    }
-
     &__header {
       margin-bottom: 2rem;
 
@@ -227,6 +208,44 @@
       span {
         max-width: 12rem;
       }
+    }
+  }
+
+  .TableContainer {
+    margin-top: 2rem;
+    position: relative;
+    overflow: auto;
+
+    .Table {
+      td:first-child {
+        z-index: 1;
+      }
+
+      span {
+        display: block;
+      }
+    }
+  }
+
+  .TableNoteContainer {
+    margin-top: 1rem;
+  }
+
+  .Table__cell--align--right {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .DataSection {
+    &:not(:last-child) {
+      margin-bottom: 2rem;
+    }
+  }
+
+  .ClaimableBalances {
+    .Table {
+      --table-min-width: 500px;
+      width: auto;
     }
   }
 
