@@ -1,4 +1,4 @@
-import BigNumber from "bignumber.js";
+import { BigNumber } from "bignumber.js";
 
 export const stroopsFromLumens = (lumens: BigNumber | string): BigNumber => {
   if (lumens instanceof BigNumber) {
