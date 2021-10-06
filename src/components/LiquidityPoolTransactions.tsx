@@ -57,7 +57,7 @@ export const LiquidityPoolTransactions = () => {
           <p>There are no liquidity pool transactions to show</p>
         )}
 
-        {lpTransactions.length && (
+        {lpTransactions.length > 0 && (
           <>
             <div className="TableContainer">
               <table className="Table">
