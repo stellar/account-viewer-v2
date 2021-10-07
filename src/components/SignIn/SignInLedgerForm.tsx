@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { Button, InfoBlock, Loader, TextLink } from "@stellar/design-system";
+import { getCatchError } from "@stellar/frontend-helpers";
 import { KeyType } from "@stellar/wallet-sdk";
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 
@@ -110,10 +111,11 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
       const transport = await TransportWebUSB.request();
       dispatch(fetchLedgerStellarAddressAction({ ledgerBipPath, transport }));
     } catch (e) {
+      const error = getCatchError(e);
       const message =
-        e.message === "navigator.usb is undefined"
+        error.message === "navigator.usb is undefined"
           ? "Your browser does not support WebUSB"
-          : e.toString();
+          : error.toString();
 
       setErrorMessage(message);
     }

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import LedgerApi from "@ledgerhq/hw-app-str";
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
+import { getCatchError } from "@stellar/frontend-helpers";
 import { ActionStatus, RejectMessage, WalletInitialState } from "types/types.d";
 
 export const fetchLedgerStellarAddressAction = createAsyncThunk<
@@ -15,7 +16,8 @@ export const fetchLedgerStellarAddressAction = createAsyncThunk<
       const ledgerApi = new LedgerApi(transport);
       const response = await ledgerApi.getPublicKey(ledgerBipPath);
       result.publicKey = response.publicKey;
-    } catch (error) {
+    } catch (e) {
+      const error = getCatchError(e);
       return rejectWithValue({ errorString: error.toString() });
     }
     return result;

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getPublicKey } from "@stellar/freighter-api";
+import { getCatchError } from "@stellar/frontend-helpers";
 
 import { ActionStatus, RejectMessage, WalletInitialState } from "types/types.d";
 
@@ -13,7 +14,8 @@ export const fetchFreighterStellarAddressAction = createAsyncThunk<
     try {
       const freighterResponse = await getPublicKey();
       return { publicKey: freighterResponse };
-    } catch (error) {
+    } catch (e) {
+      const error = getCatchError(e);
       return rejectWithValue({
         errorString: error.toString(),
       });

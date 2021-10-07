@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import albedo from "@albedo-link/intent";
+import { getCatchError } from "@stellar/frontend-helpers";
 
 import { ActionStatus, RejectMessage, WalletInitialState } from "types/types.d";
 
@@ -14,7 +15,8 @@ export const fetchAlbedoStellarAddressAction = createAsyncThunk<
       const albedoResponse = await albedo.publicKey();
 
       return { publicKey: albedoResponse.pubkey };
-    } catch (error) {
+    } catch (e) {
+      const error = getCatchError(e);
       return rejectWithValue({
         errorString: error.message || error.toString(),
       });

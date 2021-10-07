@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getCatchError } from "@stellar/frontend-helpers";
 import TrezorConnect from "trezor-connect";
 
 import { ActionStatus, RejectMessage, WalletInitialState } from "types/types.d";
@@ -26,7 +27,8 @@ export const fetchTrezorStellarAddressAction = createAsyncThunk<
       }
 
       return { publicKey: trezorResponse.payload.address };
-    } catch (error) {
+    } catch (e) {
+      const error = getCatchError(e);
       return rejectWithValue({
         errorString: error.toString(),
       });
