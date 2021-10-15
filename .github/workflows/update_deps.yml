@@ -1,0 +1,26 @@
+name: Monthly dependency updates
+on:
+  schedule:
+    # First of every month
+    - cron: 0 0 1 * *
+
+jobs:
+  create_issue:
+    name: Update dependencies
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Update dependencies
+        uses: imjohnbo/issue-bot@v3.3.4
+        with:
+          title: "Update dependencies"
+          body: |
+            Update all project dependencies
+            ```
+            yarn upgrade-interactive --latest
+            ```
+          pinned: false
+          close-previous: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
