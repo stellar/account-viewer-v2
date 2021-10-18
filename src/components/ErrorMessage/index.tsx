@@ -6,6 +6,7 @@ interface ErrorMessageProps {
   marginTop?: string;
   marginBottom?: string;
   textAlign?: "left" | "center" | "right";
+  fontSize?: string;
 }
 
 export const ErrorMessage: React.FC<ErrorMessageProps> = ({
@@ -13,6 +14,7 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = ({
   marginTop = "0",
   marginBottom = "0",
   textAlign = "left",
+  fontSize = "inherit",
 }) => {
   if (!message) {
     return null;
@@ -21,7 +23,7 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = ({
   return (
     <div
       className="ErrorMessage"
-      style={{ marginTop, marginBottom, textAlign }}
+      style={{ marginTop, marginBottom, textAlign, fontSize }}
     >
       {message}
     </div>
