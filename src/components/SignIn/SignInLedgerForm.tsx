@@ -67,7 +67,9 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
       accountStatus === ActionStatus.ERROR
     ) {
       const message =
-        ledgerErrorMessage || accountErrorMessage || "Connection failed";
+        clarifyLedgerErrorMessage(ledgerErrorMessage) ||
+        accountErrorMessage ||
+        "Connection failed";
       setErrorMessage(message);
       logEvent("login: saw connect ledger error", {
         message,
@@ -104,6 +106,22 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
       );
     }
   }, [isAuthenticated, ledgerData, ledgerBipPath, dispatch, history]);
+
+  const clarifyLedgerErrorMessage = (message?: string) => {
+    if (!message) {
+      return null;
+    }
+
+    if (message.includes("0x6511")) {
+      return "Please select Stellar app.";
+    }
+
+    if (message.includes("0x6700")) {
+      return "The firmware does not support WebUSB, please update the firmware.";
+    }
+
+    return message;
+  };
 
   const handleConnect = async () => {
     setErrorMessage("");
