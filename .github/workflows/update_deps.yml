@@ -16,10 +16,11 @@ jobs:
         with:
           title: "Update dependencies"
           body: |
-            Update all project dependencies
+            Update all project dependencies.
             ```
             yarn upgrade-interactive --latest
             ```
+            Make sure there are no issues in the code editor, code compiles, and it runs without issues in the browser.
           pinned: false
           close-previous: false
         env:
