@@ -59,7 +59,7 @@ export interface AccountInitialState {
   isAccountWatcherStarted: boolean;
   isUnfunded: boolean;
   status: ActionStatus | undefined;
-  errorString?: string;
+  errorString: string | undefined;
 }
 
 interface FlaggedAccount {
@@ -68,7 +68,7 @@ interface FlaggedAccount {
 }
 
 export interface FlaggedAccounts {
-  data: [FlaggedAccount];
+  data: FlaggedAccount[];
   status: ActionStatus | undefined;
 }
 
@@ -90,7 +90,7 @@ export interface MemoRequiredAccountsInitialState {
 export interface KeyStoreInitialState {
   keyStoreId: string;
   password: string;
-  errorString?: string;
+  errorString: string | undefined;
   custom?: {
     [key: string]: any;
   };
@@ -100,19 +100,19 @@ export interface LiquidityPoolInitialState {
   data: LiquidityPoolAccountTransaction[];
   hasMoreTxs?: boolean;
   status: ActionStatus | undefined;
-  errorString?: string;
+  errorString: string | undefined;
 }
 
 export interface ClaimableBalancesInitialState {
   data: ClaimableBalance[];
   status: ActionStatus | undefined;
-  errorString?: string;
+  errorString: string | undefined;
 }
 
 export interface SendTxInitialState {
   data: Horizon.TransactionResponse | null;
   status: ActionStatus | undefined;
-  errorString?: string;
+  errorString: string | undefined;
 }
 
 export interface SettingsInitialState {
@@ -128,14 +128,14 @@ export interface TxHistoryInitialState {
   data: Types.Payment[];
   hasMoreTxs?: boolean;
   isTxWatcherStarted: boolean;
-  errorString?: string;
+  errorString: string | undefined;
   status: ActionStatus | undefined;
 }
 
 export interface WalletInitialState {
   data: { publicKey: string } | null;
   status: ActionStatus | undefined;
-  errorString?: string;
+  errorString: string | undefined;
 }
 
 export interface Store {
