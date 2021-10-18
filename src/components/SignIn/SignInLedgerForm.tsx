@@ -113,7 +113,7 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
     }
 
     if (message.includes("0x6511")) {
-      return "Please select Stellar app.";
+      return "Please select Stellar app and try again.";
     }
 
     if (message.includes("0x6700")) {
