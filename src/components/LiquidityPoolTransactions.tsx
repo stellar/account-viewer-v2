@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import moment from "moment";
 import { Layout, Heading2, TextLink } from "@stellar/design-system";
+import { NATIVE_ASSET_CODE } from "constants/settings";
 import { fetchLiquidityPoolTxAction } from "ducks/liquidityPoolTx";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { formatAmount } from "helpers/formatAmount";
@@ -32,7 +33,7 @@ export const LiquidityPoolTransactions = () => {
 
   const getTokenString = (asset: string) => {
     if (asset === AssetType.NATIVE) {
-      return "XLM";
+      return NATIVE_ASSET_CODE;
     }
 
     return asset.split(":")[0];

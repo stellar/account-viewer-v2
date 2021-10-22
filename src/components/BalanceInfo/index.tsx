@@ -12,6 +12,7 @@ import {
 import { SendTransactionFlow } from "components/SendTransaction/SendTransactionFlow";
 import { ReceiveTransaction } from "components/ReceiveTransaction";
 import { LayoutSection } from "components/LayoutSection";
+import { NATIVE_ASSET_CODE } from "constants/settings";
 import { startAccountWatcherAction } from "ducks/account";
 import { resetSendTxAction } from "ducks/sendTx";
 import { logEvent } from "helpers/tracking";
@@ -69,7 +70,7 @@ export const BalanceInfo = () => {
         <div className="BalanceInfo__balance">
           <Heading3>Your Balance</Heading3>
           <div className="BalanceInfo__balance__amount">
-            {nativeBalance} Lumens (XLM)
+            {`${nativeBalance} Lumens (${NATIVE_ASSET_CODE})`}
           </div>
         </div>
 
@@ -107,7 +108,7 @@ export const BalanceInfo = () => {
           <InfoBlock variant={InfoBlock.variant.warning}>
             This account is currently inactive. To activate it,{" "}
             <TextLink href="https://developers.stellar.org/docs/glossary/minimum-balance/">
-              send at least 1 lumen (XLM)
+              {`send at least 1 lumen (${NATIVE_ASSET_CODE})`}
             </TextLink>{" "}
             to the Stellar public key displayed above.
           </InfoBlock>

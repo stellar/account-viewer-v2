@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Heading2, Identicon, Layout, TextLink } from "@stellar/design-system";
+import { NATIVE_ASSET_CODE } from "constants/settings";
 import { fetchClaimableBalancesAction } from "ducks/claimableBalances";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { formatAmount } from "helpers/formatAmount";
@@ -30,7 +31,7 @@ export const ClaimableBalances = () => {
     let assetString;
 
     if (asset.code === AssetType.NATIVE) {
-      assetString = "XLM";
+      assetString = NATIVE_ASSET_CODE;
     } else {
       assetString = `${asset.code}-${asset.issuer}`;
     }
@@ -64,7 +65,7 @@ export const ClaimableBalances = () => {
                       underline
                     >
                       {cb.asset.code === AssetType.NATIVE
-                        ? "XLM"
+                        ? NATIVE_ASSET_CODE
                         : cb.asset.code}
                     </TextLink>
                   </td>
