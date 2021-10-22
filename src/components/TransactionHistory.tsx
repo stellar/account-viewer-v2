@@ -16,7 +16,7 @@ import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { getMemoTypeText } from "helpers/getMemoTypeText";
 import { ErrorMessage } from "components/ErrorMessage";
 
-import { TX_HISTORY_MIN_AMOUNT } from "constants/settings";
+import { NATIVE_ASSET_CODE, TX_HISTORY_MIN_AMOUNT } from "constants/settings";
 import { ActionStatus } from "types/types.d";
 
 const LABEL_DATE_TIME = "Date/Time";
@@ -107,7 +107,7 @@ export const TransactionHistory = () => {
               <span>
                 {`${
                   showAllTxs ? "Including" : "Hiding"
-                } payments smaller than 0.5 XLM`}{" "}
+                } payments smaller than 0.5 ${NATIVE_ASSET_CODE}`}{" "}
               </span>
 
               <TextLink

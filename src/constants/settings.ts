@@ -8,6 +8,7 @@ export const FLAGGED_ACCOUNT_DATE_STORAGE_ID = "flaggedAcountDate";
 export const MEMO_REQ_ACCOUNT_STORAGE_ID = "memoRequiredAccounts";
 export const MEMO_REQ_ACCOUNT_DATE_STORAGE_ID = "memoRequiredAccountsDate";
 export const LOCAL_STORAGE_STELLAR_THEME = "stellarTheme:accountViewer";
+export const NATIVE_ASSET_CODE = "XLM";
 const STELLAR_EXPERT_URL = "https://stellar.expert/explorer";
 
 interface NetworkItemConfig {
