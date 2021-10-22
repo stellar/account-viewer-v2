@@ -10,6 +10,10 @@ declare global {
   }
 }
 
+export enum AssetType {
+  NATIVE = "native",
+}
+
 export enum NetworkType {
   TESTNET = "testnet",
   PUBLIC = "public",

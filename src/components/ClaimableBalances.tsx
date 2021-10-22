@@ -5,6 +5,7 @@ import { fetchClaimableBalancesAction } from "ducks/claimableBalances";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { formatAmount } from "helpers/formatAmount";
 import { useRedux } from "hooks/useRedux";
+import { AssetType } from "types/types.d";
 
 export const ClaimableBalances = () => {
   const { account, claimableBalances, settings } = useRedux(
@@ -25,6 +26,20 @@ export const ClaimableBalances = () => {
     return null;
   }
 
+  const getAssetLink = (asset: { code: string; issuer: string }) => {
+    let assetString;
+
+    if (asset.code === AssetType.NATIVE) {
+      assetString = "XLM";
+    } else {
+      assetString = `${asset.code}-${asset.issuer}`;
+    }
+
+    return `${
+      getNetworkConfig(settings.isTestnet).stellarExpertAssetUrl
+    }${assetString}`;
+  };
+
   return (
     <div className="ClaimableBalances DataSection">
       <Layout.Inset>
@@ -44,14 +59,13 @@ export const ClaimableBalances = () => {
                 <tr key={cb.id}>
                   <td>
                     <TextLink
-                      href={`${
-                        getNetworkConfig(settings.isTestnet)
-                          .stellarExpertAssetUrl
-                      }${cb.asset.code}-${cb.asset.issuer}`}
+                      href={getAssetLink(cb.asset)}
                       variant={TextLink.variant.secondary}
                       underline
                     >
-                      {cb.asset.code}
+                      {cb.asset.code === AssetType.NATIVE
+                        ? "XLM"
+                        : cb.asset.code}
                     </TextLink>
                   </td>
                   <td>{formatAmount(cb.amount)}</td>

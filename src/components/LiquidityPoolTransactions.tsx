@@ -6,7 +6,7 @@ import { fetchLiquidityPoolTxAction } from "ducks/liquidityPoolTx";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { formatAmount } from "helpers/formatAmount";
 import { useRedux } from "hooks/useRedux";
-import { LiquidityPoolToken } from "types/types.d";
+import { LiquidityPoolToken, AssetType } from "types/types.d";
 
 export const LiquidityPoolTransactions = () => {
   const { account, liquidityPoolTx, settings } = useRedux(
@@ -31,7 +31,7 @@ export const LiquidityPoolTransactions = () => {
   };
 
   const getTokenString = (asset: string) => {
-    if (asset === "native") {
+    if (asset === AssetType.NATIVE) {
       return "XLM";
     }
 
