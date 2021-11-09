@@ -1813,10 +1813,10 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@stellar/design-system@^0.4.0":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@stellar/design-system/-/design-system-0.4.1.tgz#2d8d5ab16c49d896a83f87328e1e4e29d0c92818"
-  integrity sha512-xhnISuEkXmKJ1z+zKYzMIb4wmB3vHvGqRkW2WCyDBFTPil1HZoTZ0+kupKjM+Jdh+2V5ZsKqs0BhohONp1UM5g==
+"@stellar/design-system@^0.4.3":
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/@stellar/design-system/-/design-system-0.4.3.tgz#2ce44172b664ade348fa3885851cba52477b7dbb"
+  integrity sha512-4V7t/pFBwSlNt7F2pAB3WBYL9LpjAkDeiVEpVgYIK8EBYVt3wWwFAXX2wlacufgOddbQp4WP+rKtqsJyEGwzUw==
   dependencies:
     configurable-date-input-polyfill "^3.1.0"
     react-copy-to-clipboard "^5.0.4"
