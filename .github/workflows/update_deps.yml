@@ -22,6 +22,10 @@ jobs:
             ```
             Make sure there are no issues in the code editor, code compiles, and it runs without issues in the browser.
           pinned: false
-          close-previous: false
+          close-previous: true
+          project-type: organization
+          project: 21
+          column: Backlog
+          labels: "account-viewer-v2, dependencies"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
