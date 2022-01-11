@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Layout, Identicon, CopyText } from "@stellar/design-system";
 
 import { resetStoreAction } from "config/store";
@@ -12,7 +12,7 @@ import { logEvent } from "helpers/tracking";
 
 export const Header = () => {
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { account } = useRedux("account");
   const { isAuthenticated } = account;
 
@@ -33,9 +33,7 @@ export const Header = () => {
     dispatch(stopAccountWatcherAction());
     dispatch(stopTxHistoryWatcherAction());
     dispatch(resetStoreAction());
-    history.push({
-      pathname: "/",
-    });
+    navigate("/");
   };
 
   const trackThemeChange = (isDarkMode: boolean) => {

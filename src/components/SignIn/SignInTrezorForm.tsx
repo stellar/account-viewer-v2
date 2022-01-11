@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import TrezorConnect from "trezor-connect";
 import { Button, InfoBlock } from "@stellar/design-system";
@@ -21,7 +21,8 @@ import { ActionStatus, AuthType, ModalPageProps } from "types/types.d";
 
 export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
   const [bipPath, setBipPath] = useState<string>(defaultStellarBipPath);
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
 
   const { walletTrezor, account } = useRedux("walletTrezor", "account");
@@ -95,9 +96,9 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
   useEffect(() => {
     if (accountStatus === ActionStatus.SUCCESS) {
       if (isAuthenticated) {
-        history.push({
+        navigate({
           pathname: "/dashboard",
-          search: history.location.search,
+          search: location.search,
         });
         dispatch(updateSettingsAction({ authType: AuthType.TREZOR }));
       } else {
@@ -110,10 +111,11 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
   }, [
     accountStatus,
     dispatch,
-    history,
     isAuthenticated,
     setErrorMessage,
     accountErrorMessage,
+    navigate,
+    location.search,
   ]);
 
   return (

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { Button, InfoBlock, Loader, TextLink } from "@stellar/design-system";
 import { getCatchError } from "@stellar/frontend-helpers";
@@ -36,7 +36,8 @@ const InlineLoadingEl = styled.div`
 
 export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const { walletLedger, account } = useRedux("walletLedger", "account");
   const {
@@ -92,9 +93,9 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      history.push({
+      navigate({
         pathname: "/dashboard",
-        search: history.location.search,
+        search: location.search,
       });
       dispatch(updateSettingsAction({ authType: AuthType.LEDGER }));
       dispatch(
@@ -105,7 +106,14 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
         }),
       );
     }
-  }, [isAuthenticated, ledgerData, ledgerBipPath, dispatch, history]);
+  }, [
+    isAuthenticated,
+    ledgerData,
+    ledgerBipPath,
+    dispatch,
+    navigate,
+    location.search,
+  ]);
 
   const clarifyLedgerErrorMessage = (message?: string) => {
     if (!message) {

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { Button, InfoBlock } from "@stellar/design-system";
 import { KeyType } from "@stellar/wallet-sdk";
@@ -17,8 +17,9 @@ import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, ModalPageProps } from "types/types.d";
 
 export const SignInAlbedoForm = ({ onClose }: ModalPageProps) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const { walletAlbedo, account } = useRedux("walletAlbedo", "account");
   const {
@@ -69,9 +70,9 @@ export const SignInAlbedoForm = ({ onClose }: ModalPageProps) => {
   useEffect(() => {
     if (accountStatus === ActionStatus.SUCCESS) {
       if (isAuthenticated) {
-        history.push({
+        navigate({
           pathname: "/dashboard",
-          search: history.location.search,
+          search: location.search,
         });
         dispatch(updateSettingsAction({ authType: AuthType.ALBEDO }));
       } else {
@@ -84,10 +85,11 @@ export const SignInAlbedoForm = ({ onClose }: ModalPageProps) => {
   }, [
     accountStatus,
     dispatch,
-    history,
+    navigate,
     isAuthenticated,
     setErrorMessage,
     accountErrorMessage,
+    location.search,
   ]);
 
   return (
