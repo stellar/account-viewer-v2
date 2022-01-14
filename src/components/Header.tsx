@@ -50,14 +50,15 @@ export const Header = () => {
       onDarkModeToggleEnd={trackThemeChange}
       onSignOut={isSignedIn ? handleSignOut : undefined}
       showButtonBorder
-    >
-      {isSignedIn && (
-        <div className="Header__account">
-          <CopyText textToCopy={account.data!.id} showCopyIcon showTooltip>
-            <Identicon publicAddress={account.data!.id} shortenAddress />
-          </CopyText>
-        </div>
-      )}
-    </Layout.Header>
+      contentCenter={
+        isSignedIn ? (
+          <div className="Header__account">
+            <CopyText textToCopy={account.data!.id} showCopyIcon showTooltip>
+              <Identicon publicAddress={account.data!.id} shortenAddress />
+            </CopyText>
+          </div>
+        ) : undefined
+      }
+    ></Layout.Header>
   );
 };

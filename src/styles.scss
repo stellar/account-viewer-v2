@@ -85,6 +85,20 @@
       @media (min-width: 700px) {
         --Layout-header-padding-vertical: 3rem;
       }
+
+      &--center {
+        @media (max-width: 900px) {
+          justify-content: center;
+          flex-grow: 1;
+          min-width: auto;
+          order: 0;
+        }
+
+        @media (max-width: 700px) {
+          min-width: 100%;
+          order: 1;
+        }
+      }
     }
 
     &__inset {
@@ -135,7 +149,7 @@
 
   .CopyKey-container {
     margin-top: 2.5rem;
-    margin-bottom: 2rem;
+    margin-bottom: 2.8rem;
   }
 
   .ReceiveModal__share {
@@ -238,7 +252,7 @@
 
   .DataSection {
     &:not(:last-child) {
-      margin-bottom: 2rem;
+      margin-bottom: 3rem;
     }
   }
 

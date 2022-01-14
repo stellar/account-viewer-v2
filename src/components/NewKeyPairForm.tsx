@@ -168,7 +168,7 @@ ${keypair.secret()}`);
                     textToCopy={keyPairCopyString}
                     showCopyIcon
                     showTooltip
-                    tooltipPosition={CopyText.tooltipPosition.right}
+                    tooltipPosition={CopyText.tooltipPosition.RIGHT}
                   >
                     <TextLink>Copy keys</TextLink>
                   </CopyText>

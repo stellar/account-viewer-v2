@@ -17,6 +17,7 @@ interface NetworkItemConfig {
   stellarExpertTxUrl: string;
   stellarExpertAccountUrl: string;
   stellarExpertAssetUrl: string;
+  stellarExpertLiquidityPoolUrl: string;
 }
 
 interface NetworkConfig {
@@ -31,6 +32,7 @@ export const networkConfig: NetworkConfig = {
     stellarExpertTxUrl: `${STELLAR_EXPERT_URL}/testnet/tx/`,
     stellarExpertAccountUrl: `${STELLAR_EXPERT_URL}/testnet/account/`,
     stellarExpertAssetUrl: `${STELLAR_EXPERT_URL}/testnet/asset/`,
+    stellarExpertLiquidityPoolUrl: `${STELLAR_EXPERT_URL}/testnet/liquidity-pool/`,
   },
   public: {
     url: "https://horizon.stellar.org",
@@ -38,6 +40,7 @@ export const networkConfig: NetworkConfig = {
     stellarExpertTxUrl: `${STELLAR_EXPERT_URL}/public/tx/`,
     stellarExpertAccountUrl: `${STELLAR_EXPERT_URL}/public/account/`,
     stellarExpertAssetUrl: `${STELLAR_EXPERT_URL}/public/asset/`,
+    stellarExpertLiquidityPoolUrl: `${STELLAR_EXPERT_URL}/public/liquidity-pool/`,
   },
 };
 
