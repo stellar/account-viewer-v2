@@ -1,13 +1,17 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import moment from "moment";
-import { Layout, Heading2, TextLink } from "@stellar/design-system";
+import { Layout, Heading2, TextLink, Table } from "@stellar/design-system";
 import { NATIVE_ASSET_CODE } from "constants/settings";
 import { fetchLiquidityPoolTxAction } from "ducks/liquidityPoolTx";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { formatAmount } from "helpers/formatAmount";
 import { useRedux } from "hooks/useRedux";
-import { LiquidityPoolToken, AssetType } from "types/types.d";
+import {
+  LiquidityPoolToken,
+  AssetType,
+  LiquidityPoolAccountTransaction,
+} from "types/types.d";
 
 export const LiquidityPoolTransactions = () => {
   const { account, liquidityPoolTx, settings } = useRedux(
@@ -49,69 +53,67 @@ export const LiquidityPoolTransactions = () => {
   const getTokenAmountString = (token: LiquidityPoolToken) =>
     `${formatAmount(token.amount)} ${getTokenString(token.asset)}`;
 
+  const columnLabels = [
+    { id: "lp-datetime", label: "Date/Time" },
+    { id: "lp-pool", label: "Liquidity Pool" },
+    { id: "lp-amount-a", label: "Token Amount" },
+    { id: "lp-amount-b", label: "Token Amount" },
+    { id: "lp-shares", label: "Shares" },
+    { id: "lp-id", label: "Operation ID" },
+  ];
+
+  const renderTableRow = (tx: LiquidityPoolAccountTransaction) => (
+    <>
+      <td>{moment(tx.createdAt).format("l HH:mm")}</td>
+      <td>
+        <TextLink
+          href={`${
+            getNetworkConfig(settings.isTestnet).stellarExpertLiquidityPoolUrl
+          }${tx.liquidityPoolId}`}
+        >
+          {getPoolTitle(tx.tokens)}
+        </TextLink>
+      </td>
+      <td>{getTokenAmountString(tx.tokens[0])}</td>
+      <td>{getTokenAmountString(tx.tokens[1])}</td>
+      <td>{getSharesString(tx.shares, tx.type)}</td>
+      <td>
+        <TextLink
+          href={`${getNetworkConfig(settings.isTestnet).stellarExpertTxUrl}${
+            tx.transactionHash
+          }`}
+          variant={TextLink.variant.secondary}
+          underline
+        >
+          {tx.id}
+        </TextLink>
+      </td>
+    </>
+  );
+
   return (
     <div className="LiquidityPoolTransactions DataSection">
       <Layout.Inset>
         <Heading2>Liquidity Pool Transactions</Heading2>
 
-        {!lpTransactions.length && (
-          <p>There are no liquidity pool transactions to show</p>
-        )}
+        <Table
+          columnLabels={columnLabels}
+          data={lpTransactions}
+          renderItemRow={renderTableRow}
+          emptyMessage="There are no recent liquidity pool transactions to show"
+          hideNumberColumn
+        />
 
-        {lpTransactions.length > 0 && (
-          <>
-            <div className="TableContainer">
-              <table className="Table">
-                <thead>
-                  <tr>
-                    <th>Date/Time</th>
-                    <th>Liquidity Pool</th>
-                    <th>Token Amount</th>
-                    <th>Token Amount</th>
-                    <th>Shares</th>
-                    <th>Operation ID</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {lpTransactions.map((tx) => (
-                    <tr key={tx.id}>
-                      <td>{moment(tx.createdAt).format("l HH:mm")}</td>
-                      {/* TODO: add LP link once available on stellar.expert */}
-                      <td>{getPoolTitle(tx.tokens)}</td>
-                      <td>{getTokenAmountString(tx.tokens[0])}</td>
-                      <td>{getTokenAmountString(tx.tokens[1])}</td>
-                      <td>{getSharesString(tx.shares, tx.type)}</td>
-                      <td>
-                        <TextLink
-                          href={`${
-                            getNetworkConfig(settings.isTestnet)
-                              .stellarExpertTxUrl
-                          }${tx.transactionHash}`}
-                          variant={TextLink.variant.secondary}
-                          underline
-                        >
-                          {tx.id}
-                        </TextLink>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {/* TODO: use LP link once available */}
-            {liquidityPoolTx.hasMoreTxs && (
-              <div className="TableNoteContainer">
-                <TextLink
-                  href={`${
-                    getNetworkConfig(settings.isTestnet).stellarExpertAccountUrl
-                  }${accountId}`}
-                >
-                  View full list of transactions
-                </TextLink>
-              </div>
-            )}
-          </>
+        {liquidityPoolTx.hasMoreTxs && (
+          <div className="TableNoteContainer">
+            <TextLink
+              href={`${
+                getNetworkConfig(settings.isTestnet).stellarExpertAccountUrl
+              }${accountId}`}
+            >
+              View full list of transactions
+            </TextLink>
+          </div>
         )}
       </Layout.Inset>
     </div>

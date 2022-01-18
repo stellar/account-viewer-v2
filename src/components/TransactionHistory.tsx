@@ -3,7 +3,13 @@ import moment from "moment";
 import { Horizon } from "stellar-sdk";
 import { useDispatch } from "react-redux";
 import { BigNumber } from "bignumber.js";
-import { Heading2, TextLink, Identicon, Layout } from "@stellar/design-system";
+import {
+  Heading2,
+  TextLink,
+  Identicon,
+  Layout,
+  Table,
+} from "@stellar/design-system";
 import { Types } from "@stellar/wallet-sdk";
 
 import {
@@ -18,12 +24,6 @@ import { ErrorMessage } from "components/ErrorMessage";
 
 import { NATIVE_ASSET_CODE, TX_HISTORY_MIN_AMOUNT } from "constants/settings";
 import { ActionStatus } from "types/types.d";
-
-const LABEL_DATE_TIME = "Date/Time";
-const LABEL_ADDRESS = "Address";
-const LABEL_AMOUNT = "Amount";
-const LABEL_MEMO = "Memo";
-const LABEL_OPERATION_ID = "Operation ID";
 
 export const TransactionHistory = () => {
   const { account, txHistory, settings } = useRedux(
@@ -67,8 +67,6 @@ export const TransactionHistory = () => {
   const visibleTransactions = showAllTxs ? data : filterOutSmallAmounts(data);
   const hasHiddenTransactions =
     data.length - filterOutSmallAmounts(data).length > 0;
-  const hasVisibleTransactions =
-    visibleTransactions && visibleTransactions.length > 0;
 
   const getPublicAddress = (pt: Types.Payment) =>
     pt.mergedAccount?.publicKey || pt.otherAccount?.publicKey;
@@ -95,6 +93,54 @@ export const TransactionHistory = () => {
       </div>
     );
   };
+
+  const tableColumnLabels = [
+    {
+      id: "timestamp",
+      label: "Date/Time",
+    },
+    {
+      id: "address",
+      label: "Address",
+    },
+    {
+      id: "amount",
+      label: "Amount",
+    },
+    {
+      id: "memo",
+      label: "Memo",
+    },
+    {
+      id: "id",
+      label: "Operation ID",
+    },
+  ];
+
+  const renderTableRow = (item: Types.Payment) => (
+    <>
+      <td>{moment.unix(item.timestamp).format("l HH:mm")}</td>
+      <td>
+        <Identicon publicAddress={getPublicAddress(item)} shortenAddress />
+      </td>
+      <td>
+        {isAccountMerge(item) && <code>account merge</code>}
+        <span>{getFormattedAmount(item)}</span>
+      </td>
+      <td>{getFormattedMemo(item)}</td>
+      <td>
+        <TextLink
+          href={`${getNetworkConfig(settings.isTestnet).stellarExpertTxUrl}${
+            item.transactionId
+          }`}
+          variant={TextLink.variant.secondary}
+          underline
+        >
+          {item.id}
+        </TextLink>
+      </td>
+    </>
+  );
 
   return (
     <div className="TransactionHistory DataSection">
@@ -124,66 +170,24 @@ export const TransactionHistory = () => {
 
         <ErrorMessage message={errorMessage} marginBottom="2rem" />
 
-        {!hasVisibleTransactions && <p>There are no payments to show</p>}
+        <Table
+          columnLabels={tableColumnLabels}
+          data={visibleTransactions}
+          renderItemRow={renderTableRow}
+          emptyMessage="There are no payments to show"
+          hideNumberColumn
+        />
 
-        {hasVisibleTransactions && (
-          <>
-            <div className="TableContainer">
-              <table className="Table">
-                <thead>
-                  <tr>
-                    <th>{LABEL_DATE_TIME}</th>
-                    <th>{LABEL_ADDRESS}</th>
-                    <th>{LABEL_AMOUNT}</th>
-                    <th>{LABEL_MEMO}</th>
-                    <th>{LABEL_OPERATION_ID}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {visibleTransactions?.map((pt: Types.Payment) => (
-                    <tr key={pt.id}>
-                      <td>{moment.unix(pt.timestamp).format("l HH:mm")}</td>
-                      <td>
-                        <Identicon
-                          publicAddress={getPublicAddress(pt)}
-                          shortenAddress
-                        />
-                      </td>
-                      <td>
-                        {isAccountMerge(pt) && <code>account merge</code>}
-                        <span>{getFormattedAmount(pt)}</span>
-                      </td>
-                      <td>{getFormattedMemo(pt)}</td>
-                      <td>
-                        <TextLink
-                          href={`${
-                            getNetworkConfig(settings.isTestnet)
-                              .stellarExpertTxUrl
-                          }${pt.transactionId}`}
-                          variant={TextLink.variant.secondary}
-                          underline
-                        >
-                          {pt.id}
-                        </TextLink>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {hasMoreTxs && (
-              <div className="TableNoteContainer">
-                <TextLink
-                  href={`${
-                    getNetworkConfig(settings.isTestnet).stellarExpertAccountUrl
-                  }${accountId}`}
-                >
-                  View full list of transactions
-                </TextLink>
-              </div>
-            )}
-          </>
+        {hasMoreTxs && (
+          <div className="TableNoteContainer">
+            <TextLink
+              href={`${
+                getNetworkConfig(settings.isTestnet).stellarExpertAccountUrl
+              }${accountId}`}
+            >
+              View full list of transactions
+            </TextLink>
+          </div>
         )}
       </Layout.Inset>
     </div>

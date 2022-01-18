@@ -1,3 +1,4 @@
+import { TX_HISTORY_LIMIT } from "constants/settings";
 import {
   LiquidityPoolOperation,
   LiquidityPoolAccountTransaction,
@@ -18,6 +19,7 @@ export const getAccountLPTransactions = async ({
     .operations()
     .forAccount(publicKey)
     .order("desc")
+    .limit(TX_HISTORY_LIMIT)
     .call();
 
   return (accountOperationsResponse.records || [])

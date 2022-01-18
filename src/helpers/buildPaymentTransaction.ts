@@ -47,7 +47,6 @@ export const buildPaymentTransaction = async (
         destination: toAccountId,
         asset: StellarSdk.Asset.native(),
         amount: amount.toString(),
-        withMuxing: true,
       });
     } else {
       operation = StellarSdk.Operation.createAccount({

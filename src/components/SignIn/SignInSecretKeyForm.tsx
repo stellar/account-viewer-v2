@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { Keypair } from "stellar-sdk";
@@ -41,7 +41,8 @@ const IllustrationWrapperEl = styled.div`
 
 export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const { account } = useRedux("account");
   const { status, isAuthenticated, errorString, data } = account;
@@ -63,9 +64,9 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
   useEffect(() => {
     if (status === ActionStatus.SUCCESS) {
       if (isAuthenticated && accountId) {
-        history.push({
+        navigate({
           pathname: "/dashboard",
-          search: history.location.search,
+          search: location.search,
         });
         dispatch(updateSettingsAction({ authType: AuthType.PRIVATE_KEY }));
         dispatch(
@@ -85,13 +86,14 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
     }
   }, [
     status,
-    history,
     isAuthenticated,
     setErrorMessage,
     dispatch,
     accountId,
     secretKey,
     errorString,
+    navigate,
+    location.search,
   ]);
 
   let failedAttempts = 0;
