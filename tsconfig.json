@@ -8,7 +8,9 @@
     "moduleResolution": "node",
     "noEmit": true,
     "jsx": "react-jsx",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
   },
   "include": ["src"]
 }
