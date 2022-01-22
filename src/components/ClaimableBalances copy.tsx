@@ -11,7 +11,7 @@ import {
   Modal,
 } from "@stellar/design-system";
 import { NATIVE_ASSET_CODE } from "constants/settings";
-import { fetchClaimableBalancesAction, resetClaimableBalancesState } from "ducks/claimableBalances";
+import { fetchClaimableBalancesAction } from "ducks/claimableBalances";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { formatAmount } from "helpers/formatAmount";
 import { useRedux } from "hooks/useRedux";
@@ -27,10 +27,9 @@ export const ClaimableBalances = () => {
     "settings",
   );
   const [IsClaimTxModalVisible, setIsClaimTxModalVisible] = useState(false);
-  const [fetchClaimableBalance, refetchClaimableBalance] = useState(1);
-  const [balanceId, setBalanceId] = useState<string>("");
+  const [balanceId, setbalanceId] = useState<string>("");
   const [balanceAsset, setBalanceAsset] = useState<Asset>(Asset.native());
-
+  const [claimBalanceListLenght, setClaimBalanceListLenght] = useState()
 
   const handleShow = ( ) => {
     setIsClaimTxModalVisible(true);
@@ -38,7 +37,7 @@ export const ClaimableBalances = () => {
 
   const resetModalStates = () => {
     setIsClaimTxModalVisible(false);
-    setBalanceId("");
+    setbalanceId("");
     setBalanceAsset(Asset.native());
   };
   const accountId = account.data?.id;
@@ -53,7 +52,6 @@ export const ClaimableBalances = () => {
   if (!claimableBalances?.data.length) {
     return null;
   }
-  console.log(claimableBalances.data.length);
 
   const getAssetLink = (asset: { code: string; issuer: string }) => {
     let assetString;
@@ -72,18 +70,16 @@ export const ClaimableBalances = () => {
   return (
     <div className="ClaimableBalances DataSection">
       <Layout.Inset>
-        <Heading2> Claimable Balance(s)</Heading2>
+        <Heading2>Claimable Balances</Heading2>
 
         <Table
           columnLabels={[
             { id: "cb-asset", label: "Asset" },
             { id: "cb-amount", label: "Amount" },
             {id: "cb-claim", label: "Claim Balance"},
-            {id: "cb-claim", label: "dispatch"},
             { id: "cb-sponsor", label: "Sponsor" },
           ]}
           data={claimableBalances.data}
-          
           renderItemRow={(cb) => (
             <>
               <td>
@@ -101,19 +97,6 @@ export const ClaimableBalances = () => {
               <td>
                 <div className="ClaimBalance__buttons">
                   <Button
-                    onClick={
-                      () => { 
-                        refetchClaimableBalance(fetchClaimableBalance+1);
-                    } }
-                    iconLeft={<Icon.Send />}
-                  >
-                  dispatch
-                </Button>
-                </div>
-              </td>
-              <td>
-                <div className="ClaimBalance__buttons">
-                  <Button
                     onClick={() => {
                       if (cb.asset.code === AssetType.NATIVE)  {
                         setBalanceAsset(Asset.native());
@@ -122,7 +105,7 @@ export const ClaimableBalances = () => {
                         setBalanceAsset(
                            new Asset(cb.asset.code, cb.asset.issuer)); 
                       }
-                      setBalanceId(cb.id);
+                      setbalanceId(cb.id);
                       handleShow();
                     }}
                     iconLeft={<Icon.Send />}
@@ -148,8 +131,6 @@ export const ClaimableBalances = () => {
               setIsClaimTxModalVisible(true);
               resetModalStates();
               dispatch(resetSendTxAction());
-              refetchClaimableBalance(fetchClaimableBalance+1);
-              dispatch(resetClaimableBalancesState());
             }}
             balanceId={balanceId}
             balanceAsset = {balanceAsset}

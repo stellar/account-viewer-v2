@@ -50,7 +50,9 @@ const initialClaimableBalancesState: ClaimableBalancesInitialState = {
 export const claimableBalancesSlice = createSlice({
   name: "claimableBalances",
   initialState: initialClaimableBalancesState,
-  reducers: {},
+  reducers: {
+    resetClaimableBalancesState: () => initialClaimableBalancesState,
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchClaimableBalancesAction.pending, (state) => {
       state.status = ActionStatus.PENDING;
@@ -71,3 +73,4 @@ export const claimableBalancesSelector = (state: RootState) =>
   state.claimableBalances;
 
 export const { reducer } = claimableBalancesSlice;
+export const { resetClaimableBalancesState } = claimableBalancesSlice.actions;
