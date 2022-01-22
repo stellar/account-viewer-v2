@@ -185,10 +185,8 @@ export interface PaymentFormData {
 }
 
 export interface ClaimBalanceData {
-  issuerId: string;
   balanceAsset: Asset;
   balanceId: string;
-  Amount: string;
   tx: Transaction | undefined;
 }
 

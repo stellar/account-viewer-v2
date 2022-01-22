@@ -27,7 +27,6 @@ export const ClaimableBalances = () => {
     "settings",
   );
   const [IsClaimTxModalVisible, setIsClaimTxModalVisible] = useState(false);
-  const [fetchClaimableBalance, refetchClaimableBalance] = useState(1);
   const [balanceId, setBalanceId] = useState<string>("");
   const [balanceAsset, setBalanceAsset] = useState<Asset>(Asset.native());
 

@@ -57,9 +57,6 @@ export const CreateClaimableBalance = ({
     [SendFormIds.SEND_FEE]: "",
   };
 
-  // Form values
-  const [issuerId, setissuerId] = useState(initialFormData.issuerId);
-
   const [recommendedFee, setRecommendedFee] = useState(
     lumensFromStroops(StellarSdk.BASE_FEE).toString(),
   );
@@ -173,10 +170,8 @@ export const CreateClaimableBalance = ({
       setTxInProgress(false);
 
       onContinue({
-        issuerId,
         balanceAsset,
         balanceId,
-        Amount:initialFormData.Amount,
         tx,
       });
     } catch (e) {
@@ -187,7 +182,7 @@ export const CreateClaimableBalance = ({
   const renderAssetIssuerLabel = () => {
     if (!balanceAsset.isNative()){
       return (
-        <LabelAndValue label="Asset IssuerBB">
+        <LabelAndValue label="Asset Issuer">
             {balanceAsset.issuer}
           </LabelAndValue> ); 
     } return null;

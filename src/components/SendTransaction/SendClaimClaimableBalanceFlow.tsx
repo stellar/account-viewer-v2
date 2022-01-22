@@ -26,10 +26,8 @@ interface CBalanceFormData {
 }
 
 const initialFormData: ClaimBalanceData = {
-  issuerId: "",
   balanceAsset: undefined,
   balanceId: "",
-  Amount: "",
   tx: undefined,
 };
 
