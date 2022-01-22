@@ -18,6 +18,7 @@ import { useRedux } from "hooks/useRedux";
 import { AssetType } from "types/types.d";
 import { Asset } from "stellar-sdk";
 import { SendTransactionFlow } from "components/SendTransaction/SendClaimClaimableBalanceFlow";
+import { resetSendTxAction } from "ducks/sendTx";
 
 export const ClaimableBalances = () => {
   const { account, claimableBalances, settings } = useRedux(
@@ -128,6 +129,7 @@ export const ClaimableBalances = () => {
             onCancel={() => {
               setIsClaimTxModalVisible(true);
               resetModalStates();
+              dispatch(resetSendTxAction());
             }}
             balanceId={balanceId}
             balanceAsset = {balanceAsset}

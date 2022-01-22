@@ -6,7 +6,6 @@ import {
   Modal,
   Icon,
 } from "@stellar/design-system";
-
 import { LabelAndValue } from "components/LabelAndValue";
 import { logEvent } from "helpers/tracking";
 import { sendTxAction } from "ducks/sendTx";
