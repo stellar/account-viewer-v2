@@ -75,7 +75,7 @@ export const ClaimableBalances = () => {
           columnLabels={[
             { id: "cb-asset", label: "Asset" },
             { id: "cb-amount", label: "Amount" },
-            {id: "cb-claim", label: "Claim"},
+            {id: "cb-claim", label: "Claim Balance"},
             { id: "cb-sponsor", label: "Sponsor" },
           ]}
           data={claimableBalances.data}
@@ -109,7 +109,7 @@ export const ClaimableBalances = () => {
                     }}
                     iconLeft={<Icon.Send />}
                   >
-                  Claim balance
+                  Claim Balance
                 </Button>
                 </div>
               </td>
