@@ -18,7 +18,7 @@ import { useRedux } from "hooks/useRedux";
 import {
   ActionStatus,
   NetworkCongestion,
-  PaymentFormData,
+  ClaimBalanceData,
 } from "types/types.d";
 import { LabelAndValue } from "components/LabelAndValue";
 import { buildPaymentTransaction } from "helpers/BuildClaimClaimableBalanceTransaction";
@@ -36,11 +36,11 @@ type ValidatedInput = {
 };
 
 interface CreateClaimableBalanceProps {
-  initialFormData: PaymentFormData;
+  initialFormData: ClaimBalanceData;
   balanceId: string;
   balanceAsset: Asset;
   maxFee: string;
-  onContinue: (formData: PaymentFormData) => void;
+  onContinue: (formData: ClaimBalanceData) => void;
   onCancel: () => void;
   setMaxFee: (maxFee: string) => void;
 }
@@ -66,44 +66,20 @@ export const CreateClaimableBalance = ({
   };
 
   // Form values
-  const [toAccountId, setToAccountId] = useState(initialFormData.toAccountId);
-  const [federationAddress, setFederationAddress] = useState(
-    initialFormData.federationAddress,
-  );
-  const [amount, setAmount] = useState(initialFormData.amount);
-  const [memoType, setMemoType] = useState(initialFormData.memoType);
-  const [memoContent, setMemoContent] = useState(
-    initialFormData.memoContent as string,
-  );
-  const [isAccountFunded, setIsAccountFunded] = useState(
-    initialFormData.isAccountFunded,
-  );
+  const [issuerId, setissuerId] = useState(initialFormData.issuerId);
 
-  const [isAccountUnsafe, setIsAccountUnsafe] = useState(
-    initialFormData.isAccountUnsafe,
+
+  const [isIssuerUnsafe, setIssuerUnsafe] = useState(
+    initialFormData.isIssuerUnsafe,
   );
   const [isAccountMalicious, setIsAccountMalicious] = useState(false);
 
-  const knownAccount =
-    knownMemoAccounts[toAccountId] ||
-    knownMemoAccounts[federationAddress || ""];
-  const [prevAddress, setPrevAddress] = useState(
-    toAccountId || federationAddress || "",
-  );
-  const [isCheckingAddress, setIsCheckingAddress] = useState(false);
-  const [isAccountIdTouched, setIsAccountIdTouched] = useState(false);
 
-  const [isMemoVisible, setIsMemoVisible] = useState(!!memoContent);
-  const [isMemoTypeFromFederation, setIsMemoTypeFromFederation] =
-    useState(false);
-  const [isMemoContentFromFederation, setIsMemoContentFromFederation] =
-    useState(false);
-  const [federationAddressFetchStatus, setFederationAddressFetchStatus] =
-    useState<string | null>(null);
+  const [isCheckingAddress, setIsCheckingAddress] = useState(false);
+
   const [recommendedFee, setRecommendedFee] = useState(
     lumensFromStroops(StellarSdk.BASE_FEE).toString(),
   );
-  const [federationAddressError, setFederationAddressError] = useState("");
   const [networkCongestion, setNetworkCongestion] = useState(
     NetworkCongestion.LOW,
   );
@@ -143,49 +119,6 @@ export const CreateClaimableBalance = ({
     fetchNetworkBaseFee();
   }, [setMaxFee, settings.isTestnet]);
 
-  useEffect(() => {
-    setIsMemoVisible(Boolean(memoContent || knownAccount));
-  }, [knownAccount, memoContent]);
-
-  const fetchIfFederationAddress = async () => {
-    setFederationAddressError("");
-
-    if (isFederationAddress(toAccountId)) {
-      setFederationAddressFetchStatus(ActionStatus.PENDING);
-
-      try {
-        const response = await FederationServer.resolve(toAccountId);
-
-        setFederationAddressFetchStatus(ActionStatus.SUCCESS);
-        setFederationAddress(response.account_id);
-        checkAndSetIsAccountFunded(response.account_id);
-
-        if (!StrKey.isValidEd25519PublicKey(response.account_id)) {
-          setFederationAddressError(
-            "Stellar address or public key resolved from federation address is invalid",
-          );
-        }
-
-        if (response.memo || response.memo_type) {
-          setIsMemoVisible(true);
-          setMemoType(response.memo_type || StellarSdk.MemoText);
-          setMemoContent(response.memo || "");
-          setIsMemoTypeFromFederation(Boolean(response.memo_type));
-          setIsMemoContentFromFederation(Boolean(response.memo));
-        } else if (knownMemoAccounts[response.account_id]) {
-          setIsMemoVisible(true);
-          setMemoType(StellarSdk.MemoText);
-          setMemoContent(response.memo || "");
-        }
-      } catch (err) {
-        setFederationAddressError("Federation Address not found");
-        setFederationAddressFetchStatus(null);
-      }
-    } else {
-      resetFederationAddressInput();
-    }
-  };
-
   const { flaggedAccounts } = useRedux("flaggedAccounts");
 
   const checkIfAccountIsFlagged = (accountId: string) => {
@@ -194,36 +127,13 @@ export const CreateClaimableBalance = ({
         address === accountId ? [...prev, ...tags] : prev,
       [],
     );
-    setIsAccountUnsafe(flaggedTags.includes("unsafe"));
+    setIssuerUnsafe(flaggedTags.includes("unsafe"));
     setIsAccountMalicious(flaggedTags.includes("malicious"));
   };
 
   const resetAccountIsFlagged = () => {
-    setIsAccountUnsafe(false);
+    setIssuerUnsafe(false);
     setIsAccountMalicious(false);
-  };
-
-  const checkAndSetIsAccountFunded = async (accountId: string) => {
-    if (!accountId || !StrKey.isValidEd25519PublicKey(accountId)) {
-      setIsAccountFunded(true);
-      return;
-    }
-
-    setIsCheckingAddress(true);
-
-    const dataProvider = new DataProvider({
-      serverUrl: getNetworkConfig(settings.isTestnet).url,
-      accountOrKey: accountId,
-      networkPassphrase: getNetworkConfig(settings.isTestnet).network,
-    });
-
-    setIsAccountFunded(await dataProvider.isAccountFunded());
-    setIsCheckingAddress(false);
-  };
-
-  const resetFederationAddressInput = () => {
-    setFederationAddressFetchStatus(null);
-    setFederationAddress(undefined);
   };
 
   const validateInput = (inputId: string) => {
@@ -301,13 +211,11 @@ export const CreateClaimableBalance = ({
       setTxInProgress(false);
 
       onContinue({
-        toAccountId,
-        federationAddress,
-        amount,
-        memoType,
-        memoContent,
-        isAccountFunded,
-        isAccountUnsafe,
+        issuerId,
+        balanceAsset,
+        balanceId,
+        isIssuerUnsafe,
+        Amount:initialFormData.Amount,
         tx,
       });
     } catch (e) {
@@ -360,10 +268,6 @@ export const CreateClaimableBalance = ({
                 <br />
                 Recommended fee: {recommendedFee}.
               </>
-            }
-            disabled={
-              isCheckingAddress ||
-              federationAddressFetchStatus === ActionStatus.PENDING
             }
           />
         </LayoutRow>

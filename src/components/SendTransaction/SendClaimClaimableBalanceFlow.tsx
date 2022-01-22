@@ -2,7 +2,7 @@ import { useState } from "react";
 import { MemoNone, BASE_FEE, Asset } from "stellar-sdk";
 import { useDispatch } from "react-redux";
 
-import { PaymentFormData } from "types/types.d";
+import { ClaimBalanceData } from "types/types.d";
 import { resetSendTxAction } from "ducks/sendTx";
 import { lumensFromStroops } from "helpers/stroopConversion";
 import { CreateClaimableBalance } from "./CreateClaimableBalance";
@@ -24,14 +24,12 @@ interface CBalanceFormData {
   onCancel: () => void;
 }
 
-const initialFormData: PaymentFormData = {
-  toAccountId: "",
-  federationAddress: undefined,
-  amount: "",
-  memoType: MemoNone,
-  memoContent: "",
-  isAccountFunded: true,
-  isAccountUnsafe: false,
+const initialFormData: ClaimBalanceData = {
+  issuerId: "",
+  balanceAsset: undefined,
+  balanceId: "",
+  isIssuerUnsafe: false,
+  Amount: "",
   tx: undefined,
 };
 

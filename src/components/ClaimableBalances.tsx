@@ -79,7 +79,6 @@ export const ClaimableBalances = () => {
             { id: "cb-asset", label: "Asset" },
             { id: "cb-amount", label: "Amount" },
             {id: "cb-claim", label: "Claim Balance"},
-            {id: "cb-claim", label: "dispatch"},
             { id: "cb-sponsor", label: "Sponsor" },
           ]}
           data={claimableBalances.data}
@@ -98,19 +97,6 @@ export const ClaimableBalances = () => {
                 </TextLink>
               </td>
               <td>{formatAmount(cb.amount)}</td>
-              <td>
-                <div className="ClaimBalance__buttons">
-                  <Button
-                    onClick={
-                      () => { 
-                        refetchClaimableBalance(fetchClaimableBalance+1);
-                    } }
-                    iconLeft={<Icon.Send />}
-                  >
-                  dispatch
-                </Button>
-                </div>
-              </td>
               <td>
                 <div className="ClaimBalance__buttons">
                   <Button

@@ -10,12 +10,12 @@ import { LabelAndValue } from "components/LabelAndValue";
 import { logEvent } from "helpers/tracking";
 import { sendTxAction } from "ducks/sendTx";
 import { useRedux } from "hooks/useRedux";
-import { ActionStatus, AuthType, PaymentFormData } from "types/types.d";
+import { ActionStatus, AuthType, ClaimBalanceData } from "types/types.d";
 import {Asset} from "stellar-sdk";
 
 
 interface ConfirmClaimTransactionProps {
-  formData: PaymentFormData;
+  formData: ClaimBalanceData;
   balanceId: string;
   balanceAsset: Asset;
   maxFee: string;
