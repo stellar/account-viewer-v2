@@ -133,8 +133,11 @@ export const ClaimableBalances = () => {
             onCancel={() => {
               setIsClaimTxModalVisible(true);
               resetModalStates();
+            }}
+            onSuccess={() =>{
+              setIsClaimTxModalVisible(true);
+              resetModalStates();
               dispatch(resetSendTxAction());
-              refetchClaimableBalance(fetchClaimableBalance+1);
               dispatch(resetClaimableBalancesState());
             }}
             balanceId={balanceId}

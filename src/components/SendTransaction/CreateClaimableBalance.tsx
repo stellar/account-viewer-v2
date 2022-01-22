@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { DataProvider } from "@stellar/wallet-sdk";
 import StellarSdk, {
-  FederationServer,
-  StrKey,
   Asset,
 } from "stellar-sdk";
 import { BigNumber } from "bignumber.js";
@@ -16,15 +13,12 @@ import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { logEvent } from "helpers/tracking";
 import { useRedux } from "hooks/useRedux";
 import {
-  ActionStatus,
   NetworkCongestion,
   ClaimBalanceData,
 } from "types/types.d";
 import { LabelAndValue } from "components/LabelAndValue";
 import { buildPaymentTransaction } from "helpers/BuildClaimClaimableBalanceTransaction";
 import { lumensFromStroops, stroopsFromLumens } from "helpers/stroopConversion";
-
-const isFederationAddress = (value: string) => value.includes("*");
 
 enum SendFormIds {
   CLAIMABLE_BALANCE_ID = "claimable_balance_id",
@@ -54,12 +48,10 @@ export const CreateClaimableBalance = ({
   onCancel,
   setMaxFee,
 }: CreateClaimableBalanceProps) => {
-  const { account, memoRequiredAccounts, settings } = useRedux(
+  const { account, settings } = useRedux(
     "account",
-    "memoRequiredAccounts",
     "settings",
   );
-  const knownMemoAccounts = memoRequiredAccounts.data;
 
   const initialInputErrors = {
     [SendFormIds.SEND_FEE]: "",
@@ -67,15 +59,6 @@ export const CreateClaimableBalance = ({
 
   // Form values
   const [issuerId, setissuerId] = useState(initialFormData.issuerId);
-
-
-  const [isIssuerUnsafe, setIssuerUnsafe] = useState(
-    initialFormData.isIssuerUnsafe,
-  );
-  const [isAccountMalicious, setIsAccountMalicious] = useState(false);
-
-
-  const [isCheckingAddress, setIsCheckingAddress] = useState(false);
 
   const [recommendedFee, setRecommendedFee] = useState(
     lumensFromStroops(StellarSdk.BASE_FEE).toString(),
@@ -86,10 +69,6 @@ export const CreateClaimableBalance = ({
   const [inputErrors, setInputErrors] =
     useState<ValidatedInput>(initialInputErrors);
   const [txInProgress, setTxInProgress] = useState(false);
-
-  const availableBalance = account.data
-    ? new BigNumber(account.data.balances.native.total)
-    : "0";
 
   useEffect(() => {
     const fetchNetworkBaseFee = async () => {
@@ -118,23 +97,6 @@ export const CreateClaimableBalance = ({
 
     fetchNetworkBaseFee();
   }, [setMaxFee, settings.isTestnet]);
-
-  const { flaggedAccounts } = useRedux("flaggedAccounts");
-
-  const checkIfAccountIsFlagged = (accountId: string) => {
-    const flaggedTags = flaggedAccounts.data.reduce(
-      (prev: string[], { address, tags }) =>
-        address === accountId ? [...prev, ...tags] : prev,
-      [],
-    );
-    setIssuerUnsafe(flaggedTags.includes("unsafe"));
-    setIsAccountMalicious(flaggedTags.includes("malicious"));
-  };
-
-  const resetAccountIsFlagged = () => {
-    setIssuerUnsafe(false);
-    setIsAccountMalicious(false);
-  };
 
   const validateInput = (inputId: string) => {
     const errors: ValidatedInput = {};
@@ -214,7 +176,6 @@ export const CreateClaimableBalance = ({
         issuerId,
         balanceAsset,
         balanceId,
-        isIssuerUnsafe,
         Amount:initialFormData.Amount,
         tx,
       });
@@ -275,7 +236,6 @@ export const CreateClaimableBalance = ({
 
       <Modal.Footer>
         <Button
-          disabled={isAccountMalicious}
           onClick={onSubmit}
           isLoading={txInProgress}
         >

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MemoNone, BASE_FEE, Asset } from "stellar-sdk";
+import { BASE_FEE, Asset } from "stellar-sdk";
 import { useDispatch } from "react-redux";
 
 import { ClaimBalanceData } from "types/types.d";
@@ -22,21 +22,22 @@ interface CBalanceFormData {
   balanceId: string;
   balanceAsset: Asset;
   onCancel: () => void;
+  onSuccess: () => void;
 }
 
 const initialFormData: ClaimBalanceData = {
   issuerId: "",
   balanceAsset: undefined,
   balanceId: "",
-  isIssuerUnsafe: false,
   Amount: "",
   tx: undefined,
 };
 
 export const SendTransactionFlow = ({ 
-  onCancel,
   balanceId,
   balanceAsset,
+  onCancel,
+  onSuccess,
 }: CBalanceFormData) => {
   const dispatch = useDispatch();
 
@@ -83,7 +84,7 @@ export const SendTransactionFlow = ({
 
       {currentStage === SendState.SUCCESS && (
         <SuccessfulClaimTransaction
-          onCancel={onCancel}
+          onCancel={onSuccess}
         />
       )}
 

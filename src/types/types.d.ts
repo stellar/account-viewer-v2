@@ -188,7 +188,6 @@ export interface ClaimBalanceData {
   issuerId: string;
   balanceAsset: Asset;
   balanceId: string;
-  isIssuerUnsafe: boolean;
   Amount: string;
   tx: Transaction | undefined;
 }
