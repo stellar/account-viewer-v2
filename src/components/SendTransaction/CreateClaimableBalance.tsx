@@ -3,6 +3,7 @@ import { DataProvider } from "@stellar/wallet-sdk";
 import StellarSdk, {
   FederationServer,
   StrKey,
+  Asset,
 } from "stellar-sdk";
 import { BigNumber } from "bignumber.js";
 import {
@@ -19,7 +20,7 @@ import {
   NetworkCongestion,
   PaymentFormData,
 } from "types/types.d";
-
+import { LabelAndValue } from "components/LabelAndValue";
 import { buildPaymentTransaction } from "helpers/BuildClaimClaimableBalanceTransaction";
 import { lumensFromStroops, stroopsFromLumens } from "helpers/stroopConversion";
 
@@ -37,6 +38,7 @@ type ValidatedInput = {
 interface CreateClaimableBalanceProps {
   initialFormData: PaymentFormData;
   balanceId: string;
+  balanceAsset: Asset;
   maxFee: string;
   onContinue: (formData: PaymentFormData) => void;
   onCancel: () => void;
@@ -46,6 +48,7 @@ interface CreateClaimableBalanceProps {
 export const CreateClaimableBalance = ({
   maxFee,
   balanceId,
+  balanceAsset,
   initialFormData,
   onContinue,
   onCancel,
@@ -62,15 +65,7 @@ export const CreateClaimableBalance = ({
     [SendFormIds.SEND_FEE]: "",
   };
 
-  const memoPlaceholderMap: { [index: string]: string } = {
-    [StellarSdk.MemoText]: "Up to 28 characters",
-    [StellarSdk.MemoID]: "Unsigned 64-bit integer",
-    [StellarSdk.MemoHash]:
-      "32-byte hash in hexadecimal format (64 [0-9a-f] characters)",
-    [StellarSdk.MemoReturn]:
-      "32-byte hash in hexadecimal format (64 [0-9a-f] characters)",
-    [StellarSdk.MemoNone]: "",
-  };
+
 
   // Form values
   const [toAccountId, setToAccountId] = useState(initialFormData.toAccountId);
@@ -280,14 +275,6 @@ export const CreateClaimableBalance = ({
         });
         return;
       }
-    const tx2 = await buildPaymentTransaction({
-      publicKey: account.data.id,
-      balanceId: balanceId.toString(),
-      fee: stroopsFromLumens(maxFee).toNumber(),
-    });
-    if (federationAddressError) {
-      return;
-    }
 
     // Loop through inputs we need to validate
     Object.keys(inputErrors).forEach((inputId) => {
@@ -308,7 +295,8 @@ export const CreateClaimableBalance = ({
 
       const tx = await buildPaymentTransaction({
         publicKey: account.data.id,
-        balanceId: balanceId.toString(),
+        balanceId,
+        balanceAsset,
         fee: stroopsFromLumens(maxFee).toNumber(),
       });
       
@@ -329,11 +317,30 @@ export const CreateClaimableBalance = ({
     }    
   };
 
+  const renderAssetIssuerLabel = () => {
+    if (!balanceAsset.isNative()){
+      return (
+        <LabelAndValue label="Asset IssuerBB">
+            {balanceAsset.issuer}
+          </LabelAndValue> ); 
+    } return null;
+  };
+
   return (
     <>
       <Modal.Heading>CLaim Claimable Balance</Modal.Heading>
 
       <Modal.Body>
+      <LabelAndValue label="Claimable Balance ID">
+          {balanceId}
+        </LabelAndValue>
+
+        <LabelAndValue label="Asset Code">
+          {balanceAsset.code}
+        </LabelAndValue>
+
+        {renderAssetIssuerLabel()}
+
         <LayoutRow>
           <Input
             id={SendFormIds.SEND_FEE}

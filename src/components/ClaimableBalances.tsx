@@ -6,6 +6,7 @@ import {
   Identicon,
   Layout,
   TextLink,
+  Icon,
   Table,
   Modal,
 } from "@stellar/design-system";
@@ -15,9 +16,7 @@ import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { formatAmount } from "helpers/formatAmount";
 import { useRedux } from "hooks/useRedux";
 import { AssetType } from "types/types.d";
-
-import { sendTxAction } from "ducks/sendTx";
-
+import { Asset } from "stellar-sdk";
 import { logEvent } from "helpers/tracking";
 import { SendTransactionFlow } from "components/SendTransaction/SendClaimClaimableBalanceFlow";
 
@@ -27,12 +26,18 @@ export const ClaimableBalances = () => {
     "claimableBalances",
     "settings",
   );
-  let balanceId="";
   const [IsClaimTxModalVisible, setIsClaimTxModalVisible] = useState(false);
+  const [balanceId, setbalanceId] = useState<string>("");
+  const [balanceAsset, setBalanceAsset] = useState<Asset>(Asset.native());
+
+  const handleShow = ( ) => {
+    setIsClaimTxModalVisible(true);
+    };
 
   const resetModalStates = () => {
     setIsClaimTxModalVisible(false);
-    balanceId="";
+    setbalanceId("");
+    setBalanceAsset(Asset.native());
   };
   const accountId = account.data?.id;
   const dispatch = useDispatch();
@@ -90,17 +95,22 @@ export const ClaimableBalances = () => {
               <td>{formatAmount(cb.amount)}</td>
               <td>
                 <div className="ClaimBalance__buttons">
-                    <Button
-                      onClick={() => {
-                        balanceId=cb.id;
-                        setIsClaimTxModalVisible(true);
-                        logEvent("send: clicked start send");
-                        console.log("with balanceID");
-                        console.log({balanceId});
-                      }}
-                    >
-                      Claim balance
-                    </Button>
+                  <Button
+                    onClick={() => {
+                      if (cb.asset.code === AssetType.NATIVE)  {
+                        setBalanceAsset(Asset.native());
+
+                      } else {
+                        setBalanceAsset(
+                           new Asset(cb.asset.code, cb.asset.issuer)); 
+                      }
+                      setbalanceId(cb.id);
+                      handleShow();
+                    }}
+                    iconLeft={<Icon.Send />}
+                  >
+                  Claim balance
+                </Button>
                 </div>
               </td>
               <td className="Table__cell--align--right">
@@ -120,7 +130,8 @@ export const ClaimableBalances = () => {
               setIsClaimTxModalVisible(true);
               resetModalStates();
             }}
-            balanceId={"000000003c8b59c0548750ad88fdba9adb87b9bc7f7a440a8ab04c188dd9357ef9feaa95"}
+            balanceId={balanceId}
+            balanceAsset = {balanceAsset}
           />
         )}
       </Modal>

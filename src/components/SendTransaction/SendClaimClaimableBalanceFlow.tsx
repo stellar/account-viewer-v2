@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { MemoNone, BASE_FEE } from "stellar-sdk";
+import { MemoNone, BASE_FEE, Asset } from "stellar-sdk";
 import { useDispatch } from "react-redux";
 
 import { PaymentFormData } from "types/types.d";
 import { resetSendTxAction } from "ducks/sendTx";
 import { lumensFromStroops } from "helpers/stroopConversion";
 import { CreateClaimableBalance } from "./CreateClaimableBalance";
-import { ConfirmTransaction } from "./ConfirmTransaction";
-import { SuccessfulTransaction } from "./SuccessfulTransaction";
+import { ConfirmClaimTransaction } from "./ConfirmClaimTransaction";
+import { SuccessfulClaimTransaction } from "./SuccessfulClaimTransaction";
 import { FailedTransaction } from "./FailedTransaction";
 
 // CREATE -> CONFIRM -> SUCCESS || ERROR
@@ -16,6 +16,12 @@ enum SendState {
   CONFIRM,
   SUCCESS,
   ERROR,
+}
+
+interface CBalanceFormData {
+  balanceId: string;
+  balanceAsset: Asset;
+  onCancel: () => void;
 }
 
 const initialFormData: PaymentFormData = {
@@ -32,7 +38,8 @@ const initialFormData: PaymentFormData = {
 export const SendTransactionFlow = ({ 
   onCancel,
   balanceId,
-}: { onCancel: () => void ; balanceId: string}) => {
+  balanceAsset,
+}: CBalanceFormData) => {
   const dispatch = useDispatch();
 
   const [currentStage, setCurrentStage] = useState(SendState.CREATE);
@@ -43,8 +50,6 @@ export const SendTransactionFlow = ({
     setCurrentStage(SendState.CREATE);
     dispatch(resetSendTxAction());
   };
-  console.log("fuck");
-  console.log(balanceId);
   return (
     <>
       {currentStage === SendState.CREATE && (
@@ -53,7 +58,8 @@ export const SendTransactionFlow = ({
             setFormData(newFormData);
             setCurrentStage(currentStage + 1);
           }}
-          balanceId={balanceId.toString()}
+          balanceAsset={balanceAsset}
+          balanceId={balanceId}
           onCancel={onCancel}
           initialFormData={formData}
           setMaxFee={setMaxFee}
@@ -62,13 +68,15 @@ export const SendTransactionFlow = ({
       )}
 
       {currentStage === SendState.CONFIRM && (
-        <ConfirmTransaction
+        <ConfirmClaimTransaction
           onSuccessfulTx={() => {
             setCurrentStage(SendState.SUCCESS);
           }}
           onFailedTx={() => {
             setCurrentStage(SendState.ERROR);
           }}
+          balanceId={balanceId}
+          balanceAsset={balanceAsset}
           onBack={handleBack}
           formData={formData}
           maxFee={maxFee}
@@ -76,12 +84,7 @@ export const SendTransactionFlow = ({
       )}
 
       {currentStage === SendState.SUCCESS && (
-        <SuccessfulTransaction
-          onRestartFlow={() => {
-            setFormData(initialFormData);
-            setCurrentStage(SendState.CREATE);
-            dispatch(resetSendTxAction());
-          }}
+        <SuccessfulClaimTransaction
           onCancel={onCancel}
         />
       )}
