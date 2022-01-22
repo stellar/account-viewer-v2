@@ -65,8 +65,6 @@ export const CreateClaimableBalance = ({
     [SendFormIds.SEND_FEE]: "",
   };
 
-
-
   // Form values
   const [toAccountId, setToAccountId] = useState(initialFormData.toAccountId);
   const [federationAddress, setFederationAddress] = useState(

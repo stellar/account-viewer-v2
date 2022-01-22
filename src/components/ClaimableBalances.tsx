@@ -17,7 +17,6 @@ import { formatAmount } from "helpers/formatAmount";
 import { useRedux } from "hooks/useRedux";
 import { AssetType } from "types/types.d";
 import { Asset } from "stellar-sdk";
-import { logEvent } from "helpers/tracking";
 import { SendTransactionFlow } from "components/SendTransaction/SendClaimClaimableBalanceFlow";
 
 export const ClaimableBalances = () => {

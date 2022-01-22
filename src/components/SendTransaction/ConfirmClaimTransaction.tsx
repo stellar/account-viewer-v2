@@ -8,7 +8,6 @@ import {
 } from "@stellar/design-system";
 
 import { LabelAndValue } from "components/LabelAndValue";
-
 import { logEvent } from "helpers/tracking";
 import { sendTxAction } from "ducks/sendTx";
 import { useRedux } from "hooks/useRedux";
