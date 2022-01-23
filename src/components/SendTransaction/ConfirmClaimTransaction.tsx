@@ -79,7 +79,7 @@ export const ConfirmClaimTransaction = ({
   const renderAssetIssuerLabel = () => {
     if (!balanceAsset.isNative()){
       return (
-        <LabelAndValue label="Asset IssuerBB">
+        <LabelAndValue label="Asset Issuer">
             {balanceAsset.issuer}
           </LabelAndValue> ); 
     } return null;

@@ -11,7 +11,7 @@ import {
   Modal,
 } from "@stellar/design-system";
 import { NATIVE_ASSET_CODE } from "constants/settings";
-import { fetchClaimableBalancesAction, resetClaimableBalancesState } from "ducks/claimableBalances";
+import { fetchClaimableBalancesAction } from "ducks/claimableBalances";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { formatAmount } from "helpers/formatAmount";
 import { useRedux } from "hooks/useRedux";
@@ -40,6 +40,7 @@ export const ClaimableBalances = () => {
     setBalanceId("");
     setBalanceAsset(Asset.native());
   };
+  
   const accountId = account.data?.id;
   const dispatch = useDispatch();
 
@@ -137,7 +138,9 @@ export const ClaimableBalances = () => {
               setIsClaimTxModalVisible(true);
               resetModalStates();
               dispatch(resetSendTxAction());
-              dispatch(resetClaimableBalancesState());
+              if (accountId) {
+                dispatch(fetchClaimableBalancesAction(accountId));
+              }          
             }}
             balanceId={balanceId}
             balanceAsset = {balanceAsset}
