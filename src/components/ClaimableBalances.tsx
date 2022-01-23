@@ -53,7 +53,6 @@ export const ClaimableBalances = () => {
   if (!claimableBalances?.data.length) {
     return null;
   }
-  console.log(claimableBalances.data.length);
 
   const getAssetLink = (asset: { code: string; issuer: string }) => {
     let assetString;
@@ -135,12 +134,12 @@ export const ClaimableBalances = () => {
               resetModalStates();
             }}
             onSuccess={() =>{
-              setIsClaimTxModalVisible(true);
-              resetModalStates();
-              dispatch(resetSendTxAction());
               if (accountId) {
                 dispatch(fetchClaimableBalancesAction(accountId));
-              }          
+              }
+              dispatch(resetSendTxAction()); 
+              setIsClaimTxModalVisible(true);
+              resetModalStates();      
             }}
             balanceId={balanceId}
             balanceAsset = {balanceAsset}
