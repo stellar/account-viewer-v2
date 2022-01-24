@@ -30,7 +30,6 @@ type ValidatedInput = {
 };
 
 interface CreateClaimableBalanceProps {
-  initialFormData: ClaimBalanceData;
   balanceId: string;
   balanceAsset: Asset;
   maxFee: string;

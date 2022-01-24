@@ -58,7 +58,6 @@ export const SendTransactionFlow = ({
           balanceAsset={balanceAsset}
           balanceId={balanceId}
           onCancel={onCancel}
-          initialFormData={formData}
           setMaxFee={setMaxFee}
           maxFee={maxFee}
         />
