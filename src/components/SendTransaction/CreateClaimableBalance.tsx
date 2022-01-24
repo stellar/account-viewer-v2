@@ -43,7 +43,6 @@ export const CreateClaimableBalance = ({
   maxFee,
   balanceId,
   balanceAsset,
-  initialFormData,
   onContinue,
   onCancel,
   setMaxFee,
