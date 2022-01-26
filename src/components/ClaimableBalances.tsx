@@ -30,17 +30,16 @@ export const ClaimableBalances = () => {
   const [balanceId, setBalanceId] = useState<string>("");
   const [balanceAsset, setBalanceAsset] = useState<Asset>(Asset.native());
 
-
-  const handleShow = ( ) => {
+  const handleShow = () => {
     setIsClaimTxModalVisible(true);
-    };
+  };
 
   const resetModalStates = () => {
     setIsClaimTxModalVisible(false);
     setBalanceId("");
     setBalanceAsset(Asset.native());
   };
-  
+
   const accountId = account.data?.id;
   const dispatch = useDispatch();
 
@@ -77,11 +76,10 @@ export const ClaimableBalances = () => {
           columnLabels={[
             { id: "cb-asset", label: "Asset" },
             { id: "cb-amount", label: "Amount" },
-            {id: "cb-claim", label: "Claim Balance"},
             { id: "cb-sponsor", label: "Sponsor" },
+            { id: "cb-claim", label: "" },
           ]}
           data={claimableBalances.data}
-          
           renderItemRow={(cb) => (
             <>
               <td>
@@ -97,55 +95,52 @@ export const ClaimableBalances = () => {
               </td>
               <td>{formatAmount(cb.amount)}</td>
               <td>
+                <Identicon publicAddress={cb.sponsor} shortenAddress />
+              </td>
+              <td>
                 <div className="ClaimBalance__buttons">
                   <Button
                     onClick={() => {
-                      if (cb.asset.code === AssetType.NATIVE)  {
+                      if (cb.asset.code === AssetType.NATIVE) {
                         setBalanceAsset(Asset.native());
-
                       } else {
                         setBalanceAsset(
-                           new Asset(cb.asset.code, cb.asset.issuer)); 
+                          new Asset(cb.asset.code, cb.asset.issuer),
+                        );
                       }
                       setBalanceId(cb.id);
                       handleShow();
                     }}
                     iconLeft={<Icon.Send />}
                   >
-                  Claim Balance
-                </Button>
+                    Claim
+                  </Button>
                 </div>
-              </td>
-              <td className="Table__cell--align--right">
-                <Identicon publicAddress={cb.sponsor} shortenAddress />
               </td>
             </>
           )}
           hideNumberColumn
         />
-        <Modal
-        visible={IsClaimTxModalVisible}
-        onClose={resetModalStates}
-      >
-        {IsClaimTxModalVisible && (
-          <SendTransactionFlow
-            onCancel={() => {
-              setIsClaimTxModalVisible(true);
-              resetModalStates();
-            }}
-            onSuccess={() =>{
-              if (accountId) {
-                dispatch(fetchClaimableBalancesAction(accountId));
-              }
-              dispatch(resetSendTxAction()); 
-              setIsClaimTxModalVisible(true);
-              resetModalStates();      
-            }}
-            balanceId={balanceId}
-            balanceAsset = {balanceAsset}
-          />
-        )}
-      </Modal>
+        <Modal visible={IsClaimTxModalVisible} onClose={resetModalStates}>
+          {IsClaimTxModalVisible && (
+            <SendTransactionFlow
+              onCancel={() => {
+                setIsClaimTxModalVisible(true);
+                resetModalStates();
+              }}
+              onSuccess={() => {
+                if (accountId) {
+                  dispatch(fetchClaimableBalancesAction(accountId));
+                }
+                dispatch(resetSendTxAction());
+                setIsClaimTxModalVisible(true);
+                resetModalStates();
+              }}
+              balanceId={balanceId}
+              balanceAsset={balanceAsset}
+            />
+          )}
+        </Modal>
       </Layout.Inset>
     </div>
   );
