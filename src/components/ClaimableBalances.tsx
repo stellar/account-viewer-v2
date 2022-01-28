@@ -53,6 +53,13 @@ export const ClaimableBalances = () => {
     return null;
   }
 
+  const getClaimBalanceHeader= () =>{
+    if(claimableBalances?.data.length===1){
+      return "Claimable Balance";
+    }
+    return "Claimable Balances";
+  };
+
   const getAssetLink = (asset: { code: string; issuer: string }) => {
     let assetString;
 
@@ -70,7 +77,7 @@ export const ClaimableBalances = () => {
   return (
     <div className="ClaimableBalances DataSection">
       <Layout.Inset>
-        <Heading2> Claimable Balance(s)</Heading2>
+        <Heading2> {getClaimBalanceHeader()}</Heading2>
 
         <Table
           columnLabels={[
