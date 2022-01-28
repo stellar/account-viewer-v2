@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import {
   Heading2,
-  Button,
   Identicon,
   Layout,
   TextLink,
@@ -105,8 +104,7 @@ export const ClaimableBalances = () => {
                 <Identicon publicAddress={cb.sponsor} shortenAddress />
               </td>
               <td>
-                <div className="ClaimBalance__buttons">
-                  <Button
+                  <TextLink 
                     onClick={() => {
                       if (cb.asset.code === AssetType.NATIVE) {
                         setBalanceAsset(Asset.native());
@@ -118,11 +116,10 @@ export const ClaimableBalances = () => {
                       setBalanceId(cb.id);
                       handleShow();
                     }}
-                    iconLeft={<Icon.Send />}
+                    iconLeft={<Icon.Send/>}
                   >
                     Claim
-                  </Button>
-                </div>
+                  </TextLink>
               </td>
             </>
           )}
