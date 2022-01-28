@@ -257,31 +257,11 @@
   }
 
   .ClaimableBalances {
-    &__header {
-      margin-bottom: 2rem;
-
-      span {
-        display: block;
-        margin-bottom: 1rem;
-      }
-
-      @media (min-width: 900px) {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        h2 {
-          margin-bottom: 0;
-        }
-
-        span {
-          display: inline-block;
-          margin-right: 0.5rem;
-          margin-bottom: 0;
-        }
-      }
-    }
+    .Table {
+      --table-min-width: 600px;
+      width: auto;
   }
+}
 
   .NotFoundPage {
     display: flex;
