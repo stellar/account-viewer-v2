@@ -134,12 +134,12 @@ export const CreateClaimableBalance = ({
     let errors = {};
     let hasErrors = false;
 
-      if (!account.data?.id) {
-        setInputErrors({
-          ...inputErrors,
-        });
-        return;
-      }
+    if (!account.data?.id) {
+      setInputErrors({
+        ...inputErrors,
+      });
+      return;
+    }
 
     // Loop through inputs we need to validate
     Object.keys(inputErrors).forEach((inputId) => {
@@ -153,7 +153,7 @@ export const CreateClaimableBalance = ({
 
     if (hasErrors) {
       setInputErrors(errors);
-    } 
+    }
 
     try {
       setTxInProgress(true);
@@ -164,7 +164,7 @@ export const CreateClaimableBalance = ({
         balanceAsset,
         fee: stroopsFromLumens(maxFee).toNumber(),
       });
-      
+
       setTxInProgress(false);
 
       onContinue({
@@ -174,15 +174,15 @@ export const CreateClaimableBalance = ({
       });
     } catch (e) {
       setTxInProgress(false);
-    }    
+    }
   };
 
   const renderAssetIssuerLabel = () => {
-    if (!balanceAsset.isNative()){
+    if (!balanceAsset.isNative()) {
       return (
         <LabelAndValue label="Asset Issuer">
-            {balanceAsset.issuer}
-          </LabelAndValue> ); 
+          {balanceAsset.issuer}
+        </LabelAndValue>);
     } return null;
   };
 
@@ -191,7 +191,7 @@ export const CreateClaimableBalance = ({
       <Modal.Heading>CLaim Claimable Balance</Modal.Heading>
 
       <Modal.Body>
-      <LabelAndValue label="Claimable Balance ID">
+        <LabelAndValue label="Claimable Balance ID">
           {balanceId}
         </LabelAndValue>
 

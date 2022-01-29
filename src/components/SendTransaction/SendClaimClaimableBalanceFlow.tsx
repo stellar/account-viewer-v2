@@ -31,7 +31,7 @@ const initialFormData: ClaimBalanceData = {
   tx: undefined,
 };
 
-export const SendTransactionFlow = ({ 
+export const SendTransactionFlow = ({
   balanceId,
   balanceAsset,
   onCancel,

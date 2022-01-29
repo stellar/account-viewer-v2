@@ -11,7 +11,7 @@ import { logEvent } from "helpers/tracking";
 import { sendTxAction } from "ducks/sendTx";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, AuthType, ClaimBalanceData } from "types/types.d";
-import {Asset} from "stellar-sdk";
+import { Asset } from "stellar-sdk";
 
 
 interface ConfirmClaimTransactionProps {
@@ -77,11 +77,11 @@ export const ConfirmClaimTransaction = ({
     }
   };
   const renderAssetIssuerLabel = () => {
-    if (!balanceAsset.isNative()){
+    if (!balanceAsset.isNative()) {
       return (
         <LabelAndValue label="Asset Issuer">
-            {balanceAsset.issuer}
-          </LabelAndValue> ); 
+          {balanceAsset.issuer}
+        </LabelAndValue>);
     } return null;
   };
 

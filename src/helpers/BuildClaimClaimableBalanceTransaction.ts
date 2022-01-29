@@ -34,21 +34,21 @@ export const buildPaymentTransaction = async (
       networkPassphrase: getNetworkConfig(settings.isTestnet).network,
       timebounds: await server.fetchTimebounds(100),
     });
-    
-    if (! balanceAsset.isNative()) {
+
+    if (!balanceAsset.isNative()) {
       const addTrustlineOperation = StellarSdk.Operation.changeTrust({
         asset: balanceAsset,
       });
       transaction.addOperation(addTrustlineOperation);
     }
-    
+
 
     const claimBalanceOperation = StellarSdk.Operation.claimClaimableBalance({
       balanceId: balanceId.toString(),
     });
 
     transaction.addOperation(claimBalanceOperation);
-    
+
     transaction = transaction.build();
     console.log(transaction);
   } catch (error) {

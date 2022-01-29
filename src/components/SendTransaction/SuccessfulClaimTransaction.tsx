@@ -22,9 +22,8 @@ export const SuccessfulClaimTransaction = ({
       <Modal.Body>
         <p className="align--center">
           <TextLink
-            href={`${getNetworkConfig(settings.isTestnet).stellarExpertTxUrl}${
-              sendTx.data.id
-            }`}
+            href={`${getNetworkConfig(settings.isTestnet).stellarExpertTxUrl}${sendTx.data.id
+              }`}
           >
             See details on StellarExpert
           </TextLink>
