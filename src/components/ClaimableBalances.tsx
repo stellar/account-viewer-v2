@@ -52,11 +52,8 @@ export const ClaimableBalances = () => {
     return null;
   }
 
-  const getClaimBalanceHeader= () =>{
-    if(claimableBalances?.data.length===1){
-      return "Claimable Balance";
-    }
-    return "Claimable Balances";
+  const getClaimBalanceHeader = () => {
+    return `Claimable ${claimableBalances?.data.length === 1 ? "Balance" : "Balances"}`
   };
 
   const getAssetLink = (asset: { code: string; issuer: string }) => {
@@ -68,15 +65,14 @@ export const ClaimableBalances = () => {
       assetString = `${asset.code}-${asset.issuer}`;
     }
 
-    return `${
-      getNetworkConfig(settings.isTestnet).stellarExpertAssetUrl
-    }${assetString}`;
+    return `${getNetworkConfig(settings.isTestnet).stellarExpertAssetUrl
+      }${assetString}`;
   };
 
   return (
     <div className="ClaimableBalances DataSection">
       <Layout.Inset>
-        <Heading2> {getClaimBalanceHeader()}</Heading2>
+        <Heading2>{getClaimBalanceHeader()}</Heading2>
 
         <Table
           columnLabels={[
@@ -104,22 +100,22 @@ export const ClaimableBalances = () => {
                 <Identicon publicAddress={cb.sponsor} shortenAddress />
               </td>
               <td>
-                  <TextLink 
-                    onClick={() => {
-                      if (cb.asset.code === AssetType.NATIVE) {
-                        setBalanceAsset(Asset.native());
-                      } else {
-                        setBalanceAsset(
-                          new Asset(cb.asset.code, cb.asset.issuer),
-                        );
-                      }
-                      setBalanceId(cb.id);
-                      handleShow();
-                    }}
-                    iconLeft={<Icon.Send/>}
-                  >
-                    Claim
-                  </TextLink>
+                <TextLink
+                  onClick={() => {
+                    if (cb.asset.code === AssetType.NATIVE) {
+                      setBalanceAsset(Asset.native());
+                    } else {
+                      setBalanceAsset(
+                        new Asset(cb.asset.code, cb.asset.issuer),
+                      );
+                    }
+                    setBalanceId(cb.id);
+                    handleShow();
+                  }
+                  }
+                >
+                  Claim
+                </TextLink>
               </td>
             </>
           )}
