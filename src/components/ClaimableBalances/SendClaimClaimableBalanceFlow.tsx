@@ -8,7 +8,7 @@ import { lumensFromStroops } from "helpers/stroopConversion";
 import { CreateClaimableBalance } from "./CreateClaimableBalance";
 import { ConfirmClaimTransaction } from "./ConfirmClaimTransaction";
 import { SuccessfulClaimTransaction } from "./SuccessfulClaimTransaction";
-import { FailedTransaction } from "./FailedTransaction";
+import { FailedTransaction } from "../SendTransaction/FailedTransaction";
 
 // CREATE -> CONFIRM -> SUCCESS || ERROR
 enum SendState {

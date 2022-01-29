@@ -17,7 +17,7 @@ import {
   ClaimBalanceData,
 } from "types/types.d";
 import { LabelAndValue } from "components/LabelAndValue";
-import { buildPaymentTransaction } from "helpers/BuildClaimClaimableBalanceTransaction";
+import { buildPaymentTransaction } from "components/ClaimableBalances/BuildClaimClaimableBalanceTransaction";
 import { lumensFromStroops, stroopsFromLumens } from "helpers/stroopConversion";
 
 enum SendFormIds {

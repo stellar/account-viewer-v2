@@ -5,7 +5,6 @@ import {
   Identicon,
   Layout,
   TextLink,
-  Icon,
   Table,
   Modal,
 } from "@stellar/design-system";
@@ -16,7 +15,7 @@ import { formatAmount } from "helpers/formatAmount";
 import { useRedux } from "hooks/useRedux";
 import { AssetType } from "types/types.d";
 import { Asset } from "stellar-sdk";
-import { SendTransactionFlow } from "components/SendTransaction/SendClaimClaimableBalanceFlow";
+import { SendTransactionFlow } from "components/ClaimableBalances/SendClaimClaimableBalanceFlow";
 import { resetSendTxAction } from "ducks/sendTx";
 
 export const ClaimableBalances = () => {
@@ -52,9 +51,8 @@ export const ClaimableBalances = () => {
     return null;
   }
 
-  const getClaimBalanceHeader = () => {
-    return `Claimable ${claimableBalances?.data.length === 1 ? "Balance" : "Balances"}`
-  };
+  const getClaimBalanceHeader = () =>
+    `Claimable ${claimableBalances?.data.length === 1 ? "Balance" : "Balances"}`;
 
   const getAssetLink = (asset: { code: string; issuer: string }) => {
     let assetString;
