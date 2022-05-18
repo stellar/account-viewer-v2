@@ -166,10 +166,10 @@ ${keypair.secret()}`);
                 <div className="CopyKey-container">
                   <CopyText
                     textToCopy={keyPairCopyString}
-                    showCopyIcon
                     showTooltip
                     tooltipPosition={CopyText.tooltipPosition.RIGHT}
                   >
+                    {/* TODO: add copy icon */}
                     <TextLink>Copy keys</TextLink>
                   </CopyText>
                 </div>

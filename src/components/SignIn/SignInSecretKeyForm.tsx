@@ -18,6 +18,7 @@ import { ReactComponent as UrlIllustration } from "assets/svg/url-illustration.s
 
 import { ErrorMessage } from "components/ErrorMessage";
 
+import { AppDispatch } from "config/store";
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storeKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
@@ -40,7 +41,7 @@ const IllustrationWrapperEl = styled.div`
 `;
 
 export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 

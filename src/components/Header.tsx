@@ -53,7 +53,8 @@ export const Header = () => {
       contentCenter={
         isSignedIn ? (
           <div className="Header__account">
-            <CopyText textToCopy={account.data!.id} showCopyIcon showTooltip>
+            {/* TODO: add copy icon */}
+            <CopyText textToCopy={account.data!.id} showTooltip>
               <Identicon publicAddress={account.data!.id} shortenAddress />
             </CopyText>
           </div>

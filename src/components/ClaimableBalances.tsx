@@ -7,6 +7,7 @@ import {
   TextLink,
   Table,
 } from "@stellar/design-system";
+import { AppDispatch } from "config/store";
 import { NATIVE_ASSET_CODE } from "constants/settings";
 import { fetchClaimableBalancesAction } from "ducks/claimableBalances";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
@@ -21,7 +22,7 @@ export const ClaimableBalances = () => {
     "settings",
   );
   const accountId = account.data?.id;
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
     if (accountId) {
@@ -53,6 +54,8 @@ export const ClaimableBalances = () => {
         <Heading2>Claimable Balances</Heading2>
 
         <Table
+          id="claimable-balances"
+          breakpoint={600}
           columnLabels={[
             { id: "cb-asset", label: "Asset" },
             { id: "cb-amount", label: "Amount" },

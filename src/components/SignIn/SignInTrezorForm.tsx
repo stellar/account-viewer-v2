@@ -9,6 +9,7 @@ import { BipPathInput } from "components/BipPathInput";
 import { ErrorMessage } from "components/ErrorMessage";
 import { WalletModalContent } from "components/WalletModalContent";
 
+import { AppDispatch } from "config/store";
 import { defaultStellarBipPath } from "constants/settings";
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storeKeyAction } from "ducks/keyStore";
@@ -23,7 +24,7 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
   const [bipPath, setBipPath] = useState<string>(defaultStellarBipPath);
   const navigate = useNavigate();
   const location = useLocation();
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
 
   const { walletTrezor, account } = useRedux("walletTrezor", "account");
   const {

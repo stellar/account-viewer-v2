@@ -1,6 +1,5 @@
 import {
   configureStore,
-  getDefaultMiddleware,
   isPlain,
   createAction,
   CombinedState,
@@ -25,6 +24,7 @@ import { reducer as walletFreighter } from "ducks/wallet/freighter";
 import { reducer as walletTrezor } from "ducks/wallet/trezor";
 
 export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
 
 const loggerMiddleware =
   (storeVal: any) => (next: any) => (action: Action<any>) => {
@@ -62,12 +62,10 @@ const rootReducer = (state: CombinedState<any>, action: Action) => {
 
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: [
-    ...getDefaultMiddleware({
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
       serializableCheck: {
         isSerializable,
       },
-    }),
-    loggerMiddleware,
-  ],
+    }).concat(loggerMiddleware),
 });

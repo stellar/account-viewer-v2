@@ -31,7 +31,7 @@ export const App = () => (
               }
             />
 
-            <Route element={NotFound} />
+            <Route element={<NotFound />} />
           </Routes>
         </Layout.Content>
 

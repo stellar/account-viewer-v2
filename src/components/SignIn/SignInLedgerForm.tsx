@@ -11,6 +11,7 @@ import { BipPathInput } from "components/BipPathInput";
 import { ErrorMessage } from "components/ErrorMessage";
 import { WalletModalContent } from "components/WalletModalContent";
 
+import { AppDispatch } from "config/store";
 import { defaultStellarBipPath } from "constants/settings";
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storeKeyAction } from "ducks/keyStore";
@@ -35,7 +36,7 @@ const InlineLoadingEl = styled.div`
 // Note: need to be on https to test Ledger
 
 export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 

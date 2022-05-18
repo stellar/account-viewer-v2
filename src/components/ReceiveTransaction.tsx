@@ -31,10 +31,10 @@ export const ReceiveTransaction = () => {
           <div className="CopyKey-container">
             <CopyText
               textToCopy={accountId}
-              showCopyIcon
               showTooltip
               tooltipPosition={CopyText.tooltipPosition.RIGHT}
             >
+              {/* TODO: add copy icon */}
               <TextLink>Copy public key</TextLink>
             </CopyText>
           </div>

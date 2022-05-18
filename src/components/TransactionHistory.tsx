@@ -12,6 +12,7 @@ import {
 } from "@stellar/design-system";
 import { Types } from "@stellar/wallet-sdk";
 
+import { AppDispatch } from "config/store";
 import {
   fetchTxHistoryAction,
   startTxHistoryWatcherAction,
@@ -33,7 +34,7 @@ export const TransactionHistory = () => {
   );
   const accountId = account.data?.id;
   const isUnfunded = account.isUnfunded;
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const [showAllTxs, setShowAllTxs] = useState(false);
   const { status, data, isTxWatcherStarted, errorString, hasMoreTxs } =
     txHistory;
@@ -89,7 +90,7 @@ export const TransactionHistory = () => {
         aria-hidden={!memoType && !pt.memo}
       >
         {memoType && <code>{memoType}</code>}
-        {pt.memo && <span>{pt.memo}</span>}
+        {pt.memo && <span>{pt.memo.toString()}</span>}
       </div>
     );
   };
@@ -171,11 +172,13 @@ export const TransactionHistory = () => {
         <ErrorMessage message={errorMessage} marginBottom="2rem" />
 
         <Table
+          id="transaction-history"
           columnLabels={tableColumnLabels}
           data={visibleTransactions}
           renderItemRow={renderTableRow}
           emptyMessage="There are no payments to show"
           hideNumberColumn
+          breakpoint={900}
         />
 
         {hasMoreTxs && (

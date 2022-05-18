@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import moment from "moment";
 import { Layout, Heading2, TextLink, Table } from "@stellar/design-system";
+import { AppDispatch } from "config/store";
 import { NATIVE_ASSET_CODE } from "constants/settings";
 import { fetchLiquidityPoolTxAction } from "ducks/liquidityPoolTx";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
@@ -22,7 +23,7 @@ export const LiquidityPoolTransactions = () => {
   const accountId = account?.data?.id;
   const lpTransactions = liquidityPoolTx.data;
 
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
     if (accountId) {
@@ -97,11 +98,13 @@ export const LiquidityPoolTransactions = () => {
         <Heading2>Liquidity Pool Transactions</Heading2>
 
         <Table
+          id="liquidity-pool"
           columnLabels={columnLabels}
           data={lpTransactions}
           renderItemRow={renderTableRow}
           emptyMessage="There are no recent liquidity pool transactions to show"
           hideNumberColumn
+          breakpoint={600}
         />
 
         {liquidityPoolTx.hasMoreTxs && (

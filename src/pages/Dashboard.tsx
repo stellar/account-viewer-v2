@@ -1,15 +1,19 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+
 import { BalanceInfo } from "components/BalanceInfo";
 import { ClaimableBalances } from "components/ClaimableBalances";
 import { TransactionHistory } from "components/TransactionHistory";
 import { LiquidityPoolTransactions } from "components/LiquidityPoolTransactions";
+
+import { AppDispatch } from "config/store";
 import { logEvent } from "helpers/tracking";
 import { fetchFlaggedAccountsAction } from "ducks/flaggedAccounts";
 import { fetchMemoRequiredAccountsAction } from "ducks/memoRequiredAccounts";
 
 export const Dashboard = () => {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
+
   useEffect(() => {
     dispatch(fetchFlaggedAccountsAction());
     dispatch(fetchMemoRequiredAccountsAction());
