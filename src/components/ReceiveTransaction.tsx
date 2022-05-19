@@ -1,5 +1,5 @@
 import QRCode from "qrcode.react";
-import { TextLink, Modal, Identicon, CopyText } from "@stellar/design-system";
+import { Modal, Identicon, CopyText, IconButton } from "@stellar/design-system";
 import { useRedux } from "hooks/useRedux";
 
 export const ReceiveTransaction = () => {
@@ -34,8 +34,11 @@ export const ReceiveTransaction = () => {
               showTooltip
               tooltipPosition={CopyText.tooltipPosition.RIGHT}
             >
-              {/* TODO: add copy icon */}
-              <TextLink>Copy public key</TextLink>
+              <IconButton
+                preset={IconButton.preset.copy}
+                variant={IconButton.variant.highlight}
+                label="Copy public key"
+              />
             </CopyText>
           </div>
         </div>

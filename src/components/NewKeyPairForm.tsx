@@ -5,7 +5,7 @@ import {
   Checkbox,
   Heading4,
   InfoBlock,
-  TextLink,
+  IconButton,
   Modal,
   CopyText,
 } from "@stellar/design-system";
@@ -169,8 +169,11 @@ ${keypair.secret()}`);
                     showTooltip
                     tooltipPosition={CopyText.tooltipPosition.RIGHT}
                   >
-                    {/* TODO: add copy icon */}
-                    <TextLink>Copy keys</TextLink>
+                    <IconButton
+                      preset={IconButton.preset.copy}
+                      variant={IconButton.variant.highlight}
+                      label="Copy keys"
+                    />
                   </CopyText>
                 </div>
               </>

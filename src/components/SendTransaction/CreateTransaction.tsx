@@ -257,8 +257,6 @@ export const CreateTransaction = ({
           message = "Please enter a valid Stellar or Federated address";
         } else if (
           !isFederationAddress(toAccountId) &&
-          // TODO: type should be updated
-          // @ts-ignore
           !StrKey.isValidMed25519PublicKey(toAccountId) &&
           !StrKey.isValidEd25519PublicKey(toAccountId)
         ) {

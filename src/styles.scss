@@ -275,4 +275,29 @@
       color: var(--pal-brand-primary);
     }
   }
+
+  .CopyIdenticon {
+    cursor: pointer;
+    flex-shrink: 0;
+    border: none;
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: opacity var(--anim-transition-default);
+    gap: 0.5rem;
+
+    svg {
+      stroke: var(--pal-text-link);
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        opacity: 0.6;
+      }
+    }
+  }
 }

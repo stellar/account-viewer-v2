@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Layout, Identicon, CopyText } from "@stellar/design-system";
+import { Layout, Identicon, CopyText, Icon } from "@stellar/design-system";
 
 import { resetStoreAction } from "config/store";
 import { stopAccountWatcherAction } from "ducks/account";
@@ -53,9 +53,11 @@ export const Header = () => {
       contentCenter={
         isSignedIn ? (
           <div className="Header__account">
-            {/* TODO: add copy icon */}
             <CopyText textToCopy={account.data!.id} showTooltip>
-              <Identicon publicAddress={account.data!.id} shortenAddress />
+              <button className="CopyIdenticon">
+                <Identicon publicAddress={account.data!.id} shortenAddress />
+                <Icon.Copy />
+              </button>
             </CopyText>
           </div>
         ) : undefined
