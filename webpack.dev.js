@@ -4,7 +4,7 @@ const common = require("./webpack.common.js");
 
 module.exports = merge(common, {
   mode: "development",
-  devtool: "source-map",
+  devtool: "cheap-module-source-map",
   devServer: {
     static: path.join(__dirname, "build"),
     historyApiFallback: true,

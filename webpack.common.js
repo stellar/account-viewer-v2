@@ -10,14 +10,13 @@ const ProvidePlugin = require("webpack").ProvidePlugin;
 module.exports = {
   entry: "./src/index.tsx",
   mode: "development",
-  devtool: "source-map",
   optimization: {
     usedExports: true,
     splitChunks: {
       cacheGroups: {
-        main: {
+        source: {
           test: /[\\/]src[\\/]/,
-          name: "main",
+          name: "source",
           chunks: "all",
         },
         "vendor-react-redux": {
@@ -33,11 +32,6 @@ module.exports = {
         "vendor-wallets": {
           test: /[\\/]node_modules[\\/](@albedo|@ledgerhq|trezor)[\\/]/,
           name: "vendor-wallets",
-          chunks: "all",
-        },
-        "vendor-other": {
-          test: /[\\/]node_modules[\\/]((?!(react|react-dom|react-router|react-router-dom|react-redux|redux|redux-thunk|@reduxjs|@stellar|stellar|@albedo|@ledgerhq|trezor)).*)[\\/]/,
-          name: "vendor-other",
           chunks: "all",
         },
       },
@@ -113,7 +107,7 @@ module.exports = {
         test: /\.(woff|woff2|eot|ttf|otf)$/i,
         type: "asset/resource",
         generator: {
-          filename: "assets/fonts/[name].[contenthash].[ext]",
+          filename: "assets/fonts/[name].[ext]",
         },
       },
     ],
@@ -148,7 +142,6 @@ module.exports = {
       url: require.resolve("url"),
       buffer: require.resolve("buffer/"),
     },
-    modules: [path.resolve(__dirname, "src"), "node_modules"],
   },
   plugins: [
     // Buffer
