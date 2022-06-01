@@ -6,6 +6,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const ESLintPlugin = require("eslint-webpack-plugin");
 const ProvidePlugin = require("webpack").ProvidePlugin;
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
 module.exports = {
   entry: "./src/index.tsx",
@@ -114,23 +115,12 @@ module.exports = {
   },
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
-    alias: {
-      // Needed for SDS fonts
-      "assets/fonts": path.resolve(
-        __dirname,
-        "./node_modules/@stellar/design-system/build/assets/fonts",
-      ),
-      // Path aliases for absolute path imports
-      assets: path.resolve(__dirname, "./src/assets"),
-      components: path.resolve(__dirname, "./src/components"),
-      config: path.resolve(__dirname, "./src/config"),
-      constants: path.resolve(__dirname, "./src/constants"),
-      ducks: path.resolve(__dirname, "./src/ducks"),
-      helpers: path.resolve(__dirname, "./src/helpers"),
-      hooks: path.resolve(__dirname, "./src/hooks"),
-      pages: path.resolve(__dirname, "./src/pages"),
-      types: path.resolve(__dirname, "./src/types"),
-    },
+    plugins: [
+      // This handles aliases and resolves Design System CSS font paths properly
+      new TsconfigPathsPlugin({
+        configFile: path.resolve(__dirname, "./tsconfig.json"),
+      }),
+    ],
     // Adding node.js modules
     fallback: {
       crypto: require.resolve("crypto-browserify"),
