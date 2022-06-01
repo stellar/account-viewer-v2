@@ -23,7 +23,7 @@ import { getMemoTypeText } from "helpers/getMemoTypeText";
 import { ErrorMessage } from "components/ErrorMessage";
 
 import { NATIVE_ASSET_CODE, TX_HISTORY_MIN_AMOUNT } from "constants/settings";
-import { ActionStatus } from "types/types.d";
+import { ActionStatus } from "types/types";
 
 export const TransactionHistory = () => {
   const { account, txHistory, settings } = useRedux(

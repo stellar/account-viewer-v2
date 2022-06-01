@@ -1,7 +1,4 @@
-import {
-  MemoRequiredAccountsResponse,
-  MemoRequiredAccount,
-} from "types/types.d";
+import { MemoRequiredAccountsResponse, MemoRequiredAccount } from "types/types";
 
 // setting limit very high as there doesn't appear to be a better way to get all
 // entries from API

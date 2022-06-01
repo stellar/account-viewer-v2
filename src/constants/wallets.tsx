@@ -1,5 +1,5 @@
 import { Logo } from "@stellar/design-system";
-import { ModalType, Wallets } from "types/types.d";
+import { ModalType, Wallets } from "types/types";
 
 export const wallets: Wallets = {
   albedo: {

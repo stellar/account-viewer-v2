@@ -1,5 +1,5 @@
 import { LOCAL_STORAGE_STELLAR_THEME } from "constants/settings";
-import { StellarThemeValue } from "types/types.d";
+import { StellarThemeValue } from "types/types";
 
 export const getUserThemeSettings = (isDarkMode?: boolean) => {
   const prefersDarkMode = window.matchMedia(

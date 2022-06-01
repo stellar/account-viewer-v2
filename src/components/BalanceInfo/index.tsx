@@ -17,7 +17,7 @@ import { startAccountWatcherAction } from "ducks/account";
 import { resetSendTxAction } from "ducks/sendTx";
 import { logEvent } from "helpers/tracking";
 import { useRedux } from "hooks/useRedux";
-import { ActionStatus } from "types/types.d";
+import { ActionStatus } from "types/types";
 
 import "./styles.scss";
 

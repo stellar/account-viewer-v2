@@ -221,17 +221,20 @@ export interface LiquidityPoolAccountTransaction {
   type: string;
 }
 
-export interface ClaimableBalance {
+interface ClaimableBalanceCommon {
   id: string;
-  asset: {
-    code: string;
-    issuer: string;
-  };
   amount: string;
   sponsor: string;
 }
 
-export interface ClaimableBalanceRecord extends ClaimableBalance {
+export interface ClaimableBalance extends ClaimableBalanceCommon {
+  asset: {
+    code: string;
+    issuer: string;
+  };
+}
+
+export interface ClaimableBalanceRecord extends ClaimableBalanceCommon {
   [key: string]: any;
   asset: string;
 }

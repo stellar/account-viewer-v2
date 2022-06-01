@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import albedo from "@albedo-link/intent";
 import { getCatchError } from "@stellar/frontend-helpers";
 
-import { ActionStatus, RejectMessage, WalletInitialState } from "types/types.d";
+import { ActionStatus, RejectMessage, WalletInitialState } from "types/types";
 
 export const fetchAlbedoStellarAddressAction = createAsyncThunk<
   { publicKey: string },

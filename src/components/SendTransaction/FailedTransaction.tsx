@@ -1,7 +1,7 @@
 import { Button, Modal } from "@stellar/design-system";
 import { ErrorMessage } from "components/ErrorMessage";
 import { useRedux } from "hooks/useRedux";
-import { AuthType } from "types/types.d";
+import { AuthType } from "types/types";
 
 export const FailedTransaction = ({
   onEditTransaction,

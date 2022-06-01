@@ -16,7 +16,7 @@ import { getMemoTypeText } from "helpers/getMemoTypeText";
 import { logEvent } from "helpers/tracking";
 import { sendTxAction } from "ducks/sendTx";
 import { useRedux } from "hooks/useRedux";
-import { ActionStatus, AuthType, PaymentFormData } from "types/types.d";
+import { ActionStatus, AuthType, PaymentFormData } from "types/types";
 
 import { AccountIsUnsafe } from "./WarningMessages/AccountIsUnsafe";
 

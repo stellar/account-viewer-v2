@@ -9,7 +9,7 @@ import {
   ActionStatus,
   RejectMessage,
   TxHistoryInitialState,
-} from "types/types.d";
+} from "types/types";
 
 let txHistoryWatcherStopper: any;
 

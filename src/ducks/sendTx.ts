@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { MemoType, MemoValue, Horizon, Transaction } from "stellar-sdk";
 import { getErrorString } from "helpers/getErrorString";
 import { submitPaymentTransaction } from "helpers/submitPaymentTransaction";
-import { ActionStatus, SendTxInitialState, RejectMessage } from "types/types.d";
+import { ActionStatus, SendTxInitialState, RejectMessage } from "types/types";
 import { RootState } from "config/store";
 
 export interface PaymentTransactionParams {

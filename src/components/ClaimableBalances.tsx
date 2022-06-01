@@ -12,7 +12,7 @@ import { fetchClaimableBalancesAction } from "ducks/claimableBalances";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { formatAmount } from "helpers/formatAmount";
 import { useRedux } from "hooks/useRedux";
-import { AssetType } from "types/types.d";
+import { AssetType } from "types/types";
 
 export const ClaimableBalances = () => {
   const { account, claimableBalances, settings } = useRedux(

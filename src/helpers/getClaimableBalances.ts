@@ -1,4 +1,4 @@
-import { ClaimableBalance, ClaimableBalanceRecord } from "types/types.d";
+import { ClaimableBalance, ClaimableBalanceRecord } from "types/types";
 
 interface GetClaimableBalancesProps {
   server: any;

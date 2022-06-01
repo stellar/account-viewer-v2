@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { KeyType } from "@stellar/wallet-sdk";
 import { storeKey, CreateKeyManagerResponse } from "helpers/keyManager";
 import { getErrorString } from "helpers/getErrorString";
-import { KeyStoreInitialState, RejectMessage } from "types/types.d";
+import { KeyStoreInitialState, RejectMessage } from "types/types";
 
 interface WalletKeyActionProps {
   publicKey: string;
