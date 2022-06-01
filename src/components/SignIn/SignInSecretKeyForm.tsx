@@ -31,9 +31,9 @@ const InputWrapperEl = styled.div`
 const IllustrationWrapperEl = styled.div`
   margin-bottom: 1rem;
 
-  svg {
+  img {
     width: 100%;
-    height: 100%;
+    display: block;
   }
 `;
 
