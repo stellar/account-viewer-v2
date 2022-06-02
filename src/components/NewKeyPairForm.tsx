@@ -15,7 +15,7 @@ import { KeyPairWithLabels } from "components/KeyPairWithLabels";
 
 import { logEvent } from "helpers/tracking";
 import { useErrorMessage } from "hooks/useErrorMessage";
-import { ModalPageProps } from "types/types.d";
+import { ModalPageProps } from "types/types";
 
 interface KeyPairType {
   publicKey: string;

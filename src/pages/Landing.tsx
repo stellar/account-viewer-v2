@@ -16,7 +16,7 @@ import { resetLedgerAction } from "ducks/wallet/ledger";
 import { resetFreighterAction } from "ducks/wallet/freighter";
 import { resetTrezorAction } from "ducks/wallet/trezor";
 import { logEvent } from "helpers/tracking";
-import { ModalType } from "types/types.d";
+import { ModalType } from "types/types";
 
 export const Landing = () => {
   const dispatch = useDispatch();

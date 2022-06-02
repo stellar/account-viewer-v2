@@ -14,7 +14,7 @@ import { fetchAlbedoStellarAddressAction } from "ducks/wallet/albedo";
 import { logEvent } from "helpers/tracking";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
-import { ActionStatus, AuthType, ModalPageProps } from "types/types.d";
+import { ActionStatus, AuthType, ModalPageProps } from "types/types";
 
 export const SignInAlbedoForm = ({ onClose }: ModalPageProps) => {
   const navigate = useNavigate();

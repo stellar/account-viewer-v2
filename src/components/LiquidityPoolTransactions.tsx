@@ -11,7 +11,7 @@ import {
   LiquidityPoolToken,
   AssetType,
   LiquidityPoolAccountTransaction,
-} from "types/types.d";
+} from "types/types";
 
 export const LiquidityPoolTransactions = () => {
   const { account, liquidityPoolTx, settings } = useRedux(

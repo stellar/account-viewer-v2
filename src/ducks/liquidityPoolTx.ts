@@ -11,7 +11,7 @@ import {
   RejectMessage,
   LiquidityPoolInitialState,
   LiquidityPoolAccountTransaction,
-} from "types/types.d";
+} from "types/types";
 
 export const fetchLiquidityPoolTxAction = createAsyncThunk<
   {

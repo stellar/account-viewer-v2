@@ -5,7 +5,7 @@ import { store } from "config/store";
 import { signTransaction } from "helpers/keyManager";
 import { signLedgerTransaction } from "helpers/signLedgerTransaction";
 import { signTrezorTransaction } from "helpers/signTrezorTransaction";
-import { AuthType } from "types/types.d";
+import { AuthType } from "types/types";
 
 export const submitPaymentTransaction = async (transaction: Transaction) => {
   const { settings, keyStore } = store.getState();

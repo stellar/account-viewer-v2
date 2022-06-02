@@ -15,5 +15,7 @@ module.exports = {
         trailingUnderscore: "allow",
       },
     ],
+    // TODO: fix this later
+    "@typescript-eslint/no-unsafe-argument": "off",
   },
 };

@@ -23,11 +23,7 @@ import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { lumensFromStroops, stroopsFromLumens } from "helpers/stroopConversion";
 import { logEvent } from "helpers/tracking";
 import { useRedux } from "hooks/useRedux";
-import {
-  ActionStatus,
-  NetworkCongestion,
-  PaymentFormData,
-} from "types/types.d";
+import { ActionStatus, NetworkCongestion, PaymentFormData } from "types/types";
 
 import { getErrorString } from "helpers/getErrorString";
 import { AccountIsUnsafe } from "./WarningMessages/AccountIsUnsafe";

@@ -11,7 +11,7 @@ import { Dashboard } from "pages/Dashboard";
 import { Landing } from "pages/Landing";
 import { NotFound } from "pages/NotFound";
 
-import "styles.scss";
+import "./styles.scss";
 
 export const App = () => (
   <Provider store={store}>

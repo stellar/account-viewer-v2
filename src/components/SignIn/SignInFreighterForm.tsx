@@ -15,7 +15,7 @@ import { fetchFreighterStellarAddressAction } from "ducks/wallet/freighter";
 import { logEvent } from "helpers/tracking";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
-import { ActionStatus, AuthType, ModalPageProps } from "types/types.d";
+import { ActionStatus, AuthType, ModalPageProps } from "types/types";
 
 export const SignInFreighterForm = ({ onClose }: ModalPageProps) => {
   const navigate = useNavigate();

@@ -7,7 +7,7 @@ import {
 } from "constants/settings";
 import { getFlaggedAccounts } from "helpers/getFlaggedAccounts";
 import { getOrSaveLocalStorageData } from "helpers/getOrSaveLocalStorageData";
-import { ActionStatus, FlaggedAccounts } from "types/types.d";
+import { ActionStatus, FlaggedAccounts } from "types/types";
 
 const initialState: FlaggedAccounts = {
   data: [{ address: "", tags: [""] }],

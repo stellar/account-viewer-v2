@@ -19,7 +19,7 @@ import { fetchLedgerStellarAddressAction } from "ducks/wallet/ledger";
 import { logEvent } from "helpers/tracking";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
-import { ActionStatus, AuthType, ModalPageProps } from "types/types.d";
+import { ActionStatus, AuthType, ModalPageProps } from "types/types";
 
 const InlineLoadingEl = styled.div`
   width: 100%;

@@ -2,7 +2,7 @@ import { TX_HISTORY_LIMIT } from "constants/settings";
 import {
   LiquidityPoolOperation,
   LiquidityPoolAccountTransaction,
-} from "types/types.d";
+} from "types/types";
 
 interface GetAccountLPTransactionsProps {
   server: any;

@@ -14,8 +14,6 @@ import {
 } from "@stellar/design-system";
 import { KeyType } from "@stellar/wallet-sdk";
 
-import { ReactComponent as UrlIllustration } from "assets/svg/url-illustration.svg";
-
 import { ErrorMessage } from "components/ErrorMessage";
 
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
@@ -24,7 +22,7 @@ import { updateSettingsAction } from "ducks/settings";
 import { logEvent } from "helpers/tracking";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
-import { ActionStatus, AuthType, ModalPageProps } from "types/types.d";
+import { ActionStatus, AuthType, ModalPageProps } from "types/types";
 
 const InputWrapperEl = styled.div`
   margin-top: 1.5rem;
@@ -33,9 +31,9 @@ const InputWrapperEl = styled.div`
 const IllustrationWrapperEl = styled.div`
   margin-bottom: 1rem;
 
-  svg {
+  img {
     width: 100%;
-    height: 100%;
+    display: block;
   }
 `;
 
@@ -209,7 +207,10 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
           <Modal.Body>
             <InfoBlock>
               <IllustrationWrapperEl>
-                <UrlIllustration />
+                <img
+                  src="assets/svg/url-illustration.svg"
+                  alt="URL illustration"
+                />
               </IllustrationWrapperEl>
               <p>
                 Always make sure the domain you are using to access the Account

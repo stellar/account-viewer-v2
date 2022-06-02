@@ -11,7 +11,7 @@ import {
   MemoRequiredAccountsInitialState,
   MemoRequiredAccountsResponse,
   AnyObject,
-} from "types/types.d";
+} from "types/types";
 
 export const fetchMemoRequiredAccountsAction = createAsyncThunk<
   MemoRequiredAccountsResponse | AnyObject
