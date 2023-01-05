@@ -3,9 +3,11 @@ import {
   getDefaultMiddleware,
   isPlain,
   createAction,
+  // eslint-disable-next-line import/named
   CombinedState,
 } from "@reduxjs/toolkit";
-import { combineReducers, Action } from "redux";
+// eslint-disable-next-line import/named
+import { Action, combineReducers } from "redux";
 import { BigNumber } from "bignumber.js";
 
 import { RESET_STORE_ACTION_TYPE } from "constants/settings";

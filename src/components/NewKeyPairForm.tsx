@@ -144,7 +144,7 @@ ${keypair.secret()}`);
                 <li>
                   You have several options: Write your key down on a piece of
                   paper. Keep it in a safe. Store it in a password manager. Use
-                  a hardware wallet. But don't ever keep it unencrypted on your
+                  a hardware wallet. But don’t ever keep it unencrypted on your
                   computer or in your email.
                 </li>
                 <li>

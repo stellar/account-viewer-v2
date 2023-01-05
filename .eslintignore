@@ -2,4 +2,9 @@ babel.config.js
 webpack.common.js
 webpack.dev.js
 webpack.prod.js
-.eslintrc.js
+node_modules/
+dist/
+build/
+.prettierrc.json
+.eslintrc.json
+env.d.ts

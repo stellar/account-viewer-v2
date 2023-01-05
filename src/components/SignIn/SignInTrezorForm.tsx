@@ -134,8 +134,9 @@ export const SignInTrezorForm = ({ onClose }: ModalPageProps) => {
     >
       {!trezorStatus && (
         <InfoBlock>
-          Click on "Connect with Trezor" to be redirected to the external Trezor
-          wallet connection setup.
+          {
+            'Click on "Connect with Trezor" to be redirected to the external Trezor wallet connection setup.'
+          }
         </InfoBlock>
       )}
 

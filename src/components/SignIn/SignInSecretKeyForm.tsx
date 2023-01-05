@@ -228,7 +228,7 @@ export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
               </Heading4>
               <p>
                 Password managers will autocomplete the secret key field only if
-                they detect you're in the right domain. They also reduce risk by
+                they detect you’re in the right domain. They also reduce risk by
                 removing the need to copy and paste your secret key.
               </p>
             </InfoBlock>

@@ -1,5 +1,5 @@
 import TrezorConnect from "trezor-connect";
-// @ts-ignore
+// @ts-ignore: no types for trezor stellar plugin
 import transformTransaction from "trezor-connect/lib/plugins/stellar/plugin";
 import { Transaction } from "stellar-sdk";
 import { loadPrivateKey } from "helpers/keyManager";
@@ -29,8 +29,7 @@ export const signTrezorTransaction = async (
 
   const bipPath = custom.bipPath || "44'/148'/0'";
   const trezorParams = transformTransaction(`m/${bipPath}`, transaction);
-  // @ts-ignore
-  // Trezor memo returns number for type
+  // @ts-ignore: Trezor memo returns number for type
   const response = await TrezorConnect.stellarSignTransaction(trezorParams);
 
   if (response.success) {
