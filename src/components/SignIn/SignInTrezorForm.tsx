@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import TrezorConnect from "trezor-connect";
+import TrezorConnect from "@trezor/connect-web";
 import { Button, InfoBlock } from "@stellar/design-system";
 import { KeyType } from "@stellar/wallet-sdk";
 

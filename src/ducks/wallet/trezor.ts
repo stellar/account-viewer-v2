@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getCatchError } from "@stellar/frontend-helpers";
-import TrezorConnect from "trezor-connect";
+import TrezorConnect from "@trezor/connect-web";
 
 import { ActionStatus, RejectMessage, WalletInitialState } from "types/types";
 
