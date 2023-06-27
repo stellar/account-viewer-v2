@@ -13,6 +13,7 @@ import { SendTransactionFlow } from "components/SendTransaction/SendTransactionF
 import { ReceiveTransaction } from "components/ReceiveTransaction";
 import { LayoutSection } from "components/LayoutSection";
 import { NATIVE_ASSET_CODE } from "constants/settings";
+import { AppDispatch } from "config/store";
 import { startAccountWatcherAction } from "ducks/account";
 import { resetSendTxAction } from "ducks/sendTx";
 import { logEvent } from "helpers/tracking";
@@ -22,7 +23,7 @@ import { ActionStatus } from "types/types";
 import "./styles.scss";
 
 export const BalanceInfo = () => {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const { account } = useRedux("account");
   const { flaggedAccounts } = useRedux("flaggedAccounts");
   const {
