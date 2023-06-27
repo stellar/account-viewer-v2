@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { isConnected } from "@stellar/freighter-api";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -37,7 +37,8 @@ export const SignInFreighterForm = ({ onClose }: ModalPageProps) => {
     isAuthenticated,
     errorString: accountErrorMessage,
   } = account;
-  const isAvailable = isConnected();
+
+  const [isAvailable, setIsAvailable] = useState(false);
   const { isTestnet } = settings;
 
   const { errorMessage, setErrorMessage } = useErrorMessage({
@@ -53,6 +54,19 @@ export const SignInFreighterForm = ({ onClose }: ModalPageProps) => {
     setErrorMessage("");
     dispatch(fetchFreighterStellarAddressAction());
   };
+
+  useEffect(() => {
+    const checkIfAvailable = async () => {
+      try {
+        const connected = await isConnected();
+        setIsAvailable(connected);
+      } catch (e) {
+        setIsAvailable(false);
+      }
+    };
+
+    checkIfAvailable();
+  }, []);
 
   useEffect(() => {
     if (freighterStatus === ActionStatus.SUCCESS) {
