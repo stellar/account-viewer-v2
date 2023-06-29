@@ -7,6 +7,7 @@ import { KeyType } from "@stellar/wallet-sdk";
 import { WalletModalContent } from "components/WalletModalContent";
 import { ErrorMessage } from "components/ErrorMessage";
 
+import { AppDispatch } from "config/store";
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storeKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
@@ -18,7 +19,7 @@ import { ActionStatus, AuthType, ModalPageProps } from "types/types";
 
 export const SignInAlbedoForm = ({ onClose }: ModalPageProps) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const location = useLocation();
 
   const { walletAlbedo, account } = useRedux("walletAlbedo", "account");

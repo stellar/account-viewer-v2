@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { isConnected } from "@stellar/freighter-api";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -8,6 +8,7 @@ import { KeyType } from "@stellar/wallet-sdk";
 import { WalletModalContent } from "components/WalletModalContent";
 import { ErrorMessage } from "components/ErrorMessage";
 
+import { AppDispatch } from "config/store";
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storeKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
@@ -19,7 +20,7 @@ import { ActionStatus, AuthType, ModalPageProps } from "types/types";
 
 export const SignInFreighterForm = ({ onClose }: ModalPageProps) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const location = useLocation();
 
   const { walletFreighter, account, settings } = useRedux(
@@ -37,7 +38,8 @@ export const SignInFreighterForm = ({ onClose }: ModalPageProps) => {
     isAuthenticated,
     errorString: accountErrorMessage,
   } = account;
-  const isAvailable = isConnected();
+
+  const [isAvailable, setIsAvailable] = useState(false);
   const { isTestnet } = settings;
 
   const { errorMessage, setErrorMessage } = useErrorMessage({
@@ -53,6 +55,19 @@ export const SignInFreighterForm = ({ onClose }: ModalPageProps) => {
     setErrorMessage("");
     dispatch(fetchFreighterStellarAddressAction());
   };
+
+  useEffect(() => {
+    const checkIfAvailable = async () => {
+      try {
+        const connected = await isConnected();
+        setIsAvailable(connected);
+      } catch (e) {
+        setIsAvailable(false);
+      }
+    };
+
+    checkIfAvailable();
+  }, []);
 
   useEffect(() => {
     if (freighterStatus === ActionStatus.SUCCESS) {

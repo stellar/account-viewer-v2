@@ -23,6 +23,7 @@ import { getMemoTypeText } from "helpers/getMemoTypeText";
 import { ErrorMessage } from "components/ErrorMessage";
 
 import { NATIVE_ASSET_CODE, TX_HISTORY_MIN_AMOUNT } from "constants/settings";
+import { AppDispatch } from "config/store";
 import { ActionStatus } from "types/types";
 
 export const TransactionHistory = () => {
@@ -33,7 +34,7 @@ export const TransactionHistory = () => {
   );
   const accountId = account.data?.id;
   const isUnfunded = account.isUnfunded;
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const [showAllTxs, setShowAllTxs] = useState(false);
   const { status, data, isTxWatcherStarted, errorString, hasMoreTxs } =
     txHistory;
@@ -89,7 +90,7 @@ export const TransactionHistory = () => {
         aria-hidden={!memoType && !pt.memo}
       >
         {memoType && <code>{memoType}</code>}
-        {pt.memo && <span>{pt.memo}</span>}
+        {pt.memo && <span>{pt.memo as string}</span>}
       </div>
     );
   };

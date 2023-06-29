@@ -1,6 +1,6 @@
 import { Checkbox, Input } from "@stellar/design-system";
 import { useState } from "react";
-import styled from "styled-components";
+import { styled } from "styled-components";
 import { defaultStellarBipPath } from "constants/settings";
 
 const AccountWrapperEl = styled.div`

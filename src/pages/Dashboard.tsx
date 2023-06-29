@@ -7,9 +7,10 @@ import { LiquidityPoolTransactions } from "components/LiquidityPoolTransactions"
 import { logEvent } from "helpers/tracking";
 import { fetchFlaggedAccountsAction } from "ducks/flaggedAccounts";
 import { fetchMemoRequiredAccountsAction } from "ducks/memoRequiredAccounts";
+import { AppDispatch } from "config/store";
 
 export const Dashboard = () => {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchFlaggedAccountsAction());
     dispatch(fetchMemoRequiredAccountsAction());

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import styled from "styled-components";
+import { styled } from "styled-components";
 import { Keypair } from "stellar-sdk";
 import {
   Button,
@@ -16,6 +16,7 @@ import { KeyType } from "@stellar/wallet-sdk";
 
 import { ErrorMessage } from "components/ErrorMessage";
 
+import { AppDispatch } from "config/store";
 import { fetchAccountAction, resetAccountAction } from "ducks/account";
 import { storeKeyAction } from "ducks/keyStore";
 import { updateSettingsAction } from "ducks/settings";
@@ -38,7 +39,7 @@ const IllustrationWrapperEl = styled.div`
 `;
 
 export const SignInSecretKeyForm = ({ onClose }: ModalPageProps) => {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
