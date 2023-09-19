@@ -1,4 +1,4 @@
-import StellarSdk from "stellar-sdk";
+import { Networks } from "stellar-sdk";
 
 export const TX_HISTORY_LIMIT = 100;
 export const TX_HISTORY_MIN_AMOUNT = 0.5;
@@ -28,7 +28,7 @@ interface NetworkConfig {
 export const networkConfig: NetworkConfig = {
   testnet: {
     url: "https://horizon-testnet.stellar.org",
-    network: StellarSdk.Networks.TESTNET,
+    network: Networks.TESTNET,
     stellarExpertTxUrl: `${STELLAR_EXPERT_URL}/testnet/tx/`,
     stellarExpertAccountUrl: `${STELLAR_EXPERT_URL}/testnet/account/`,
     stellarExpertAssetUrl: `${STELLAR_EXPERT_URL}/testnet/asset/`,
@@ -36,7 +36,7 @@ export const networkConfig: NetworkConfig = {
   },
   public: {
     url: "https://horizon.stellar.org",
-    network: StellarSdk.Networks.PUBLIC,
+    network: Networks.PUBLIC,
     stellarExpertTxUrl: `${STELLAR_EXPERT_URL}/public/tx/`,
     stellarExpertAccountUrl: `${STELLAR_EXPERT_URL}/public/account/`,
     stellarExpertAssetUrl: `${STELLAR_EXPERT_URL}/public/asset/`,

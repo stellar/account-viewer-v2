@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import StellarSdk from "stellar-sdk";
+import { Server } from "stellar-sdk";
 import { RootState } from "config/store";
 import { settingsSelector } from "ducks/settings";
 import { getClaimableBalances } from "helpers/getClaimableBalances";
@@ -23,7 +23,7 @@ export const fetchClaimableBalancesAction = createAsyncThunk<
   async (publicKey, { rejectWithValue, getState }) => {
     const { isTestnet } = settingsSelector(getState());
     const networkConfig = getNetworkConfig(isTestnet);
-    const server = new StellarSdk.Server(networkConfig.url);
+    const server = new Server(networkConfig.url);
 
     let data: ClaimableBalance[] = [];
 

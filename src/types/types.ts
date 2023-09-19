@@ -114,7 +114,7 @@ export interface ClaimableBalancesInitialState {
 }
 
 export interface SendTxInitialState {
-  data: Horizon.TransactionResponse | null;
+  data: Horizon.SubmitTransactionResponse | null;
   status: ActionStatus | undefined;
   errorString: string | undefined;
 }

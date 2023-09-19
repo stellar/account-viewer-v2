@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { DataProvider } from "@stellar/wallet-sdk";
-import StellarSdk, {
+import {
   Memo,
   MemoType,
   FederationServer,
   StrKey,
+  MemoText,
+  MemoID,
+  MemoHash,
+  MemoReturn,
+  MemoNone,
+  BASE_FEE,
+  Server,
 } from "stellar-sdk";
 import { BigNumber } from "bignumber.js";
 import {
@@ -73,13 +80,11 @@ export const CreateTransaction = ({
   };
 
   const memoPlaceholderMap: { [index: string]: string } = {
-    [StellarSdk.MemoText]: "Up to 28 characters",
-    [StellarSdk.MemoID]: "Unsigned 64-bit integer",
-    [StellarSdk.MemoHash]:
-      "32-byte hash in hexadecimal format (64 [0-9a-f] characters)",
-    [StellarSdk.MemoReturn]:
-      "32-byte hash in hexadecimal format (64 [0-9a-f] characters)",
-    [StellarSdk.MemoNone]: "",
+    [MemoText]: "Up to 28 characters",
+    [MemoID]: "Unsigned 64-bit integer",
+    [MemoHash]: "32-byte hash in hexadecimal format (64 [0-9a-f] characters)",
+    [MemoReturn]: "32-byte hash in hexadecimal format (64 [0-9a-f] characters)",
+    [MemoNone]: "",
   };
 
   // Form values
@@ -88,7 +93,7 @@ export const CreateTransaction = ({
     initialFormData.federationAddress,
   );
   const [amount, setAmount] = useState(initialFormData.amount);
-  const [memoType, setMemoType] = useState(initialFormData.memoType);
+  const [memoType, setMemoType] = useState<MemoType>(initialFormData.memoType);
   const [memoContent, setMemoContent] = useState(
     initialFormData.memoContent as string,
   );
@@ -118,7 +123,7 @@ export const CreateTransaction = ({
   const [federationAddressFetchStatus, setFederationAddressFetchStatus] =
     useState<string | null>(null);
   const [recommendedFee, setRecommendedFee] = useState(
-    lumensFromStroops(StellarSdk.BASE_FEE).toString(),
+    lumensFromStroops(BASE_FEE).toString(),
   );
   const [federationAddressError, setFederationAddressError] = useState("");
   const [networkCongestion, setNetworkCongestion] = useState(
@@ -134,9 +139,7 @@ export const CreateTransaction = ({
 
   useEffect(() => {
     const fetchNetworkBaseFee = async () => {
-      const server = new StellarSdk.Server(
-        getNetworkConfig(settings.isTestnet).url,
-      );
+      const server = new Server(getNetworkConfig(settings.isTestnet).url);
       try {
         const feeStats = await server.feeStats();
         const networkFee = lumensFromStroops(
@@ -145,11 +148,11 @@ export const CreateTransaction = ({
         setRecommendedFee(networkFee);
         setMaxFee(networkFee);
         if (
-          feeStats.ledger_capacity_usage > 0.5 &&
-          feeStats.ledger_capacity_usage <= 0.75
+          Number(feeStats.ledger_capacity_usage) > 0.5 &&
+          Number(feeStats.ledger_capacity_usage) <= 0.75
         ) {
           setNetworkCongestion(NetworkCongestion.MEDIUM);
-        } else if (feeStats.ledger_capacity_usage > 0.75) {
+        } else if (Number(feeStats.ledger_capacity_usage) > 0.75) {
           setNetworkCongestion(NetworkCongestion.HIGH);
         }
       } catch (err) {
@@ -185,13 +188,13 @@ export const CreateTransaction = ({
 
         if (response.memo || response.memo_type) {
           setIsMemoVisible(true);
-          setMemoType(response.memo_type || StellarSdk.MemoText);
+          setMemoType((response.memo_type as MemoType) || MemoText);
           setMemoContent(response.memo || "");
           setIsMemoTypeFromFederation(Boolean(response.memo_type));
           setIsMemoContentFromFederation(Boolean(response.memo));
         } else if (knownMemoAccounts[response.account_id]) {
           setIsMemoVisible(true);
-          setMemoType(StellarSdk.MemoText);
+          setMemoType(MemoText);
           setMemoContent(response.memo || "");
         }
       } catch (err) {
@@ -306,21 +309,21 @@ export const CreateTransaction = ({
 
           try {
             switch (memoType) {
-              case StellarSdk.MemoText:
+              case MemoText:
                 memoMessage =
                   "MEMO_TEXT must contain a maximum of 28 characters";
                 Memo.text(memoContent);
                 break;
-              case StellarSdk.MemoID:
+              case MemoID:
                 memoMessage = "MEMO_ID must be a valid 64 bit unsigned integer";
                 Memo.id(memoContent);
                 break;
-              case StellarSdk.MemoHash:
+              case MemoHash:
                 memoMessage =
                   "MEMO_HASH must be a 32 byte hash represented in hexadecimal (A-Z0-9)";
                 Memo.hash(memoContent);
                 break;
-              case StellarSdk.MemoReturn:
+              case MemoReturn:
                 memoMessage =
                   "MEMO_RETURN must be a 32 byte hash represented in hexadecimal (A-Z0-9)";
                 Memo.return(memoContent);
@@ -456,7 +459,7 @@ export const CreateTransaction = ({
                 knownMemoAccounts[e.target.value] ||
                 knownMemoAccounts[prevAddress]
               ) {
-                setMemoType(StellarSdk.MemoText);
+                setMemoType(MemoText);
                 setMemoContent("");
               }
 
@@ -572,7 +575,7 @@ export const CreateTransaction = ({
               variant={TextLink.variant.secondary}
               underline
               onClick={() => {
-                setMemoType(StellarSdk.MemoText);
+                setMemoType(MemoText);
                 setIsMemoVisible(true);
               }}
             >
@@ -598,19 +601,17 @@ export const CreateTransaction = ({
                   isMemoTypeFromFederation
                 }
               >
-                <option value={StellarSdk.MemoText}>MEMO_TEXT</option>
-                <option value={StellarSdk.MemoID}>MEMO_ID</option>
-                <option value={StellarSdk.MemoHash}>MEMO_HASH</option>
-                <option value={StellarSdk.MemoReturn}>MEMO_RETURN</option>
+                <option value={MemoText}>MEMO_TEXT</option>
+                <option value={MemoID}>MEMO_ID</option>
+                <option value={MemoHash}>MEMO_HASH</option>
+                <option value={MemoReturn}>MEMO_RETURN</option>
               </Select>
 
               <Input
                 id={SendFormIds.SEND_MEMO_CONTENT}
                 label="Memo content"
                 type="text"
-                placeholder={
-                  memoPlaceholderMap[memoType || StellarSdk.MemoNone]
-                }
+                placeholder={memoPlaceholderMap[memoType || MemoNone]}
                 onChange={(e) => {
                   clearInputError(e.target.id);
                   setMemoContent(e.target.value);
@@ -640,7 +641,7 @@ export const CreateTransaction = ({
                   underline
                   onClick={() => {
                     clearInputError(SendFormIds.SEND_MEMO_CONTENT);
-                    setMemoType(StellarSdk.MemoNone);
+                    setMemoType(MemoNone);
                     setMemoContent("");
                     setIsMemoVisible(false);
                   }}
