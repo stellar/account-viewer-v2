@@ -1,4 +1,4 @@
-import StellarSdk, { Transaction } from "stellar-sdk";
+import { Transaction, Server } from "stellar-sdk";
 import { getErrorString } from "helpers/getErrorString";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { store } from "config/store";
@@ -9,9 +9,7 @@ import { AuthType } from "types/types";
 
 export const submitPaymentTransaction = async (transaction: Transaction) => {
   const { settings, keyStore } = store.getState();
-  const server = new StellarSdk.Server(
-    getNetworkConfig(settings.isTestnet).url,
-  );
+  const server = new Server(getNetworkConfig(settings.isTestnet).url);
 
   try {
     let signedTransaction: Transaction;

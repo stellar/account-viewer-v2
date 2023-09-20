@@ -16,7 +16,7 @@ export interface PaymentTransactionParams {
 }
 
 export const sendTxAction = createAsyncThunk<
-  Horizon.TransactionResponse,
+  Horizon.SubmitTransactionResponse,
   Transaction | any,
   { rejectValue: RejectMessage; state: RootState }
 >("sendTx/sendTxAction", async (tx, { rejectWithValue }) => {

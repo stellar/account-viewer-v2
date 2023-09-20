@@ -23,7 +23,7 @@ export const SuccessfulTransaction = ({
         <p className="align--center">
           <TextLink
             href={`${getNetworkConfig(settings.isTestnet).stellarExpertTxUrl}${
-              sendTx.data.id
+              sendTx.data.hash
             }`}
           >
             See details on StellarExpert

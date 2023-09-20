@@ -1,19 +1,19 @@
-import StellarSdk, { MemoType } from "stellar-sdk";
+import { MemoHash, MemoID, MemoReturn, MemoText, MemoType } from "stellar-sdk";
 
 export const getMemoTypeText = (memoType?: MemoType) => {
   let memoTypeText;
 
   switch (memoType) {
-    case StellarSdk.MemoText:
+    case MemoText:
       memoTypeText = "MEMO_TEXT";
       break;
-    case StellarSdk.MemoHash:
+    case MemoHash:
       memoTypeText = "MEMO_HASH";
       break;
-    case StellarSdk.MemoID:
+    case MemoID:
       memoTypeText = "MEMO_ID";
       break;
-    case StellarSdk.MemoReturn:
+    case MemoReturn:
       memoTypeText = "MEMO_RETURN";
       break;
     default:
