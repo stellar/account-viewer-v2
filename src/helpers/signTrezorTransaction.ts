@@ -1,5 +1,5 @@
 import TrezorConnect from "@trezor/connect-web";
-import transformTransaction from "@trezor/connect-plugin-stellar";
+import transformTransaction from "helpers/transformTransactionTrezor";
 import { Transaction } from "stellar-sdk";
 import { loadPrivateKey } from "helpers/keyManager";
 

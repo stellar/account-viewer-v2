@@ -22,7 +22,7 @@
     "@stellar/wallet-sdk": "^0.10.0",
     "@svgr/webpack": "^8.0.1",
     "@trezor/connect-plugin-stellar": "^9.0.1",
-    "@trezor/connect-web": "^9.0.11",
+    "@trezor/connect-web": "^9.1.3",
     "amplitude-js": "^8.21.9",
     "assert": "^2.0.0",
     "bignumber.js": "^9.1.1",
