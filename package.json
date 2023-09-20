@@ -19,7 +19,7 @@
     "@stellar/design-system": "^0.6.0",
     "@stellar/freighter-api": "^1.5.1",
     "@stellar/frontend-helpers": "^2.1.4",
-    "@stellar/wallet-sdk": "^0.9.1",
+    "@stellar/wallet-sdk": "^0.10.0",
     "@svgr/webpack": "^8.0.1",
     "@trezor/connect-plugin-stellar": "^9.0.1",
     "@trezor/connect-web": "^9.0.11",
