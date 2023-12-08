@@ -54,7 +54,7 @@ export const TransactionHistory = () => {
   }, [status, isTxWatcherStarted, accountId, dispatch]);
 
   const isAccountMerge = (pt: Types.Payment) =>
-    pt.type === Horizon.OperationResponseType.accountMerge;
+    pt.type === Horizon.HorizonApi.OperationResponseType.accountMerge;
 
   const filterOutSmallAmounts = (transactions: Types.Payment[]) =>
     transactions.filter((tx) => {

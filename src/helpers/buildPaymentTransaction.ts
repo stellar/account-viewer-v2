@@ -9,8 +9,8 @@ import {
   MemoText,
   MemoType,
   Operation,
-  Server,
   TransactionBuilder,
+  Horizon,
 } from "stellar-sdk";
 import { PaymentTransactionParams } from "ducks/sendTx";
 import { getErrorString } from "helpers/getErrorString";
@@ -48,7 +48,7 @@ export const buildPaymentTransaction = async (
       isAccountFunded,
     } = params;
     const { settings } = store.getState();
-    const server = new Server(getNetworkConfig(settings.isTestnet).url);
+    const server = new Horizon.Server(getNetworkConfig(settings.isTestnet).url);
     const sequence = (await server.loadAccount(publicKey)).sequence;
     const source = new Account(publicKey, sequence);
     let operation;

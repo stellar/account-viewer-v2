@@ -3,7 +3,6 @@ import { DataProvider } from "@stellar/wallet-sdk";
 import {
   Memo,
   MemoType,
-  FederationServer,
   StrKey,
   MemoText,
   MemoID,
@@ -11,7 +10,8 @@ import {
   MemoReturn,
   MemoNone,
   BASE_FEE,
-  Server,
+  Horizon,
+  Federation,
 } from "stellar-sdk";
 import { BigNumber } from "bignumber.js";
 import {
@@ -139,7 +139,9 @@ export const CreateTransaction = ({
 
   useEffect(() => {
     const fetchNetworkBaseFee = async () => {
-      const server = new Server(getNetworkConfig(settings.isTestnet).url);
+      const server = new Horizon.Server(
+        getNetworkConfig(settings.isTestnet).url,
+      );
       try {
         const feeStats = await server.feeStats();
         const networkFee = lumensFromStroops(
@@ -174,7 +176,7 @@ export const CreateTransaction = ({
       setFederationAddressFetchStatus(ActionStatus.PENDING);
 
       try {
-        const response = await FederationServer.resolve(toAccountId);
+        const response = await Federation.Server.resolve(toAccountId);
 
         setFederationAddressFetchStatus(ActionStatus.SUCCESS);
         setFederationAddress(response.account_id);
