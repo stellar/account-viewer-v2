@@ -12,7 +12,7 @@ import {
   Modal,
   Checkbox,
 } from "@stellar/design-system";
-import { KeyType } from "@stellar/wallet-sdk";
+import { KeyType } from "@stellar/typescript-wallet-sdk-km";
 
 import { ErrorMessage } from "components/ErrorMessage";
 

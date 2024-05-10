@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { Button, InfoBlock } from "@stellar/design-system";
-import { KeyType } from "@stellar/wallet-sdk";
+import { KeyType } from "@stellar/typescript-wallet-sdk-km";
 
 import { WalletModalContent } from "components/WalletModalContent";
 import { ErrorMessage } from "components/ErrorMessage";
