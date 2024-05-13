@@ -9,12 +9,12 @@ import {
   Identicon,
   Layout,
   Table,
+  Icon,
 } from "@stellar/design-system";
-import { Types } from "@stellar/wallet-sdk";
 
 import {
   fetchTxHistoryAction,
-  startTxHistoryWatcherAction,
+  // startTxHistoryWatcherAction,
 } from "ducks/txHistory";
 import { useErrorMessage } from "hooks/useErrorMessage";
 import { useRedux } from "hooks/useRedux";
@@ -24,7 +24,7 @@ import { ErrorMessage } from "components/ErrorMessage";
 
 import { NATIVE_ASSET_CODE, TX_HISTORY_MIN_AMOUNT } from "constants/settings";
 import { AppDispatch } from "config/store";
-import { ActionStatus } from "types/types";
+import { Payment } from "types/types";
 
 export const TransactionHistory = () => {
   const { account, txHistory, settings } = useRedux(
@@ -36,8 +36,7 @@ export const TransactionHistory = () => {
   const isUnfunded = account.isUnfunded;
   const dispatch: AppDispatch = useDispatch();
   const [showAllTxs, setShowAllTxs] = useState(false);
-  const { status, data, isTxWatcherStarted, errorString, hasMoreTxs } =
-    txHistory;
+  const { data, errorString, hasMoreTxs } = txHistory;
 
   const { errorMessage } = useErrorMessage({ initialMessage: errorString });
 
@@ -47,16 +46,17 @@ export const TransactionHistory = () => {
     }
   }, [accountId, isUnfunded, dispatch]);
 
-  useEffect(() => {
-    if (status === ActionStatus.SUCCESS && accountId && !isTxWatcherStarted) {
-      dispatch(startTxHistoryWatcherAction(accountId));
-    }
-  }, [status, isTxWatcherStarted, accountId, dispatch]);
+  // useEffect(() => {
+  //   if (status === ActionStatus.SUCCESS && accountId &&
+  // !isTxWatcherStarted) {
+  //     dispatch(startTxHistoryWatcherAction(accountId));
+  //   }
+  // }, [status, isTxWatcherStarted, accountId, dispatch]);
 
-  const isAccountMerge = (pt: Types.Payment) =>
+  const isAccountMerge = (pt: Payment) =>
     pt.type === Horizon.HorizonApi.OperationResponseType.accountMerge;
 
-  const filterOutSmallAmounts = (transactions: Types.Payment[]) =>
+  const filterOutSmallAmounts = (transactions: Payment[]) =>
     transactions.filter((tx) => {
       if (isAccountMerge(tx)) {
         return true;
@@ -69,10 +69,10 @@ export const TransactionHistory = () => {
   const hasHiddenTransactions =
     data.length - filterOutSmallAmounts(data).length > 0;
 
-  const getPublicAddress = (pt: Types.Payment) =>
+  const getPublicAddress = (pt: Payment) =>
     pt.mergedAccount?.publicKey || pt.otherAccount?.publicKey;
 
-  const getFormattedAmount = (pt: Types.Payment) => {
+  const getFormattedAmount = (pt: Payment) => {
     if (!pt?.amount) {
       return "";
     }
@@ -81,7 +81,7 @@ export const TransactionHistory = () => {
     return `${(isRecipient ? "+" : "-") + amount} ${token.code}`;
   };
 
-  const getFormattedMemo = (pt: Types.Payment) => {
+  const getFormattedMemo = (pt: Payment) => {
     const memoType = getMemoTypeText(pt.memoType);
 
     return (
@@ -118,7 +118,7 @@ export const TransactionHistory = () => {
     },
   ];
 
-  const renderTableRow = (item: Types.Payment) => (
+  const renderTableRow = (item: Payment) => (
     <>
       <td>{moment.unix(item.timestamp).format("l HH:mm")}</td>
       <td>
@@ -147,7 +147,23 @@ export const TransactionHistory = () => {
     <div className="TransactionHistory DataSection">
       <Layout.Inset>
         <div className="TransactionHistory__header">
-          <Heading2>Payments History</Heading2>
+          <div>
+            <Heading2>Payments History</Heading2>
+            <div className="TransactionHistory__header__refresh">
+              <TextLink
+                variant={TextLink.variant.secondary}
+                onClick={() => {
+                  if (account.data?.id) {
+                    dispatch(fetchTxHistoryAction(account.data.id));
+                  }
+                }}
+                iconRight={<Icon.RefreshCcw />}
+                underline
+              >
+                Refresh history
+              </TextLink>
+            </div>
+          </div>
 
           {hasHiddenTransactions && (
             <div className="TransactionHistory__header__note">
@@ -175,7 +191,7 @@ export const TransactionHistory = () => {
           columnLabels={tableColumnLabels}
           data={visibleTransactions}
           renderItemRow={renderTableRow}
-          emptyMessage="There are no payments to show"
+          emptyMessage="There are no recent payments to show"
           hideNumberColumn
         />
 

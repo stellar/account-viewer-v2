@@ -5,6 +5,7 @@ import BigNumber from "bignumber.js";
 import { RootState } from "config/store";
 import { settingsSelector } from "ducks/settings";
 import { getErrorString } from "helpers/getErrorString";
+import { isAccountFunded } from "helpers/isAccountFunded";
 import {
   ActionStatus,
   RejectMessage,
@@ -22,17 +23,6 @@ interface FetchAccountActionResponse {
   data: AccountDetails | UnfundedAccount;
   isUnfunded: boolean;
 }
-
-const isAccountFunded = async (publicKey: string, isTestnet: boolean) => {
-  const url = `https://${
-    isTestnet ? "horizon-testnet.stellar.org" : "horizon.stellar.org"
-  }/accounts/${publicKey}`;
-
-  const request = await fetch(url);
-  const response = await request.json();
-
-  return Boolean(response.account_id);
-};
 
 const formatAccount = (accountRedord: any) => {
   const formatBalances = accountRedord.balances.reduce((res: any, cur: any) => {
@@ -94,8 +84,6 @@ export const fetchAccountAction = createAsyncThunk<
     let isUnfunded = false;
 
     try {
-      isAccountFunded(publicKey, isTestnet);
-
       const accountIsFunded = await isAccountFunded(publicKey, isTestnet);
 
       if (accountIsFunded) {

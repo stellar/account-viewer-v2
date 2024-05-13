@@ -84,8 +84,9 @@ export const BalanceInfo = () => {
                   }
                 }}
                 iconRight={<Icon.RefreshCcw />}
+                underline
               >
-                Refresh
+                Refresh balance
               </TextLink>
             </div>
           ) : null}

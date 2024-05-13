@@ -1,13 +1,14 @@
 import React from "react";
-import { MemoType, MemoValue, Horizon, Transaction } from "stellar-sdk";
-import { Types } from "@stellar/wallet-sdk";
+import { MemoType, MemoValue, Horizon, Transaction, Memo } from "stellar-sdk";
 import BigNumber from "bignumber.js";
+import { KeyManager } from "@stellar/typescript-wallet-sdk-km";
 
 declare global {
   interface Window {
     _env_: {
       AMPLITUDE_API_KEY: string;
     };
+    _AV_KEYMANAGER_: KeyManager;
   }
 }
 
@@ -59,7 +60,7 @@ export enum ModalType {
 
 // Store
 export interface AccountInitialState {
-  data: Types.AccountDetails | null;
+  data: AccountDetails | null;
   isAuthenticated: boolean;
   isAccountWatcherStarted: boolean;
   isUnfunded: boolean;
@@ -130,7 +131,7 @@ export interface Setting {
 }
 
 export interface TxHistoryInitialState {
-  data: Types.Payment[];
+  data: Payment[];
   hasMoreTxs?: boolean;
   isTxWatcherStarted: boolean;
   errorString: string | undefined;
@@ -138,7 +139,7 @@ export interface TxHistoryInitialState {
 }
 
 export interface WalletInitialState {
-  data: { publicKey: string } | null;
+  data: { publicKey: string; bipPath?: string } | null;
   status: ActionStatus | undefined;
   errorString: string | undefined;
 }
@@ -240,11 +241,41 @@ export interface ClaimableBalanceRecord extends ClaimableBalanceCommon {
   asset: string;
 }
 
+// Wallet SDK
+export type PaymentOperation =
+  | Horizon.ServerApi.CreateAccountOperationRecord
+  | Horizon.ServerApi.PaymentOperationRecord
+  | Horizon.ServerApi.PathPaymentOperationRecord;
+
+export type Token = NativeToken | AssetToken;
+
+export interface Account {
+  publicKey: string;
+}
+export interface Issuer {
+  key: string;
+  name?: string;
+  url?: string;
+  hostName?: string;
+}
+export interface NativeToken {
+  type: AssetType;
+  code: string;
+}
+export interface AssetToken {
+  type: AssetType;
+  code: string;
+  issuer: Issuer;
+  anchorAsset?: string;
+  numAccounts?: BigNumber;
+  amount?: BigNumber;
+  bidCount?: BigNumber;
+  askCount?: BigNumber;
+  spread?: BigNumber;
+}
+
 export interface NativeBalance {
-  token: {
-    type: AssetType;
-    code: string;
-  };
+  token: NativeToken;
   minimumBalance: BigNumber;
   available: BigNumber;
   total: BigNumber;
@@ -266,4 +297,21 @@ export interface AccountDetails {
     native: NativeBalance;
   };
   sequenceNumber: string;
+}
+
+export interface Payment {
+  id: string;
+  isInitialFunding: boolean;
+  isRecipient: boolean;
+  token: Token;
+  amount: BigNumber;
+  timestamp: number;
+  otherAccount: Account;
+  sourceToken?: Token;
+  sourceAmount?: BigNumber;
+  transactionId: string;
+  type: Horizon.HorizonApi.OperationResponseType;
+  memo?: Memo | string;
+  memoType?: MemoType;
+  mergedAccount?: Account;
 }

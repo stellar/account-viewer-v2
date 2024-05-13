@@ -100,7 +100,7 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
     }
   }, [
     isAuthenticated,
-    ledgerData,
+    ledgerData?.publicKey,
     ledgerBipPath,
     dispatch,
     navigate,

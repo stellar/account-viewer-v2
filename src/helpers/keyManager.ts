@@ -17,10 +17,12 @@ export interface CreateKeyManagerResponse {
 }
 
 const createKeyManager = () => {
-  const localKeyStore = new MemoryKeyStore();
-  const keyManager = new KeyManager({ keyStore: localKeyStore });
+  if (!window._AV_KEYMANAGER_) {
+    const localKeyStore = new MemoryKeyStore();
+    window._AV_KEYMANAGER_ = new KeyManager({ keyStore: localKeyStore });
+  }
 
-  return keyManager;
+  return window._AV_KEYMANAGER_;
 };
 
 export const storeKey = async ({
@@ -89,8 +91,7 @@ export const signTransaction = ({
   password,
   transaction,
   custom,
-}: // TODO: fix any type
-SignTransactionProps): Promise<any> => {
+}: SignTransactionProps): Promise<any> => {
   const keyManager = createKeyManager();
 
   return keyManager.signTransaction({

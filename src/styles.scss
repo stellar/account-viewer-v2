@@ -196,23 +196,35 @@
     &__header {
       margin-bottom: 2rem;
 
-      span {
+      &__note {
+        span {
+          display: block;
+          margin-bottom: 1rem;
+        }
+      }
+
+      &__refresh {
         display: block;
+        margin-top: 1rem;
         margin-bottom: 1rem;
       }
 
       @media (min-width: 900px) {
         display: flex;
-        align-items: center;
+        align-items: baseline;
         justify-content: space-between;
 
         h2 {
-          margin-bottom: 0;
+          margin-bottom: 1rem;
         }
 
         span {
           display: inline-block;
           margin-right: 0.5rem;
+          margin-bottom: 0;
+        }
+
+        &__refresh {
           margin-bottom: 0;
         }
       }
