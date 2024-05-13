@@ -1,6 +1,6 @@
 import TrezorConnect from "@trezor/connect-web";
 import transformTransaction from "@trezor/connect-plugin-stellar";
-import { Transaction } from "stellar-sdk";
+import { Transaction } from "@stellar/stellar-sdk";
 
 export const signTrezorTransaction = async (
   transaction: Transaction,

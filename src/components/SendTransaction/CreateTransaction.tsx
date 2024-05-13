@@ -11,7 +11,7 @@ import {
   BASE_FEE,
   Horizon,
   Federation,
-} from "stellar-sdk";
+} from "@stellar/stellar-sdk";
 import { BigNumber } from "bignumber.js";
 import {
   Button,

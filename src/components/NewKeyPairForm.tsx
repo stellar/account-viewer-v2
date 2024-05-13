@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Keypair } from "stellar-sdk";
+import { Keypair } from "@stellar/stellar-sdk";
 import {
   Button,
   Checkbox,

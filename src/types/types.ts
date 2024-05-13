@@ -1,5 +1,11 @@
 import React from "react";
-import { MemoType, MemoValue, Horizon, Transaction, Memo } from "stellar-sdk";
+import {
+  MemoType,
+  MemoValue,
+  Horizon,
+  Transaction,
+  Memo,
+} from "@stellar/stellar-sdk";
 import BigNumber from "bignumber.js";
 import { KeyManager } from "@stellar/typescript-wallet-sdk-km";
 

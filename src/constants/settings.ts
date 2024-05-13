@@ -1,4 +1,4 @@
-import { Networks } from "stellar-sdk";
+import { Networks } from "@stellar/stellar-sdk";
 
 export const TX_HISTORY_LIMIT = 100;
 export const TX_HISTORY_MIN_AMOUNT = 0.5;

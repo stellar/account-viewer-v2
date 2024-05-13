@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MemoNone, BASE_FEE } from "stellar-sdk";
+import { MemoNone, BASE_FEE } from "@stellar/stellar-sdk";
 import { useDispatch } from "react-redux";
 
 import { PaymentFormData } from "types/types";

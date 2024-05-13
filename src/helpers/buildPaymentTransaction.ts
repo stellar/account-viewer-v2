@@ -11,7 +11,7 @@ import {
   Operation,
   TransactionBuilder,
   Horizon,
-} from "stellar-sdk";
+} from "@stellar/stellar-sdk";
 import { PaymentTransactionParams } from "ducks/sendTx";
 import { getErrorString } from "helpers/getErrorString";
 import { getNetworkConfig } from "helpers/getNetworkConfig";

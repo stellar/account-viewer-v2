@@ -1,4 +1,10 @@
-import { MemoHash, MemoID, MemoReturn, MemoText, MemoType } from "stellar-sdk";
+import {
+  MemoHash,
+  MemoID,
+  MemoReturn,
+  MemoText,
+  MemoType,
+} from "@stellar/stellar-sdk";
 
 export const getMemoTypeText = (memoType?: MemoType) => {
   let memoTypeText;

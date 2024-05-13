@@ -1,4 +1,4 @@
-import { Keypair, Transaction, xdr } from "stellar-sdk";
+import { Keypair, Transaction, xdr } from "@stellar/stellar-sdk";
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import LedgerApi from "@ledgerhq/hw-app-str";
 
