@@ -1,6 +1,7 @@
 import React from "react";
 import { MemoType, MemoValue, Horizon, Transaction } from "stellar-sdk";
 import { Types } from "@stellar/wallet-sdk";
+import BigNumber from "bignumber.js";
 
 declare global {
   interface Window {
@@ -237,4 +238,32 @@ export interface ClaimableBalance extends ClaimableBalanceCommon {
 export interface ClaimableBalanceRecord extends ClaimableBalanceCommon {
   [key: string]: any;
   asset: string;
+}
+
+export interface NativeBalance {
+  token: {
+    type: AssetType;
+    code: string;
+  };
+  minimumBalance: BigNumber;
+  available: BigNumber;
+  total: BigNumber;
+  buyingLiabilities: BigNumber;
+  sellingLiabilities: BigNumber;
+}
+
+export interface AccountDetails {
+  id: string;
+  subentryCount: number;
+  sponsoringCount: number;
+  sponsoredCount: number;
+  sponsor?: string;
+  inflationDestination?: string;
+  thresholds: Horizon.HorizonApi.AccountThresholds;
+  signers: Horizon.ServerApi.AccountRecordSigners[];
+  flags: Horizon.HorizonApi.Flags;
+  balances: {
+    native: NativeBalance;
+  };
+  sequenceNumber: string;
 }
