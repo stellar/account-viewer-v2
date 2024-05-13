@@ -61,7 +61,7 @@ export const fetchTxHistoryAction = createAsyncThunk<
 );
 
 // TODO: put back once this is available in TS Wallet SDK
-// export const startTxHistoryWatcherAction = createAsyncThunk<
+//  export const startTxHistoryWatcherAction = createAsyncThunk<
 //   { isTxWatcherStarted: boolean },
 //   string,
 //   { rejectValue: RejectMessage; state: RootState }
