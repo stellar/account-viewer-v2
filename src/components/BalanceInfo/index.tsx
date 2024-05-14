@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import {
   Button,
@@ -14,8 +14,9 @@ import { ReceiveTransaction } from "components/ReceiveTransaction";
 import { LayoutSection } from "components/LayoutSection";
 import { NATIVE_ASSET_CODE } from "constants/settings";
 import { AppDispatch } from "config/store";
-import { startAccountWatcherAction } from "ducks/account";
+// import { startAccountWatcherAction } from "ducks/account";
 import { resetSendTxAction } from "ducks/sendTx";
+import { fetchAccountAction } from "ducks/account";
 import { logEvent } from "helpers/tracking";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus } from "types/types";
@@ -27,9 +28,9 @@ export const BalanceInfo = () => {
   const { account } = useRedux("account");
   const { flaggedAccounts } = useRedux("flaggedAccounts");
   const {
-    status: accountStatus,
+    // status: accountStatus,
     data,
-    isAccountWatcherStarted,
+    // isAccountWatcherStarted,
     isUnfunded,
   } = account;
   const { status: flaggedAccountsStatus } = flaggedAccounts;
@@ -37,15 +38,15 @@ export const BalanceInfo = () => {
   const [isReceiveTxModalVisible, setIsReceiveTxModalVisible] = useState(false);
   const publicAddress = data?.id;
 
-  useEffect(() => {
-    if (
-      publicAddress &&
-      accountStatus === ActionStatus.SUCCESS &&
-      !isAccountWatcherStarted
-    ) {
-      dispatch(startAccountWatcherAction(publicAddress));
-    }
-  }, [dispatch, publicAddress, accountStatus, isAccountWatcherStarted]);
+  // useEffect(() => {
+  //   if (
+  //     publicAddress &&
+  //     accountStatus === ActionStatus.SUCCESS &&
+  //     !isAccountWatcherStarted
+  //   ) {
+  //     dispatch(startAccountWatcherAction(publicAddress));
+  //   }
+  // }, [dispatch, publicAddress, accountStatus, isAccountWatcherStarted]);
 
   let nativeBalance = "0";
 
@@ -73,6 +74,22 @@ export const BalanceInfo = () => {
           <div className="BalanceInfo__balance__amount">
             {`${nativeBalance} Lumens (${NATIVE_ASSET_CODE})`}
           </div>
+          {account.data?.id ? (
+            <div className="BalanceInfo__balance__refresh">
+              <TextLink
+                variant={TextLink.variant.secondary}
+                onClick={() => {
+                  if (account.data?.id) {
+                    dispatch(fetchAccountAction(account.data.id));
+                  }
+                }}
+                iconRight={<Icon.RefreshCcw />}
+                underline
+              >
+                Refresh balance
+              </TextLink>
+            </div>
+          ) : null}
         </div>
 
         <div className="BalanceInfo__buttons">

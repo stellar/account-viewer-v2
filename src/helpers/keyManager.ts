@@ -1,8 +1,11 @@
-import { KeyManager, KeyManagerPlugins, KeyType } from "@stellar/wallet-sdk";
-import { Transaction } from "stellar-sdk";
+import { Transaction } from "@stellar/stellar-sdk";
+import {
+  KeyManager,
+  MemoryKeyStore,
+  KeyType,
+  IdentityEncrypter,
+} from "@stellar/typescript-wallet-sdk-km";
 import { getErrorString } from "helpers/getErrorString";
-import { getNetworkConfig } from "helpers/getNetworkConfig";
-import { store } from "config/store";
 
 export interface CreateKeyManagerResponse {
   id: string;
@@ -14,32 +17,24 @@ export interface CreateKeyManagerResponse {
 }
 
 const createKeyManager = () => {
-  const localKeyStore = new KeyManagerPlugins.LocalStorageKeyStore();
-  localKeyStore.configure({ storage: localStorage });
-  const { settings } = store.getState();
+  if (!window._AV_KEYMANAGER_) {
+    const localKeyStore = new MemoryKeyStore();
+    window._AV_KEYMANAGER_ = new KeyManager({ keyStore: localKeyStore });
+  }
 
-  const keyManager = new KeyManager({
-    keyStore: localKeyStore,
-    defaultNetworkPassphrase: getNetworkConfig(settings.isTestnet).network,
-  });
-
-  keyManager.registerEncrypter(KeyManagerPlugins.ScryptEncrypter);
-  return keyManager;
+  return window._AV_KEYMANAGER_;
 };
 
 export const storeKey = async ({
   publicKey,
   privateKey,
   keyType,
-  path,
 }: {
   publicKey: string;
-  privateKey?: string;
+  privateKey: string;
   keyType: KeyType;
-  path?: string;
 }) => {
   const keyManager = createKeyManager();
-  const { settings } = store.getState();
 
   const result: CreateKeyManagerResponse = {
     id: "",
@@ -47,17 +42,18 @@ export const storeKey = async ({
     errorString: undefined,
   };
 
+  keyManager.registerEncrypter(IdentityEncrypter);
+
   try {
     const metaData = await keyManager.storeKey({
       key: {
+        id: result.id,
         type: keyType,
         publicKey,
-        privateKey: privateKey || "",
-        network: getNetworkConfig(settings.isTestnet).network,
-        path,
+        privateKey,
       },
       password: result.password,
-      encrypterName: KeyManagerPlugins.ScryptEncrypter.name,
+      encrypterName: "IdentityEncrypter",
     });
 
     result.id = metaData.id;
@@ -95,7 +91,7 @@ export const signTransaction = ({
   password,
   transaction,
   custom,
-}: SignTransactionProps): Promise<Transaction> => {
+}: SignTransactionProps): Promise<any> => {
   const keyManager = createKeyManager();
 
   return keyManager.signTransaction({

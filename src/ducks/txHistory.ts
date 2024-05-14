@@ -1,12 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { DataProvider, Types } from "@stellar/wallet-sdk";
+import { walletSdk } from "@stellar/typescript-wallet-sdk";
 import { RootState } from "config/store";
 import { TX_HISTORY_LIMIT } from "constants/settings";
 import { settingsSelector } from "ducks/settings";
 import { getErrorString } from "helpers/getErrorString";
-import { getNetworkConfig } from "helpers/getNetworkConfig";
+import { makeDisplayablePayments } from "helpers/makeDisplayablePayments";
 import {
   ActionStatus,
+  Payment,
+  PaymentOperation,
   RejectMessage,
   TxHistoryInitialState,
 } from "types/types";
@@ -15,7 +17,7 @@ let txHistoryWatcherStopper: any;
 
 export const fetchTxHistoryAction = createAsyncThunk<
   {
-    data: Types.Payment[];
+    data: Payment[];
     hasMoreTxs: boolean;
   },
   string,
@@ -25,20 +27,26 @@ export const fetchTxHistoryAction = createAsyncThunk<
   async (publicKey, { rejectWithValue, getState }) => {
     const { isTestnet } = settingsSelector(getState());
 
-    const dataProvider = new DataProvider({
-      serverUrl: getNetworkConfig(isTestnet).url,
-      accountOrKey: publicKey,
-      networkPassphrase: getNetworkConfig(isTestnet).network,
-    });
-    let data: Types.Payment[] | null = null;
+    const wallet = isTestnet
+      ? walletSdk.Wallet.TestNet()
+      : walletSdk.Wallet.MainNet();
+
+    let data: Payment[] | null = null;
     let hasMoreTxs = false;
 
     try {
-      const transactions = await dataProvider.fetchPayments({
+      const transactions = await wallet.stellar().account().getHistory({
+        accountAddress: publicKey,
         limit: TX_HISTORY_LIMIT,
       });
+
+      const displayTransactions = await makeDisplayablePayments(
+        publicKey,
+        transactions.records as PaymentOperation[],
+      );
+
       hasMoreTxs = (await transactions.next())?.records.length > 0;
-      data = transactions?.records;
+      data = displayTransactions;
     } catch (error) {
       return rejectWithValue({
         errorString: getErrorString(error),
@@ -52,53 +60,54 @@ export const fetchTxHistoryAction = createAsyncThunk<
   },
 );
 
-export const startTxHistoryWatcherAction = createAsyncThunk<
-  { isTxWatcherStarted: boolean },
-  string,
-  { rejectValue: RejectMessage; state: RootState }
->(
-  "txHistory/startTxHistoryWatcherAction",
-  (publicKey, { rejectWithValue, getState, dispatch }) => {
-    try {
-      const { isTestnet } = settingsSelector(getState());
-      const { data } = txHistorySelector(getState());
+// TODO: put back once this is available in TS Wallet SDK
+//  export const startTxHistoryWatcherAction = createAsyncThunk<
+//   { isTxWatcherStarted: boolean },
+//   string,
+//   { rejectValue: RejectMessage; state: RootState }
+// >(
+//   "txHistory/startTxHistoryWatcherAction",
+//   (publicKey, { rejectWithValue, getState, dispatch }) => {
+//     try {
+//       const { isTestnet } = settingsSelector(getState());
+//       const { data } = txHistorySelector(getState());
 
-      const dataProvider = new DataProvider({
-        serverUrl: getNetworkConfig(isTestnet).url,
-        accountOrKey: publicKey,
-        networkPassphrase: getNetworkConfig(isTestnet).network,
-      });
+//       const dataProvider = new DataProvider({
+//         serverUrl: getNetworkConfig(isTestnet).url,
+//         accountOrKey: publicKey,
+//         networkPassphrase: getNetworkConfig(isTestnet).network,
+//       });
 
-      txHistoryWatcherStopper = dataProvider.watchPayments({
-        onMessage: (payment: Types.Payment) => {
-          // Update only if there are newer transactions
-          if (!data[0] || payment.timestamp > data[0]?.timestamp) {
-            dispatch(updateTxHistoryAction(payment));
-          }
-        },
-        onError: () => {
-          const isDevelopment = process.env.NODE_ENV === "development";
-          const isOnSameNetwork =
-            (isDevelopment && isTestnet) || (!isDevelopment && !isTestnet);
+//       txHistoryWatcherStopper = dataProvider.watchPayments({
+//         onMessage: (payment: Payment) => {
+//           // Update only if there are newer transactions
+//           if (!data[0] || payment.timestamp > data[0]?.timestamp) {
+//             dispatch(updateTxHistoryAction(payment));
+//           }
+//         },
+//         onError: () => {
+//           const isDevelopment = process.env.NODE_ENV === "development";
+//           const isOnSameNetwork =
+//             (isDevelopment && isTestnet) || (!isDevelopment && !isTestnet);
 
-          const errorString = isOnSameNetwork
-            ? "We couldn’t update your payments history at this time."
-            : `Payments history cannot be updated because you are using ${
-                isTestnet ? "TEST" : "PUBLIC"
-              } network in ${isDevelopment ? "DEVELOPMENT" : "PRODUCTION"}.`;
+//           const errorString = isOnSameNetwork
+//             ? "We couldn’t update your payments history at this time."
+//             : `Payments history cannot be updated because you are using ${
+//                 isTestnet ? "TEST" : "PUBLIC"
+//               } network in ${isDevelopment ? "DEVELOPMENT" : "PRODUCTION"}.`;
 
-          dispatch(updateTxHistoryErrorAction({ errorString }));
-        },
-      });
+//           dispatch(updateTxHistoryErrorAction({ errorString }));
+//         },
+//       });
 
-      return { isTxWatcherStarted: true };
-    } catch (error) {
-      return rejectWithValue({
-        errorString: getErrorString(error),
-      });
-    }
-  },
-);
+//       return { isTxWatcherStarted: true };
+//     } catch (error) {
+//       return rejectWithValue({
+//         errorString: getErrorString(error),
+//       });
+//     }
+//   },
+// );
 
 const initialTxHistoryState: TxHistoryInitialState = {
   data: [],
@@ -143,13 +152,15 @@ export const txHistorySlice = createSlice({
       state.errorString = action.payload?.errorString;
     });
 
-    builder.addCase(startTxHistoryWatcherAction.fulfilled, (state, action) => {
-      state.isTxWatcherStarted = action.payload.isTxWatcherStarted;
-    });
-    builder.addCase(startTxHistoryWatcherAction.rejected, (state, action) => {
-      state.status = ActionStatus.ERROR;
-      state.errorString = action.payload?.errorString;
-    });
+    // builder.addCase(startTxHistoryWatcherAction.fulfilled, (state, action)
+    //  => {
+    //   state.isTxWatcherStarted = action.payload.isTxWatcherStarted;
+    // });
+    // builder.addCase(startTxHistoryWatcherAction.rejected, (state, action)
+    //  => {
+    //   state.status = ActionStatus.ERROR;
+    //   state.errorString = action.payload?.errorString;
+    // });
   },
 });
 

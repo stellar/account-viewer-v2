@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { styled } from "styled-components";
-import { Keypair } from "stellar-sdk";
+import { Keypair } from "@stellar/stellar-sdk";
 import {
   Button,
   Heading4,
@@ -12,7 +12,7 @@ import {
   Modal,
   Checkbox,
 } from "@stellar/design-system";
-import { KeyType } from "@stellar/wallet-sdk";
+import { KeyType } from "@stellar/typescript-wallet-sdk-km";
 
 import { ErrorMessage } from "components/ErrorMessage";
 

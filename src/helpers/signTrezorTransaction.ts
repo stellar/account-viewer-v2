@@ -1,33 +1,19 @@
 import TrezorConnect from "@trezor/connect-web";
 import transformTransaction from "@trezor/connect-plugin-stellar";
-import { Transaction } from "stellar-sdk";
-import { loadPrivateKey } from "helpers/keyManager";
+import { Transaction } from "@stellar/stellar-sdk";
 
 export const signTrezorTransaction = async (
   transaction: Transaction,
-  keyStore: any,
+  publicKey: string,
+  bipPath: string,
 ) => {
-  const { keyStoreId, password, custom } = keyStore;
-
-  if (!custom || !custom.email || !custom.appUrl) {
-    throw new Error(
-      `Trezor Connect manifest with "email" and "appUrl" props is required.
-      Make sure they are passed through "custom" prop.`,
-    );
-  }
-
-  const key = await loadPrivateKey({
-    id: keyStoreId,
-    password,
-  });
-
   TrezorConnect.manifest({
-    email: custom.email,
-    appUrl: custom.appUrl,
+    email: "accounts+trezor@stellar.org",
+    appUrl: "https://accountviewer.stellar.org/",
   });
 
-  const bipPath = custom.bipPath || "44'/148'/0'";
-  const trezorParams = transformTransaction(`m/${bipPath}`, transaction);
+  const path = bipPath || "44'/148'/0'";
+  const trezorParams = transformTransaction(`m/${path}`, transaction);
   // @ts-ignore
   // Trezor memo returns number for type
   const response = await TrezorConnect.stellarSignTransaction(trezorParams);
@@ -36,7 +22,7 @@ export const signTrezorTransaction = async (
     const signature = Buffer.from(response.payload.signature, "hex").toString(
       "base64",
     );
-    transaction.addSignature(key.publicKey, signature);
+    transaction.addSignature(publicKey, signature);
 
     return transaction;
   }

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { KeyType } from "@stellar/wallet-sdk";
+import { KeyType } from "@stellar/typescript-wallet-sdk-km";
 import { storeKey, CreateKeyManagerResponse } from "helpers/keyManager";
 import { getErrorString } from "helpers/getErrorString";
 import { KeyStoreInitialState, RejectMessage } from "types/types";
@@ -8,7 +8,6 @@ interface WalletKeyActionProps {
   publicKey: string;
   privateKey?: string;
   keyType: KeyType;
-  path?: string;
   // In wallet-sdk, "custom" is a signTransaction() prop for any extra
   // information a wallet might require.
   custom?: {
@@ -22,13 +21,14 @@ export const storeKeyAction = createAsyncThunk<
   { rejectValue: RejectMessage }
 >(
   "keyStore/storeKeyAction",
-  async (
-    { publicKey, privateKey, keyType, path, custom },
-    { rejectWithValue },
-  ) => {
+  async ({ publicKey, privateKey, keyType, custom }, { rejectWithValue }) => {
     let result;
     try {
-      result = await storeKey({ publicKey, privateKey, keyType, path });
+      result = await storeKey({
+        publicKey,
+        privateKey: privateKey || "",
+        keyType,
+      });
       result.custom = custom;
     } catch (error) {
       return rejectWithValue({

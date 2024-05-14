@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { DataProvider } from "@stellar/wallet-sdk";
 import {
   Memo,
   MemoType,
@@ -12,7 +11,7 @@ import {
   BASE_FEE,
   Horizon,
   Federation,
-} from "stellar-sdk";
+} from "@stellar/stellar-sdk";
 import { BigNumber } from "bignumber.js";
 import {
   Button,
@@ -29,6 +28,7 @@ import { buildPaymentTransaction } from "helpers/buildPaymentTransaction";
 import { getNetworkConfig } from "helpers/getNetworkConfig";
 import { lumensFromStroops, stroopsFromLumens } from "helpers/stroopConversion";
 import { logEvent } from "helpers/tracking";
+import { isAccountFunded as fetchIsAccountFunded } from "helpers/isAccountFunded";
 import { useRedux } from "hooks/useRedux";
 import { ActionStatus, NetworkCongestion, PaymentFormData } from "types/types";
 
@@ -233,13 +233,9 @@ export const CreateTransaction = ({
 
     setIsCheckingAddress(true);
 
-    const dataProvider = new DataProvider({
-      serverUrl: getNetworkConfig(settings.isTestnet).url,
-      accountOrKey: accountId,
-      networkPassphrase: getNetworkConfig(settings.isTestnet).network,
-    });
-
-    setIsAccountFunded(await dataProvider.isAccountFunded());
+    setIsAccountFunded(
+      await fetchIsAccountFunded(accountId, settings.isTestnet),
+    );
     setIsCheckingAddress(false);
   };
 
