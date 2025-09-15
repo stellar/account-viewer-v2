@@ -22,6 +22,12 @@ export const submitPaymentTransaction = async (transaction: Transaction) => {
     // HTTPS."
     // So we need to trigger the signing "directly" from the action, passing it
     // to the `wallet-sdk` fails because it's going through different layers.
+    //
+    // With the latest OS update of the Ledger Stax (1.8.0),
+    // Ledger Flex (1.4.0), Ledger Nano X (2.5.0) and
+    // Ledger Nano S Plus (1.4.0), Windows users cannot
+    // connect via WebUSB to third-party wallets.
+    // https://support.ledger.com/article/Windows-Cannot-connect-via-WebUSB
     if (settings.authType === AuthType.LEDGER) {
       if (walletLedger.data?.publicKey && walletLedger.data?.bipPath) {
         signedTransaction = await signLedgerTransaction(
