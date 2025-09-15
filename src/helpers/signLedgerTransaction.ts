@@ -7,6 +7,16 @@ export const signLedgerTransaction = async (
   publicKey: string,
   bipPath: string,
 ) => {
+  // Close existing connections to avoid "device already open" error
+  const existingTransports = await TransportWebHID.list();
+  await Promise.all(
+    existingTransports.map((existingTransport) =>
+      existingTransport.close().catch(() => {
+        // Ignore close errors - device might already be closed
+      }),
+    ),
+  );
+
   const transport = await TransportWebHID.create();
   const ledgerApi = new LedgerApi(transport);
   const result = await ledgerApi.signTransaction(

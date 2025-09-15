@@ -126,6 +126,16 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
   const handleConnect = async () => {
     setErrorMessage("");
     try {
+      // Close existing connections to avoid "device already open" error
+      const existingTransports = await TransportWebHID.list();
+      await Promise.all(
+        existingTransports.map((existingTransport) =>
+          existingTransport.close().catch(() => {
+            // Ignore close errors - device might already be closed
+          }),
+        ),
+      );
+
       const transport = await TransportWebHID.request();
       dispatch(fetchLedgerStellarAddressAction({ ledgerBipPath, transport }));
     } catch (e) {
