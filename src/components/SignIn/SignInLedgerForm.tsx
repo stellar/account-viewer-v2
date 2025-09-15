@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { styled } from "styled-components";
 import { Button, InfoBlock, Loader, TextLink } from "@stellar/design-system";
 import { getCatchError } from "@stellar/frontend-helpers";
-import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
+import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 
 import { BipPathInput } from "components/BipPathInput";
 import { ErrorMessage } from "components/ErrorMessage";
@@ -126,13 +126,13 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
   const handleConnect = async () => {
     setErrorMessage("");
     try {
-      const transport = await TransportWebUSB.request();
+      const transport = await TransportWebHID.request();
       dispatch(fetchLedgerStellarAddressAction({ ledgerBipPath, transport }));
     } catch (e) {
       const error = getCatchError(e);
       const message =
-        error.message === "navigator.usb is undefined"
-          ? "Your browser does not support WebUSB"
+        error.message === "navigator.hid is not supported"
+          ? "Your browser does not support WebHID"
           : error.toString();
 
       setErrorMessage(message);
@@ -158,10 +158,10 @@ export const SignInLedgerForm = ({ onClose }: ModalPageProps) => {
             application open on it.
           </p>
           <p>
-            Ledger Wallet is using WebUSB to communicate with hardware wallets,
+            Ledger Wallet is using WebHID to communicate with hardware wallets,
             check if your browser supports it{" "}
             <TextLink
-              href="https://caniuse.com/webusb"
+              href="https://caniuse.com/webhid"
               target="_blank"
               rel="noreferrer"
             >

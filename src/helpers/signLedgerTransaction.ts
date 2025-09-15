@@ -1,5 +1,5 @@
 import { Keypair, Transaction, xdr } from "@stellar/stellar-sdk";
-import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
+import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import LedgerApi from "@ledgerhq/hw-app-str";
 
 export const signLedgerTransaction = async (
@@ -7,7 +7,7 @@ export const signLedgerTransaction = async (
   publicKey: string,
   bipPath: string,
 ) => {
-  const transport = await TransportWebUSB.create();
+  const transport = await TransportWebHID.create();
   const ledgerApi = new LedgerApi(transport);
   const result = await ledgerApi.signTransaction(
     bipPath,
