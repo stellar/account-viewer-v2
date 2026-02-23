@@ -487,7 +487,10 @@ export const CreateTransaction = ({
 
               setPrevAddress(e.target.value);
               setIsAccountIdTouched(false);
-              if (!isFederationAddress(e.target.value)) {
+              if (
+                !isFederationAddress(e.target.value) &&
+                Array.isArray(flaggedAccounts?.data)
+              ) {
                 checkIfAccountIsFlagged(e.target.value);
               }
             }}
