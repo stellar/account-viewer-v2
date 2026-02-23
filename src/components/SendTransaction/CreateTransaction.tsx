@@ -181,7 +181,11 @@ export const CreateTransaction = ({
         setFederationAddressFetchStatus(ActionStatus.SUCCESS);
         setFederationAddress(response.account_id);
         checkAndSetIsAccountFunded(response.account_id);
-        checkIfAccountIsFlagged(response.account_id);
+        try {
+          checkIfAccountIsFlagged(response.account_id);
+        } catch (e) {
+          // Swallow errors from checkIfAccountIsFlagged to avoid breaking federation resolution
+        }
 
         if (!StrKey.isValidEd25519PublicKey(response.account_id)) {
           setFederationAddressError(
