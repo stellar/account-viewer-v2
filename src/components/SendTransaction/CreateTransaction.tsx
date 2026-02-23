@@ -181,6 +181,7 @@ export const CreateTransaction = ({
         setFederationAddressFetchStatus(ActionStatus.SUCCESS);
         setFederationAddress(response.account_id);
         checkAndSetIsAccountFunded(response.account_id);
+        checkIfAccountIsFlagged(response.account_id);
 
         if (!StrKey.isValidEd25519PublicKey(response.account_id)) {
           setFederationAddressError(
@@ -486,7 +487,9 @@ export const CreateTransaction = ({
 
               setPrevAddress(e.target.value);
               setIsAccountIdTouched(false);
-              checkIfAccountIsFlagged(e.target.value);
+              if (!isFederationAddress(e.target.value)) {
+                checkIfAccountIsFlagged(e.target.value);
+              }
             }}
             error={inputErrors[SendFormIds.SEND_TO]}
             value={toAccountId}
