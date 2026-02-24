@@ -184,7 +184,8 @@ export const CreateTransaction = ({
         try {
           checkIfAccountIsFlagged(response.account_id);
         } catch (e) {
-          // Swallow errors from checkIfAccountIsFlagged to avoid breaking federation resolution
+          // Swallow errors from checkIfAccountIsFlagged to avoid
+          // breaking federation resolution
         }
 
         if (!StrKey.isValidEd25519PublicKey(response.account_id)) {
