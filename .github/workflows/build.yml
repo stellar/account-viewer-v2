@@ -1,0 +1,100 @@
+name: Build and push account-viewer-v2
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  SLACK_CHANNEL: alerts-product-eng
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Determine image label
+        id: vars
+        run: echo "label=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: ECR login
+        id: ecr
+        uses: stellar/actions/sdf-ecr-login@main
+
+      - name: Build docker image
+        env:
+          LABEL: ${{ steps.vars.outputs.label }}
+        run: |
+          set -eu
+          make docker-build
+
+      # -------------------- Dev --------------------
+      - name: Push to Dev
+        id: push_dev
+        env:
+          ECR_REGISTRY: ${{ steps.ecr.outputs.ecr-registry }}
+          LABEL: ${{ steps.vars.outputs.label }}
+        run: |
+          set -eu
+          ECR_IMAGE="${ECR_REGISTRY}/dev/account-viewer-v2:${LABEL}"
+          docker tag "stellar/account-viewer-v2:${LABEL}" "${ECR_IMAGE}"
+          ecr-push "${ECR_IMAGE}"
+
+      - name: Slack notification — dev success
+        if: steps.push_dev.outcome == 'success'
+        uses: slackapi/slack-github-action@v3.0.3
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: "${{ env.SLACK_CHANNEL }}"
+            text: "Account Viewer v2 *dev* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|build> complete for <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>."
+
+      - name: Slack notification — dev failure
+        if: failure() && steps.push_dev.conclusion == 'failure'
+        uses: slackapi/slack-github-action@v3.0.3
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: "${{ env.SLACK_CHANNEL }}"
+            text: "Account Viewer v2 *dev* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|build> failed for <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>."
+
+      # -------------------- Prd --------------------
+      - name: Push to Prd
+        id: push_prd
+        env:
+          ECR_REGISTRY: ${{ steps.ecr.outputs.ecr-registry }}
+          LABEL: ${{ steps.vars.outputs.label }}
+        run: |
+          set -eu
+          ECR_IMAGE="${ECR_REGISTRY}/prd/account-viewer-v2:${LABEL}"
+          docker tag "stellar/account-viewer-v2:${LABEL}" "${ECR_IMAGE}"
+          ecr-push "${ECR_IMAGE}"
+
+      - name: Slack notification — prd success
+        if: steps.push_prd.outcome == 'success'
+        uses: slackapi/slack-github-action@v3.0.3
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: "${{ env.SLACK_CHANNEL }}"
+            text: "Account Viewer v2 *prd* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|build> complete for <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>."
+
+      - name: Slack notification — prd failure
+        if: failure() && steps.push_prd.conclusion == 'failure'
+        uses: slackapi/slack-github-action@v3.0.3
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: "${{ env.SLACK_CHANNEL }}"
+            text: "Account Viewer v2 *prd* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|build> failed for <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>."
