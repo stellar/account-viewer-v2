@@ -49,7 +49,7 @@ jobs:
 
       - name: Slack notification — dev success
         if: steps.push_dev.outcome == 'success'
-        uses: slackapi/slack-github-action@v3.0.3
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
         with:
           method: chat.postMessage
           token: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -59,7 +59,7 @@ jobs:
 
       - name: Slack notification — dev failure
         if: failure() && steps.push_dev.conclusion == 'failure'
-        uses: slackapi/slack-github-action@v3.0.3
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
         with:
           method: chat.postMessage
           token: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -81,7 +81,7 @@ jobs:
 
       - name: Slack notification — prd success
         if: steps.push_prd.outcome == 'success'
-        uses: slackapi/slack-github-action@v3.0.3
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
         with:
           method: chat.postMessage
           token: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -91,7 +91,7 @@ jobs:
 
       - name: Slack notification — prd failure
         if: failure() && steps.push_prd.conclusion == 'failure'
-        uses: slackapi/slack-github-action@v3.0.3
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
         with:
           method: chat.postMessage
           token: ${{ secrets.SLACK_BOT_TOKEN }}
