@@ -1,0 +1,12 @@
+{
+  "workspace": ".",
+  "javascript_sast_enabled": true,
+  "javascript_disabled_rules": "js-express-async-no-error-handler,js-unhandled-promise-rejection",
+  "sast_ignore_overrides": "js-default-credentials:src/ducks/keyStore.ts,js-sensitive-data-in-logs:src/ducks/flaggedAccounts.ts,js-sensitive-data-in-logs:src/ducks/memoRequiredAccounts.ts",
+  "secret_scanning_enabled": true,
+  "console_tabular_enabled": true,
+  "dockerfiles": "Dockerfile",
+  "socket_tier_1_enabled": false,
+  "trivy_vuln_enabled": false,
+  "trufflehog_exclude_dir": "node_modules,dist,build,.git"
+}
